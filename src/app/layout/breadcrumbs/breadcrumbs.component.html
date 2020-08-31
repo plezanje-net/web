@@ -1,0 +1,11 @@
+<div>
+    <a [routerLink]="['/']">Plezanje.net</a>
+
+    <ng-container *ngFor="let bc of breadcrumbs">
+        <span class="sep"> / </span>
+        <ng-container *ngIf="bc.path">
+            <a [routerLink]="[bc.path]">{{ bc.name }}</a>
+        </ng-container>
+        <span *ngIf="!bc.path">{{ bc.name }}</span>
+    </ng-container>
+</div>

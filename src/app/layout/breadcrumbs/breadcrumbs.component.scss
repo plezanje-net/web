@@ -1,0 +1,12 @@
+div {
+    font-size: 13px;
+}
+.sep {
+    font-size: 9px;
+}
+a {
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
+}

@@ -1,0 +1,23 @@
+@import "../../../styles/colors.scss";
+
+header {
+    position: fixed;
+    z-index: 200;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: 3px solid $primary;
+    background: #fff;
+    box-shadow: 1px 0 10px rgba(0, 0, 0, 0.5);
+    .logo {
+        img {
+            display: block;
+        }
+    }
+    nav {
+        a:hover {
+            color: $primary;
+            text-decoration: none;
+        }
+    }
+}
