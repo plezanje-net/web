@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LayoutService } from 'src/app/services/layout.service';
+import { DataError } from 'src/app/types/data-error';
 
 @Component({
   selector: 'app-not-found',
@@ -7,6 +8,10 @@ import { LayoutService } from 'src/app/services/layout.service';
   styleUrls: ['./not-found.component.scss']
 })
 export class NotFoundComponent implements OnInit {
+
+  error: DataError = {
+    message: 'Iskane strani ni bilo mogoče najti.'
+  }
 
   constructor(private layoutService: LayoutService) { }
 

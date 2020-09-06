@@ -1,0 +1,33 @@
+<div fxLayout="column" fxLayoutGap="12px">
+    <div class="card">
+        <h3>{{ country.name }}</h3>
+        <a [routerLink]="['/plezalisca', country.slug]" [class.active]="!areaId" class="row" fxLayout="row"
+            fxLayoutAlign="start center">
+            <div fxFlex="100">Vse regije</div>
+            <mat-icon>arrow_right</mat-icon>
+        </a>
+        <a *ngFor="let area of country.areas" [routerLink]="['/plezalisca', country.slug, { area: area.id }]"
+            [class.active]="area.id == areaId" class="row" fxLayout="row" fxLayoutAlign="start center">
+            <div fxFlex="100">{{ area.name }}</div>
+            <mat-icon>arrow_right</mat-icon>
+        </a>
+    </div>
+
+    <div class="card" *ngIf="countries">
+        <h3 *ngIf="country.slug == 'slovenija'">Tujina</h3>
+        <ng-container *ngFor="let listCountry of countries; let i = index">
+            <ng-container *ngIf="showAllCountries || i <= 5">
+                <a *ngIf="listCountry.slug != country.slug" [routerLink]="['/plezalisca/', listCountry.slug]"
+                    class="row" fxLayout="row">
+                    <div fxFlex="100">{{ listCountry.name }}</div>
+                    <span>{{ listCountry.crags.length }}</span>
+                </a>
+            </ng-container>
+        </ng-container>
+        <div *ngIf="!showAllCountries" (click)="showAllCountries = true" class="show-all" fxLayout="row"
+            fxLayoutAlign="center center">
+            <div>Prikaži vseh {{ countries.length }}</div>
+            <mat-icon>arrow_drop_down</mat-icon>
+        </div>
+    </div>
+</div>

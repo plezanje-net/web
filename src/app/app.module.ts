@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -13,6 +14,12 @@ import { CragsComponent } from './pages/crags/crags.component';
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { BreadcrumbsComponent } from './layout/breadcrumbs/breadcrumbs.component';
+import { LoaderComponent } from './layout/loader/loader.component';
+import { DataErrorComponent } from './layout/data-error/data-error.component';
+import { GraphQLModule } from './graphql/graphql.module';
+import { HttpClientModule } from '@angular/common/http';
+import { CragsTocComponent } from './pages/crags/crags-toc/crags-toc.component';
+import { CragsMapComponent } from './pages/crags/crags-map/crags-map.component';
 
 
 
@@ -23,7 +30,11 @@ import { BreadcrumbsComponent } from './layout/breadcrumbs/breadcrumbs.component
     CragsComponent,
     HomeComponent,
     NotFoundComponent,
-    BreadcrumbsComponent
+    BreadcrumbsComponent,
+    LoaderComponent,
+    DataErrorComponent,
+    CragsTocComponent,
+    CragsMapComponent
   ],
   imports: [
     BrowserModule,
@@ -31,8 +42,11 @@ import { BreadcrumbsComponent } from './layout/breadcrumbs/breadcrumbs.component
     BrowserAnimationsModule,
     FlexLayoutModule,
     MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
     MatTooltipModule,
-    MatIconModule
+    GraphQLModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

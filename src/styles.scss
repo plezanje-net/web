@@ -2,13 +2,9 @@
 
 @include mat-core();
 
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
 $plezanje-net-primary: mat-palette($mat-blue);
 $plezanje-net-accent: mat-palette($mat-amber, A200, A100, A400);
 
-// The warn palette is optional (defaults to red).
 $plezanje-net-warn: mat-palette($mat-red);
 
 $plezanje-net-theme: mat-light-theme(

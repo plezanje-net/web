@@ -1,0 +1,23 @@
+.row {
+    cursor: pointer;
+    a {
+        text-decoration: none;
+    }
+
+    .routes {
+        white-space: nowrap;
+        text-align: right;
+    }
+}
+.scrollable {
+}
+.crag-map-container {
+    margin-bottom: 16px;
+    position: relative;
+    height: 360px;
+    .crag-map {
+        position: absolute;
+        height: 360px;
+        width: 100%;
+    }
+}

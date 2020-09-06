@@ -18,7 +18,7 @@ h1 {
     background: #fff;
     box-shadow: 0 2px 6px 0 #6494ff26;
     border-radius: 3px;
-    color: #1e88e5;
+    color: $primary;
     @include layout-bp(lt-md) {
         font-size: 18px;
     }
@@ -27,7 +27,7 @@ h1 {
 a {
     color: $primary;
     &:hover {
-        color: mat-color($app-primary, 300);
+        color: mat-color($app-primary, 500);
         text-decoration: underline;
     }
 }
@@ -71,7 +71,23 @@ a {
 
 .card {
     background: #fff;
-    padding: 16px 12px;
-    border-radius: 3px;
-    box-shadow: 0 2px 6px 0 #6494ff26;
+    border-radius: 0;
+    box-shadow: 0 0px 13px 0px #314c8833;
+}
+
+.row {
+    min-height: 42px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 12px 14px;
+    outline: none;
+    &.header {
+        color: #0000008a;
+        border-top: none;
+        padding-top: 28px;
+    }
+    &:not(.header) {
+        &:hover {
+            background: #f6f9ff;
+        }
+    }
 }
