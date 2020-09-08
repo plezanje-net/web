@@ -33,7 +33,8 @@
                 <div fxLayout="row" fxLayoutAlign="start center" fxHide.lt-md class="row header">
                     <div fxFlex="50" fxFlex.lt-md="100">Plezališče</div>
                     <div fxFlex="25" fxFlex.lt-md>Število smeri</div>
-                    <div fxFlex="25" fxFlex.lt-md>Težavnost</div>
+                    <div fxFlex="20px" fxFlex.lt-md>U</div>
+                    <div fxFlex="25" class="routes" fxFlex.lt-md>Težavnost</div>
                 </div>
                 <div *ngFor="let crag of country.crags" [routerLink]="['/plezalisca/',country.slug, crag.slug]"
                     fxLayout="row" fxLayoutAlign="start center" class="row">
@@ -41,9 +42,13 @@
                         <a [routerLink]="['/plezalisca/',country.slug, crag.slug]">{{ crag.name }}</a>
                     </div>
                     <div fxFlex="25" fxFlex.lt-md fxHide.lt-md>{{ crag.nrRoutes }}</div>
+                    <div fxFlex="20px" fxFlex.lt-md fxHide.lt-md>{{ crag.orientation }}</div>
                     <div fxFlex="25" fxFlex.lt-md class="routes">
                         <span fxHide.gt-sm>{{ crag.nrRoutes }}
-                            smeri<br /></span>{{ crag.minGrade }}{{ crag.minGrade != '' && crag.maxGrade != '' ? ' do ' : '' }}{{ crag.maxGrade }}
+                            smeri<br /></span>
+                        <app-grade [grade]="crag.minGrade"></app-grade>
+                        {{ crag.minGrade != null && crag.maxGrade != null ? ' do ' : '' }}<app-grade
+                            [grade]="crag.maxGrade"></app-grade>
                     </div>
                 </div>
             </div>

@@ -1,27 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { LayoutService } from 'src/app/services/layout.service';
-import { DataError } from '../../types/data-error';
-import { ActivatedRoute } from '@angular/router';
+import { DataError } from 'src/app/types/data-error';
 import { Apollo, gql } from 'apollo-angular';
-
-declare var ol: any;
+import { ActivatedRoute } from '@angular/router';
+import { LayoutService } from 'src/app/services/layout.service';
 
 @Component({
-  selector: 'app-crags',
-  templateUrl: './crags.component.html',
-  styleUrls: ['./crags.component.scss']
+  selector: 'app-crag',
+  templateUrl: './crag.component.html',
+  styleUrls: ['./crag.component.scss']
 })
-
-export class CragsComponent implements OnInit {
+export class CragComponent implements OnInit {
 
   loading: boolean = true;
-  cragsLoading: boolean = false;
   error: DataError = null;
 
-  countries: any[];
-  country: any;
-
-  area: string;
+  crag: any;
 
   map: any;
 
@@ -32,49 +25,44 @@ export class CragsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
     this.layoutService.$breadcrumbs.next([
       {
         name: "Plezališča"
       }
     ])
 
-    this.loading = true;
-
     this.activatedRoute.params.subscribe((params) => {
 
-      this.cragsLoading = true;
-
-      this.area = params.area;
-
-      let cragsArgs = params.area != null ? `(area:"${params.area}")` : '';
+      this.loading = true;
 
       this.apollo.watchQuery({
         query: gql`
           {
-            countryBySlug(slug: "${params.country}") {
-              name,
-              slug,
-              code,
-              crags${cragsArgs} {
+            cragBySlug(slug: "${params.crag}") {
                 id,
                 slug,
                 name,
-                nrRoutes,
-                orientation,
-                minGrade,
-                maxGrade
-              },
-              areas {
-                id,
-                name
+                country {
+                  id,
+                  name,
+                  slug
+                },
+                sectors {
+                  id,
+                  name,
+                  label,
+                  routes {
+                    id,
+                    name,
+                    grade,
+                    length
+                  }
+                }
               }
-            }
           }
         `
       }).valueChanges.subscribe(result => {
         this.loading = false;
-        this.cragsLoading = false;
 
         if (result.errors != null) {
           this.queryError(result.errors)
@@ -88,7 +76,7 @@ export class CragsComponent implements OnInit {
   queryError(errors: any) {
     if (errors.length > 0 && errors[0].message == 'entity_not_found') {
       this.error = {
-        message: 'Država ne obstaja v bazi.'
+        message: 'Plezališče ne obstaja v bazi.'
       }
       return;
     }
@@ -99,7 +87,7 @@ export class CragsComponent implements OnInit {
   }
 
   querySuccess(data: any) {
-    this.country = data.countryBySlug;
+    this.crag = data.cragBySlug;
 
     this.layoutService.$breadcrumbs.next([
       {
@@ -107,7 +95,11 @@ export class CragsComponent implements OnInit {
         path: "/plezalisca"
       },
       {
-        name: this.country.name
+        name: this.crag.country.name,
+        path: "/plezalisca/" + this.crag.country.slug
+      },
+      {
+        name: this.crag.name
       }
     ])
   }

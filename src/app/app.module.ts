@@ -20,6 +20,8 @@ import { GraphQLModule } from './graphql/graphql.module';
 import { HttpClientModule } from '@angular/common/http';
 import { CragsTocComponent } from './pages/crags/crags-toc/crags-toc.component';
 import { CragsMapComponent } from './pages/crags/crags-map/crags-map.component';
+import { GradeComponent } from './common/grade/grade.component';
+import { CragComponent } from './pages/crag/crag.component';
 
 
 
@@ -34,7 +36,9 @@ import { CragsMapComponent } from './pages/crags/crags-map/crags-map.component';
     LoaderComponent,
     DataErrorComponent,
     CragsTocComponent,
-    CragsMapComponent
+    CragsMapComponent,
+    GradeComponent,
+    CragComponent
   ],
   imports: [
     BrowserModule,
