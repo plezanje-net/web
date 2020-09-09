@@ -18,7 +18,7 @@
         <ng-container *ngFor="let listCountry of countries; let i = index">
             <ng-container *ngIf="showAllCountries || i <= 5">
                 <a *ngIf="listCountry.slug != country.slug" [routerLink]="['/plezalisca/', listCountry.slug]"
-                    class="row" fxLayout="row">
+                    class="row" fxLayout="row" fxLayoutAlign="start center">
                     <div fxFlex="100">{{ listCountry.name }}</div>
                     <span>{{ listCountry.crags.length }}</span>
                 </a>
