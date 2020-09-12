@@ -4,11 +4,18 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { CragsComponent } from './pages/crags/crags.component';
 import { HomeComponent } from './pages/home/home.component';
 import { CragComponent } from './pages/crag/crag.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
+  },
+  {
+    path: 'moj-profil',
+    component: ProfileComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'plezalisca/:country',

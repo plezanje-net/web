@@ -3,8 +3,13 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule, MatFormFieldDefaultOptions, MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,8 +27,15 @@ import { CragsTocComponent } from './pages/crags/crags-toc/crags-toc.component';
 import { CragsMapComponent } from './pages/crags/crags-map/crags-map.component';
 import { GradeComponent } from './common/grade/grade.component';
 import { CragComponent } from './pages/crag/crag.component';
+import { LoginComponent } from './auth/login/login.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { AuthGuard } from './auth/auth.guard';
+import { ReactiveFormsModule } from '@angular/forms';
+import { PasswordRecoveryComponent } from './auth/password-recovery/password-recovery.component';
 
-
+const formFieldAppearance: MatFormFieldDefaultOptions = {
+  appearance: 'fill'
+};
 
 @NgModule({
   declarations: [
@@ -38,21 +50,33 @@ import { CragComponent } from './pages/crag/crag.component';
     CragsTocComponent,
     CragsMapComponent,
     GradeComponent,
-    CragComponent
+    CragComponent,
+    LoginComponent,
+    ProfileComponent,
+    PasswordRecoveryComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
     FlexLayoutModule,
     MatButtonModule,
+    MatDialogModule,
+    MatMenuModule,
     MatIconModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
     GraphQLModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [AuthGuard, {
+    provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+    useValue: formFieldAppearance
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
