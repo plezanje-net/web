@@ -10,6 +10,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule, MatFormFieldDefaultOptions, MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -32,6 +33,8 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { AuthGuard } from './auth/auth.guard';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PasswordRecoveryComponent } from './auth/password-recovery/password-recovery.component';
+import { RegisterComponent } from './pages/account/register/register.component';
+import { ConfirmAccountComponent } from './pages/account/confirm-account/confirm-account.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill'
@@ -53,7 +56,9 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     CragComponent,
     LoginComponent,
     ProfileComponent,
-    PasswordRecoveryComponent
+    PasswordRecoveryComponent,
+    RegisterComponent,
+    ConfirmAccountComponent
   ],
   imports: [
     BrowserModule,
@@ -68,6 +73,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MatCheckboxModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSnackBarModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
     GraphQLModule,

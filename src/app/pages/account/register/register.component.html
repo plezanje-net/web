@@ -1,0 +1,65 @@
+<h1>
+    <div class="container p15">
+        <div fxFlex="100">Registracija</div>
+    </div>
+</h1>
+
+<div class="container">
+    <div class="card">
+        <div *ngIf="!success">
+            <p>
+                Vnesite zahtevane podatke in na vnešeni e-naslov vam bomo poslali povezavo za aktivacijo računa.
+            </p>
+            <form [formGroup]="form" (submit)="register()">
+
+                <p>
+                    <mat-form-field>
+                        <mat-label>E-naslov</mat-label>
+                        <input matInput formControlName="email" />
+                        <mat-hint>Služi kot uporabniško ime ob prijavi</mat-hint>
+                    </mat-form-field>
+                </p>
+
+                <p>
+                    <mat-form-field>
+                        <mat-label>Geslo</mat-label>
+                        <input matInput formControlName="password" type="password" />
+                        <mat-hint>Najmanj 8 znakov</mat-hint>
+                    </mat-form-field>
+                </p>
+
+                <p>
+                    <mat-form-field class="no-hint">
+                        <mat-label>Ime</mat-label>
+                        <input matInput formControlName="firstname" />
+                    </mat-form-field>
+                </p>
+
+                <p>
+                    <mat-form-field class="no-hint">
+                        <mat-label>Priimek</mat-label>
+                        <input matInput formControlName="lastname" />
+                    </mat-form-field>
+                </p>
+
+                <p class="conditions">
+                    <mat-checkbox formControlName="conditions">Strinjam se s <a href="#">pogoji uporabe portala</a>
+                    </mat-checkbox>
+                </p>
+
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <button *ngIf="!loading" mat-flat-button color="primary"
+                        [disabled]="!form.valid">REGISTRACIJA</button>
+
+                    <div *ngIf="loading" class="loading">
+                        <mat-spinner diameter="30"></mat-spinner>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div *ngIf="success">
+            <h3>Registracija uspešna.</h3>
+            Na naslov anze@drek.si smo poslali povezavo za aktivacijo računa.
+        </div>
+    </div>
+</div>

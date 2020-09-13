@@ -10,7 +10,7 @@ body {
 }
 body {
     margin: 0;
-    font-family: "Poppins", "Helvetica Neue", sans-serif;
+    font-family: "Roboto", "Helvetica Neue", sans-serif;
     background: #eef5f9;
 }
 
@@ -112,5 +112,14 @@ body {
     }
     .mat-form-field-subscript-wrapper {
         overflow: visible;
+    }
+    .mat-snack-bar-container {
+        border-radius: 2px;
+        &.error {
+            color: $warn;
+        }
+    }
+    .mat-form-field-infix {
+        line-height: normal;
     }
 }

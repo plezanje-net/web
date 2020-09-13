@@ -6,6 +6,8 @@ import { HomeComponent } from './pages/home/home.component';
 import { CragComponent } from './pages/crag/crag.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { AuthGuard } from './auth/auth.guard';
+import { RegisterComponent } from './pages/account/register/register.component';
+import { ConfirmAccountComponent } from './pages/account/confirm-account/confirm-account.component';
 
 const routes: Routes = [
   {
@@ -13,9 +15,17 @@ const routes: Routes = [
     component: HomeComponent,
   },
   {
+    path: 'registracija',
+    component: RegisterComponent,
+  },
+  {
     path: 'moj-profil',
     component: ProfileComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'aktivacija/:id/:token',
+    component: ConfirmAccountComponent
   },
   {
     path: 'plezalisca/:country',
