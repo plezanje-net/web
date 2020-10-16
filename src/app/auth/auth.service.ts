@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Subject } from "rxjs";
 import { LoginRequest } from '../types/login-request';
+import { Apollo, gql } from 'apollo-angular';
 
 @Injectable({
     providedIn: "root"
@@ -12,44 +13,46 @@ export class AuthService {
 
     public openLogin$ = new Subject<LoginRequest>();
 
-    constructor(private http: HttpClient) { }
-
-    // login(user: any): Promise<any> {
-    //     // return this.http
-    //     //   .post<any>(environment.API_URL + "auth/login", user)
-    //     //   .toPromise();
-    // }
+    constructor(private apollo: Apollo) { }
 
     logout(): void {
-        localStorage.removeItem(this.getCookieName("AUTH"));
+        localStorage.removeItem(this.getCookieName("auth"));
         this.currentUser = null;
     }
 
     getCurrentUser(): Promise<any> {
+        if (this.getToken() == null) {
+            return Promise.resolve(null);
+        }
+
         if (this.currentUser) {
             return Promise.resolve(this.currentUser);
         }
 
-        return this.http
-            .get<any>("auth/user")
-            .toPromise()
-            .then(response => {
-                this.currentUser = response.data;
-                return response.data;
-            })
-            .catch(error => null);
+        return this.apollo.query({
+            query: gql`{
+                profile {
+                    id,
+                    email,
+                    roles
+                }
+            }`
+        }).toPromise().then((result: any) => {
+            this.currentUser = result.data.profile;
+            return this.currentUser;
+        });
     }
 
     setToken(token: string): void {
-        localStorage.setItem(this.getCookieName("AUTH"), token);
+        localStorage.setItem(this.getCookieName("auth"), token);
     }
 
     getToken(): string {
-        return localStorage.getItem(this.getCookieName("AUTH"));
+        return localStorage.getItem(this.getCookieName("auth"));
     }
 
     getCookieName(type: string): string {
-        return "plezanjenet-";
+        return "plezanjenet-" + type;
     }
 
     checkRole(role: string) {

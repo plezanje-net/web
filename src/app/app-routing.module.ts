@@ -4,10 +4,11 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { CragsComponent } from './pages/crags/crags.component';
 import { HomeComponent } from './pages/home/home.component';
 import { CragComponent } from './pages/crag/crag.component';
-import { ProfileComponent } from './pages/profile/profile.component';
+import { ProfileComponent } from './pages/account/profile/profile.component';
 import { AuthGuard } from './auth/auth.guard';
 import { RegisterComponent } from './pages/account/register/register.component';
 import { ConfirmAccountComponent } from './pages/account/confirm-account/confirm-account.component';
+import { SelectPasswordComponent } from './pages/account/select-password/select-password.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,10 @@ const routes: Routes = [
   {
     path: 'aktivacija/:id/:token',
     component: ConfirmAccountComponent
+  },
+  {
+    path: 'menjava-gesla/:id/:token',
+    component: SelectPasswordComponent
   },
   {
     path: 'plezalisca/:country',

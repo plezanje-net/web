@@ -22,8 +22,11 @@
             <mat-checkbox formControlName="remember">Zapomni si me</mat-checkbox>
         </p>
 
-        <p>
-            <button mat-flat-button color="primary" [disabled]="!loginForm.valid">PRIJAVA</button>
+        <p fxLayout="row" fxLayoutAlign="center center" class="login-button">
+            <button *ngIf="!loading" mat-flat-button color="primary" [disabled]="!loginForm.valid">PRIJAVA</button>
+            <span *ngIf="loading" class="loading">
+                <mat-spinner diameter="30"></mat-spinner>
+            </span>
         </p>
     </form>
 

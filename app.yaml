@@ -1,0 +1,29 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+handlers:
+  - url: /
+    secure: always
+    static_files: dist/plezanje-net/index.html
+    upload: dist/plezanje-net/index.html
+
+  - url: /(.*\.(.+))$
+    secure: always
+    static_files: dist/plezanje-net/\1
+    upload: dist/plezanje-net/(.*\.(.+))$
+
+  - url: /(.*)
+    secure: always
+    static_files: dist/plezanje-net/index.html
+    upload: dist/plezanje-net/index.html
+
+skip_files:
+  - e2e/
+  - node_modules/
+  - src/
+  - coverage
+  - ^(.*/)?\..*$
+  - ^(.*/)?.*\.json$
+  - ^(.*/)?.*\.md$
+  - ^(.*/)?.*\.yaml$
+  - ^LICENSE

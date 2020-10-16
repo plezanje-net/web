@@ -15,7 +15,7 @@
 
     <div class="crag-map-container" *ngIf="!loading && country.code == 'SI'">
         <div class="crag-map">
-            <app-crags-map></app-crags-map>
+            <app-crags-map [crags]="crags$"></app-crags-map>
         </div>
     </div>
 

@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Apollo, gql } from 'apollo-angular';
+import { AuthService } from '../auth.service';
 import { PasswordRecoveryComponent } from '../password-recovery/password-recovery.component';
 
 @Component({
@@ -10,9 +13,14 @@ import { PasswordRecoveryComponent } from '../password-recovery/password-recover
 })
 export class LoginComponent implements OnInit {
 
+  loading = false;
+
   constructor(
+    private authService: AuthService,
     private dialogRef: MatDialogRef<LoginComponent>,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackbar: MatSnackBar,
+    private apollo: Apollo
   ) { }
 
   loginForm = new FormGroup({
@@ -31,7 +39,28 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
-    console.log(this.loginForm.value);
+    this.loading = true;
+
+    const value = this.loginForm.value;
+
+    this.apollo.mutate({
+      mutation: gql`
+        mutation {
+          login(input: {
+            email: "${value.email}", 
+            password: "${value.password}"
+          }) {
+            token
+          }
+        }
+      `
+    }).subscribe((result: any) => {
+      this.authService.setToken(result.data.login.token);
+      this.dialogRef.close(true);
+    }, (error) => {
+      this.loading = false;
+      this.snackbar.open("Prijava ni uspela.", null, { panelClass: "error", duration: 3000 });
+    })
   }
 
 }

@@ -23,18 +23,20 @@ import { BreadcrumbsComponent } from './layout/breadcrumbs/breadcrumbs.component
 import { LoaderComponent } from './layout/loader/loader.component';
 import { DataErrorComponent } from './layout/data-error/data-error.component';
 import { GraphQLModule } from './graphql/graphql.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CragsTocComponent } from './pages/crags/crags-toc/crags-toc.component';
 import { CragsMapComponent } from './pages/crags/crags-map/crags-map.component';
 import { GradeComponent } from './common/grade/grade.component';
 import { CragComponent } from './pages/crag/crag.component';
 import { LoginComponent } from './auth/login/login.component';
-import { ProfileComponent } from './pages/profile/profile.component';
+import { ProfileComponent } from './pages/account/profile/profile.component';
 import { AuthGuard } from './auth/auth.guard';
+import { AuthInterceptor } from './auth/auth-interceptor';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PasswordRecoveryComponent } from './auth/password-recovery/password-recovery.component';
 import { RegisterComponent } from './pages/account/register/register.component';
 import { ConfirmAccountComponent } from './pages/account/confirm-account/confirm-account.component';
+import { SelectPasswordComponent } from './pages/account/select-password/select-password.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill'
@@ -58,7 +60,8 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ProfileComponent,
     PasswordRecoveryComponent,
     RegisterComponent,
-    ConfirmAccountComponent
+    ConfirmAccountComponent,
+    SelectPasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -82,7 +85,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
   providers: [AuthGuard, {
     provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
     useValue: formFieldAppearance
-  }],
+  }, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -10,6 +10,7 @@ export class AuthGuard implements CanActivate {
     ) { }
 
     async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+        console.log(route, state);
         return this.authService.getCurrentUser().then(user => {
             if (!user) {
                 this.authService.openLogin$.next({

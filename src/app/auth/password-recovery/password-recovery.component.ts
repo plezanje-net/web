@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Apollo, gql } from 'apollo-angular';
 
 @Component({
   selector: 'app-password-recovery',
@@ -8,7 +10,13 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 })
 export class PasswordRecoveryComponent implements OnInit {
 
-  constructor() { }
+  loading = false;
+  success = false;
+
+  constructor(
+    private apollo: Apollo,
+    private snackbar: MatSnackBar
+  ) { }
 
   passwordForm = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email])
@@ -19,7 +27,23 @@ export class PasswordRecoveryComponent implements OnInit {
   }
 
   recover(): void {
-    console.log(this.passwordForm.value);
+    this.loading = true;
+
+    const value = this.passwordForm.value;
+
+    this.apollo.mutate({
+      mutation: gql`
+        mutation {
+          recover(email: "${value.email}")
+        }
+      `
+    }).subscribe(() => {
+      this.loading = false;
+      this.success = true;
+    }, (error) => {
+      this.loading = false;
+      this.snackbar.open("Račun s tem e-naslovom ne obstaja.", null, { panelClass: "error", duration: 3000 });
+    })
   }
 
 }

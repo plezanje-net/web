@@ -115,6 +115,7 @@ body {
     }
     .mat-snack-bar-container {
         border-radius: 2px;
+        text-align: center;
         &.error {
             color: $warn;
         }

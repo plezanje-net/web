@@ -3,8 +3,35 @@ import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from '../../types/data-error';
 import { ActivatedRoute } from '@angular/router';
 import { Apollo, gql } from 'apollo-angular';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 declare var ol: any;
+
+const CragsQuery = gql`
+  query CragsQuery($country: String!, $area: String) {
+    countryBySlug(slug: $country) {
+      id,
+      name,
+      slug,
+      code,
+      crags(area: $area) {
+        id,
+        slug,
+        name,
+        nrRoutes,
+        orientation,
+        lang,
+        lat,
+        minGrade,
+        maxGrade
+      },
+      areas {
+        id,
+        name
+      }
+    }
+  }
+`
 
 @Component({
   selector: 'app-crags',
@@ -20,6 +47,8 @@ export class CragsComponent implements OnInit {
 
   countries: any[];
   country: any;
+
+  crags$ = new BehaviorSubject<any[]>([]);
 
   area: string;
 
@@ -44,35 +73,15 @@ export class CragsComponent implements OnInit {
     this.activatedRoute.params.subscribe((params) => {
 
       this.cragsLoading = true;
-
       this.area = params.area;
 
-      let cragsArgs = params.area != null ? `(area:"${params.area}")` : '';
-
-      this.apollo.watchQuery({
-        query: gql`
-          {
-            countryBySlug(slug: "${params.country}") {
-              name,
-              slug,
-              code,
-              crags${cragsArgs} {
-                id,
-                slug,
-                name,
-                nrRoutes,
-                orientation,
-                minGrade,
-                maxGrade
-              },
-              areas {
-                id,
-                name
-              }
-            }
-          }
-        `
-      }).valueChanges.subscribe(result => {
+      this.apollo.query({
+        query: CragsQuery,
+        variables: {
+          country: params.country,
+          area: params.area
+        }
+      }).subscribe(result => {
         this.loading = false;
         this.cragsLoading = false;
 
@@ -100,6 +109,8 @@ export class CragsComponent implements OnInit {
 
   querySuccess(data: any) {
     this.country = data.countryBySlug;
+
+    this.crags$.next(this.country.crags);
 
     this.layoutService.$breadcrumbs.next([
       {
