@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { gql, Apollo } from 'apollo-angular';
 
 @Component({
@@ -15,7 +16,7 @@ export class CragsTocComponent implements OnInit {
 
   showAllCountries: boolean = false;
 
-  constructor(private apollo: Apollo) { }
+  constructor(private apollo: Apollo, private router: Router) { }
 
   ngOnInit(): void {
     this.apollo.watchQuery({
@@ -40,6 +41,28 @@ export class CragsTocComponent implements OnInit {
 
       this.countries.sort((a, b) => b.crags.length - a.crags.length)
     })
+  }
+
+  changeArea(id: string) {
+    if (id != null) {
+      this.router.navigate([
+        '/plezalisca',
+        this.country.slug,
+        { area: id }
+      ])
+    } else {
+      this.router.navigate([
+        '/plezalisca',
+        this.country.slug
+      ])
+    }
+  }
+
+  changeCountry(slug: string) {
+    this.router.navigate([
+      '/plezalisca',
+      slug
+    ])
   }
 
 }

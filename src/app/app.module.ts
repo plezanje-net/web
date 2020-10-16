@@ -11,6 +11,7 @@ import { MatFormFieldModule, MatFormFieldDefaultOptions, MAT_FORM_FIELD_DEFAULT_
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSelectModule } from '@angular/material/select';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -79,6 +80,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MatSnackBarModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
+    MatSelectModule,
     GraphQLModule,
     HttpClientModule,
   ],

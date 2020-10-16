@@ -1,4 +1,4 @@
-<div fxLayout="column" fxLayoutGap="12px">
+<div fxLayout="column" fxLayoutGap="12px" fxHide.lt-md>
     <div class="card">
         <h3>{{ country.name }}</h3>
         <a [routerLink]="['/plezalisca', country.slug]" [class.active]="!areaId" class="row" fxLayout="row"
@@ -29,5 +29,25 @@
             <div>Prikaži vseh {{ countries.length }}</div>
             <mat-icon>arrow_drop_down</mat-icon>
         </div>
+    </div>
+</div>
+
+<div fxLayout="row" fxLayoutGap="12px" fxShow.lt-md>
+    <div fxFlex="100">
+        <mat-form-field class="no-hint">
+            <mat-label>Država</mat-label>
+            <mat-select [value]="country.slug" (selectionChange)="changeCountry($event.value)">
+                <mat-option *ngFor="let listCountry of countries" [value]="listCountry.slug">{{ listCountry.name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div fxFlex="100">
+        <mat-form-field class="no-hint">
+            <mat-label>Regija</mat-label>
+            <mat-select [value]="areaId" (selectionChange)="changeArea($event.value)">
+                <mat-option [value]="null">Vse regije</mat-option>
+                <mat-option *ngFor="let area of country.areas" [value]="area.id">{{ area.name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
 </div>
