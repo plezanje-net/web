@@ -34,16 +34,21 @@ a {
 
 .container {
     margin: 0 auto;
-    padding: 0 15px;
+    padding: 0 8px;
     width: 100%;
     &.p15 {
-        padding: 15px;
+        padding: 15px 8px;
     }
 }
 
 @media (min-width: 576px) {
     .container {
         max-width: 540px;
+        padding: 0 15px;
+        width: 100%;
+        &.p15 {
+            padding: 15px;
+        }
     }
 }
 
@@ -83,7 +88,8 @@ a {
     &.header {
         color: #0000008a;
         border-top: none;
-        padding-top: 28px;
+        padding-top: 20px;
+        padding-bottom: 12px;
     }
     &:not(.header) {
         &:hover {
@@ -122,5 +128,10 @@ body {
     }
     .mat-form-field-infix {
         line-height: normal;
+    }
+    .infix-width-auto {
+        .mat-form-field-infix {
+            width: auto;
+        } 
     }
 }
