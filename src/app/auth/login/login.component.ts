@@ -55,8 +55,7 @@ export class LoginComponent implements OnInit {
         }
       `
     }).subscribe((result: any) => {
-      this.authService.setToken(result.data.login.token);
-      this.dialogRef.close(true);
+      this.authService.login(result.data.login.token).then(() => this.dialogRef.close(true));
     }, (error) => {
       this.loading = false;
       this.snackbar.open("Prijava ni uspela.", null, { panelClass: "error", duration: 3000 });

@@ -27,10 +27,12 @@ export class ProfileComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout();
-    this.router.navigate(['/']);
+    this.authService.logout().then(() => {
+      this.router.navigate(['/']);
 
-    this.snackbar.open("Uspešno ste se odjavili", null, { duration: 3000 })
+      this.snackbar.open("Uspešno ste se odjavili", null, { duration: 3000 })
+    });
+
   }
 
 }

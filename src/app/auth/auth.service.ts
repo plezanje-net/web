@@ -15,9 +15,15 @@ export class AuthService {
 
     constructor(private apollo: Apollo) { }
 
-    logout(): void {
-        localStorage.removeItem(this.getCookieName("auth"));
+    logout(): Promise<any> {
         this.currentUser = null;
+        localStorage.removeItem(this.getCookieName("auth"));
+        return this.apollo.client.resetStore();
+    }
+
+    login(token: string): Promise<any> {
+        localStorage.setItem(this.getCookieName("auth"), token);
+        return this.apollo.client.resetStore();
     }
 
     getCurrentUser(): Promise<any> {
@@ -41,10 +47,6 @@ export class AuthService {
             this.currentUser = result.data.profile;
             return this.currentUser;
         });
-    }
-
-    setToken(token: string): void {
-        localStorage.setItem(this.getCookieName("auth"), token);
     }
 
     getToken(): string {
