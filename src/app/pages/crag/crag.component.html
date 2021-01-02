@@ -21,8 +21,28 @@
 
     <div class="container" fxLayout="row" fxLayoutGap="12px" fxLayout.lt-md="column">
 
-        <div fxFlex="320px" fxFlex.lt-md>
-            CRAG TOC
+        <div fxFlex="320px" fxFlex.lt-md *ngIf="crag">
+            <div class="toc-title">
+                {{ crag.country.name }}{{ crag.area ? ', ' + crag.area.name : '' }}
+            </div>
+
+            <div>
+                <app-map [height]="260" [crag]="crag" [crags]="crags$"></app-map>
+            </div>
+
+            <div *ngIf="crag.access">
+                <div class="toc-title">
+                    Dostop
+                </div>
+                <div class="toc-content">{{ crag.access }}</div>
+            </div>
+            <div *ngIf="crag.description">
+                <div class="toc-title">
+                    Opis
+                </div>
+                <div class="toc-content">{{ crag.description }}</div>
+            </div>
+
         </div>
 
         <div fxFlex="100" fxFlex.lt-md fxLayout="column" fxLayoutGap="12px">
@@ -38,15 +58,18 @@
                 </div>
                 <div *ngFor="let route of sector.routes" fxLayout="row" fxLayoutAlign="start center" class="row">
                     <div fxFlex="50" fxFlex.lt-md="100">
-                        <a [routerLink]="['/plezalisca/',crag.country.slug, crag.slug, route.id]">{{ route.name }}</a>
+                        <a [routerLink]="['/plezalisca/',crag.country.slug, crag.slug, route.id]">{{ route.name
+                            }}</a>
                     </div>
                     <div fxFlex="25" fxFlex.lt-md fxHide.lt-md>{{ route.length }} m</div>
                     <div fxFlex="25" fxFlex.lt-md class="routes">
-                        <app-grade [grade]="route.grade" [text]="route.difficulty" [showModifier]="true"></app-grade>
+                        <app-grade [grade]="route.grade" [text]="route.difficulty" [showModifier]="true">
+                        </app-grade>
                     </div>
                 </div>
             </div>
 
         </div>
+
     </div>
 </div>

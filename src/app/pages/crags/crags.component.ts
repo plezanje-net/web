@@ -22,7 +22,7 @@ const CragsQuery = gql`
         name,
         nrRoutes,
         orientation,
-        long,
+        lon,
         lat,
         minGrade,
         maxGrade

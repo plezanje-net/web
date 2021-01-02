@@ -3,6 +3,7 @@ import { DataError } from 'src/app/types/data-error';
 import { Apollo, gql } from 'apollo-angular';
 import { ActivatedRoute } from '@angular/router';
 import { LayoutService } from 'src/app/services/layout.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-crag',
@@ -15,6 +16,7 @@ export class CragComponent implements OnInit {
   error: DataError = null;
 
   crag: any;
+  crags$ = new BehaviorSubject<any>([]);
 
   map: any;
 
@@ -42,6 +44,13 @@ export class CragComponent implements OnInit {
                 id,
                 slug,
                 name,
+                lat,
+                lon,
+                access,
+                description,
+                area {
+                  name
+                },
                 country {
                   id,
                   name,
@@ -88,6 +97,8 @@ export class CragComponent implements OnInit {
 
   querySuccess(data: any) {
     this.crag = data.cragBySlug;
+
+    this.crags$.next([this.crag]);
 
     this.layoutService.$breadcrumbs.next([
       {

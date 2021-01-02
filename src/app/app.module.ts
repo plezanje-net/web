@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,7 +27,6 @@ import { DataErrorComponent } from './layout/data-error/data-error.component';
 import { GraphQLModule } from './graphql/graphql.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CragsTocComponent } from './pages/crags/crags-toc/crags-toc.component';
-import { CragsMapComponent } from './pages/crags/crags-map/crags-map.component';
 import { GradeComponent } from './common/grade/grade.component';
 import { CragComponent } from './pages/crag/crag.component';
 import { LoginComponent } from './auth/login/login.component';
@@ -39,6 +39,7 @@ import { RegisterComponent } from './pages/account/register/register.component';
 import { ConfirmAccountComponent } from './pages/account/confirm-account/confirm-account.component';
 import { SelectPasswordComponent } from './pages/account/select-password/select-password.component';
 import { CragFormComponent } from './forms/crag-form/crag-form.component';
+import { MapComponent } from './common/map/map.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill'
@@ -55,7 +56,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     LoaderComponent,
     DataErrorComponent,
     CragsTocComponent,
-    CragsMapComponent,
     GradeComponent,
     CragComponent,
     LoginComponent,
@@ -64,7 +64,8 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     RegisterComponent,
     ConfirmAccountComponent,
     SelectPasswordComponent,
-    CragFormComponent
+    CragFormComponent,
+    MapComponent
   ],
   imports: [
     BrowserModule,
@@ -74,6 +75,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     FlexLayoutModule,
     MatButtonModule,
     MatDialogModule,
+    MatTabsModule,
     MatMenuModule,
     MatIconModule,
     MatCheckboxModule,

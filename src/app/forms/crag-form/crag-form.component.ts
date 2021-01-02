@@ -27,7 +27,7 @@ export class CragFormComponent implements OnInit {
     name: new FormControl("", [Validators.required]),
     slug: new FormControl("", [Validators.required]),
     lat: new FormControl(""),
-    long: new FormControl(""),
+    lon: new FormControl(""),
     orientation: new FormControl(""),
     access: new FormControl(""),
     description: new FormControl(""),

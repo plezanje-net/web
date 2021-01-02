@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -14,20 +14,33 @@ import VectorSource from 'ol/source/Vector';
 import { BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-crags-map',
-  templateUrl: './crags-map.component.html',
-  styleUrls: ['./crags-map.component.scss']
+  selector: 'app-map',
+  templateUrl: './map.component.html',
+  styleUrls: ['./map.component.scss']
 })
-export class CragsMapComponent implements OnInit {
+export class MapComponent implements OnInit, AfterViewInit {
 
   @Input() crags: BehaviorSubject<any[]>;
+  @Input() crag: any;
+  @Input() height: number = 360;
+
+  lon: number = 14.9912767;
+  lat: number = 46.1369805;
+  zoom: number = 8;
 
   map: any;
 
   constructor() { }
 
   ngOnInit(): void {
+    if (this.crag != null && this.crag.lon != null && this.crag.lat != null) {
+      this.lon = this.crag.lon;
+      this.lat = this.crag.lat;
+      this.zoom = 10;
+    }
+  }
 
+  ngAfterViewInit(){
     const iconStyle = new Style({
       image: new Icon({
         anchor: [0, 0],
@@ -43,8 +56,8 @@ export class CragsMapComponent implements OnInit {
         })
       ],
       view: new View({
-        center: olProj.fromLonLat([14.9912767, 46.1369805]),
-        zoom: 8
+        center: olProj.fromLonLat([this.lon, this.lat]),
+        zoom: this.zoom
       })
     });
 
@@ -56,9 +69,9 @@ export class CragsMapComponent implements OnInit {
       const markers = [];
 
       crags.forEach((crag) => {
-        if (crag.lat != null && crag.long != null) {
+        if (crag.lat != null && crag.lon != null) {
           const marker = new Feature({
-            geometry: new Point(olProj.fromLonLat([crag.long, crag.lat]))
+            geometry: new Point(olProj.fromLonLat([crag.lon, crag.lat]))
           });
 
           marker.setStyle(iconStyle);
@@ -78,7 +91,6 @@ export class CragsMapComponent implements OnInit {
       this.map.addLayer(vectorLayer);
 
     })
-
   }
 
 }

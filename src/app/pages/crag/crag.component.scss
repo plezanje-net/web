@@ -3,3 +3,25 @@ h3 {
     margin: 16px 16px 0;
     font-weight: 500;
 }
+.row {
+    cursor: pointer;
+    a {
+        text-decoration: none;
+    }
+
+    .routes {
+        white-space: nowrap;
+        text-align: right;
+    }
+    &.header {
+        cursor: default;
+    }
+}
+.toc-title {
+    color: #0000008a;
+    font-size: 16px;
+    padding: 12px 0;
+}
+.toc-content {
+    padding-bottom: 12px;
+}
