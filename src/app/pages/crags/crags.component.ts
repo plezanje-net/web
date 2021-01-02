@@ -4,6 +4,8 @@ import { DataError } from '../../types/data-error';
 import { ActivatedRoute } from '@angular/router';
 import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { CragFormComponent } from 'src/app/forms/crag-form/crag-form.component';
 
 declare var ol: any;
 
@@ -20,7 +22,7 @@ const CragsQuery = gql`
         name,
         nrRoutes,
         orientation,
-        lang,
+        long,
         lat,
         minGrade,
         maxGrade
@@ -57,7 +59,8 @@ export class CragsComponent implements OnInit {
   constructor(
     private layoutService: LayoutService,
     private activatedRoute: ActivatedRoute,
-    private apollo: Apollo
+    private apollo: Apollo,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -121,5 +124,15 @@ export class CragsComponent implements OnInit {
         name: this.country.name
       }
     ])
+  }
+
+  addCrag() {
+    this.dialog.open(CragFormComponent, {
+      data: {
+        countryId: this.country.id
+      }
+    }).afterClosed().subscribe((data) => {
+      console.log(data);
+    });
   }
 }

@@ -56,9 +56,9 @@ export class CragsMapComponent implements OnInit {
       const markers = [];
 
       crags.forEach((crag) => {
-        if (crag.lat != null && crag.lang != null) {
+        if (crag.lat != null && crag.long != null) {
           const marker = new Feature({
-            geometry: new Point(olProj.fromLonLat([crag.lang, crag.lat]))
+            geometry: new Point(olProj.fromLonLat([crag.long, crag.lat]))
           });
 
           marker.setStyle(iconStyle);

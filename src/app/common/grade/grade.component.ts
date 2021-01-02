@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Grade } from '../grade';
 
 @Component({
   selector: 'app-grade',
@@ -11,7 +12,7 @@ export class GradeComponent implements OnInit {
   @Input('text') alternativeText: string = '';
   @Input() showModifier: boolean = false;
 
-  grade: string;
+  grade: Grade;
   modifier: number = 0;
 
   gradeLetters = ['a', 'a+', 'b', 'b+', 'c', 'c+'];
@@ -20,25 +21,10 @@ export class GradeComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.grade = this.getGradeString()
-  }
+    this.grade = new Grade(this.numericGrade);
 
-  getGradeString(): string {
     if (this.numericGrade == null) {
-      return this.alternativeText;
+      this.grade.name = this.alternativeText;
     }
-
-    let gradeNumber = Math.floor((this.numericGrade / 100 + 14) / 3);
-
-    let baseNumber = (gradeNumber * 3 - 14) * 100;
-
-    if (gradeNumber <= 3) {
-      return gradeNumber.toString();
-    }
-
-    let gradeLetter = this.gradeLetters[Math.floor((this.numericGrade - baseNumber) / 50)];
-
-    return gradeNumber + gradeLetter;
   }
-
 }

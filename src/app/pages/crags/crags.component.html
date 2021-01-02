@@ -5,9 +5,16 @@
     <h1>
         <div class="container p15" fxLayout="row" fxLayoutAlign="start center">
             <div fxFlex="100">Športna plezališča</div>
-            <button mat-icon-button>
+            <button mat-icon-button [matMenuTriggerFor]="menu">
                 <mat-icon>more_vert</mat-icon>
             </button>
+
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="addCrag()">
+                  <mat-icon>post_add</mat-icon>
+                  <span>Dodaj plezališče</span>
+                </button>
+              </mat-menu>
         </div>
     </h1>
 

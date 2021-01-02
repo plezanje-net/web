@@ -1,1 +1,3 @@
-{{grade}}
+<span class="grade-name">{{grade.name}} </span>
+<span *ngIf="showModifier && grade.modifier == 1" class="grade-modifier hard">hard</span>
+<span *ngIf="showModifier && grade.modifier == -1" class="grade-modifier soft">soft</span>
