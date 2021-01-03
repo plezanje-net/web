@@ -92,9 +92,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.map.addLayer(this.vectorLayer);
 
     this.crags.subscribe((crags) => {
-      const markers = [];
-
-      crags.forEach((crag) => {
+      const markers: AdvancedFeature[] = crags.reduce((arr: AdvancedFeature[], crag) => {
         if (crag.lat != null && crag.lon != null) {
           const marker = new AdvancedFeature({
             geometry: new Point(olProj.fromLonLat([crag.lon, crag.lat]))
@@ -102,10 +100,12 @@ export class MapComponent implements OnInit, AfterViewInit {
           marker.crag = crag;
 
           marker.setStyle(iconStyle);
-
-          markers.push(marker);
+          arr.push(marker);
         }
-      })
+
+        return arr;
+      }, []);
+
       this.vectorSource.clear();
       this.vectorSource.addFeatures(markers);
 
