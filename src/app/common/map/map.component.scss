@@ -9,3 +9,14 @@
     padding: 5px 10px 0px 10px;
 }
   
+.ol-control.ol-unselectable.locate.location-active > button.map-button
+{
+    color:rgba(128,0,0.5);
+}
+.ol-control.ol-unselectable.locate.location-active {
+    background-color: rgba(128,0,0.5);
+}
+.locate {
+    top: 4em;
+    left: .5em;
+}
