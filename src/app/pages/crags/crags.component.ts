@@ -24,6 +24,11 @@ const CragsQuery = gql`
         orientation,
         lon,
         lat,
+        country {
+          id,
+          name,
+          slug
+        },
         minGrade,
         maxGrade
       },

@@ -1,1 +1,16 @@
 <div id="crag-map" [ngStyle]="{ 'height.px': height }"></div>
+<div #popup class="popup" [hidden]="true" title="Plezališče">
+  <div>
+    <p>
+      <a [routerLink]="['/plezalisca/',selectedCrag?.country.slug, selectedCrag?.slug]">{{ selectedCrag?.name }}</a>
+    </p>
+    <p>
+      <span *ngIf="selectedCrag?.nrRoutes">
+        <b>Število smeri:</b> {{selectedCrag?.nrRoutes}},
+      </span>
+      <span *ngIf="selectedCrag?.orientation">
+        <b>Orientacija:</b> {{selectedCrag?.orientation}}
+      </span>
+    </p>
+  </div>
+</div>

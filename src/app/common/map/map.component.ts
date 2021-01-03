@@ -1,6 +1,8 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 
 import Map from 'ol/Map';
+import { MapBrowserEvent, Overlay as OverlayPopup } from 'ol';
+import { defaults as defaultInteractions } from 'ol/interaction';
 import View from 'ol/View';
 import VectorLayer from 'ol/layer/Vector';
 import Style from 'ol/style/Style';
@@ -8,7 +10,7 @@ import Icon from 'ol/style/Icon';
 import OSM from 'ol/source/OSM';
 import * as olProj from 'ol/proj';
 import TileLayer from 'ol/layer/Tile';
-import Feature from 'ol/Feature';
+import Feature, { FeatureLike } from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import VectorSource from 'ol/source/Vector';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -23,6 +25,9 @@ export class MapComponent implements OnInit, AfterViewInit {
   @Input() crags: BehaviorSubject<any[]>;
   @Input() crag: any;
   @Input() height: number = 360;
+  @ViewChild('popup') popup;
+  popupOverlay: OverlayPopup;
+  selectedCrag: any;
 
   lon: number = 14.9912767;
   lat: number = 46.1369805;
@@ -47,9 +52,13 @@ export class MapComponent implements OnInit, AfterViewInit {
         src: 'assets/marker.webp'
       }),
     });
+    this.popupOverlay = new OverlayPopup({
+      element: this.popup.nativeElement,
+    });
 
     this.map = new Map({
       target: 'crag-map',
+      interactions: defaultInteractions({ doubleClickZoom: false, pinchRotate: false }),
       layers: [
         new TileLayer({
           source: new OSM()
@@ -61,6 +70,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       })
     });
 
+    this.map.addOverlay(this.popupOverlay);
     this.crags.subscribe((crags) => {
 
       this.map.removeLayer(this.map.getLayers().item(1));
@@ -70,9 +80,10 @@ export class MapComponent implements OnInit, AfterViewInit {
 
       crags.forEach((crag) => {
         if (crag.lat != null && crag.lon != null) {
-          const marker = new Feature({
+          const marker = new AdvancedFeature({
             geometry: new Point(olProj.fromLonLat([crag.lon, crag.lat]))
           });
+          marker.crag = crag;
 
           marker.setStyle(iconStyle);
 
@@ -96,6 +107,21 @@ export class MapComponent implements OnInit, AfterViewInit {
         });
       }
     })
-  }
 
+    this.map.on('click', this.mapClickEvent);
+  }
+  mapClickEvent = async (evt) => {
+    this.popup.nativeElement.hidden = true;
+    const featuresClick: FeatureLike[] = this.map.getFeaturesAtPixel(evt.pixel);
+    if (featuresClick.length > 0) {
+      this.selectedCrag = (<AdvancedFeature> featuresClick[0]).crag;
+      this.popupOverlay.setPosition(evt.coordinate);
+      this.popup.nativeElement.hidden = false;
+      this.map.getView().setCenter(evt.coordinate)
+    }
+  }
+}
+
+class AdvancedFeature extends Feature {
+  public crag: any
 }
