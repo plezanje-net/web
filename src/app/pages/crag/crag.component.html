@@ -34,37 +34,38 @@
                 <div class="toc-title">
                     Dostop
                 </div>
-                <div class="toc-content">{{ crag.access }}</div>
+                <div class="toc-content" [innerHTML]="crag.access"></div>
             </div>
             <div *ngIf="crag.description">
                 <div class="toc-title">
                     Opis
                 </div>
-                <div class="toc-content">{{ crag.description }}</div>
+                <div class="toc-content" [innerHTML]="crag.description"></div>
             </div>
 
         </div>
 
         <div fxFlex="100" fxFlex.lt-md fxLayout="column" fxLayoutGap="12px">
 
-            <div *ngFor="let sector of crag.sectors" class="card">
+            <div *ngFor="let sector of crag.sectors">
 
                 <h3>{{ sector.label }} <span>{{ sector.name != '' ? ' - '+sector.name : '' }}</span></h3>
-
-                <div fxLayout="row" fxLayoutAlign="start center" fxHide.lt-md class="row header">
-                    <div fxFlex="50" fxFlex.lt-md="100">Ime</div>
-                    <div fxFlex="25" fxFlex.lt-md>Dolžina</div>
-                    <div fxFlex="25" fxFlex.lt-md>Težavnost</div>
-                </div>
-                <div *ngFor="let route of sector.routes" fxLayout="row" fxLayoutAlign="start center" class="row">
-                    <div fxFlex="50" fxFlex.lt-md="100">
-                        <a [routerLink]="['/plezalisca/',crag.country.slug, crag.slug, route.id]">{{ route.name
-                            }}</a>
+                <div class="card">
+                    <div fxLayout="row" fxLayoutAlign="start center" fxHide.lt-md class="row header">
+                        <div fxFlex="50" fxFlex.lt-md="100">Ime</div>
+                        <div fxFlex="25" fxFlex.lt-md>Dolžina</div>
+                        <div fxFlex="25" fxFlex.lt-md>Težavnost</div>
                     </div>
-                    <div fxFlex="25" fxFlex.lt-md fxHide.lt-md>{{ route.length }} m</div>
-                    <div fxFlex="25" fxFlex.lt-md class="routes">
-                        <app-grade [grade]="route.grade" [text]="route.difficulty" [showModifier]="true">
-                        </app-grade>
+                    <div *ngFor="let route of sector.routes" fxLayout="row" fxLayoutAlign="start center" class="row">
+                        <div fxFlex="50" fxFlex.lt-md="100">
+                            <a [routerLink]="['/plezalisca/',crag.country.slug, crag.slug, route.id]">{{ route.name
+                                }}</a>
+                        </div>
+                        <div fxFlex="25" fxFlex.lt-md fxHide.lt-md>{{ route.length }} m</div>
+                        <div fxFlex="25" fxFlex.lt-md class="routes">
+                            <app-grade [grade]="route.grade" [text]="route.difficulty" [showModifier]="true">
+                            </app-grade>
+                        </div>
                     </div>
                 </div>
             </div>
