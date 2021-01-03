@@ -28,7 +28,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   lat: number = 46.1369805;
   zoom: number = 8;
 
-  map: any;
+  map: Map;
 
   constructor() { }
 
@@ -40,7 +40,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     const iconStyle = new Style({
       image: new Icon({
         anchor: [0, 0],
@@ -65,7 +65,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
       this.map.removeLayer(this.map.getLayers().item(1));
 
-  
+
       const markers = [];
 
       crags.forEach((crag) => {
@@ -83,13 +83,18 @@ export class MapComponent implements OnInit, AfterViewInit {
       const vectorSource = new VectorSource({
         features: markers
       });
-  
+
       const vectorLayer = new VectorLayer({
         source: vectorSource
       });
 
       this.map.addLayer(vectorLayer);
-
+      if (markers.length > 0) {
+        this.map.getView().fit(vectorLayer.getSource().getExtent(), {
+          size: this.map.getSize(),
+          maxZoom: 15,
+        });
+      }
     })
   }
 
