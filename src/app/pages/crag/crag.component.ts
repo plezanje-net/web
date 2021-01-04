@@ -5,6 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { LayoutService } from 'src/app/services/layout.service';
 import { BehaviorSubject } from 'rxjs';
 
+import { Tab } from '../../types/tab';
+
 @Component({
   selector: 'app-crag',
   templateUrl: './crag.component.html',
@@ -19,6 +21,31 @@ export class CragComponent implements OnInit {
   crags$ = new BehaviorSubject<any>([]);
 
   map: any;
+
+  tabs: Array<Tab> = [
+    {
+      slug: 'lokacija',
+      label: 'Lokacija'
+    },
+    {
+      slug: 'smeri',
+      label: 'Smeri'
+    },
+    {
+      slug: 'komentarji',
+      label: 'Komentarji'
+    },
+    {
+      slug: 'info',
+      label: 'Info'
+    },
+    {
+      slug: 'galerija',
+      label: 'Galerija'
+    }
+  ];
+
+  activeTab: Tab = this.tabs[1];
 
   constructor(
     private layoutService: LayoutService,
@@ -114,4 +141,10 @@ export class CragComponent implements OnInit {
       }
     ])
   }
+
+  setActiveTab(tab: Tab){
+    this.activeTab = tab;
+  }
+
+
 }
