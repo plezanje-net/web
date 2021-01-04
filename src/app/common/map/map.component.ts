@@ -27,6 +27,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   @Input() crags: BehaviorSubject<any[]>;
   @Input() crag: any;
   @Input() height: number = 360;
+  @Input() id: string = 'default';
   @ViewChild('popup') popup;
   @ViewChild('locate') locate: ElementRef;
 
@@ -71,7 +72,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
 
     this.map = new Map({
-      target: 'crag-map',
+      target: 'crag-map-' + this.id,
       interactions: defaultInteractions({ doubleClickZoom: false, pinchRotate: false }),
       layers: [
         new TileLayer({

@@ -1,0 +1,12 @@
+@import "../../../../styles/colors.scss";
+
+.comment {
+    margin-bottom: 16px;
+}
+.condition {
+    margin-bottom: 16px;
+    border-left-color: $accent;
+}
+.author {
+    color: #00000080;
+}

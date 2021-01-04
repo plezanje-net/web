@@ -42,6 +42,10 @@ import { CragFormComponent } from './forms/crag-form/crag-form.component';
 import { MapComponent } from './common/map/map.component';
 import { CragRoutesComponent } from './pages/crag/crag-routes/crag-routes.component';
 import { CragInfoComponent } from './pages/crag/crag-info/crag-info.component';
+import { CragCommentsComponent } from './pages/crag/crag-comments/crag-comments.component';
+import { MomentModule } from 'ngx-moment';
+import { CragLocationComponent } from './pages/crag/crag-location/crag-location.component';
+import { CragWarningsComponent } from './pages/crag/crag-warnings/crag-warnings.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill'
@@ -69,7 +73,10 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     CragFormComponent,
     MapComponent,
     CragRoutesComponent,
-    CragInfoComponent
+    CragInfoComponent,
+    CragCommentsComponent,
+    CragLocationComponent,
+    CragWarningsComponent
   ],
   imports: [
     BrowserModule,
@@ -91,6 +98,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MatSelectModule,
     GraphQLModule,
     HttpClientModule,
+    MomentModule,
   ],
   providers: [AuthGuard, {
     provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,

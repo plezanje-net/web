@@ -27,6 +27,8 @@
     "apollo-link-error": "^1.1.13",
     "apollo-link-http": "^1.5.17",
     "graphql": "^15.0.0",
+    "moment": "^2.29.1",
+    "ngx-moment": "^5.0.0",
     "ol": "^6.5.0",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",

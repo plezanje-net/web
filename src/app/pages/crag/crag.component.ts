@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { DataError } from 'src/app/types/data-error';
 import { Apollo, gql } from 'apollo-angular';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LayoutService } from 'src/app/services/layout.service';
 import { BehaviorSubject } from 'rxjs';
 
 import { Tab } from '../../types/tab';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-crag',
@@ -18,14 +19,13 @@ export class CragComponent implements OnInit {
   error: DataError = null;
 
   crag: any;
-  crags$ = new BehaviorSubject<any>([]);
 
   map: any;
 
   tabs: Array<Tab> = [
     {
       slug: 'lokacija',
-      label: 'Lokacija'
+      label: 'Lokacija & dostop'
     },
     {
       slug: 'smeri',
@@ -45,12 +45,13 @@ export class CragComponent implements OnInit {
     }
   ];
 
-  activeTab: Tab = this.tabs[1];
+  activeTab: string = "smeri";
 
   constructor(
     private layoutService: LayoutService,
     private activatedRoute: ActivatedRoute,
-    private apollo: Apollo
+    private apollo: Apollo,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -93,6 +94,27 @@ export class CragComponent implements OnInit {
                     grade,
                     length
                   }
+                },
+                comments {
+                  content,
+                  created,
+                  user {
+                    fullName
+                  }
+                },
+                conditions {
+                  content,
+                  created,
+                  user {
+                    fullName
+                  }
+                },
+                warnings {
+                  content,
+                  created,
+                  user {
+                    fullName
+                  }
                 }
               }
           }
@@ -106,7 +128,13 @@ export class CragComponent implements OnInit {
           this.querySuccess(result.data);
         }
       })
-    })
+
+      if (params.tab != null) {
+        this.activeTab = params.tab;
+      } else {
+        this.activeTab = "smeri";
+      }
+    });
   }
 
   queryError(errors: any) {
@@ -125,8 +153,6 @@ export class CragComponent implements OnInit {
   querySuccess(data: any) {
     this.crag = data.cragBySlug;
 
-    this.crags$.next([this.crag]);
-
     this.layoutService.$breadcrumbs.next([
       {
         name: "Plezališča",
@@ -142,8 +168,18 @@ export class CragComponent implements OnInit {
     ])
   }
 
-  setActiveTab(tab: Tab){
-    this.activeTab = tab;
+  setActiveTab(tab: Tab) {
+    let routeParams = [
+      "/plezalisca/",
+      this.crag.country.slug,
+      this.crag.slug
+    ];
+
+    if (tab.slug != 'smeri') {
+      routeParams.push({ tab: tab.slug });
+    }
+
+    this.router.navigate(routeParams);
   }
 
 

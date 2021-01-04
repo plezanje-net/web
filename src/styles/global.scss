@@ -17,15 +17,16 @@ body {
 h1 {
     background: #fff;
     box-shadow: 0 2px 6px 0 #6494ff26;
-    border-radius: 3px;
+    padding-left: 8px;
     color: $primary;
     @include layout-bp(lt-md) {
         font-size: 18px;
     }
 }
-h3 {
+.mat-typography h3 {
     color: #0000008a;
-    margin: 14px 16px;
+    padding: 14px 16px;
+    margin: 0;
     font-weight: 500;
 }
 
@@ -87,6 +88,7 @@ b {
     background: #fff;
     border-radius: 0;
     box-shadow: 0 0px 13px 0px #314c8833;
+    border-left: 1px solid $primary;
     &.padding {
         padding: 16px;
     }

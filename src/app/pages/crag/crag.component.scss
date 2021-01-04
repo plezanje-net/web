@@ -1,15 +1,18 @@
+@import "../../../styles/colors.scss";
 
-.toc-title {
-    color: #0000008a;
-    font-size: 16px;
-    padding: 18px 0;
-}
-.toc-content {
-    padding-bottom: 12px;
-}    
 .mat-tab-link {
     width: 100%;
 }
 .mat-tab-label.mat-tab-disabled, .mat-tab-link.mat-tab-disabled {
     color: rgba(0, 0, 0, 0.87);
+}
+.tab-button {
+    height: 48px;
+    padding: 0 24px;
+    opacity: .6;
+    color: rgba(0, 0, 0, 0.87);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    &.active {
+        color: $primary;
+    }
 }
