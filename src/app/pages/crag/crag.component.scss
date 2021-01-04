@@ -1,23 +1,4 @@
-h3 {
-    color: #0000008a;
-    margin: 14px 16px;
-    font-weight: 500;
-}
-.row {
-    cursor: pointer;
-    a {
-        text-decoration: none;
-    }
 
-    .routes {
-        white-space: nowrap;
-        text-align: right;
-    }
-    &.header {
-        cursor: default;
-        padding-top: 12px;
-    }
-}
 .toc-title {
     color: #0000008a;
     font-size: 16px;
@@ -25,4 +6,10 @@ h3 {
 }
 .toc-content {
     padding-bottom: 12px;
+}    
+.mat-tab-link {
+    width: 100%;
+}
+.mat-tab-label.mat-tab-disabled, .mat-tab-link.mat-tab-disabled {
+    color: rgba(0, 0, 0, 0.87);
 }

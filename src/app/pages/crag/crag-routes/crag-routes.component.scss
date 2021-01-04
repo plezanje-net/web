@@ -1,0 +1,17 @@
+h3 {
+    color: #0000008a;
+    margin: 14px 16px;
+    font-weight: 500;
+}
+.row {
+    cursor: pointer;
+
+    .routes {
+        white-space: nowrap;
+        text-align: right;
+    }
+    &.header {
+        cursor: default;
+        padding-top: 12px;
+    }
+}
