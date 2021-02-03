@@ -2,6 +2,15 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.8.
 
+## First run
+
+Before running the project for the first time you should install all the needed dependencies by running:
+```
+npm i
+```
+
+If you can't run `npm`, you probably don't have NodeJS installed. To install it, go to: https://nodejs.org/en/download/
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
