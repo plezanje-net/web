@@ -1,12 +1,14 @@
 <div *ngFor="let sector of crag.sectors">
     <h3>{{ sector.label }} <span>{{ sector.name != '' ? ' - '+sector.name : '' }}</span></h3>
     <div class="card">
-        <div fxLayout="row" fxLayoutAlign="start center" fxHide.lt-md class="row header">
+        <div fxLayout="row" fxLayoutAlign="start center" fxHide.lt-md class="row header" fxLayoutGap="14px">
+            
             <div fxFlex="50" fxFlex.lt-md="100">Ime</div>
             <div fxFlex="25" fxFlex.lt-md>Dolžina</div>
             <div fxFlex="25" fxFlex.lt-md>Težavnost</div>
         </div>
-        <div *ngFor="let route of sector.routes" fxLayout="row" fxLayoutAlign="start center" class="row">
+        <div *ngFor="let route of sector.routes" fxLayout="row" fxLayoutAlign="start center" class="row" fxLayoutGap="14px">
+            <div fxFlex><mat-checkbox (change)="changeSelection(route)" [checked]="selectedRoutes.indexOf(route) > -1"></mat-checkbox></div>
             <div fxFlex="50" fxFlex.lt-md="100">
                 <a [routerLink]="['/plezalisca/',crag.country.slug, crag.slug, route.id]">{{
                     route.name

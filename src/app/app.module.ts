@@ -13,6 +13,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -33,7 +34,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { ProfileComponent } from './pages/account/profile/profile.component';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthInterceptor } from './auth/auth-interceptor';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PasswordRecoveryComponent } from './auth/password-recovery/password-recovery.component';
 import { RegisterComponent } from './pages/account/register/register.component';
 import { ConfirmAccountComponent } from './pages/account/confirm-account/confirm-account.component';
@@ -46,6 +47,11 @@ import { CragCommentsComponent } from './pages/crag/crag-comments/crag-comments.
 import { MomentModule } from 'ngx-moment';
 import { CragLocationComponent } from './pages/crag/crag-location/crag-location.component';
 import { CragWarningsComponent } from './pages/crag/crag-warnings/crag-warnings.component';
+import { SnackBarButtonsComponent } from './common/snack-bar-buttons/snack-bar-buttons.component';
+import { ActivityFormComponent } from './forms/activity-form/activity-form.component';
+import { ActivityFormRouteComponent } from './forms/activity-form/activity-form-route/activity-form-route.component';
+import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatMomentDateModule, MomentDateAdapter } from '@angular/material-moment-adapter';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill'
@@ -76,12 +82,16 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     CragInfoComponent,
     CragCommentsComponent,
     CragLocationComponent,
-    CragWarningsComponent
+    CragWarningsComponent,
+    SnackBarButtonsComponent,
+    ActivityFormComponent,
+    ActivityFormRouteComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule,
     MatButtonModule,
@@ -96,14 +106,36 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatSelectModule,
+    MatDatepickerModule,
     GraphQLModule,
     HttpClientModule,
+    MatMomentDateModule,
     MomentModule,
   ],
-  providers: [AuthGuard, {
-    provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-    useValue: formFieldAppearance
-  }, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
+  providers: [
+    AuthGuard,
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: formFieldAppearance
+    }, {
+      provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
+    },
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: {
+        parse: {
+          dateInput: "DD.MM.YYYY"
+        },
+        display: {
+          dateInput: "DD.MM.YYYY",
+          monthYearLabel: "MMM YYYY",
+          dateA11yLabel: "LL",
+          monthYearA11yLabel: "MMMM YYYY"
+        }
+      }
+    },
+    { provide: MAT_DATE_LOCALE, useValue: "en-GB" },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

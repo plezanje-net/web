@@ -4,6 +4,8 @@ import { AuthService } from '../app/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { LoginComponent } from './auth/login/login.component';
 import { Router } from '@angular/router';
+import { LayoutService } from './services/layout.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +16,13 @@ import { Router } from '@angular/router';
 export class AppComponent implements OnInit {
   title = 'plezanje-net';
 
-  constructor(private authService: AuthService, private dialog: MatDialog, private router: Router) { }
+  constructor(
+    private authService: AuthService, 
+    private dialog: MatDialog, 
+    private router: Router,
+    private layoutService: LayoutService,
+    private titleService: Title
+  ) { }
 
   ngOnInit(): void {
     this.authService.openLogin$.subscribe((req) => {
@@ -32,6 +40,14 @@ export class AppComponent implements OnInit {
           this.router.navigateByUrl(req.returnUrl);
         }
       });
+    })
+
+    this.layoutService.$breadcrumbs.subscribe((value) => {
+      let title = "Plezanje.net";
+      if (value.length > 0) {
+        title = value[value.length - 1].name + " · " + title;
+      }
+      this.titleService.setTitle(title);
     })
   }
 }
