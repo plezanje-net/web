@@ -12,6 +12,7 @@ body {
     margin: 0;
     font-family: "Roboto", "Helvetica Neue", sans-serif;
     background: #eef5f9;
+    // overflow: hidden;
 }
 
 h1 {
@@ -23,6 +24,7 @@ h1 {
         font-size: 18px;
     }
 }
+
 .mat-typography h3 {
     color: #0000008a;
     padding: 14px 16px;
@@ -147,5 +149,8 @@ body {
         .mat-form-field-infix {
             width: auto;
         } 
+    }
+    .cdk-overlay-pane {
+        max-width: 95vw !important;
     }
 }
