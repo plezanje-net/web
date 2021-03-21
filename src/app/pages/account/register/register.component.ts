@@ -45,9 +45,9 @@ export class RegisterComponent implements OnInit {
       mutation: gql`
         mutation {
           register(input: {
-            email: "${value.email}", 
-            password: "${value.password}", 
-            firstname: "${value.firstname}", 
+            email: "${value.email}",
+            password: "${value.password}",
+            firstname: "${value.firstname}",
             lastname: "${value.lastname}"
           })
         }
