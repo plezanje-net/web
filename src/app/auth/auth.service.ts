@@ -3,6 +3,9 @@ import { HttpClient } from "@angular/common/http";
 import { Subject } from "rxjs";
 import { LoginRequest } from '../types/login-request';
 import { Apollo, gql } from 'apollo-angular';
+import { GuardedActionOptions } from '../types/guarded-action-options';
+import { RecursiveTemplateAstVisitor } from "@angular/compiler";
+import { filter } from "rxjs/operators";
 
 @Injectable({
     providedIn: "root"
@@ -26,7 +29,7 @@ export class AuthService {
         return this.apollo.client.resetStore();
     }
 
-    getCurrentUser(): Promise<any> {
+    async getCurrentUser(): Promise<any> {
         if (this.getToken() == null) {
             return Promise.resolve(null);
         }
@@ -62,5 +65,25 @@ export class AuthService {
             return this.currentUser.roles.indexOf(role) != -1;
         }
         return false;
+    }
+
+    guardedAction(options: GuardedActionOptions): Promise<any> {
+      return this.getCurrentUser().then((user: any) => {
+        return new Promise((resolve, reject) => {
+          if (user != null) {
+            resolve({});
+          }
+
+          const success = new Subject<any>();
+
+          this.openLogin$.next({
+            success: success
+          });
+
+          success.subscribe(() => {
+            resolve({});
+          })
+        })
+      })
     }
 }

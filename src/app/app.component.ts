@@ -7,6 +7,9 @@ import { Router } from '@angular/router';
 import { LayoutService } from './services/layout.service';
 import { Title } from '@angular/platform-browser';
 
+import { filter } from 'rxjs/operators';
+import { SelectControlValueAccessor } from '@angular/forms';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -17,8 +20,8 @@ export class AppComponent implements OnInit {
   title = 'plezanje-net';
 
   constructor(
-    private authService: AuthService, 
-    private dialog: MatDialog, 
+    private authService: AuthService,
+    private dialog: MatDialog,
     private router: Router,
     private layoutService: LayoutService,
     private titleService: Title
@@ -31,15 +34,22 @@ export class AppComponent implements OnInit {
         this.router.navigate(['/']);
       }
 
-      this.dialog.open(LoginComponent, {
-        data: {
-          message: req.message
-        }
-      }).afterClosed().subscribe((data) => {
-        if (data != null && data != '' && req.returnUrl != null) {
-          this.router.navigateByUrl(req.returnUrl);
-        }
-      });
+      this.dialog
+        .open(LoginComponent, {
+          data: {
+            message: req.message
+          }
+        }).afterClosed()
+        .pipe(filter((data) => data != null && data != ''))
+        .subscribe((data) => {
+          if (req.returnUrl != null) {
+            this.router.navigateByUrl(req.returnUrl);
+          }
+
+          if (req.success != null) {
+            req.success.next(data);
+          }
+        });
     })
 
     this.layoutService.$breadcrumbs.subscribe((value) => {
