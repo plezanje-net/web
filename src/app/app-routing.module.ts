@@ -33,6 +33,11 @@ const routes: Routes = [
     component: SelectPasswordComponent
   },
   {
+    path: 'plezalisca',
+    redirectTo: "plezalisca/slovenija",
+    pathMatch: "full"
+  },
+  {
     path: 'plezalisca/:country',
     component: CragsComponent,
   },
