@@ -20,7 +20,7 @@
                 <a *ngIf="listCountry.slug != country.slug" [routerLink]="['/plezalisca/', listCountry.slug]"
                     class="row" fxLayout="row" fxLayoutAlign="start center">
                     <div fxFlex="100">{{ listCountry.name }}</div>
-                    <span>{{ listCountry.crags.length }}</span>
+                    <span>{{ listCountry.nrCrags }}</span>
                 </a>
             </ng-container>
         </ng-container>

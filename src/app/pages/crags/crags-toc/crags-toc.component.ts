@@ -22,25 +22,21 @@ export class CragsTocComponent implements OnInit {
     this.apollo.watchQuery({
       query: gql`
         {
-          countries {
+          countries(input: {
+            hasCrags: true,
+            orderBy: {
+              field: "nrCrags",
+              direction: "DESC"
+            }
+          }) {
             name,
             slug,
-            crags {
-              id
-            }
+            nrCrags
           }
         }
       `,
       errorPolicy: 'all'
-    }).valueChanges.subscribe((result: any) => {
-      this.countries = [];
-
-      for (let country of result.data.countries) {
-        this.countries.push(country);
-      }
-
-      this.countries.sort((a, b) => b.crags.length - a.crags.length)
-    })
+    }).valueChanges.subscribe((result: any) => this.countries = result.data.countries)
   }
 
   changeArea(id: string) {
