@@ -7,9 +7,20 @@
     <h1>
         <div class="container p15" fxLayout="row" fxLayoutAlign="start center">
             <div fxFlex="100">{{ crag.name }}</div>
-            <button mat-icon-button>
+            <button mat-icon-button [matMenuTriggerFor]="menu">
                 <mat-icon>more_vert</mat-icon>
             </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="addComment('comment')">
+                <span>Dodaj komentar</span>
+              </button>
+              <button mat-menu-item (click)="addComment('condition')">
+                <span>Dodaj informacijo o razmerah</span>
+              </button>
+              <button mat-menu-item (click)="addComment('warning')">
+                <span>Dodaj opozorilo</span>
+              </button>
+            </mat-menu>
         </div>
     </h1>
 
@@ -43,8 +54,9 @@
 
             <app-crag-location [crag]="crag" *ngIf="activeTab == 'lokacija'"></app-crag-location>
             <app-crag-routes [crag]="crag" *ngIf="activeTab == 'smeri'"></app-crag-routes>
-            <app-crag-comments [crag]="crag" *ngIf="activeTab == 'komentarji'"></app-crag-comments>
+            <app-crag-comments [crag]="crag" *ngIf="activeTab == 'komentarji'" [action]="action$"></app-crag-comments>
             <app-crag-info [crag]="crag" *ngIf="activeTab == 'info'"></app-crag-info>
+            <app-crag-gallery [crag]="crag" *ngIf="activeTab == 'galerija'"></app-crag-gallery>
         </div>
 
     </div>

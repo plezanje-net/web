@@ -72,6 +72,7 @@ export class AuthService {
         return new Promise((resolve, reject) => {
           if (user != null) {
             resolve({});
+            return;
           }
 
           const success = new Subject<any>();

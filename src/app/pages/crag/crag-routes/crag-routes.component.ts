@@ -1,8 +1,6 @@
-import { Overlay } from '@angular/cdk/overlay';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Subject } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SnackBarButtonsComponent } from 'src/app/common/snack-bar-buttons/snack-bar-buttons.component';
 import { ActivityFormComponent } from 'src/app/forms/activity-form/activity-form.component';
@@ -21,7 +19,6 @@ export class CragRoutesComponent implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private overlay: Overlay,
     private authService: AuthService
   ) { }
 
@@ -62,12 +59,10 @@ export class CragRoutesComponent implements OnInit {
     this.authService
       .guardedAction({})
       .then(() => {
-        const scrollStrategy = this.overlay.scrollStrategies.reposition();
         this.dialog.open(ActivityFormComponent, {
           data: {
             crag: this.crag,
             routes: this.selectedRoutes,
-            scrollStrategy,
           },
           autoFocus: false
         })

@@ -1,0 +1,14 @@
+.image-container {
+  padding: 12px;
+  .card {
+    padding: 8px;
+    img {
+      display: block;
+      max-height: 400px;
+      max-width: 100%;
+    }
+    .title {
+      padding-top: 4px;
+    }
+  }
+}

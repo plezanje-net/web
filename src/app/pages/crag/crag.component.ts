@@ -3,10 +3,13 @@ import { DataError } from 'src/app/types/data-error';
 import { Apollo, gql } from 'apollo-angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LayoutService } from 'src/app/services/layout.service';
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 import { Tab } from '../../types/tab';
-import { Location } from '@angular/common';
+import { AuthService } from 'src/app/auth/auth.service';
+import { Overlay } from '@angular/cdk/overlay';
+import { MatDialog } from '@angular/material/dialog';
+import { CommentFormComponent } from 'src/app/forms/comment-form/comment-form.component';
 
 @Component({
   selector: 'app-crag',
@@ -21,6 +24,8 @@ export class CragComponent implements OnInit {
   crag: any;
 
   map: any;
+
+  action$ = new Subject<string>();
 
   tabs: Array<Tab> = [
     {
@@ -49,6 +54,9 @@ export class CragComponent implements OnInit {
 
   constructor(
     private layoutService: LayoutService,
+    private authService: AuthService,
+    private overlay: Overlay,
+    private dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
     private apollo: Apollo,
     private router: Router
@@ -116,6 +124,10 @@ export class CragComponent implements OnInit {
                     fullName
                   }
                 }
+                images {
+                  title,
+                  path
+                }
               }
           }
         `
@@ -133,6 +145,20 @@ export class CragComponent implements OnInit {
         this.activeTab = params.tab;
       } else {
         this.activeTab = "smeri";
+      }
+    });
+
+    this.action$.subscribe((action) => {
+      switch (action) {
+        case "add-comment":
+          this.addComment("comment")
+          break;
+        case "add-condition":
+          this.addComment("condition")
+          break;
+        case "add-warning":
+          this.addComment("warning")
+          break;
       }
     });
   }
@@ -180,6 +206,20 @@ export class CragComponent implements OnInit {
     }
 
     this.router.navigate(routeParams);
+  }
+
+  addComment(type: string) {
+    this.authService
+      .guardedAction({})
+      .then(() => {
+        this.dialog.open(CommentFormComponent, {
+          data: {
+            crag: this.crag,
+            type: type,
+          },
+          autoFocus: false
+        })
+      })
   }
 
 

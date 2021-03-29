@@ -52,6 +52,8 @@ import { ActivityFormComponent } from './forms/activity-form/activity-form.compo
 import { ActivityFormRouteComponent } from './forms/activity-form/activity-form-route/activity-form-route.component';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatMomentDateModule, MomentDateAdapter } from '@angular/material-moment-adapter';
+import { CragGalleryComponent } from './pages/crag/crag-gallery/crag-gallery.component';
+import { CommentFormComponent } from './forms/comment-form/comment-form.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill'
@@ -85,7 +87,9 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     CragWarningsComponent,
     SnackBarButtonsComponent,
     ActivityFormComponent,
-    ActivityFormRouteComponent
+    ActivityFormRouteComponent,
+    CragGalleryComponent,
+    CommentFormComponent
   ],
   imports: [
     BrowserModule,
