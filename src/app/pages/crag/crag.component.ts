@@ -218,6 +218,8 @@ export class CragComponent implements OnInit {
             type: type,
           },
           autoFocus: false
+        }).afterClosed().subscribe(() => {
+          console.log("AOAOAOAO")
         })
       })
   }

@@ -7,10 +7,7 @@
 <form [formGroup]="commentForm" (submit)="save()">
 
   <div fxLayout="row">
-    <mat-form-field fxFlex="100">
-      <mat-label>Komentar</mat-label>
-      <textarea matInput formControlName="content"></textarea>
-    </mat-form-field>
+    <app-editor fxFlex="100" placeholder="Komentar" [control]="commentForm.controls.content"></app-editor>
   </div>
 
   <mat-dialog-actions fxLayout="row">
