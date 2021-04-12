@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Crag } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-crag-gallery',
@@ -7,7 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class CragGalleryComponent implements OnInit {
 
-  @Input() crag: any;
+  @Input() crag: Crag;
 
   constructor() { }
 

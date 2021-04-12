@@ -9,12 +9,35 @@ const uri = environment.apiUrl;
 export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
   return {
     link: httpLink.create({ uri }),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Crag: {
+          fields: {
+            comments: {
+              merge(existing, incoming) {
+                return incoming;
+              }
+            },
+            warnings: {
+              merge(existing, incoming) {
+                return incoming;
+              }
+            },
+            conditions: {
+              merge(existing, incoming) {
+                return incoming;
+              }
+            },
+          }
+        },
+      },
+    }),
     defaultOptions: {
       watchQuery: {
         errorPolicy: 'all'
-      }
-    }
+      },
+    },
+
   };
 }
 

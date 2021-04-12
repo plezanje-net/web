@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SnackBarButtonsComponent } from 'src/app/common/snack-bar-buttons/snack-bar-buttons.component';
 import { ActivityFormComponent } from 'src/app/forms/activity-form/activity-form.component';
+import { Crag } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-crag-routes',
@@ -12,7 +13,7 @@ import { ActivityFormComponent } from 'src/app/forms/activity-form/activity-form
 })
 export class CragRoutesComponent implements OnInit {
 
-  @Input() crag: any;
+  @Input() crag: Crag;
 
   selectedRoutes: any[] = [];
 

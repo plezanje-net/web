@@ -1,0 +1,63 @@
+query CragBySlug($crag: String!) {
+  cragBySlug(slug: $crag) {
+    id
+    slug
+    name
+    lat
+    lon
+    access
+    description
+    area {
+      id
+      name
+    }
+    country {
+      id
+      name
+      slug
+    }
+    sectors {
+      id
+      name
+      label
+      routes {
+        id
+        name
+        grade
+        length
+      }
+    }
+    comments {
+      id
+      content
+      created
+      user {
+        id
+        fullName
+      }
+    }
+    conditions {
+      id
+      content
+      created
+      user {
+        id
+        fullName
+      }
+    }
+    warnings {
+      id
+      content
+      created
+      user {
+        id
+        fullName
+      }
+    }
+    images {
+      id
+      title
+      path
+    }
+  }
+}

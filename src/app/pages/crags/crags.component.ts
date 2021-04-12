@@ -6,39 +6,10 @@ import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { CragFormComponent } from 'src/app/forms/crag-form/crag-form.component';
+import { CragsQuery, CragsGQL, Country, Area, Crag, CountriesTocQuery } from '../../../generated/graphql';
+import { GraphQLError } from 'graphql';
 
 declare var ol: any;
-
-const CragsQuery = gql`
-  query CragsQuery($country: String!, $area: String) {
-    countryBySlug(slug: $country) {
-      id,
-      name,
-      slug,
-      code,
-      crags(area: $area) {
-        id,
-        slug,
-        name,
-        nrRoutes,
-        orientation,
-        lon,
-        lat,
-        country {
-          id,
-          name,
-          slug
-        },
-        minGrade,
-        maxGrade
-      },
-      areas {
-        id,
-        name
-      }
-    }
-  }
-`
 
 @Component({
   selector: 'app-crags',
@@ -52,20 +23,20 @@ export class CragsComponent implements OnInit {
   cragsLoading: boolean = false;
   error: DataError = null;
 
-  countries: any[];
-  country: any;
+  countries: CragsQuery['countryBySlug'][];
+  country: CragsQuery['countryBySlug'];
 
-  crags$ = new BehaviorSubject<any[]>([]);
+  crags$ = new BehaviorSubject<CragsQuery['countryBySlug']['crags']>([]);
 
-  area: string;
+  area: Area;
 
   map: any;
 
   constructor(
     private layoutService: LayoutService,
     private activatedRoute: ActivatedRoute,
-    private apollo: Apollo,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cragsGQL: CragsGQL
   ) { }
 
   ngOnInit(): void {
@@ -83,12 +54,9 @@ export class CragsComponent implements OnInit {
       this.cragsLoading = true;
       this.area = params.area;
 
-      this.apollo.query({
-        query: CragsQuery,
-        variables: {
-          country: params.country,
-          area: params.area
-        }
+      this.cragsGQL.fetch({
+        country: params.country,
+        area: params.area
       }).subscribe(result => {
         this.loading = false;
         this.cragsLoading = false;
@@ -96,13 +64,13 @@ export class CragsComponent implements OnInit {
         if (result.errors != null) {
           this.queryError(result.errors)
         } else {
-          this.querySuccess(result.data);
+          this.querySuccess(result.data.countryBySlug);
         }
       })
     })
   }
 
-  queryError(errors: any) {
+  queryError(errors: readonly GraphQLError[]) {
     if (errors.length > 0 && errors[0].message == 'entity_not_found') {
       this.error = {
         message: 'Država ne obstaja v bazi.'
@@ -115,8 +83,8 @@ export class CragsComponent implements OnInit {
     }
   }
 
-  querySuccess(data: any) {
-    this.country = data.countryBySlug;
+  querySuccess(country: CragsQuery['countryBySlug']) {
+    this.country = country;
 
     this.crags$.next(this.country.crags);
 

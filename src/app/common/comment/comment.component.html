@@ -1,0 +1,9 @@
+<div class="card padding comment" [ngClass]="commentType" fxLayout="column" fxLayoutGap="8px">
+  <div fxFlex [innerHTML]="comment.content"></div>
+  <div fxFlex fxLayout="row" fxLayoutAlign="end center" class="author" >
+    <div [class.actions]="isAuthor()">
+      {{ comment.user?.fullName }}, {{ comment.created | amDateFormat: 'D.M.Y H:mm' }}
+        <app-comment-options *ngIf="isAuthor()" [comment]="comment"></app-comment-options>
+    </div>
+  </div>
+</div>

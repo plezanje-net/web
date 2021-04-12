@@ -10,6 +10,9 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { Overlay } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 import { CommentFormComponent } from 'src/app/forms/comment-form/comment-form.component';
+import { CragBySlugGQL, CragBySlugQuery } from 'src/generated/graphql';
+import { ApolloError } from '@apollo/client/errors';
+import { GraphQLError } from 'graphql';
 
 @Component({
   selector: 'app-crag',
@@ -21,7 +24,7 @@ export class CragComponent implements OnInit {
   loading: boolean = true;
   error: DataError = null;
 
-  crag: any;
+  crag: CragBySlugQuery['cragBySlug'];
 
   map: any;
 
@@ -59,7 +62,8 @@ export class CragComponent implements OnInit {
     private dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
     private apollo: Apollo,
-    private router: Router
+    private router: Router,
+    private cragBySlugGQL: CragBySlugGQL
   ) { }
 
   ngOnInit(): void {
@@ -73,71 +77,15 @@ export class CragComponent implements OnInit {
 
       this.loading = true;
 
-      this.apollo.watchQuery({
-        query: gql`
-          {
-            cragBySlug(slug: "${params.crag}") {
-                id,
-                slug,
-                name,
-                lat,
-                lon,
-                access,
-                description,
-                area {
-                  name
-                },
-                country {
-                  id,
-                  name,
-                  slug
-                },
-                sectors {
-                  id,
-                  name,
-                  label,
-                  routes {
-                    id,
-                    name,
-                    grade,
-                    length
-                  }
-                },
-                comments {
-                  content,
-                  created,
-                  user {
-                    fullName
-                  }
-                },
-                conditions {
-                  content,
-                  created,
-                  user {
-                    fullName
-                  }
-                },
-                warnings {
-                  content,
-                  created,
-                  user {
-                    fullName
-                  }
-                }
-                images {
-                  title,
-                  path
-                }
-              }
-          }
-        `
+      this.cragBySlugGQL.watch({
+        crag: params.crag
       }).valueChanges.subscribe(result => {
         this.loading = false;
 
         if (result.errors != null) {
           this.queryError(result.errors)
         } else {
-          this.querySuccess(result.data);
+          this.querySuccess(result.data.cragBySlug);
         }
       })
 
@@ -163,7 +111,7 @@ export class CragComponent implements OnInit {
     });
   }
 
-  queryError(errors: any) {
+  queryError(errors: readonly GraphQLError[]) {
     if (errors.length > 0 && errors[0].message == 'entity_not_found') {
       this.error = {
         message: 'Plezališče ne obstaja v bazi.'
@@ -176,8 +124,8 @@ export class CragComponent implements OnInit {
     }
   }
 
-  querySuccess(data: any) {
-    this.crag = data.cragBySlug;
+  querySuccess(cragBySlug: CragBySlugQuery['cragBySlug']) {
+    this.crag = cragBySlug;
 
     this.layoutService.$breadcrumbs.next([
       {
@@ -195,7 +143,7 @@ export class CragComponent implements OnInit {
   }
 
   setActiveTab(tab: Tab) {
-    let routeParams = [
+    let routeParams: any[] = [
       "/plezalisca/",
       this.crag.country.slug,
       this.crag.slug
@@ -219,7 +167,6 @@ export class CragComponent implements OnInit {
           },
           autoFocus: false
         }).afterClosed().subscribe(() => {
-          console.log("AOAOAOAO")
         })
       })
   }

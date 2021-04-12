@@ -7,7 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "private": true,
   "dependencies": {
@@ -40,6 +41,11 @@
     "@angular-devkit/build-angular": "^0.1002.0",
     "@angular/cli": "~10.0.8",
     "@angular/compiler-cli": "~10.0.14",
+    "@graphql-codegen/cli": "1.21.3",
+    "@graphql-codegen/named-operations-object": "^1.18.1",
+    "@graphql-codegen/typescript": "1.21.1",
+    "@graphql-codegen/typescript-apollo-angular": "2.3.2",
+    "@graphql-codegen/typescript-operations": "1.17.15",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",

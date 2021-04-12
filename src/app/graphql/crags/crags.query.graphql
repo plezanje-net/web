@@ -1,0 +1,28 @@
+query Crags($country: String!, $area: String) {
+    countryBySlug(slug: $country) {
+      id,
+      name,
+      slug,
+      code,
+      crags(area: $area) {
+        id,
+        slug,
+        name,
+        nrRoutes,
+        orientation,
+        lon,
+        lat,
+        country {
+          id,
+          name,
+          slug
+        },
+        minGrade,
+        maxGrade
+      },
+      areas {
+        id,
+        name
+      }
+    }
+  }

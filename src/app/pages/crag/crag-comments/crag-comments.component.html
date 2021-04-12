@@ -1,25 +1,20 @@
 <h3 fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column">
-    <span fxFlex="100">Komentarji o razmerah</span>
-    <div fxFlex>
-        <button mat-button color="primary" (click)="action.next('add-condition')">Dodaj komentar o razmerah</button>
-    </div>
+  <span fxFlex="100">Komentarji o razmerah</span>
+  <div fxFlex>
+    <button mat-button color="primary" (click)="action.next('add-condition')">Dodaj komentar o razmerah</button>
+  </div>
 </h3>
-<div *ngFor="let comment of crag.conditions" class="card padding condition" fxLayout="column" fxLayoutGap="8px">
-    <div [innerHTML]="comment.content" fxFlex></div>
-    <div fxFlex fxLayout="row" fxLayoutAlign="end center" class="author">
-        <div>{{ comment.user?.fullName }}, {{ comment.created | amDateFormat: 'D.M.Y H:mm' }}</div>
-    </div>
-</div>
+<ng-container *ngFor="let comment of crag.conditions">
+  <app-comment [comment]="comment" commentType="condition"></app-comment>
+</ng-container>
 
 <h3 fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column">
-    <span fxFlex="100">Komentarji uporabnikov</span>
-    <div fxFlex>
-        <button mat-button color="primary" (click)="action.next('add-comment')">Dodaj komentar</button>
-    </div>
+  <span fxFlex="100">Komentarji uporabnikov</span>
+  <div fxFlex>
+    <button mat-button color="primary" (click)="action.next('add-comment')">Dodaj komentar</button>
+  </div>
 </h3>
-<div *ngFor="let comment of crag.comments" class="card padding comment" fxLayout="column" fxLayoutGap="8px">
-    <div [innerHTML]="comment.content" fxFlex></div>
-    <div fxFlex fxLayout="row" fxLayoutAlign="end center" class="author">
-        <div>{{ comment.user?.fullName }}, {{ comment.created | amDateFormat: 'D.M.Y H:mm' }}</div>
-    </div>
-</div>
+<ng-container *ngFor="let comment of crag.comments">
+  <app-comment [comment]="comment"></app-comment>
+</ng-container>
+

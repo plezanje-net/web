@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { Crag } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-crag-location',
@@ -8,7 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class CragLocationComponent implements OnInit {
 
-  @Input() crag: any;
+  @Input() crag: Crag;
 
   @Input() id: string = 'default';
 

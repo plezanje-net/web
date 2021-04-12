@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { gql, Apollo } from 'apollo-angular';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { CountriesTocGQL, CountriesTocQuery, Country } from '../../../../generated/graphql';
 
 @Component({
   selector: 'app-crags-toc',
@@ -9,34 +11,17 @@ import { gql, Apollo } from 'apollo-angular';
 })
 export class CragsTocComponent implements OnInit {
 
-  @Input() country: any;
+  @Input() country: Country;
   @Input('area') areaId: string = '';
 
-  countries: any[];
+  countries: CountriesTocQuery['countries'];
 
   showAllCountries: boolean = false;
 
-  constructor(private apollo: Apollo, private router: Router) { }
+  constructor(private router: Router, private countriesTocGQL: CountriesTocGQL) { }
 
   ngOnInit(): void {
-    this.apollo.watchQuery({
-      query: gql`
-        {
-          countries(input: {
-            hasCrags: true,
-            orderBy: {
-              field: "nrCrags",
-              direction: "DESC"
-            }
-          }) {
-            name,
-            slug,
-            nrCrags
-          }
-        }
-      `,
-      errorPolicy: 'all'
-    }).valueChanges.subscribe((result: any) => this.countries = result.data.countries)
+    this.countriesTocGQL.watch().valueChanges.subscribe((result) => this.countries = result.data.countries);
   }
 
   changeArea(id: string) {

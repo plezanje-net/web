@@ -28,6 +28,8 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.authService.getCurrentUser();
+
     this.authService.openLogin$.subscribe((req) => {
 
       if (!this.router.navigated) {

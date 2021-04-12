@@ -56,6 +56,9 @@ import { CragGalleryComponent } from './pages/crag/crag-gallery/crag-gallery.com
 import { CommentFormComponent } from './forms/comment-form/comment-form.component';
 import { EditorComponent } from './forms/editor/editor.component';
 import { EditorModule } from '@tinymce/tinymce-angular';
+import { CommentComponent } from './common/comment/comment.component';
+import { CommentOptionsComponent } from './common/comment/comment-options/comment-options.component';
+import { ConfirmationDialogComponent } from './common/confirmation-dialog/confirmation-dialog.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill'
@@ -92,7 +95,10 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ActivityFormRouteComponent,
     CragGalleryComponent,
     CommentFormComponent,
-    EditorComponent
+    EditorComponent,
+    CommentComponent,
+    CommentOptionsComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,

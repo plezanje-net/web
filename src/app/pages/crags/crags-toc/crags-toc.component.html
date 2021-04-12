@@ -42,7 +42,7 @@
         </mat-form-field>
     </div>
     <div fxFlex="100">
-        <mat-form-field class="no-hint infix-width-auto">
+        <mat-form-field class="no-hint infix-width-auto" *ngIf="country.areas">
             <mat-label>Regija</mat-label>
             <mat-select [value]="areaId" (selectionChange)="changeArea($event.value)">
                 <mat-option [value]="null">Vse regije</mat-option>

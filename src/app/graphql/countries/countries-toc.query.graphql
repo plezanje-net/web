@@ -1,0 +1,9 @@
+query CountriesToc {
+  countries(
+    input: { hasCrags: true, orderBy: { field: "nrCrags", direction: "DESC" } }
+  ) {
+    name
+    slug
+    nrCrags
+  }
+}
