@@ -30,6 +30,11 @@ export type Area = {
   nrCrags: Scalars['Int'];
 };
 
+export type ClubMember = {
+  __typename?: 'ClubMember';
+  admin: Scalars['Boolean'];
+};
+
 export type Comment = {
   __typename?: 'Comment';
   id: Scalars['String'];
@@ -496,8 +501,20 @@ export type User = {
   lastname: Scalars['String'];
   www?: Maybe<Scalars['String']>;
   roles: Array<Scalars['String']>;
+  clubs: Array<ClubMember>;
   fullName: Scalars['String'];
 };
+
+export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ProfileQuery = (
+  { __typename?: 'Query' }
+  & { profile: (
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'email' | 'roles'>
+  ) }
+);
 
 export type CreateCommentMutationVariables = Exact<{
   input: CreateCommentInput;
@@ -622,6 +639,26 @@ export type CragsQuery = (
   ) }
 );
 
+export const ProfileDocument = gql`
+    query Profile {
+  profile {
+    id
+    email
+    roles
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ProfileGQL extends Apollo.Query<ProfileQuery, ProfileQueryVariables> {
+    document = ProfileDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const CreateCommentDocument = gql`
     mutation CreateComment($input: CreateCommentInput!) {
   createComment(input: $input) {
@@ -814,6 +851,7 @@ export const CragsDocument = gql`
   }
 export const namedOperations = {
   Query: {
+    Profile: 'Profile',
     CountriesToc: 'CountriesToc',
     CragBySlug: 'CragBySlug',
     Crags: 'Crags'
