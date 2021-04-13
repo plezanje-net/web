@@ -9,6 +9,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule, MatFormFieldDefaultOptions, MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
@@ -59,6 +60,12 @@ import { EditorModule } from '@tinymce/tinymce-angular';
 import { CommentComponent } from './common/comment/comment.component';
 import { CommentOptionsComponent } from './common/comment/comment-options/comment-options.component';
 import { ConfirmationDialogComponent } from './common/confirmation-dialog/confirmation-dialog.component';
+import { RouteComponent } from './pages/route/route.component';
+import { RouteInfoComponent } from './pages/route/route-info/route-info.component';
+import { DistributionChartComponent } from './common/distribution-chart/distribution-chart.component';
+import { RoutePicturesComponent } from './pages/route/route-pictures/route-pictures.component';
+import { RouteCommentsComponent } from './pages/route/route-comments/route-comments.component';
+import { RouteGradesComponent } from './pages/route/route-grades/route-grades.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill'
@@ -98,7 +105,13 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     EditorComponent,
     CommentComponent,
     CommentOptionsComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    RouteComponent,
+    RouteInfoComponent,
+    DistributionChartComponent,
+    RoutePicturesComponent,
+    RouteCommentsComponent,
+    RouteGradesComponent,
   ],
   imports: [
     BrowserModule,
@@ -124,7 +137,8 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     HttpClientModule,
     MatMomentDateModule,
     MomentModule,
-    EditorModule
+    MatCardModule,
+    EditorModule,
   ],
   providers: [
     AuthGuard,

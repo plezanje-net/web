@@ -1,0 +1,12 @@
+<h3 *ngIf="comments.length" fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column">
+    <span fxFlex="100">Komentarji uporabnikov</span>
+    <div fxFlex>
+        <button mat-button color="primary">Dodaj komentar</button>
+    </div>
+</h3>
+<div *ngFor="let comment of comments" class="card padding comment" fxLayout="column" fxLayoutGap="8px">
+    <div [innerHTML]="comment.content" fxFlex></div>
+    <div fxFlex fxLayout="row" fxLayoutAlign="end center" class="author">
+        <div>{{ comment.user.firstname + ' ' + comment.user.lastname }}, {{ comment.created | amDateFormat: 'D. M. Y H:mm' }}</div>
+    </div>
+</div>

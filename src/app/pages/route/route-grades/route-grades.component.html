@@ -1,0 +1,7 @@
+<div *ngIf="grades.length > 0">
+  <div *ngFor="let grade of grades" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="12px">
+    <div>{{ grade.grade }}</div>
+    <div>{{ grade.user.firstname + ' ' + grade.user.lastname }}</div>
+    <div class="grade-date">{{ grade.updated || grade.created | amDateFormat:'D. M. Y' }}</div>
+  </div>
+</div>
