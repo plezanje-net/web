@@ -1,0 +1,27 @@
+.distribution-container {
+
+}
+
+.distribution-bar-wrapper {
+  margin-bottom: 5px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.distribution-bar-label {
+  width: 20px;
+  margin-right: 10px;
+}
+
+.distribution-bar {
+  height: 12px;
+  border: 1px solid grey;
+  background-color: white;
+}
+
+.distribution-bar-inner {
+  height: 100%;
+  background-color: rgb(33, 150, 243); // TODO: replace with variable
+}
