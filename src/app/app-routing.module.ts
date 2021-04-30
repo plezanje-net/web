@@ -9,6 +9,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { RegisterComponent } from './pages/account/register/register.component';
 import { ConfirmAccountComponent } from './pages/account/confirm-account/confirm-account.component';
 import { SelectPasswordComponent } from './pages/account/select-password/select-password.component';
+import { RouteComponent } from './pages/route/route.component';
 
 const routes: Routes = [
   {
@@ -44,6 +45,10 @@ const routes: Routes = [
   {
     path: 'plezalisca/:country/:crag',
     component: CragComponent,
+  },
+  {
+    path: 'plezalisca/:country/:crag/:route',
+    component: RouteComponent,
   },
   {
     path: '**',
