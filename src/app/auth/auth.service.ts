@@ -36,11 +36,11 @@ export class AuthService {
       return Promise.resolve(null);
     }
 
-    if (this.currentUser) {
+    if (this.currentUser != null) {
       return Promise.resolve(this.currentUser);
     }
 
-    this.profileGQL.fetch().toPromise().then((result) => {
+    return this.profileGQL.fetch().toPromise().then((result) => {
       this.currentUser = result.data.profile;
       return this.currentUser;
     }).catch(() => {

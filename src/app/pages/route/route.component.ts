@@ -101,7 +101,6 @@ export class RouteComponent implements OnInit {
 
   querySuccess(data: any): void {
     this.route = data.route;
-    console.log(this.route);
 
     this.layoutService.$breadcrumbs.next([
       {

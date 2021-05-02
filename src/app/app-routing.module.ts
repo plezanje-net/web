@@ -10,6 +10,9 @@ import { RegisterComponent } from './pages/account/register/register.component';
 import { ConfirmAccountComponent } from './pages/account/confirm-account/confirm-account.component';
 import { SelectPasswordComponent } from './pages/account/select-password/select-password.component';
 import { RouteComponent } from './pages/route/route.component';
+import { ActivityLogComponent } from './pages/activity/activity-log/activity-log.component';
+import { ActivityRoutesComponent } from './pages/activity/activity-routes/activity-routes.component';
+import { ActivityStatisticsComponent } from './pages/activity/activity-statistics/activity-statistics.component';
 
 const routes: Routes = [
   {
@@ -23,6 +26,21 @@ const routes: Routes = [
   {
     path: 'moj-profil',
     component: ProfileComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'plezalni-dnevnik',
+    component: ActivityLogComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'plezalni-dnevnik/vzponi',
+    component: ActivityRoutesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'plezalni-dnevnik/statistika',
+    component: ActivityStatisticsComponent,
     canActivate: [AuthGuard]
   },
   {

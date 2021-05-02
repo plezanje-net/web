@@ -66,6 +66,11 @@ import { DistributionChartComponent } from './common/distribution-chart/distribu
 import { RoutePicturesComponent } from './pages/route/route-pictures/route-pictures.component';
 import { RouteCommentsComponent } from './pages/route/route-comments/route-comments.component';
 import { RouteGradesComponent } from './pages/route/route-grades/route-grades.component';
+import { ActivityLogComponent } from './pages/activity/activity-log/activity-log.component';
+import { ActivityRoutesComponent } from './pages/activity/activity-routes/activity-routes.component';
+import { ActivityStatisticsComponent } from './pages/activity/activity-statistics/activity-statistics.component';
+import { ActivityListComponent } from './pages/activity/partials/activity-list/activity-list.component';
+import { ActivityHeaderComponent } from './pages/activity/partials/activity-header/activity-header.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill'
@@ -112,6 +117,11 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     RoutePicturesComponent,
     RouteCommentsComponent,
     RouteGradesComponent,
+    ActivityLogComponent,
+    ActivityRoutesComponent,
+    ActivityStatisticsComponent,
+    ActivityListComponent,
+    ActivityHeaderComponent,
   ],
   imports: [
     BrowserModule,

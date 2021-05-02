@@ -1,0 +1,17 @@
+query MyActivities($pageNumber: Int) {
+  myActivities(input: { pageNumber: $pageNumber }) {
+    items {
+      name
+      date,
+      routes {
+        grade
+      }
+    }
+    meta {
+      itemCount
+      pageCount
+      pageNumber
+      pageSize
+    }
+  }
+}

@@ -18,6 +18,25 @@ export type Scalars = {
 
 
 
+export type Activity = {
+  __typename?: 'Activity';
+  name: Scalars['String'];
+  date: Scalars['DateTime'];
+  routes: Array<ActivityRoute>;
+  user: User;
+};
+
+export type ActivityRoute = {
+  __typename?: 'ActivityRoute';
+  route: Route;
+  ascentType: Scalars['String'];
+  difficulty?: Maybe<Scalars['String']>;
+  grade?: Maybe<Scalars['Float']>;
+  date?: Maybe<Scalars['DateTime']>;
+  notes?: Maybe<Scalars['String']>;
+  user: User;
+};
+
 export type Area = {
   __typename?: 'Area';
   id: Scalars['String'];
@@ -87,6 +106,7 @@ export type Crag = {
   peak?: Maybe<Peak>;
   country: Country;
   sectors: Array<Sector>;
+  routes: Array<Route>;
   nrRoutes: Scalars['Int'];
   minGrade?: Maybe<Scalars['String']>;
   maxGrade?: Maybe<Scalars['String']>;
@@ -144,6 +164,21 @@ export type CreateSectorInput = {
 };
 
 
+export type FindActivitiesInput = {
+  userId?: Maybe<Scalars['String']>;
+  orderBy?: Maybe<OrderByInput>;
+  pageNumber?: Maybe<Scalars['Int']>;
+  pageSize?: Maybe<Scalars['Int']>;
+};
+
+export type FindActivityRoutesInput = {
+  userId?: Maybe<Scalars['String']>;
+  ascentType?: Maybe<Scalars['String']>;
+  orderBy?: Maybe<OrderByInput>;
+  pageNumber?: Maybe<Scalars['Int']>;
+  pageSize?: Maybe<Scalars['Int']>;
+};
+
 export type FindCountriesInput = {
   hasCrags?: Maybe<Scalars['Boolean']>;
   orderBy: OrderByInput;
@@ -154,6 +189,8 @@ export type Grade = {
   id: Scalars['String'];
   grade: Scalars['Float'];
   user: User;
+  created: Scalars['DateTime'];
+  updated: Scalars['DateTime'];
   route: Route;
 };
 
@@ -338,6 +375,26 @@ export type OrderByInput = {
   direction: Scalars['String'];
 };
 
+export type PaginatedActivities = {
+  __typename?: 'PaginatedActivities';
+  items: Array<Activity>;
+  meta: PaginationMeta;
+};
+
+export type PaginatedActivityRoutes = {
+  __typename?: 'PaginatedActivityRoutes';
+  items: Array<ActivityRoute>;
+  meta: PaginationMeta;
+};
+
+export type PaginationMeta = {
+  __typename?: 'PaginationMeta';
+  itemCount: Scalars['Float'];
+  pageCount: Scalars['Float'];
+  pageSize: Scalars['Float'];
+  pageNumber: Scalars['Float'];
+};
+
 export type PasswordInput = {
   id: Scalars['String'];
   token: Scalars['String'];
@@ -375,8 +432,11 @@ export type Query = {
   crag: Crag;
   cragBySlug: Crag;
   crags: Array<Crag>;
+  route: Route;
   profile: User;
   users: Array<User>;
+  myActivities: PaginatedActivities;
+  myActivityRoutes: PaginatedActivityRoutes;
 };
 
 
@@ -404,6 +464,21 @@ export type QueryCragsArgs = {
   country?: Maybe<Scalars['String']>;
 };
 
+
+export type QueryRouteArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryMyActivitiesArgs = {
+  input?: Maybe<FindActivitiesInput>;
+};
+
+
+export type QueryMyActivityRoutesArgs = {
+  input?: Maybe<FindActivityRoutesInput>;
+};
+
 export type RegisterInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -423,13 +498,16 @@ export type Route = {
   difficulty: Scalars['String'];
   grade?: Maybe<Scalars['Float']>;
   length: Scalars['String'];
-  author: Scalars['String'];
+  author?: Maybe<Scalars['String']>;
   status: Scalars['Int'];
+  crag: Crag;
   sector: Sector;
   grades: Array<Grade>;
   pitches: Array<Pitch>;
   comments: Array<Comment>;
   images: Array<Image>;
+  warnings: Array<Comment>;
+  conditions: Array<Comment>;
 };
 
 export type Sector = {
@@ -504,6 +582,29 @@ export type User = {
   clubs: Array<ClubMember>;
   fullName: Scalars['String'];
 };
+
+export type MyActivitiesQueryVariables = Exact<{
+  pageNumber?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type MyActivitiesQuery = (
+  { __typename?: 'Query' }
+  & { myActivities: (
+    { __typename?: 'PaginatedActivities' }
+    & { items: Array<(
+      { __typename?: 'Activity' }
+      & Pick<Activity, 'name' | 'date'>
+      & { routes: Array<(
+        { __typename?: 'ActivityRoute' }
+        & Pick<ActivityRoute, 'grade'>
+      )> }
+    )>, meta: (
+      { __typename?: 'PaginationMeta' }
+      & Pick<PaginationMeta, 'itemCount' | 'pageCount' | 'pageNumber' | 'pageSize'>
+    ) }
+  ) }
+);
 
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -639,6 +740,36 @@ export type CragsQuery = (
   ) }
 );
 
+export const MyActivitiesDocument = gql`
+    query MyActivities($pageNumber: Int) {
+  myActivities(input: {pageNumber: $pageNumber}) {
+    items {
+      name
+      date
+      routes {
+        grade
+      }
+    }
+    meta {
+      itemCount
+      pageCount
+      pageNumber
+      pageSize
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class MyActivitiesGQL extends Apollo.Query<MyActivitiesQuery, MyActivitiesQueryVariables> {
+    document = MyActivitiesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const ProfileDocument = gql`
     query Profile {
   profile {
@@ -851,6 +982,7 @@ export const CragsDocument = gql`
   }
 export const namedOperations = {
   Query: {
+    MyActivities: 'MyActivities',
     Profile: 'Profile',
     CountriesToc: 'CountriesToc',
     CragBySlug: 'CragBySlug',

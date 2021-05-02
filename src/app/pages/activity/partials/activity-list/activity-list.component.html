@@ -1,0 +1,18 @@
+<app-loader *ngIf="loading"></app-loader>
+
+<div class="card" *ngIf="!loading">
+    <div fxLayout="row" fxLayoutAlign="start center" class="row header">
+        <div fxFlex="100px">Datum</div>
+        <div fxFlex="100">Lokacija</div>
+        <div fxFlex="100px">Število smeri</div>
+    </div>
+    <div *ngFor="let activity of activities" [routerLink]="['/plezalni-dnevnik/plezalni-dan/', activity.id]"
+        fxLayout="row" fxLayoutAlign="start center" class="row">
+        <div fxFlex="100px" fxFlex.lt-md>{{ activity.date | amDateFormat: 'D.M.YYYY' }}</div>
+
+        <div fxFlex="100">
+            {{ activity.name }}
+        </div>
+        <div fxFlex="100px">{{ activity.routes.length }}</div>
+    </div>
+</div>
