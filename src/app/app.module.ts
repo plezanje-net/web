@@ -78,6 +78,7 @@ import { ActivityRoutesComponent } from './pages/activity/activity-routes/activi
 import { ActivityStatisticsComponent } from './pages/activity/activity-statistics/activity-statistics.component';
 import { ActivityListComponent } from './pages/activity/partials/activity-list/activity-list.component';
 import { ActivityHeaderComponent } from './pages/activity/partials/activity-header/activity-header.component';
+import { CragImageComponent } from './pages/crag/crag-image/crag-image.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -129,6 +130,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ActivityStatisticsComponent,
     ActivityListComponent,
     ActivityHeaderComponent,
+    CragImageComponent,
   ],
   imports: [
     BrowserModule,
