@@ -17,10 +17,9 @@ import { GraphQLError } from 'graphql';
 @Component({
   selector: 'app-crag',
   templateUrl: './crag.component.html',
-  styleUrls: ['./crag.component.scss']
+  styleUrls: ['./crag.component.scss'],
 })
 export class CragComponent implements OnInit {
-
   loading: boolean = true;
   error: DataError = null;
 
@@ -33,27 +32,27 @@ export class CragComponent implements OnInit {
   tabs: Array<Tab> = [
     {
       slug: 'lokacija',
-      label: 'Lokacija & dostop'
+      label: 'Lokacija & dostop',
     },
     {
       slug: 'smeri',
-      label: 'Smeri'
+      label: 'Smeri',
     },
     {
       slug: 'komentarji',
-      label: 'Komentarji'
+      label: 'Komentarji',
     },
     {
       slug: 'info',
-      label: 'Info'
+      label: 'Info',
     },
     {
       slug: 'galerija',
-      label: 'Galerija'
-    }
+      label: 'Galerija',
+    },
   ];
 
-  activeTab: string = "smeri";
+  activeTab: string = 'smeri';
 
   constructor(
     private layoutService: LayoutService,
@@ -64,48 +63,49 @@ export class CragComponent implements OnInit {
     private apollo: Apollo,
     private router: Router,
     private cragBySlugGQL: CragBySlugGQL
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.layoutService.$breadcrumbs.next([
       {
-        name: "Plezališča"
-      }
-    ])
+        name: 'Plezališča',
+      },
+    ]);
 
     this.activatedRoute.params.subscribe((params) => {
-
       this.loading = true;
 
-      this.cragBySlugGQL.watch({
-        crag: params.crag
-      }).valueChanges.subscribe(result => {
-        this.loading = false;
+      this.cragBySlugGQL
+        .watch({
+          crag: params.crag,
+        })
+        .valueChanges.subscribe((result) => {
+          this.loading = false;
 
-        if (result.errors != null) {
-          this.queryError(result.errors)
-        } else {
-          this.querySuccess(result.data.cragBySlug);
-        }
-      })
+          if (result.errors != null) {
+            this.queryError(result.errors);
+          } else {
+            this.querySuccess(result.data.cragBySlug);
+          }
+        });
 
       if (params.tab != null) {
         this.activeTab = params.tab;
       } else {
-        this.activeTab = "smeri";
+        this.activeTab = 'smeri';
       }
     });
 
     this.action$.subscribe((action) => {
       switch (action) {
-        case "add-comment":
-          this.addComment("comment")
+        case 'add-comment':
+          this.addComment('comment');
           break;
-        case "add-condition":
-          this.addComment("condition")
+        case 'add-condition':
+          this.addComment('condition');
           break;
-        case "add-warning":
-          this.addComment("warning")
+        case 'add-warning':
+          this.addComment('warning');
           break;
       }
     });
@@ -114,14 +114,14 @@ export class CragComponent implements OnInit {
   queryError(errors: readonly GraphQLError[]) {
     if (errors.length > 0 && errors[0].message == 'entity_not_found') {
       this.error = {
-        message: 'Plezališče ne obstaja v bazi.'
-      }
+        message: 'Plezališče ne obstaja v bazi.',
+      };
       return;
     }
 
     this.error = {
-      message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.'
-    }
+      message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
+    };
   }
 
   querySuccess(cragBySlug: CragBySlugQuery['cragBySlug']) {
@@ -129,24 +129,24 @@ export class CragComponent implements OnInit {
 
     this.layoutService.$breadcrumbs.next([
       {
-        name: "Plezališča",
-        path: "/plezalisca"
+        name: 'Plezališča',
+        path: '/plezalisca',
       },
       {
         name: this.crag.country.name,
-        path: "/plezalisca/" + this.crag.country.slug
+        path: '/plezalisca/' + this.crag.country.slug,
       },
       {
-        name: this.crag.name
-      }
-    ])
+        name: this.crag.name,
+      },
+    ]);
   }
 
   setActiveTab(tab: Tab) {
     let routeParams: any[] = [
-      "/plezalisca/",
+      '/plezalisca/',
       this.crag.country.slug,
-      this.crag.slug
+      this.crag.slug,
     ];
 
     if (tab.slug != 'smeri') {
@@ -157,19 +157,24 @@ export class CragComponent implements OnInit {
   }
 
   addComment(type: string) {
-    this.authService
-      .guardedAction({})
-      .then(() => {
-        this.dialog.open(CommentFormComponent, {
+    this.authService.guardedAction({}).then(() => {
+      this.dialog
+        .open(CommentFormComponent, {
           data: {
             crag: this.crag,
             type: type,
           },
-          autoFocus: false
-        }).afterClosed().subscribe(() => {
+          autoFocus: false,
         })
-      })
+        .afterClosed()
+        .subscribe(() => {});
+    });
   }
 
-
+  onImageClicked() {
+    this.setActiveTab({
+      slug: 'galerija',
+      label: 'Galerija',
+    });
+  }
 }

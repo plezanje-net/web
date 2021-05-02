@@ -7,7 +7,11 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule, MatFormFieldDefaultOptions, MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import {
+  MatFormFieldModule,
+  MatFormFieldDefaultOptions,
+  MAT_FORM_FIELD_DEFAULT_OPTIONS,
+} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -52,7 +56,10 @@ import { SnackBarButtonsComponent } from './common/snack-bar-buttons/snack-bar-b
 import { ActivityFormComponent } from './forms/activity-form/activity-form.component';
 import { ActivityFormRouteComponent } from './forms/activity-form/activity-form-route/activity-form-route.component';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatMomentDateModule, MomentDateAdapter } from '@angular/material-moment-adapter';
+import {
+  MatMomentDateModule,
+  MomentDateAdapter,
+} from '@angular/material-moment-adapter';
 import { CragGalleryComponent } from './pages/crag/crag-gallery/crag-gallery.component';
 import { CommentFormComponent } from './forms/comment-form/comment-form.component';
 import { EditorComponent } from './forms/editor/editor.component';
@@ -66,9 +73,10 @@ import { DistributionChartComponent } from './common/distribution-chart/distribu
 import { RoutePicturesComponent } from './pages/route/route-pictures/route-pictures.component';
 import { RouteCommentsComponent } from './pages/route/route-comments/route-comments.component';
 import { RouteGradesComponent } from './pages/route/route-grades/route-grades.component';
+import { CragImageComponent } from './pages/crag/crag-image/crag-image.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
-  appearance: 'fill'
+  appearance: 'fill',
 };
 
 @NgModule({
@@ -112,6 +120,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     RoutePicturesComponent,
     RouteCommentsComponent,
     RouteGradesComponent,
+    CragImageComponent,
   ],
   imports: [
     BrowserModule,
@@ -144,26 +153,29 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     AuthGuard,
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-      useValue: formFieldAppearance
-    }, {
-      provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
+      useValue: formFieldAppearance,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
     },
     {
       provide: MAT_DATE_FORMATS,
       useValue: {
         parse: {
-          dateInput: "DD.MM.YYYY"
+          dateInput: 'DD.MM.YYYY',
         },
         display: {
-          dateInput: "DD.MM.YYYY",
-          monthYearLabel: "MMM YYYY",
-          dateA11yLabel: "LL",
-          monthYearA11yLabel: "MMMM YYYY"
-        }
-      }
+          dateInput: 'DD.MM.YYYY',
+          monthYearLabel: 'MMM YYYY',
+          dateA11yLabel: 'LL',
+          monthYearA11yLabel: 'MMMM YYYY',
+        },
+      },
     },
-    { provide: MAT_DATE_LOCALE, useValue: "en-GB" },
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
