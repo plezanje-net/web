@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { Crag } from 'src/generated/graphql';
 
 @Component({
@@ -8,6 +9,8 @@ import { Crag } from 'src/generated/graphql';
 })
 export class CragImageComponent implements OnInit {
   @Input() crag: Crag;
+
+  storageUrl = environment.storageUrl;
 
   constructor() {}
 
