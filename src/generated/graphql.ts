@@ -20,9 +20,16 @@ export type Scalars = {
 
 export type Activity = {
   __typename?: 'Activity';
+  id: Scalars['String'];
+  crag: Crag;
+  iceFall: IceFall;
+  peak: Peak;
   type: Scalars['String'];
   name: Scalars['String'];
   date: Scalars['DateTime'];
+  duration?: Maybe<Scalars['Int']>;
+  notes: Scalars['String'];
+  partners: Scalars['String'];
   routes: Array<ActivityRoute>;
   user: User;
 };
@@ -31,6 +38,7 @@ export type ActivityRoute = {
   __typename?: 'ActivityRoute';
   route: Route;
   ascentType: Scalars['String'];
+  name: Scalars['String'];
   difficulty?: Maybe<Scalars['String']>;
   grade?: Maybe<Scalars['Float']>;
   date?: Maybe<Scalars['DateTime']>;
@@ -115,6 +123,31 @@ export type Crag = {
   images: Array<Image>;
   warnings: Array<Comment>;
   conditions: Array<Comment>;
+};
+
+export type CreateActivityInput = {
+  date: Scalars['DateTime'];
+  name: Scalars['String'];
+  type: Scalars['String'];
+  duration?: Maybe<Scalars['Int']>;
+  notes?: Maybe<Scalars['String']>;
+  partners?: Maybe<Scalars['String']>;
+  iceFallId?: Maybe<Scalars['String']>;
+  cragId?: Maybe<Scalars['String']>;
+  peakId?: Maybe<Scalars['String']>;
+};
+
+export type CreateActivityRouteInput = {
+  name: Scalars['String'];
+  ascentType: Scalars['String'];
+  publish: Scalars['String'];
+  date: Scalars['DateTime'];
+  notes?: Maybe<Scalars['String']>;
+  partner?: Maybe<Scalars['String']>;
+  routeId?: Maybe<Scalars['String']>;
+  position?: Maybe<Scalars['Int']>;
+  grade?: Maybe<Scalars['Float']>;
+  difficulty?: Maybe<Scalars['String']>;
 };
 
 export type CreateAreaInput = {
@@ -254,6 +287,7 @@ export type Mutation = {
   recover: Scalars['Boolean'];
   setPassword: Scalars['Boolean'];
   login: TokenResponse;
+  createActivity: Activity;
 };
 
 
@@ -369,6 +403,12 @@ export type MutationSetPasswordArgs = {
 
 export type MutationLoginArgs = {
   input: LoginInput;
+};
+
+
+export type MutationCreateActivityArgs = {
+  routes: Array<CreateActivityRouteInput>;
+  input: CreateActivityInput;
 };
 
 export type OrderByInput = {
@@ -584,6 +624,20 @@ export type User = {
   fullName: Scalars['String'];
 };
 
+export type CreateActivityMutationVariables = Exact<{
+  input: CreateActivityInput;
+  routes: Array<CreateActivityRouteInput> | CreateActivityRouteInput;
+}>;
+
+
+export type CreateActivityMutation = (
+  { __typename?: 'Mutation' }
+  & { createActivity: (
+    { __typename?: 'Activity' }
+    & Pick<Activity, 'id'>
+  ) }
+);
+
 export type MyActivitiesQueryVariables = Exact<{
   pageNumber?: Maybe<Scalars['Int']>;
 }>;
@@ -741,6 +795,24 @@ export type CragsQuery = (
   ) }
 );
 
+export const CreateActivityDocument = gql`
+    mutation CreateActivity($input: CreateActivityInput!, $routes: [CreateActivityRouteInput!]!) {
+  createActivity(input: $input, routes: $routes) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateActivityGQL extends Apollo.Mutation<CreateActivityMutation, CreateActivityMutationVariables> {
+    document = CreateActivityDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const MyActivitiesDocument = gql`
     query MyActivities($pageNumber: Int) {
   myActivities(input: {pageNumber: $pageNumber}) {
@@ -991,6 +1063,7 @@ export const namedOperations = {
     Crags: 'Crags'
   },
   Mutation: {
+    CreateActivity: 'CreateActivity',
     CreateComment: 'CreateComment',
     DeleteComment: 'DeleteComment',
     UpdateComment: 'UpdateComment'
