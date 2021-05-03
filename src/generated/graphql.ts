@@ -20,6 +20,7 @@ export type Scalars = {
 
 export type Activity = {
   __typename?: 'Activity';
+  type: Scalars['String'];
   name: Scalars['String'];
   date: Scalars['DateTime'];
   routes: Array<ActivityRoute>;
@@ -594,7 +595,7 @@ export type MyActivitiesQuery = (
     { __typename?: 'PaginatedActivities' }
     & { items: Array<(
       { __typename?: 'Activity' }
-      & Pick<Activity, 'name' | 'date'>
+      & Pick<Activity, 'name' | 'date' | 'type'>
       & { routes: Array<(
         { __typename?: 'ActivityRoute' }
         & Pick<ActivityRoute, 'grade'>
@@ -746,6 +747,7 @@ export const MyActivitiesDocument = gql`
     items {
       name
       date
+      type
       routes {
         grade
       }

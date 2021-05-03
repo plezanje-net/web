@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -76,7 +77,6 @@ import { RouteGradesComponent } from './pages/route/route-grades/route-grades.co
 import { ActivityLogComponent } from './pages/activity/activity-log/activity-log.component';
 import { ActivityRoutesComponent } from './pages/activity/activity-routes/activity-routes.component';
 import { ActivityStatisticsComponent } from './pages/activity/activity-statistics/activity-statistics.component';
-import { ActivityListComponent } from './pages/activity/partials/activity-list/activity-list.component';
 import { ActivityHeaderComponent } from './pages/activity/partials/activity-header/activity-header.component';
 import { CragImageComponent } from './pages/crag/crag-image/crag-image.component';
 
@@ -128,7 +128,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ActivityLogComponent,
     ActivityRoutesComponent,
     ActivityStatisticsComponent,
-    ActivityListComponent,
     ActivityHeaderComponent,
     CragImageComponent,
   ],
@@ -148,6 +147,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MatFormFieldModule,
     MatInputModule,
     MatSnackBarModule,
+    MatPaginatorModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatSelectModule,
