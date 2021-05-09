@@ -79,6 +79,9 @@ import { ActivityRoutesComponent } from './pages/activity/activity-routes/activi
 import { ActivityStatisticsComponent } from './pages/activity/activity-statistics/activity-statistics.component';
 import { ActivityHeaderComponent } from './pages/activity/partials/activity-header/activity-header.component';
 import { CragImageComponent } from './pages/crag/crag-image/crag-image.component';
+import { AscentTypeComponent } from './common/ascent-type/ascent-type.component';
+import { AscentPublishOptionComponent } from './common/ascent-publish-option/ascent-publish-option.component';
+import { ActivityRouteRowComponent } from './pages/activity/partials/activity-route-row/activity-route-row.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -130,6 +133,9 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ActivityStatisticsComponent,
     ActivityHeaderComponent,
     CragImageComponent,
+    AscentTypeComponent,
+    AscentPublishOptionComponent,
+    ActivityRouteRowComponent,
   ],
   imports: [
     BrowserModule,
