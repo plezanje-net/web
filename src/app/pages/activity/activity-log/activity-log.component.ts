@@ -39,8 +39,8 @@ export class ActivityLogComponent implements OnInit {
     this.queryParams.pipe(debounceTime(300)).subscribe((params) => {
       this.loading = true;
       this.myActivitiesGQL
-        .fetch({ pageNumber: params.pageNumber })
-        .subscribe((result) => {
+        .watch({ pageNumber: params.pageNumber })
+        .valueChanges.subscribe((result) => {
           this.loading = false;
 
           if (result.errors != null) {

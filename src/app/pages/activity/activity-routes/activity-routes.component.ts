@@ -90,8 +90,8 @@ export class ActivityRoutesComponent implements OnInit {
       const queryParams: FindActivityRoutesInput = ft.queryParams;
 
       this.myActivityRoutesGQL
-        .fetch({ input: queryParams })
-        .subscribe((result) => {
+        .watch({ input: queryParams })
+        .valueChanges.subscribe((result) => {
           this.loading = false;
 
           if (result.errors != null) {

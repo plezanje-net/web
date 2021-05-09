@@ -135,7 +135,12 @@ export class ActivityFormComponent implements OnInit {
     this.createActivityGQL
       .mutate(
         { input: activity, routes: routes },
-        { refetchQueries: [namedOperations.Query.MyActivities] }
+        {
+          refetchQueries: [
+            namedOperations.Query.MyActivities,
+            namedOperations.Query.MyActivityRoutes,
+          ],
+        }
       )
       .subscribe(
         () => {
