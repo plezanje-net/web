@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Grade } from '../../../common/grade';
 import { IDistribution } from '../../../common/distribution-chart/distribution-chart.component';
 
 @Component({
@@ -33,7 +34,7 @@ export class RouteInfoComponent implements OnInit {
 
       Object.entries(dist).forEach(([grade, count]: [string, number]) => {
         this.gradesDistribution.push({
-          label: grade,
+          label: new Grade(Number(grade)).name,
           value: count,
         });
       });

@@ -54,7 +54,9 @@ export class RouteComponent implements OnInit {
                   firstname,
                   lastname
                 },
-                content
+                content,
+                created,
+                updated,
               },
               images {
                 path

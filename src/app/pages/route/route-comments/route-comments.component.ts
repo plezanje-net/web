@@ -17,15 +17,7 @@ interface IComment {
 })
 export class RouteCommentsComponent {
 
-  @Input() comments: IComment[] = [{
-    content: 'Testni komentar',
-    user: {
-      firstname: 'Todomir',
-      lastname: 'Todorovič',
-    },
-    type: 'comment',
-    created: 'Mar 10 2021',
-  }];
+  @Input() comments: IComment[] = [];
 
   constructor() {}
 }
