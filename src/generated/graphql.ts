@@ -210,6 +210,8 @@ export type FindActivitiesInput = {
 
 export type FindActivityRoutesInput = {
   userId?: Maybe<Scalars['String']>;
+  cragId?: Maybe<Scalars['String']>;
+  routeId?: Maybe<Scalars['String']>;
   dateFrom?: Maybe<Scalars['DateTime']>;
   dateTo?: Maybe<Scalars['DateTime']>;
   ascentType?: Maybe<Array<Scalars['String']>>;
@@ -630,6 +632,32 @@ export type User = {
   fullName: Scalars['String'];
 };
 
+export type ActivityFiltersCragQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type ActivityFiltersCragQuery = (
+  { __typename?: 'Query' }
+  & { crag: (
+    { __typename?: 'Crag' }
+    & Pick<Crag, 'id' | 'name'>
+  ) }
+);
+
+export type ActivityFiltersRouteQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type ActivityFiltersRouteQuery = (
+  { __typename?: 'Query' }
+  & { route: (
+    { __typename?: 'Route' }
+    & Pick<Route, 'id' | 'name'>
+  ) }
+);
+
 export type CreateActivityMutationVariables = Exact<{
   input: CreateActivityInput;
   routes: Array<CreateActivityRouteInput> | CreateActivityRouteInput;
@@ -684,7 +712,7 @@ export type MyActivityRoutesQuery = (
         & Pick<Route, 'name' | 'id'>
         & { crag: (
           { __typename?: 'Crag' }
-          & Pick<Crag, 'name' | 'slug'>
+          & Pick<Crag, 'id' | 'name' | 'slug'>
           & { country: (
             { __typename?: 'Country' }
             & Pick<Country, 'slug'>
@@ -832,6 +860,44 @@ export type CragsQuery = (
   ) }
 );
 
+export const ActivityFiltersCragDocument = gql`
+    query ActivityFiltersCrag($id: String!) {
+  crag(id: $id) {
+    id
+    name
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ActivityFiltersCragGQL extends Apollo.Query<ActivityFiltersCragQuery, ActivityFiltersCragQueryVariables> {
+    document = ActivityFiltersCragDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ActivityFiltersRouteDocument = gql`
+    query ActivityFiltersRoute($id: String!) {
+  route(id: $id) {
+    id
+    name
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ActivityFiltersRouteGQL extends Apollo.Query<ActivityFiltersRouteQuery, ActivityFiltersRouteQueryVariables> {
+    document = ActivityFiltersRouteDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const CreateActivityDocument = gql`
     mutation CreateActivity($input: CreateActivityInput!, $routes: [CreateActivityRouteInput!]!) {
   createActivity(input: $input, routes: $routes) {
@@ -894,6 +960,7 @@ export const MyActivityRoutesDocument = gql`
       publish
       route {
         crag {
+          id
           name
           slug
           country {
@@ -1136,6 +1203,8 @@ export const CragsDocument = gql`
   }
 export const namedOperations = {
   Query: {
+    ActivityFiltersCrag: 'ActivityFiltersCrag',
+    ActivityFiltersRoute: 'ActivityFiltersRoute',
     MyActivities: 'MyActivities',
     MyActivityRoutes: 'MyActivityRoutes',
     Profile: 'Profile',

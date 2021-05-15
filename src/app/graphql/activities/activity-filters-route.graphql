@@ -1,0 +1,6 @@
+query ActivityFiltersRoute($id: String!) {
+  route(id: $id) {
+    id
+    name
+  }
+}

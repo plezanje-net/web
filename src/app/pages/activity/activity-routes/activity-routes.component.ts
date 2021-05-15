@@ -13,12 +13,23 @@ import {
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from 'src/app/types/data-error';
 import {
+  ActivityRoute,
+  Crag,
   FindActivityRoutesInput,
   MyActivityRoutesGQL,
   MyActivityRoutesQuery,
-  MyActivityRoutesQueryVariables,
+  ActivityFiltersCragGQL,
+  ActivityFiltersCragQuery,
+  ActivityFiltersRouteGQL,
+  ActivityFiltersRouteQuery,
+  Route,
 } from 'src/generated/graphql';
 import { FilteredTable } from '../../../common/filtered-table';
+
+export interface RowAction {
+  item: ActivityRoute;
+  action: string;
+}
 
 @Component({
   selector: 'app-activity-routes',
@@ -38,7 +49,12 @@ export class ActivityRoutesComponent implements OnInit {
     dateTo: new FormControl(),
     ascentType: new FormControl(),
     publish: new FormControl(),
+    cragId: new FormControl(),
+    routeId: new FormControl(),
   });
+
+  forCrag: ActivityFiltersCragQuery['crag'];
+  forRoute: ActivityFiltersRouteQuery['route'];
 
   filteredTable = new FilteredTable(
     [
@@ -54,8 +70,12 @@ export class ActivityRoutesComponent implements OnInit {
       { name: 'dateTo', type: 'date' },
       { name: 'ascentType', type: 'multiselect' },
       { name: 'publish', type: 'multiselect' },
+      { name: 'cragId', type: 'relation' },
+      { name: 'routeId', type: 'relation' },
     ]
   );
+
+  rowAction$ = new Subject<RowAction>();
 
   ascentTypes = ASCENT_TYPES;
   publishOptions = PUBLISH_OPTIONS;
@@ -64,7 +84,9 @@ export class ActivityRoutesComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
-    private myActivityRoutesGQL: MyActivityRoutesGQL
+    private myActivityRoutesGQL: MyActivityRoutesGQL,
+    private activityFiltersCragGQL: ActivityFiltersCragGQL,
+    private activityFiltersRouteGQL: ActivityFiltersRouteGQL
   ) {}
 
   ngOnInit(): void {
@@ -80,10 +102,12 @@ export class ActivityRoutesComponent implements OnInit {
       this.router.navigate(['/plezalni-dnevnik/vzponi', params])
     );
 
-    this.activatedRoute.params.pipe(debounceTime(300)).subscribe((params) => {
+    this.activatedRoute.params.subscribe((params) => {
       ft.setRouteParams(params);
 
       this.filters.patchValue(ft.filterParams, { emitEvent: false });
+
+      this.applyRelationFilterDisplayValues();
 
       this.loading = true;
 
@@ -102,9 +126,55 @@ export class ActivityRoutesComponent implements OnInit {
         });
     });
 
-    this.filters.valueChanges.pipe(debounceTime(600)).subscribe((values) => {
-      ft.setFilterParams(values);
+    this.filters.valueChanges.pipe(debounceTime(400)).subscribe((values) => {
+      if (ft.navigating) {
+        ft.navigating = false;
+      } else {
+        ft.setFilterParams(values);
+      }
     });
+
+    this.rowAction$.subscribe((action) => {
+      switch (action.action) {
+        case 'filterByCrag':
+          this.forCrag = action.item.route.crag;
+          this.filters.patchValue({
+            routeId: null,
+            cragId: action.item.route.crag.id,
+          });
+          break;
+        case 'filterByRoute':
+          this.filters.patchValue({
+            cragId: null,
+            routeId: action.item.route.id,
+          });
+          break;
+      }
+    });
+  }
+
+  applyRelationFilterDisplayValues() {
+    if (this.filters.value.cragId != null && !(this.forCrag != null)) {
+      this.activityFiltersCragGQL
+        .fetch({ id: this.filters.value.cragId })
+        .toPromise()
+        .then((crag) => (this.forCrag = crag.data.crag));
+    }
+
+    if (!(this.filters.value.cragId != null)) {
+      this.forCrag = null;
+    }
+
+    if (this.filters.value.routeId != null && !(this.forRoute != null)) {
+      this.activityFiltersRouteGQL
+        .fetch({ id: this.filters.value.routeId })
+        .toPromise()
+        .then((route) => (this.forRoute = route.data.route));
+    }
+
+    if (this.filters.value.routeId == null) {
+      this.forRoute = null;
+    }
   }
 
   queryError(): void {
