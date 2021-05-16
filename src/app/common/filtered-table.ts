@@ -50,8 +50,6 @@ export class FilteredTable {
     this.filters = filters;
   }
 
-  // initialized = false;
-
   setRouteParams(values: Params) {
     const qp: any = {};
     const fp: any = {};
@@ -92,12 +90,12 @@ export class FilteredTable {
       direction: this.sortDirection,
     };
 
-    this.setFilterParams(fp);
+    this.setFilterParams(fp, false);
 
     this.queryParams = qp;
   }
 
-  setFilterParams(values: any) {
+  setFilterParams(values: any, navigate = true) {
     const rp: any = {};
     const fp: any = {};
 
@@ -150,8 +148,9 @@ export class FilteredTable {
       rp.sort = this.routeParams.sort;
     }
 
-    this.navigate(rp);
-
+    if (navigate) {
+      this.navigate(rp);
+    }
     this.initialized = true;
   }
 

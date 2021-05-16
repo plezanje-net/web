@@ -1,11 +1,19 @@
-query MyActivities($pageNumber: Int) {
-  myActivities(input: { pageNumber: $pageNumber }) {
+query MyActivities($input: FindActivitiesInput) {
+  myActivities(input: $input) {
     items {
       name
       date
       type
       routes {
         grade
+      }
+      crag {
+        id
+        name
+        slug
+        country {
+          slug
+        }
       }
     }
     meta {

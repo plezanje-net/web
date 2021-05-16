@@ -5,7 +5,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import moment, { Moment } from 'moment';
 import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounce, debounceTime } from 'rxjs/operators';
 import {
   ASCENT_TYPES,
   PUBLISH_OPTIONS,
@@ -105,7 +105,7 @@ export class ActivityRoutesComponent implements OnInit {
     this.activatedRoute.params.subscribe((params) => {
       ft.setRouteParams(params);
 
-      this.filters.patchValue(ft.filterParams, { emitEvent: false });
+      this.filters.patchValue(ft.filterParams);
 
       this.applyRelationFilterDisplayValues();
 
@@ -117,6 +117,7 @@ export class ActivityRoutesComponent implements OnInit {
         .watch({ input: queryParams })
         .valueChanges.subscribe((result) => {
           this.loading = false;
+          ft.navigating = false;
 
           if (result.errors != null) {
             this.queryError();
@@ -126,7 +127,7 @@ export class ActivityRoutesComponent implements OnInit {
         });
     });
 
-    this.filters.valueChanges.pipe(debounceTime(400)).subscribe((values) => {
+    this.filters.valueChanges.subscribe((values) => {
       if (ft.navigating) {
         ft.navigating = false;
       } else {

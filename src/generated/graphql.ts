@@ -203,6 +203,10 @@ export type CreateSectorInput = {
 
 export type FindActivitiesInput = {
   userId?: Maybe<Scalars['String']>;
+  cragId?: Maybe<Scalars['String']>;
+  type?: Maybe<Array<Scalars['String']>>;
+  dateFrom?: Maybe<Scalars['DateTime']>;
+  dateTo?: Maybe<Scalars['DateTime']>;
   orderBy?: Maybe<OrderByInput>;
   pageNumber?: Maybe<Scalars['Int']>;
   pageSize?: Maybe<Scalars['Int']>;
@@ -673,7 +677,7 @@ export type CreateActivityMutation = (
 );
 
 export type MyActivitiesQueryVariables = Exact<{
-  pageNumber?: Maybe<Scalars['Int']>;
+  input?: Maybe<FindActivitiesInput>;
 }>;
 
 
@@ -687,7 +691,14 @@ export type MyActivitiesQuery = (
       & { routes: Array<(
         { __typename?: 'ActivityRoute' }
         & Pick<ActivityRoute, 'grade'>
-      )> }
+      )>, crag: (
+        { __typename?: 'Crag' }
+        & Pick<Crag, 'id' | 'name' | 'slug'>
+        & { country: (
+          { __typename?: 'Country' }
+          & Pick<Country, 'slug'>
+        ) }
+      ) }
     )>, meta: (
       { __typename?: 'PaginationMeta' }
       & Pick<PaginationMeta, 'itemCount' | 'pageCount' | 'pageNumber' | 'pageSize'>
@@ -917,14 +928,22 @@ export const CreateActivityDocument = gql`
     }
   }
 export const MyActivitiesDocument = gql`
-    query MyActivities($pageNumber: Int) {
-  myActivities(input: {pageNumber: $pageNumber}) {
+    query MyActivities($input: FindActivitiesInput) {
+  myActivities(input: $input) {
     items {
       name
       date
       type
       routes {
         grade
+      }
+      crag {
+        id
+        name
+        slug
+        country {
+          slug
+        }
       }
     }
     meta {

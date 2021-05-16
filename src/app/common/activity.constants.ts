@@ -16,3 +16,12 @@ export const PUBLISH_OPTIONS: any[] = [
   { value: 'log', label: 'Javno na mojem profilu' },
   { value: 'private', label: 'Samo zame' },
 ];
+
+export const ACTIVITY_TYPES: any[] = [
+  { value: 'crag', label: 'Dan v plezališču' },
+  { value: 'climbingGym', label: 'Plezalni center' },
+  { value: 'trainingGym', label: 'Telovadnica' },
+  { value: 'peak', label: 'Osvojen vrh' },
+  { value: 'iceFall', label: 'Slap' },
+  { value: 'other', label: 'Ostalo' },
+];
