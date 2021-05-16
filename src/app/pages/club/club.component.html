@@ -1,0 +1,26 @@
+<app-data-error *ngIf="error" [error]="error"></app-data-error>
+
+<div *ngIf="!error">
+  <h1>
+    <div class="container p15" fxLayout="row" fxLayoutAlign="start center">
+      <div fxFlex="100">{{ club.name }}</div>
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <!-- TODO: only if I am the club admin should this be seen -->
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="addMember()">
+          <mat-icon>post_add</mat-icon>
+          <span>Dodaj člana</span>
+        </button>
+      </mat-menu>
+    </div>
+  </h1>
+
+  <app-loader *ngIf="loading"></app-loader>
+
+  <ul>
+    <li *ngFor="let member of club.members">{{ member.user.fullName }}</li>
+  </ul>
+</div>

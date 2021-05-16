@@ -79,6 +79,9 @@ import { ActivityRoutesComponent } from './pages/activity/activity-routes/activi
 import { ActivityStatisticsComponent } from './pages/activity/activity-statistics/activity-statistics.component';
 import { ActivityHeaderComponent } from './pages/activity/partials/activity-header/activity-header.component';
 import { CragImageComponent } from './pages/crag/crag-image/crag-image.component';
+import { ClubsComponent } from './pages/clubs/clubs.component';
+import { ClubComponent } from './pages/club/club.component';
+import { ClubMemberFormComponent } from './forms/club-member-form/club-member-form.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -130,6 +133,9 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ActivityStatisticsComponent,
     ActivityHeaderComponent,
     CragImageComponent,
+    ClubsComponent,
+    ClubComponent,
+    ClubMemberFormComponent,
   ],
   imports: [
     BrowserModule,

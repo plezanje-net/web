@@ -13,6 +13,8 @@ import { RouteComponent } from './pages/route/route.component';
 import { ActivityLogComponent } from './pages/activity/activity-log/activity-log.component';
 import { ActivityRoutesComponent } from './pages/activity/activity-routes/activity-routes.component';
 import { ActivityStatisticsComponent } from './pages/activity/activity-statistics/activity-statistics.component';
+import { ClubsComponent } from './pages/clubs/clubs.component';
+import { ClubComponent } from './pages/club/club.component';
 
 const routes: Routes = [
   {
@@ -26,35 +28,45 @@ const routes: Routes = [
   {
     path: 'moj-profil',
     component: ProfileComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'moj-profil/moji-klubi',
+    component: ClubsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'moj-profil/moji-klubi/:club',
+    component: ClubComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'plezalni-dnevnik',
     component: ActivityLogComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'plezalni-dnevnik/vzponi',
     component: ActivityRoutesComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'plezalni-dnevnik/statistika',
     component: ActivityStatisticsComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'aktivacija/:id/:token',
-    component: ConfirmAccountComponent
+    component: ConfirmAccountComponent,
   },
   {
     path: 'menjava-gesla/:id/:token',
-    component: SelectPasswordComponent
+    component: SelectPasswordComponent,
   },
   {
     path: 'plezalisca',
-    redirectTo: "plezalisca/slovenija",
-    pathMatch: "full"
+    redirectTo: 'plezalisca/slovenija',
+    pathMatch: 'full',
   },
   {
     path: 'plezalisca/:country',
@@ -76,6 +88,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'top' })],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -1,0 +1,22 @@
+<mat-dialog-content>
+  <p>
+    Vnesi e-naslov uporabnika, ki ga želiš dodati v klub {{ data.clubName }}.
+  </p>
+  <form [formGroup]="addMemberForm" (ngSubmit)="onSubmit()">
+    <p>
+      <mat-form-field class="no-hint">
+        <mat-label>E-naslov uporabnika</mat-label>
+        <input matInput formControlName="email" id="email" required />
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-checkbox fxLayout="row" fxLayoutAlign="start" formControlName="admin"
+        >Administrator</mat-checkbox
+      >
+    </p>
+
+    <button mat-flat-button color="primary" [disabled]="!addMemberForm.valid">
+      DODAJ ČLANA
+    </button>
+  </form>
+</mat-dialog-content>

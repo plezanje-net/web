@@ -1,0 +1,7 @@
+<div>
+  <ul>
+    <li *ngFor="let club of myClubs">
+      <a [routerLink]="['/moj-profil/moji-klubi/', club.id]">{{ club.name }}</a>
+    </li>
+  </ul>
+</div>

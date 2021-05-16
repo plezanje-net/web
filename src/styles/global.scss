@@ -163,6 +163,9 @@ body {
     &.error {
       color: $warn;
     }
+    &.success {
+      color: $success;
+    }
   }
   .mat-form-field-infix {
     line-height: normal;
