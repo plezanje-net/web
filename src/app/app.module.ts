@@ -82,6 +82,9 @@ import { CragImageComponent } from './pages/crag/crag-image/crag-image.component
 import { ClubsComponent } from './pages/clubs/clubs.component';
 import { ClubComponent } from './pages/club/club.component';
 import { ClubMemberFormComponent } from './forms/club-member-form/club-member-form.component';
+import { AscentTypeComponent } from './common/ascent-type/ascent-type.component';
+import { AscentPublishOptionComponent } from './common/ascent-publish-option/ascent-publish-option.component';
+import { ActivityRouteRowComponent } from './pages/activity/partials/activity-route-row/activity-route-row.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -136,6 +139,9 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ClubsComponent,
     ClubComponent,
     ClubMemberFormComponent,
+    AscentTypeComponent,
+    AscentPublishOptionComponent,
+    ActivityRouteRowComponent,
   ],
   imports: [
     BrowserModule,

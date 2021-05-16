@@ -136,6 +136,34 @@ b {
   }
 }
 
+.card-table {
+  width: 100%;
+  .row {
+    height: 42px;
+    td {
+      vertical-align: middle;
+      padding: 0 12px;
+      &.tools {
+        width: 10px;
+        white-space: nowrap;
+        color: #b7b7b7;
+      }
+    }
+    &.header {
+      td {
+        padding-top: 12px;
+        height: 52px;
+        span.sortable {
+          cursor: pointer;
+          &.sorted {
+            color: $primary;
+          }
+        }
+      }
+    }
+  }
+}
+
 body {
   .mat-dialog-container {
     border-radius: 2px;

@@ -1,0 +1,8 @@
+mutation CreateActivity(
+  $input: CreateActivityInput!
+  $routes: [CreateActivityRouteInput!]!
+) {
+  createActivity(input: $input, routes: $routes) {
+    id
+  }
+}

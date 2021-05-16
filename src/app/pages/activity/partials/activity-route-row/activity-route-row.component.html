@@ -1,0 +1,35 @@
+<td>
+  {{ route.date | amDateFormat: "DD.MM.YYYY" }}
+</td>
+<td><a [routerLink]="['/plezalisca', route.route.crag.country.slug, route.route.crag.slug]">{{
+    route.route.crag.name }}</a></td>
+<td><a [routerLink]="['/plezalisca', route.route.crag.country.slug, route.route.crag.slug, route.route.id]">{{
+    route.route.name }}</a></td>
+
+<td>
+  <app-grade [grade]="route.grade" [text]="route.difficulty" [showModifier]="true"></app-grade>
+</td>
+<td>
+  <app-ascent-type [value]="route.ascentType"></app-ascent-type>
+</td>
+<td>
+  <app-ascent-publish-option [value]="route.publish"></app-ascent-publish-option>
+</td>
+<td class="tools">
+  <button mat-icon-button [mat-menu-trigger-for]="menu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item>
+      <span>Odpri plezalni dan</span>
+    </button>
+    <button mat-menu-item>
+      <span>Uredi vzpon</span>
+    </button>
+    <button mat-menu-item>
+      <span>Odstrani vzpon</span>
+    </button>
+  </mat-menu>
+
+</td>

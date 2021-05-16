@@ -1,5 +1,73 @@
 <app-activity-header active="vzponi"></app-activity-header>
 
-<div class="container">
-  <p>activity-routes works!</p>
+<div class="container p15">
+
+  <div fxLayout="row" [formGroup]="filters" fxLayoutGap="8px">
+    <mat-form-field appearance="fill">
+      <mat-label>Časovno obdobje</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate formControlName="dateFrom" placeholder="Start date">
+        <input matEndDate formControlName="dateTo" placeholder="End date">
+      </mat-date-range-input>
+      <div matSuffix fxLayout="row">
+        <button mat-icon-button matSuffix *ngIf="filters.value.dateFrom != null || filters.value.dateTo != null"
+          (click)="filters.patchValue({ dateFrom: null, dateTo: null })">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      </div>
+
+      <mat-date-range-picker #picker></mat-date-range-picker>
+
+      <mat-error *ngIf="filters.controls.dateFrom.hasError('matStartDateInvalid')">Neveljaven začetni datum</mat-error>
+      <mat-error *ngIf="filters.controls.dateTo.hasError('matEndDateInvalid')">Neveljaven končni datum</mat-error>
+
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Vrsta vzpona</mat-label>
+      <mat-select formControlName="ascentType" multiple>
+        <mat-option *ngFor="let type of ascentTypes" [value]="type.value">{{ type.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Objava</mat-label>
+      <mat-select formControlName="publish" multiple>
+        <mat-option *ngFor="let option of publishOptions" [value]="option.value">{{ option.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </div>
+
+  <div class="card">
+    <div class="card-loader" *ngIf="loading">
+      <app-loader></app-loader>
+    </div>
+    <table class="card-table">
+      <tr class="row header">
+
+        <td *ngFor="let column of filteredTable.columns">
+          <span *ngIf="column.sortable" class="sortable" [class.sorted]="filteredTable.sortColumn == column.name"
+            (click)="filteredTable.sort(column)">
+            {{column.label}} <mat-icon inline *ngIf="filteredTable.sortColumn != column.name">sort</mat-icon>
+            <mat-icon inline *ngIf="filteredTable.sortColumn == column.name">{{ filteredTable.sortDirection == 'DESC' ?
+              'arrow_downward' : 'arrow_upward' }}</mat-icon>
+          </span>
+          <span *ngIf="!column.sortable">{{ column.label }}</span>
+        </td>
+        <td></td>
+      </tr>
+
+      <tr class="row" *ngFor="let route of routes" app-activity-route-row [route]="route"></tr>
+    </table>
+
+  </div>
+
+  <mat-paginator *ngIf="pagination != null" hidePageSize showFirstLastButtons [length]="pagination.itemCount"
+    [pageIndex]="pagination.pageNumber-1" [pageSize]="pagination.pageSize" (page)="filteredTable.paginate($event)">
+  </mat-paginator>
+
 </div>
