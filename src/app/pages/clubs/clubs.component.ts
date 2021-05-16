@@ -50,7 +50,6 @@ export class ClubsComponent implements OnInit, OnDestroy {
   }
 
   querySuccess(data: any) {
-    console.log(data);
     this.myClubs = data.myClubs;
 
     this.layoutService.$breadcrumbs.next([

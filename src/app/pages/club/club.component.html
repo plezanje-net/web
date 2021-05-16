@@ -4,17 +4,19 @@
   <h1>
     <div class="container p15" fxLayout="row" fxLayoutAlign="start center">
       <div fxFlex="100">{{ club.name }}</div>
-      <button mat-icon-button [matMenuTriggerFor]="menu">
-        <mat-icon>more_vert</mat-icon>
-      </button>
 
-      <!-- TODO: only if I am the club admin should this be seen -->
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="addMember()">
-          <mat-icon>post_add</mat-icon>
-          <span>Dodaj člana</span>
+      <div *ngIf="clubAdmin">
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
         </button>
-      </mat-menu>
+
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="addMember()">
+            <mat-icon>post_add</mat-icon>
+            <span>Dodaj člana</span>
+          </button>
+        </mat-menu>
+      </div>
     </div>
   </h1>
 

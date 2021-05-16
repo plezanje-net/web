@@ -4,6 +4,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { GraphQLError } from 'graphql';
 import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 
 import { ClubMemberFormComponent } from 'src/app/forms/club-member-form/club-member-form.component';
 import { LayoutService } from 'src/app/services/layout.service';
@@ -25,7 +26,7 @@ const GET_CLUB = gql`
   }
 `;
 
-// TODO: should be unable to get club data if I am not a member!
+// TODO: should be unable to get club data if I am not a member?
 
 // TODO: should have nice url with no id, but slug
 
@@ -35,8 +36,9 @@ const GET_CLUB = gql`
   styleUrls: ['./club.component.scss'],
 })
 export class ClubComponent implements OnInit, OnDestroy {
-  club: any = {};
   loading = true;
+  club: any = {};
+  clubAdmin = false;
   error: DataError = null;
   clubQuery: QueryRef<any>;
   querySubscription: Subscription;
@@ -45,7 +47,8 @@ export class ClubComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private apollo: Apollo,
     private layoutService: LayoutService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -87,7 +90,11 @@ export class ClubComponent implements OnInit, OnDestroy {
 
   querySuccess(data: any) {
     this.club = data.club;
-    console.log(this.club);
+    this.clubAdmin = this.club.members.some(
+      (member) =>
+        member.user.id === this.authService.currentUser.id && member.admin
+    );
+
     this.layoutService.$breadcrumbs.next([
       {
         name: 'Moj Profil',

@@ -58,7 +58,6 @@ export class ClubMemberFormComponent implements OnInit {
     this.apollo
       .watchQuery({ query: GET_USER, variables: { email } })
       .valueChanges.subscribe((result: any) => {
-        console.log(result);
         if (result.errors != null) {
           this.queryError(result.errors);
           return;
@@ -108,6 +107,9 @@ export class ClubMemberFormComponent implements OnInit {
       )
     ) {
       this.displayError('Uporabnik s tem e-poštnim naslovom je že član kluba.');
+    } else if (errors.length > 0 && errors[0].message === 'Forbidden') {
+      // should not really happen, because only club admins should see the option for adding members
+      this.displayError('Samo administratorji kluba lahko dodajajo člane.');
     } else {
       this.displayError();
     }
