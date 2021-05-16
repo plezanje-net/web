@@ -97,7 +97,7 @@
       ></app-crag-comments>
       <app-crag-info [crag]="crag" *ngIf="activeTab == 'info'"></app-crag-info>
       <app-crag-gallery
-        [crag]="crag"
+        [images]="crag.images"
         *ngIf="activeTab == 'galerija'"
       ></app-crag-gallery>
     </div>
