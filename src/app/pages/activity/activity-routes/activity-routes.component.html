@@ -40,9 +40,27 @@
       </mat-select>
     </mat-form-field>
 
+    <mat-form-field *ngIf="forCrag">
+      <mat-label>Plezališče</mat-label>
+      <input matInput disabled [value]="forCrag.name" />
+      <button mat-icon-button matSuffix (click)="filters.patchValue({cragId: null})">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="forRoute">
+      <mat-label>Smer</mat-label>
+      <input matInput disabled [value]="forRoute.name" />
+      <button mat-icon-button matSuffix (click)="filters.patchValue({routeId: null})">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
   </div>
 
-  <div class="card">
+  <app-data-error *ngIf="error" [error]="error"></app-data-error>
+
+  <div class="card" *ngIf="!error">
     <div class="card-loader" *ngIf="loading">
       <app-loader></app-loader>
     </div>
@@ -61,7 +79,7 @@
         <td></td>
       </tr>
 
-      <tr class="row" *ngFor="let route of routes" app-activity-route-row [route]="route"></tr>
+      <tr class="row" *ngFor="let route of routes" app-activity-route-row [route]="route" [rowAction]="rowAction$"></tr>
     </table>
 
   </div>

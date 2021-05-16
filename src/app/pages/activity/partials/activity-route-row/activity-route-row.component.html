@@ -24,6 +24,12 @@
     <button mat-menu-item>
       <span>Odpri plezalni dan</span>
     </button>
+    <button mat-menu-item (click)="rowAction.next({ item: route, action: 'filterByRoute' })">
+      <span>Vsi vzponi za to smer</span>
+    </button>
+    <button mat-menu-item (click)="rowAction.next({ item: route, action: 'filterByCrag' })">
+      <span>Vsi vzponi v tem plezališču</span>
+    </button>
     <button mat-menu-item>
       <span>Uredi vzpon</span>
     </button>

@@ -203,6 +203,10 @@ export type CreateSectorInput = {
 
 export type FindActivitiesInput = {
   userId?: Maybe<Scalars['String']>;
+  cragId?: Maybe<Scalars['String']>;
+  type?: Maybe<Array<Scalars['String']>>;
+  dateFrom?: Maybe<Scalars['DateTime']>;
+  dateTo?: Maybe<Scalars['DateTime']>;
   orderBy?: Maybe<OrderByInput>;
   pageNumber?: Maybe<Scalars['Int']>;
   pageSize?: Maybe<Scalars['Int']>;
@@ -210,6 +214,8 @@ export type FindActivitiesInput = {
 
 export type FindActivityRoutesInput = {
   userId?: Maybe<Scalars['String']>;
+  cragId?: Maybe<Scalars['String']>;
+  routeId?: Maybe<Scalars['String']>;
   dateFrom?: Maybe<Scalars['DateTime']>;
   dateTo?: Maybe<Scalars['DateTime']>;
   ascentType?: Maybe<Array<Scalars['String']>>;
@@ -630,6 +636,32 @@ export type User = {
   fullName: Scalars['String'];
 };
 
+export type ActivityFiltersCragQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type ActivityFiltersCragQuery = (
+  { __typename?: 'Query' }
+  & { crag: (
+    { __typename?: 'Crag' }
+    & Pick<Crag, 'id' | 'name'>
+  ) }
+);
+
+export type ActivityFiltersRouteQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type ActivityFiltersRouteQuery = (
+  { __typename?: 'Query' }
+  & { route: (
+    { __typename?: 'Route' }
+    & Pick<Route, 'id' | 'name'>
+  ) }
+);
+
 export type CreateActivityMutationVariables = Exact<{
   input: CreateActivityInput;
   routes: Array<CreateActivityRouteInput> | CreateActivityRouteInput;
@@ -645,7 +677,7 @@ export type CreateActivityMutation = (
 );
 
 export type MyActivitiesQueryVariables = Exact<{
-  pageNumber?: Maybe<Scalars['Int']>;
+  input?: Maybe<FindActivitiesInput>;
 }>;
 
 
@@ -659,7 +691,14 @@ export type MyActivitiesQuery = (
       & { routes: Array<(
         { __typename?: 'ActivityRoute' }
         & Pick<ActivityRoute, 'grade'>
-      )> }
+      )>, crag: (
+        { __typename?: 'Crag' }
+        & Pick<Crag, 'id' | 'name' | 'slug'>
+        & { country: (
+          { __typename?: 'Country' }
+          & Pick<Country, 'slug'>
+        ) }
+      ) }
     )>, meta: (
       { __typename?: 'PaginationMeta' }
       & Pick<PaginationMeta, 'itemCount' | 'pageCount' | 'pageNumber' | 'pageSize'>
@@ -684,7 +723,7 @@ export type MyActivityRoutesQuery = (
         & Pick<Route, 'name' | 'id'>
         & { crag: (
           { __typename?: 'Crag' }
-          & Pick<Crag, 'name' | 'slug'>
+          & Pick<Crag, 'id' | 'name' | 'slug'>
           & { country: (
             { __typename?: 'Country' }
             & Pick<Country, 'slug'>
@@ -832,6 +871,44 @@ export type CragsQuery = (
   ) }
 );
 
+export const ActivityFiltersCragDocument = gql`
+    query ActivityFiltersCrag($id: String!) {
+  crag(id: $id) {
+    id
+    name
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ActivityFiltersCragGQL extends Apollo.Query<ActivityFiltersCragQuery, ActivityFiltersCragQueryVariables> {
+    document = ActivityFiltersCragDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ActivityFiltersRouteDocument = gql`
+    query ActivityFiltersRoute($id: String!) {
+  route(id: $id) {
+    id
+    name
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ActivityFiltersRouteGQL extends Apollo.Query<ActivityFiltersRouteQuery, ActivityFiltersRouteQueryVariables> {
+    document = ActivityFiltersRouteDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const CreateActivityDocument = gql`
     mutation CreateActivity($input: CreateActivityInput!, $routes: [CreateActivityRouteInput!]!) {
   createActivity(input: $input, routes: $routes) {
@@ -851,14 +928,22 @@ export const CreateActivityDocument = gql`
     }
   }
 export const MyActivitiesDocument = gql`
-    query MyActivities($pageNumber: Int) {
-  myActivities(input: {pageNumber: $pageNumber}) {
+    query MyActivities($input: FindActivitiesInput) {
+  myActivities(input: $input) {
     items {
       name
       date
       type
       routes {
         grade
+      }
+      crag {
+        id
+        name
+        slug
+        country {
+          slug
+        }
       }
     }
     meta {
@@ -894,6 +979,7 @@ export const MyActivityRoutesDocument = gql`
       publish
       route {
         crag {
+          id
           name
           slug
           country {
@@ -1136,6 +1222,8 @@ export const CragsDocument = gql`
   }
 export const namedOperations = {
   Query: {
+    ActivityFiltersCrag: 'ActivityFiltersCrag',
+    ActivityFiltersRoute: 'ActivityFiltersRoute',
     MyActivities: 'MyActivities',
     MyActivityRoutes: 'MyActivityRoutes',
     Profile: 'Profile',

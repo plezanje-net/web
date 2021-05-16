@@ -85,6 +85,7 @@ import { ClubMemberFormComponent } from './forms/club-member-form/club-member-fo
 import { AscentTypeComponent } from './common/ascent-type/ascent-type.component';
 import { AscentPublishOptionComponent } from './common/ascent-publish-option/ascent-publish-option.component';
 import { ActivityRouteRowComponent } from './pages/activity/partials/activity-route-row/activity-route-row.component';
+import { ActivityRowComponent } from './pages/activity/partials/activity-row/activity-row.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -142,6 +143,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     AscentTypeComponent,
     AscentPublishOptionComponent,
     ActivityRouteRowComponent,
+    ActivityRowComponent,
   ],
   imports: [
     BrowserModule,

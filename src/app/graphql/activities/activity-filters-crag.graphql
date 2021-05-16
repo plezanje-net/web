@@ -1,0 +1,6 @@
+query ActivityFiltersCrag($id: String!) {
+  crag(id: $id) {
+    id
+    name
+  }
+}
