@@ -13,8 +13,6 @@ export class RouteInfoComponent implements OnInit {
   grades: any[];
   gradesDistribution: IDistribution[] = [];
 
-  description = 'Najlepša smer daleč naokoli.';
-
   constructor() {}
 
   ngOnInit(): void {

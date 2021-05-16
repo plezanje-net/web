@@ -1,10 +1,7 @@
 <mat-card>
   <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
-    <div *ngIf="description">
+    <div *ngIf="route.description">
       <strong>Opis:</strong> {{ description }}
-    </div>
-    <div>
-      <strong>Prvi vzpon:</strong> {{ 'Todomir Todorovič (2004)' }}
     </div>
     <div *ngIf="route.author">
       <strong>Avtor:</strong> {{ route.author }}
