@@ -73,6 +73,7 @@ export type Comment = {
   user?: Maybe<User>;
   content?: Maybe<Scalars['String']>;
   created: Scalars['DateTime'];
+  updated: Scalars['DateTime'];
   crag: Crag;
   route: Route;
   iceFall: IceFall;
@@ -832,6 +833,48 @@ export type CragsQuery = (
   ) }
 );
 
+export type RouteQueryVariables = Exact<{
+  routeId: Scalars['String'];
+}>;
+
+
+export type RouteQuery = (
+  { __typename?: 'Query' }
+  & { route: (
+    { __typename?: 'Route' }
+    & Pick<Route, 'id' | 'difficulty' | 'name' | 'grade' | 'length' | 'author' | 'status'>
+    & { sector: (
+      { __typename?: 'Sector' }
+      & Pick<Sector, 'id' | 'name'>
+      & { crag: (
+        { __typename?: 'Crag' }
+        & Pick<Crag, 'name' | 'slug'>
+        & { country: (
+          { __typename?: 'Country' }
+          & Pick<Country, 'slug' | 'name'>
+        ) }
+      ) }
+    ), grades: Array<(
+      { __typename?: 'Grade' }
+      & Pick<Grade, 'grade' | 'created' | 'updated'>
+      & { user?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'firstname' | 'lastname'>
+      )> }
+    )>, comments: Array<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'type' | 'content' | 'created' | 'updated'>
+      & { user?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'fullName'>
+      )> }
+    )>, images: Array<(
+      { __typename?: 'Image' }
+      & Pick<Image, 'path'>
+    )> }
+  ) }
+);
+
 export const CreateActivityDocument = gql`
     mutation CreateActivity($input: CreateActivityInput!, $routes: [CreateActivityRouteInput!]!) {
   createActivity(input: $input, routes: $routes) {
@@ -1134,6 +1177,74 @@ export const CragsDocument = gql`
       super(apollo);
     }
   }
+export const RouteDocument = gql`
+    query Route($routeId: String!) {
+  route(id: $routeId) {
+    id
+    difficulty
+    name
+    grade
+    length
+    author
+    status
+    sector {
+      id
+      name
+      crag {
+        name
+        slug
+        country {
+          slug
+          name
+        }
+      }
+    }
+    grades {
+      grade
+      user {
+        firstname
+        lastname
+      }
+      created
+      updated
+    }
+    comments {
+      type
+      user {
+        fullName
+      }
+      content
+      created
+      updated
+    }
+    images {
+      path
+    }
+    sector {
+      name
+      crag {
+        name
+        slug
+        country {
+          slug
+          name
+        }
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class RouteGQL extends Apollo.Query<RouteQuery, RouteQueryVariables> {
+    document = RouteDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const namedOperations = {
   Query: {
     MyActivities: 'MyActivities',
@@ -1141,7 +1252,8 @@ export const namedOperations = {
     Profile: 'Profile',
     CountriesToc: 'CountriesToc',
     CragBySlug: 'CragBySlug',
-    Crags: 'Crags'
+    Crags: 'Crags',
+    Route: 'Route'
   },
   Mutation: {
     CreateActivity: 'CreateActivity',
