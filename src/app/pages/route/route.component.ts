@@ -51,8 +51,7 @@ export class RouteComponent implements OnInit {
               comments {
                 type,
                 user {
-                  firstname,
-                  lastname
+                  fullName,
                 },
                 content,
                 created,
