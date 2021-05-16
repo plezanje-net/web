@@ -12,6 +12,8 @@ export class RouteInfoComponent implements OnInit {
   @Input() route: any;
   grades: any[];
   gradesDistribution: IDistribution[] = [];
+  author: string;
+  firstAscent: string;
 
   constructor() {}
 
@@ -36,6 +38,15 @@ export class RouteInfoComponent implements OnInit {
           value: count,
         });
       });
+
+      if (this.route.author) {
+        if (this.route.author.indexOf('/') > -1) {
+          this.author = this.route.author.split('/')[0];
+          this.firstAscent = this.route.author.split('/')[1];
+        } else {
+          this.author = this.route.author;
+        }
+      }
     }
   }
 }

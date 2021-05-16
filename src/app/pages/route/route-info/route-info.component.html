@@ -3,8 +3,11 @@
     <div *ngIf="route.description">
       <strong>Opis:</strong> {{ description }}
     </div>
-    <div *ngIf="route.author">
-      <strong>Avtor:</strong> {{ route.author }}
+    <div *ngIf="author">
+      <strong>Avtor:</strong> {{ author }}
+    </div>
+    <div *ngIf="firstAscent">
+      <strong>Prvi vzpon:</strong> {{ firstAscent }}
     </div>
     <div>
       <strong>Ocene:</strong>
