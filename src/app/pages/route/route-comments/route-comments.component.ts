@@ -13,19 +13,20 @@ interface IComment {
 @Component({
   selector: 'app-route-comments',
   templateUrl: './route-comments.component.html',
-  styleUrls: ['./route-comments.component.scss']
+  styleUrls: ['./route-comments.component.scss'],
 })
 export class RouteCommentsComponent {
-
-  @Input() comments: IComment[] = [{
-    content: 'Testni komentar',
-    user: {
-      firstname: 'Todomir',
-      lastname: 'Todorovič',
+  @Input() comments: IComment[] = [
+    {
+      content: 'Testni komentar',
+      user: {
+        firstname: 'Todomir',
+        lastname: 'Todorovič',
+      },
+      type: 'comment',
+      created: 'Mar 10 2021',
     },
-    type: 'comment',
-    created: 'Mar 10 2021',
-  }];
+  ];
 
   constructor() {}
 }

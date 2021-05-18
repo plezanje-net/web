@@ -1,14 +1,8 @@
 <mat-card>
   <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
-    <div *ngIf="description">
-      <strong>Opis:</strong> {{ description }}
-    </div>
-    <div>
-      <strong>Prvi vzpon:</strong> {{ 'Todomir Todorovič (2004)' }}
-    </div>
-    <div *ngIf="route.author">
-      <strong>Avtor:</strong> {{ route.author }}
-    </div>
+    <div *ngIf="description"><strong>Opis:</strong> {{ description }}</div>
+    <div><strong>Prvi vzpon:</strong> {{ "Todomir Todorovič (2004)" }}</div>
+    <div *ngIf="route.author"><strong>Avtor:</strong> {{ route.author }}</div>
     <div>
       <strong>Ocene:</strong>
     </div>
@@ -16,6 +10,9 @@
       [distribution]="gradesDistribution"
       fxFlexAlign="stretch"
     ></app-distribution-chart>
-    <app-route-grades fxFlexAlign="stretch" [grades]="grades"></app-route-grades>
+    <app-route-grades
+      fxFlexAlign="stretch"
+      [grades]="grades"
+    ></app-route-grades>
   </div>
 </mat-card>

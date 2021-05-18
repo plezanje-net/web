@@ -8,9 +8,8 @@ describe('DataErrorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DataErrorComponent ]
-    })
-    .compileComponents();
+      declarations: [DataErrorComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

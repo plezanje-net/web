@@ -9,10 +9,9 @@ import { PasswordRecoveryComponent } from '../password-recovery/password-recover
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-
   loading = false;
 
   constructor(
@@ -21,15 +20,15 @@ export class LoginComponent implements OnInit {
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
     private apollo: Apollo
-  ) { }
+  ) {}
 
   loginForm = new FormGroup({
-    email: new FormControl("", [Validators.required, Validators.email]),
-    password: new FormControl("", [Validators.required]),
-    remember: new FormControl(false)
-  })
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required]),
+    remember: new FormControl(false),
+  });
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   passwordRecovery(): boolean {
     this.dialog.open(PasswordRecoveryComponent);
@@ -43,8 +42,9 @@ export class LoginComponent implements OnInit {
 
     const value = this.loginForm.value;
 
-    this.apollo.mutate({
-      mutation: gql`
+    this.apollo
+      .mutate({
+        mutation: gql`
         mutation {
           login(input: {
             email: "${value.email}", 
@@ -53,13 +53,21 @@ export class LoginComponent implements OnInit {
             token
           }
         }
-      `
-    }).subscribe((result: any) => {
-      this.authService.login(result.data.login.token).then(() => this.dialogRef.close(true));
-    }, (error) => {
-      this.loading = false;
-      this.snackbar.open("Prijava ni uspela.", null, { panelClass: "error", duration: 3000 });
-    })
+      `,
+      })
+      .subscribe(
+        (result: any) => {
+          this.authService
+            .login(result.data.login.token)
+            .then(() => this.dialogRef.close(true));
+        },
+        (error) => {
+          this.loading = false;
+          this.snackbar.open('Prijava ni uspela.', null, {
+            panelClass: 'error',
+            duration: 3000,
+          });
+        }
+      );
   }
-
 }

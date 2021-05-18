@@ -4,17 +4,16 @@ import { LayoutService } from 'src/app/services/layout.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-
-  constructor(private layoutService: LayoutService) { }
+  constructor(private layoutService: LayoutService) {}
 
   ngOnInit(): void {
     this.layoutService.$breadcrumbs.next([
       {
-        name: "Prva stran"
-      }
-    ])
+        name: 'Prva stran',
+      },
+    ]);
   }
 }

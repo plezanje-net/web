@@ -1,21 +1,21 @@
 .row {
-    cursor: pointer;
+  cursor: pointer;
 
-    .routes {
-        white-space: nowrap;
-        text-align: right;
-    }
-    &.header {
-        cursor: default;
-    }
+  .routes {
+    white-space: nowrap;
+    text-align: right;
+  }
+  &.header {
+    cursor: default;
+  }
 }
 .crag-map-container {
-    margin-bottom: 16px;
-    position: relative;
+  margin-bottom: 16px;
+  position: relative;
+  height: 360px;
+  .crag-map {
+    position: absolute;
     height: 360px;
-    .crag-map {
-        position: absolute;
-        height: 360px;
-        width: 100%;
-    }
+    width: 100%;
+  }
 }

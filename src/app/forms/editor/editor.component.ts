@@ -4,10 +4,9 @@ import { FormControl } from '@angular/forms';
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
-  styleUrls: ['./editor.component.scss']
+  styleUrls: ['./editor.component.scss'],
 })
 export class EditorComponent implements OnInit {
-
   @Input() placeholder: string;
   @Input() control: FormControl;
 
@@ -24,19 +23,13 @@ export class EditorComponent implements OnInit {
         this.focus = false;
       });
     },
-    plugins: [
-      'autolink lists link',
-    ],
+    plugins: ['autolink lists link'],
     toolbar:
       'undo redo | bold italic underline strikethrough | \
-      bullist numlist | link'
-  }
+      bullist numlist | link',
+  };
 
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-
+  ngOnInit(): void {}
 }

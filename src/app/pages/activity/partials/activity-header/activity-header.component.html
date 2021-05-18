@@ -6,8 +6,23 @@
 
 <div class="container">
   <nav mat-tab-nav-bar>
-    <a mat-tab-link [active]="active=='dnevnik'" [routerLink]="['/plezalni-dnevnik']">Moj dnevnik</a>
-    <a mat-tab-link [active]="active=='vzponi'" [routerLink]="['/plezalni-dnevnik/vzponi']">Pregled vzponov</a>
-    <a mat-tab-link [active]="active=='statistika'" [routerLink]="['/plezalni-dnevnik/statistika']">Statistika</a>
+    <a
+      mat-tab-link
+      [active]="active == 'dnevnik'"
+      [routerLink]="['/plezalni-dnevnik']"
+      >Moj dnevnik</a
+    >
+    <a
+      mat-tab-link
+      [active]="active == 'vzponi'"
+      [routerLink]="['/plezalni-dnevnik/vzponi']"
+      >Pregled vzponov</a
+    >
+    <a
+      mat-tab-link
+      [active]="active == 'statistika'"
+      [routerLink]="['/plezalni-dnevnik/statistika']"
+      >Statistika</a
+    >
   </nav>
 </div>

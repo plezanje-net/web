@@ -1,3 +1,9 @@
-<span *ngIf="ascentType" [ngClass]="'color-' + (topRope ? 'yellow' : ascentType.color)">{{ascentType.label}} <span
-    class="toprope" *ngIf="topRope"> (top rope)</span></span>
-<span *ngIf="ascentType == null"><i>{{ type }}</i></span>
+<span
+  *ngIf="ascentType"
+  [ngClass]="'color-' + (topRope ? 'yellow' : ascentType.color)"
+  >{{ ascentType.label }}
+  <span class="toprope" *ngIf="topRope"> (top rope)</span></span
+>
+<span *ngIf="ascentType == null"
+  ><i>{{ type }}</i></span
+>

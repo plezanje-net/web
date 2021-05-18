@@ -26,35 +26,35 @@ const routes: Routes = [
   {
     path: 'moj-profil',
     component: ProfileComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'plezalni-dnevnik',
     component: ActivityLogComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'plezalni-dnevnik/vzponi',
     component: ActivityRoutesComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'plezalni-dnevnik/statistika',
     component: ActivityStatisticsComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'aktivacija/:id/:token',
-    component: ConfirmAccountComponent
+    component: ConfirmAccountComponent,
   },
   {
     path: 'menjava-gesla/:id/:token',
-    component: SelectPasswordComponent
+    component: SelectPasswordComponent,
   },
   {
     path: 'plezalisca',
-    redirectTo: "plezalisca/slovenija",
-    pathMatch: "full"
+    redirectTo: 'plezalisca/slovenija',
+    pathMatch: 'full',
   },
   {
     path: 'plezalisca/:country',
@@ -76,6 +76,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'top' })],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

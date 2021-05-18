@@ -3,7 +3,11 @@
     <div fxFlex="100" fxLayout="row" fxLayoutGap="12px">
       <ng-container *ngIf="route.value.routeId">
         <span class="route-name">{{ route.value.name }} </span>
-        <app-grade [grade]="route.value.grade" [text]="route.value.difficulty" [showModifier]="true">
+        <app-grade
+          [grade]="route.value.grade"
+          [text]="route.value.difficulty"
+          [showModifier]="true"
+        >
         </app-grade>
       </ng-container>
       <ng-container *ngIf="!(route.value.routeId != null)">
@@ -14,19 +18,42 @@
       </ng-container>
     </div>
     <div fxFlex class="tools">
-      <button type="button" mat-icon-button (click)="move.emit(2)" [disabled]="route.disabled"
-        matTooltip="Dodaj ponovitev">
+      <button
+        type="button"
+        mat-icon-button
+        (click)="move.emit(2)"
+        [disabled]="route.disabled"
+        matTooltip="Dodaj ponovitev"
+      >
         <mat-icon>control_point_duplicate</mat-icon>
       </button>
-      <button type="button" mat-icon-button *ngIf="!first" (click)="move.emit(-1)" [disabled]="route.disabled"
-        matTooltip="Premakni navzgor">
+      <button
+        type="button"
+        mat-icon-button
+        *ngIf="!first"
+        (click)="move.emit(-1)"
+        [disabled]="route.disabled"
+        matTooltip="Premakni navzgor"
+      >
         <mat-icon>arrow_drop_up</mat-icon>
       </button>
-      <button type="button" mat-icon-button *ngIf="!last" (click)="move.emit(1)" [disabled]="route.disabled"
-        matTooltip="Premakni navzdol">
+      <button
+        type="button"
+        mat-icon-button
+        *ngIf="!last"
+        (click)="move.emit(1)"
+        [disabled]="route.disabled"
+        matTooltip="Premakni navzdol"
+      >
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
-      <button type="button" mat-icon-button (click)="move.emit(0)" [disabled]="route.disabled" matTooltip="Odstrani">
+      <button
+        type="button"
+        mat-icon-button
+        (click)="move.emit(0)"
+        [disabled]="route.disabled"
+        matTooltip="Odstrani"
+      >
         <mat-icon>close</mat-icon>
       </button>
     </div>
@@ -38,7 +65,8 @@
           <mat-form-field class="no-hint">
             <mat-label>Vrsta vzpona</mat-label>
             <mat-select formControlName="ascentType">
-              <mat-option *ngFor="let type of ascentTypes" [value]="type.value">{{ type.label }}
+              <mat-option *ngFor="let type of ascentTypes" [value]="type.value"
+                >{{ type.label }}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -48,7 +76,10 @@
         <mat-form-field class="no-hint" fxFlex="50">
           <mat-label>Objava</mat-label>
           <mat-select formControlName="publish">
-            <mat-option *ngFor="let option of publishOptions" [value]="option.value">{{ option.label }}
+            <mat-option
+              *ngFor="let option of publishOptions"
+              [value]="option.value"
+              >{{ option.label }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -57,8 +88,11 @@
       <div fxFlex fxLayout="row" fxLayoutGap="12px" *ngIf="!activity">
         <mat-form-field class="no-hint" fxFlex="50">
           <mat-label>Datum</mat-label>
-          <input matInput formControlName="date" [matDatepicker]="picker">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <input matInput formControlName="date" [matDatepicker]="picker" />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
         <mat-form-field class="no-hint" fxFlex="50">
@@ -70,7 +104,11 @@
     <div fxFlex="40" fxLayout="column">
       <mat-form-field fxFlex="100" class="no-hint">
         <mat-label>Komentar</mat-label>
-        <textarea matInput formControlName="notes" [rows]="activity ? 3 : 6"></textarea>
+        <textarea
+          matInput
+          formControlName="notes"
+          [rows]="activity ? 3 : 6"
+        ></textarea>
       </mat-form-field>
     </div>
   </div>

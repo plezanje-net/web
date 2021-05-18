@@ -1,8 +1,13 @@
 <div fxLayout="row wrap">
-  <div fxFlex="50" *ngFor="let image of crag.images" class="image-container" fxLayout="row"
-    fxLayoutAlign="center center">
+  <div
+    fxFlex="50"
+    *ngFor="let image of crag.images"
+    class="image-container"
+    fxLayout="row"
+    fxLayoutAlign="center center"
+  >
     <div class="card">
-      <img [src]="storageUrl + '/images/'+image.path" />
+      <img [src]="storageUrl + '/images/' + image.path" />
       <div class="title">{{ image.title }}</div>
     </div>
   </div>
