@@ -3,6 +3,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Apollo, gql } from 'apollo-angular';
 import { DataError } from '../../types/data-error';
 import { LayoutService } from '../../services/layout.service';
+import { RouteGQL } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-route',
@@ -17,61 +18,15 @@ export class RouteComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private apollo: Apollo,
-    private layoutService: LayoutService
+    private layoutService: LayoutService,
+    private routeGQL: RouteGQL
   ) {}
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params: Params) => {
-      this.apollo
-        .watchQuery({
-          query: gql`
-          {
-            route(id: "${params.route}") {
-              id,
-              difficulty,
-              name,
-              grade,
-              length,
-              author,
-              status,
-              sector {
-                id,
-                name
-              },
-              grades {
-                grade,
-                user {
-                  firstname,
-                  lastname
-                },
-                created,
-                updated,
-              },
-              comments {
-                type,
-                user {
-                  firstname,
-                  lastname
-                },
-                content
-              },
-              images {
-                path
-              },
-              sector {
-                name
-                crag {
-                  name,
-                  slug,
-                  country {
-                    slug,
-                    name
-                  }
-                }
-              }
-            }
-          }
-        `,
+      this.routeGQL
+        .watch({
+          routeId: params.route,
         })
         .valueChanges.subscribe((result) => {
           this.loading = false;

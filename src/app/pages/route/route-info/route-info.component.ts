@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Grade } from '../../../common/grade';
 import { IDistribution } from '../../../common/distribution-chart/distribution-chart.component';
 
 @Component({
@@ -9,9 +10,9 @@ import { IDistribution } from '../../../common/distribution-chart/distribution-c
 export class RouteInfoComponent implements OnInit {
   @Input() route: any;
   grades: any[];
-  gradesDistribution: IDistribution[] = [];
-
-  description = 'Najlepša smer daleč naokoli.';
+  gradesDistribution: IDistribution[] = [];
+  author: string;
+  firstAscent: string;
 
   constructor() {}
 
@@ -32,10 +33,19 @@ export class RouteInfoComponent implements OnInit {
 
       Object.entries(dist).forEach(([grade, count]: [string, number]) => {
         this.gradesDistribution.push({
-          label: grade,
+          label: new Grade(Number(grade)).name,
           value: count,
         });
       });
+
+      if (this.route.author) {
+        if (this.route.author.indexOf('/') > -1) {
+          this.author = this.route.author.split('/')[0];
+          this.firstAscent = this.route.author.split('/')[1];
+        } else {
+          this.author = this.route.author;
+        }
+      }
     }
   }
 }

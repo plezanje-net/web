@@ -1,15 +1,15 @@
-<app-data-error *ngIf="error" [error]="error"></app-data-error>
+<app-data-error *ngIf="error"
+                [error]="error"></app-data-error>
 
 <app-loader *ngIf="loading"></app-loader>
 
 <div *ngIf="!error && !loading">
   <h1>
-    <div
-      class="container p15"
-      fxLayout="row"
-      fxLayoutAlign="space-between center"
-    >
-      <div fxLayout="row" fxLayoutAlign="start center">
+    <div class="container p15"
+         fxLayout="row"
+         fxLayoutAlign="space-between center">
+      <div fxLayout="row"
+           fxLayoutAlign="start center">
         <div>{{ route.name }}</div>
         <mat-icon class="star">star</mat-icon>
         <mat-icon class="star">star</mat-icon>
@@ -17,24 +17,22 @@
       <div>{{ route.difficulty }} | {{ route.length }}m</div>
     </div>
   </h1>
-  <div
-    class="container"
-    fxLayout="row"
-    fxLayoutGap="12px"
-    fxLayout.lt-md="column"
-  >
-    <div fxFlex="320px" fxFlex.lt-md>
+  <div class="container"
+       fxLayout="row"
+       fxLayoutGap="12px"
+       fxLayout.lt-md="column">
+    <div fxFlex="320px"
+         fxFlex.lt-md>
       <app-route-info [route]="route"></app-route-info>
     </div>
-    <div
-      fxFlex="100"
-      fxFlex.lt-md
-      fxLayout="column"
-      fxLayoutGap="0px"
-      fxLayoutGap.lt-md="12px"
-    >
-      <app-route-pictures [route]="route"></app-route-pictures>
-      <app-route-comments [route]="route"></app-route-comments>
+    <div fxFlex="100"
+         fxFlex.lt-md
+         fxLayout="column"
+         fxLayoutGap="0px"
+         fxLayoutGap.lt-md="12px">
+      <app-crag-gallery [pictures]="route.images"></app-crag-gallery>
+      <app-route-comments *ngIf="route.comments.length"
+                          [comments]="route.comments"></app-route-comments>
     </div>
   </div>
 </div>

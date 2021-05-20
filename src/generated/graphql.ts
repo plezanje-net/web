@@ -73,6 +73,7 @@ export type Comment = {
   user?: Maybe<User>;
   content?: Maybe<Scalars['String']>;
   created: Scalars['DateTime'];
+  updated: Scalars['DateTime'];
   crag: Crag;
   route: Route;
   iceFall: IceFall;
@@ -871,6 +872,47 @@ export type CragsQuery = (
   ) }
 );
 
+export type RouteQueryVariables = Exact<{
+  routeId: Scalars['String'];
+}>;
+
+export type RouteQuery = (
+  { __typename?: 'Query' }
+  & { route: (
+    { __typename?: 'Route' }
+    & Pick<Route, 'id' | 'difficulty' | 'name' | 'grade' | 'length' | 'author' | 'status'>
+    & { sector: (
+      { __typename?: 'Sector' }
+      & Pick<Sector, 'id' | 'name'>
+      & { crag: (
+        { __typename?: 'Crag' }
+        & Pick<Crag, 'name' | 'slug'>
+        & { country: (
+          { __typename?: 'Country' }
+          & Pick<Country, 'slug' | 'name'>
+        ) }
+      ) }
+    ), grades: Array<(
+      { __typename?: 'Grade' }
+      & Pick<Grade, 'grade' | 'created' | 'updated'>
+      & { user?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'firstname' | 'lastname'>
+      )> }
+    )>, comments: Array<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'type' | 'content' | 'created' | 'updated'>
+      & { user?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'fullName'>
+      )> }
+    )>, images: Array<(
+      { __typename?: 'Image' }
+      & Pick<Image, 'path'>
+    )> }
+  ) }
+);
+
 export const ActivityFiltersCragDocument = gql`
     query ActivityFiltersCrag($id: String!) {
   crag(id: $id) {
@@ -885,7 +927,7 @@ export const ActivityFiltersCragDocument = gql`
   })
   export class ActivityFiltersCragGQL extends Apollo.Query<ActivityFiltersCragQuery, ActivityFiltersCragQueryVariables> {
     document = ActivityFiltersCragDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -904,7 +946,7 @@ export const ActivityFiltersRouteDocument = gql`
   })
   export class ActivityFiltersRouteGQL extends Apollo.Query<ActivityFiltersRouteQuery, ActivityFiltersRouteQueryVariables> {
     document = ActivityFiltersRouteDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -922,7 +964,7 @@ export const CreateActivityDocument = gql`
   })
   export class CreateActivityGQL extends Apollo.Mutation<CreateActivityMutation, CreateActivityMutationVariables> {
     document = CreateActivityDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -961,7 +1003,7 @@ export const MyActivitiesDocument = gql`
   })
   export class MyActivitiesGQL extends Apollo.Query<MyActivitiesQuery, MyActivitiesQueryVariables> {
     document = MyActivitiesDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1005,7 +1047,7 @@ export const MyActivityRoutesDocument = gql`
   })
   export class MyActivityRoutesGQL extends Apollo.Query<MyActivityRoutesQuery, MyActivityRoutesQueryVariables> {
     document = MyActivityRoutesDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1025,7 +1067,7 @@ export const ProfileDocument = gql`
   })
   export class ProfileGQL extends Apollo.Query<ProfileQuery, ProfileQueryVariables> {
     document = ProfileDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1043,7 +1085,7 @@ export const CreateCommentDocument = gql`
   })
   export class CreateCommentGQL extends Apollo.Mutation<CreateCommentMutation, CreateCommentMutationVariables> {
     document = CreateCommentDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1059,7 +1101,7 @@ export const DeleteCommentDocument = gql`
   })
   export class DeleteCommentGQL extends Apollo.Mutation<DeleteCommentMutation, DeleteCommentMutationVariables> {
     document = DeleteCommentDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1078,7 +1120,7 @@ export const UpdateCommentDocument = gql`
   })
   export class UpdateCommentGQL extends Apollo.Mutation<UpdateCommentMutation, UpdateCommentMutationVariables> {
     document = UpdateCommentDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1098,7 +1140,7 @@ export const CountriesTocDocument = gql`
   })
   export class CountriesTocGQL extends Apollo.Query<CountriesTocQuery, CountriesTocQueryVariables> {
     document = CountriesTocDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1174,7 +1216,7 @@ export const CragBySlugDocument = gql`
   })
   export class CragBySlugGQL extends Apollo.Query<CragBySlugQuery, CragBySlugQueryVariables> {
     document = CragBySlugDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1215,7 +1257,75 @@ export const CragsDocument = gql`
   })
   export class CragsGQL extends Apollo.Query<CragsQuery, CragsQueryVariables> {
     document = CragsDocument;
-    
+
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const RouteDocument = gql`
+    query Route($routeId: String!) {
+  route(id: $routeId) {
+    id
+    difficulty
+    name
+    grade
+    length
+    author
+    status
+    sector {
+      id
+      name
+      crag {
+        name
+        slug
+        country {
+          slug
+          name
+        }
+      }
+    }
+    grades {
+      grade
+      user {
+        firstname
+        lastname
+      }
+      created
+      updated
+    }
+    comments {
+      type
+      user {
+        fullName
+      }
+      content
+      created
+      updated
+    }
+    images {
+      path
+    }
+    sector {
+      name
+      crag {
+        name
+        slug
+        country {
+          slug
+          name
+        }
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class RouteGQL extends Apollo.Query<RouteQuery, RouteQueryVariables> {
+    document = RouteDocument;
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1229,7 +1339,8 @@ export const namedOperations = {
     Profile: 'Profile',
     CountriesToc: 'CountriesToc',
     CragBySlug: 'CragBySlug',
-    Crags: 'Crags'
+    Crags: 'Crags',
+    Route: 'Route'
   },
   Mutation: {
     CreateActivity: 'CreateActivity',

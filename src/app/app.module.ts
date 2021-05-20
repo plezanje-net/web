@@ -71,7 +71,6 @@ import { ConfirmationDialogComponent } from './common/confirmation-dialog/confir
 import { RouteComponent } from './pages/route/route.component';
 import { RouteInfoComponent } from './pages/route/route-info/route-info.component';
 import { DistributionChartComponent } from './common/distribution-chart/distribution-chart.component';
-import { RoutePicturesComponent } from './pages/route/route-pictures/route-pictures.component';
 import { RouteCommentsComponent } from './pages/route/route-comments/route-comments.component';
 import { RouteGradesComponent } from './pages/route/route-grades/route-grades.component';
 import { ActivityLogComponent } from './pages/activity/activity-log/activity-log.component';
@@ -126,7 +125,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     RouteComponent,
     RouteInfoComponent,
     DistributionChartComponent,
-    RoutePicturesComponent,
     RouteCommentsComponent,
     RouteGradesComponent,
     ActivityLogComponent,

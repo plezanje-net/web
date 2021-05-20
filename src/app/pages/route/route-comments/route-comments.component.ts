@@ -16,17 +16,36 @@ interface IComment {
   styleUrls: ['./route-comments.component.scss'],
 })
 export class RouteCommentsComponent {
-  @Input() comments: IComment[] = [
-    {
-      content: 'Testni komentar',
-      user: {
-        firstname: 'Todomir',
-        lastname: 'Todorovič',
-      },
-      type: 'comment',
-      created: 'Mar 10 2021',
-    },
-  ];
+  allComments: IComment[];
+  regularComments: IComment[];
+  conditions: IComment[];
+  warnings: IComment[];
+  descriptions: IComment[];
+
+  @Input() set comments(comments: IComment[]) {
+    this.allComments = comments;
+
+    this.regularComments = [];
+    this.conditions = [];
+    this.warnings = [];
+    this.descriptions = [];
+
+    this.allComments.forEach((comment) => {
+      if (comment.type === 'condition') {
+        this.conditions.push(comment);
+      } else if (comment.type === 'warning') {
+        this.warnings.push(comment);
+      } else if (comment.type === 'description') {
+        this.descriptions.push(comment);
+      } else {
+        this.regularComments.push(comment);
+      }
+    });
+  }
+
+  get comments(): IComment[] {
+    return this.allComments;
+  }
 
   constructor() {}
 }

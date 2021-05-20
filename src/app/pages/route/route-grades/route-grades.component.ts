@@ -17,6 +17,7 @@ interface IGrade {
 })
 export class RouteGradesComponent {
   @Input() grades: IGrade[] = [];
+  @Input() difficulty: string;
 
   constructor() {}
 }
