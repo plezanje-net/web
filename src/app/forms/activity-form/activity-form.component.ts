@@ -87,11 +87,19 @@ export class ActivityFormComponent implements OnInit {
       return;
     }
 
+    if (direction == 2) {
+      this.routes.controls.splice(
+        routeIndex,
+        0,
+        this.routes.controls[routeIndex]
+      );
+      return;
+    }
+
     const temp = this.routes.controls[routeIndex + direction];
 
-    this.routes.controls[routeIndex + direction] = this.routes.controls[
-      routeIndex
-    ];
+    this.routes.controls[routeIndex + direction] =
+      this.routes.controls[routeIndex];
     this.routes.controls[routeIndex] = temp;
   }
 

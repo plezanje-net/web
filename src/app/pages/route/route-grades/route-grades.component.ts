@@ -5,7 +5,7 @@ interface IGrade {
     firstname: string;
     lastname: string;
   };
-  grade: number;  // TODO difficulty instead of grade
+  grade: number; // TODO difficulty instead of grade
   created: string;
   updated: string;
 }
@@ -13,12 +13,11 @@ interface IGrade {
 @Component({
   selector: 'app-route-grades',
   templateUrl: './route-grades.component.html',
-  styleUrls: ['./route-grades.component.scss']
+  styleUrls: ['./route-grades.component.scss'],
 })
 export class RouteGradesComponent {
-
   @Input() grades: IGrade[] = [];
   @Input() difficulty: string;
 
-  constructor() { }
+  constructor() {}
 }

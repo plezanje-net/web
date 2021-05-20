@@ -1,33 +1,109 @@
 <app-activity-header active="dnevnik"></app-activity-header>
 
 <div class="container p15">
+  <div fxLayout="row" [formGroup]="filters" fxLayoutGap="8px">
+    <mat-form-field appearance="fill">
+      <mat-label>Časovno obdobje</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input
+          matStartDate
+          formControlName="dateFrom"
+          placeholder="Start date"
+        />
+        <input matEndDate formControlName="dateTo" placeholder="End date" />
+      </mat-date-range-input>
+      <div matSuffix fxLayout="row">
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="filters.value.dateFrom != null || filters.value.dateTo != null"
+          (click)="filters.patchValue({ dateFrom: null, dateTo: null })"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      </div>
 
+      <mat-date-range-picker #picker></mat-date-range-picker>
 
+      <mat-error
+        *ngIf="filters.controls.dateFrom.hasError('matStartDateInvalid')"
+        >Neveljaven začetni datum</mat-error
+      >
+      <mat-error *ngIf="filters.controls.dateTo.hasError('matEndDateInvalid')"
+        >Neveljaven končni datum</mat-error
+      >
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Vrsta aktivnosti</mat-label>
+      <mat-select formControlName="type" multiple>
+        <mat-option *ngFor="let type of activityTypes" [value]="type.value"
+          >{{ type.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="forCrag">
+      <mat-label>Plezališče</mat-label>
+      <input matInput disabled [value]="forCrag.name" />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="filters.patchValue({ cragId: null })"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
 
   <div class="card">
     <div class="card-loader" *ngIf="loading">
       <app-loader></app-loader>
     </div>
-    <div fxLayout="row" fxLayoutAlign="start center" class="row header">
-      <div fxFlex="100px">Datum</div>
-      <div fxFlex="100px"></div>
-      <div fxFlex="100">Lokacija</div>
-      <div fxFlex="100px">Število smeri</div>
-    </div>
-    <div *ngFor="let activity of activities" [routerLink]="['/plezalni-dnevnik/plezalni-dan/', activity.id]"
-      fxLayout="row" fxLayoutAlign="start center" class="row">
-      <div fxFlex="100px" fxFlex.lt-md>{{ activity.date | amDateFormat: 'D.M.YYYY' }}</div>
-      <div fxFlex="100px">{{ activity.type }}</div>
 
-      <div fxFlex="100">
-        {{ activity.name }}
-      </div>
-      <div fxFlex="100px">{{ activity.routes.length }}</div>
-    </div>
+    <table class="card-table">
+      <tr class="row header">
+        <td *ngFor="let column of filteredTable.columns">
+          <span
+            *ngIf="column.sortable"
+            class="sortable"
+            [class.sorted]="filteredTable.sortColumn == column.name"
+            (click)="filteredTable.sort(column)"
+          >
+            {{ column.label }}
+            <mat-icon inline *ngIf="filteredTable.sortColumn != column.name"
+              >sort</mat-icon
+            >
+            <mat-icon inline *ngIf="filteredTable.sortColumn == column.name">{{
+              filteredTable.sortDirection == "DESC"
+                ? "arrow_downward"
+                : "arrow_upward"
+            }}</mat-icon>
+          </span>
+          <span *ngIf="!column.sortable">{{ column.label }}</span>
+        </td>
+        <td></td>
+      </tr>
 
-
+      <tr
+        class="row"
+        *ngFor="let activity of activities"
+        app-activity-row
+        [activity]="activity"
+        [rowAction]="rowAction$"
+      ></tr>
+    </table>
   </div>
 
-  <mat-paginator *ngIf="pagination != null" hidePageSize showFirstLastButtons [length]="pagination.itemCount"
-    [pageIndex]="pagination.pageNumber-1" [pageSize]="pagination.pageSize" (page)="paginate($event)"></mat-paginator>
+  <mat-paginator
+    *ngIf="pagination != null"
+    hidePageSize
+    showFirstLastButtons
+    [length]="pagination.itemCount"
+    [pageIndex]="pagination.pageNumber - 1"
+    [pageSize]="pagination.pageSize"
+    (page)="filteredTable.paginate($event)"
+  >
+  </mat-paginator>
 </div>

@@ -1,5 +1,7 @@
 <mat-card>
-  <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
+  <div fxLayout="column"
+       fxLayoutAlign="start start"
+       fxLayoutGap="8px">
     <div *ngIf="route.description">
       <strong>Opis:</strong> {{ description }}
     </div>
@@ -12,10 +14,10 @@
     <div>
       <strong>Ocene:</strong>
     </div>
-    <app-distribution-chart
-      [distribution]="gradesDistribution"
-      fxFlexAlign="stretch"
-    ></app-distribution-chart>
-    <app-route-grades fxFlexAlign="stretch" [grades]="grades" [difficulty]="route.difficulty"></app-route-grades>
+    <app-distribution-chart [distribution]="gradesDistribution"
+                            fxFlexAlign="stretch"></app-distribution-chart>
+    <app-route-grades fxFlexAlign="stretch"
+                      [grades]="grades"
+                      [difficulty]="route.difficulty"></app-route-grades>
   </div>
 </mat-card>

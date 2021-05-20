@@ -8,36 +8,38 @@ import { LayoutService } from 'src/app/services/layout.service';
 @Component({
   selector: 'app-select-password',
   templateUrl: './select-password.component.html',
-  styleUrls: ['./select-password.component.scss']
+  styleUrls: ['./select-password.component.scss'],
 })
 export class SelectPasswordComponent implements OnInit {
-
   loading = false;
   success = false;
 
   form = new FormGroup({
-    id: new FormControl(""),
-    password: new FormControl("", [Validators.required, Validators.minLength(8)]),
-    token: new FormControl("")
-  })
+    id: new FormControl(''),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(8),
+    ]),
+    token: new FormControl(''),
+  });
 
   constructor(
     private layoutService: LayoutService,
     private apollo: Apollo,
     private snackbar: MatSnackBar,
     private activatedRoute: ActivatedRoute
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.layoutService.$breadcrumbs.next([
       {
-        name: "Menjava gesla"
-      }
-    ])
+        name: 'Menjava gesla',
+      },
+    ]);
 
     this.activatedRoute.params.subscribe((params) => {
       this.form.patchValue(params);
-    })
+    });
   }
 
   changePassword() {
@@ -45,8 +47,9 @@ export class SelectPasswordComponent implements OnInit {
 
     const value = this.form.value;
 
-    this.apollo.mutate({
-      mutation: gql`
+    this.apollo
+      .mutate({
+        mutation: gql`
         mutation {
           setPassword(input: {
             id: "${value.id}", 
@@ -54,15 +57,22 @@ export class SelectPasswordComponent implements OnInit {
             password: "${value.password}"
           })
         }
-      `
-    }).subscribe(() => {
-      this.success = true;
-    }, (error) => {
-      this.loading = false;
+      `,
+      })
+      .subscribe(
+        () => {
+          this.success = true;
+        },
+        (error) => {
+          this.loading = false;
 
-      let message = 'Novega gesla ni bilo mogoče shraniti. Poskusite ga resetirati ponovno.';
-      this.snackbar.open(message, null, { panelClass: "error", duration: 3000 });
-    })
+          let message =
+            'Novega gesla ni bilo mogoče shraniti. Poskusite ga resetirati ponovno.';
+          this.snackbar.open(message, null, {
+            panelClass: 'error',
+            duration: 3000,
+          });
+        }
+      );
   }
-
 }

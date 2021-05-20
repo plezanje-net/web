@@ -1,14 +1,27 @@
 <div class="container p15" *ngIf="crag.warnings.length > 0">
   <ng-container *ngFor="let warning of crag.warnings">
-    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px" class="warning">
+    <div
+      fxLayout="row"
+      fxLayoutAlign="start center"
+      fxLayoutGap="12px"
+      class="warning"
+    >
       <mat-icon fxFlex color="warn" fxHide.lt-md>warning</mat-icon>
       <div fxFlex="100">
         <div [innerHTML]="warning.content"></div>
       </div>
     </div>
     <div fxLayout="row" fxLayoutAlign="end center" class="author">
-      {{ warning.user?.fullName }}, {{ warning.created | amDateFormat: 'D.M.Y H:mm' }}
-      <app-comment-options *ngIf="authService.currentUser && warning.user && warning.user.id == authService.currentUser.id" [comment]="warning"></app-comment-options>
+      {{ warning.user?.fullName }},
+      {{ warning.created | amDateFormat: "D.M.Y H:mm" }}
+      <app-comment-options
+        *ngIf="
+          authService.currentUser &&
+          warning.user &&
+          warning.user.id == authService.currentUser.id
+        "
+        [comment]="warning"
+      ></app-comment-options>
     </div>
   </ng-container>
 </div>

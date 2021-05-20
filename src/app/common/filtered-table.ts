@@ -18,6 +18,9 @@ export interface FilterDefinition {
 
 export class FilteredTable {
   navigate$ = new Subject<any>();
+  navigating = false;
+
+  initialized = false;
 
   columns: ColumnDefinition[];
   filters: FilterDefinition[];
@@ -47,8 +50,6 @@ export class FilteredTable {
     this.filters = filters;
   }
 
-  initialized = false;
-
   setRouteParams(values: Params) {
     const qp: any = {};
     const fp: any = {};
@@ -59,11 +60,19 @@ export class FilteredTable {
       if (filter.type == 'date' && values[filter.name] != null) {
         fp[filter.name] = moment(values[filter.name]);
         qp[filter.name] = values[filter.name];
+        return;
       }
       if (filter.type == 'multiselect' && values[filter.name] != null) {
         fp[filter.name] = values[filter.name].split(',');
         qp[filter.name] = values[filter.name].split(',');
+        return;
       }
+      if (filter.type == 'relation' && values[filter.name] != null) {
+        fp[filter.name] = values[filter.name];
+        qp[filter.name] = values[filter.name];
+        return;
+      }
+      fp[filter.name] = null;
     });
 
     if (values.pageNumber != null) {
@@ -81,17 +90,12 @@ export class FilteredTable {
       direction: this.sortDirection,
     };
 
-    if (this.initialized) {
-      this.setFilterParams(fp);
-    } else {
-      this.filterParams = fp;
-      this.initialized = true;
-    }
+    this.setFilterParams(fp, false);
 
     this.queryParams = qp;
   }
 
-  setFilterParams(values: any) {
+  setFilterParams(values: any, navigate = true) {
     const rp: any = {};
     const fp: any = {};
 
@@ -99,6 +103,7 @@ export class FilteredTable {
       if (filter.type == 'date' && values[filter.name] != null) {
         rp[filter.name] = moment(values[filter.name]).format('YYYY-MM-DD');
         fp[filter.name] = values[filter.name];
+        return;
       }
       if (
         filter.type == 'multiselect' &&
@@ -108,10 +113,20 @@ export class FilteredTable {
       ) {
         rp[filter.name] = values[filter.name].join(',');
         fp[filter.name] = values[filter.name];
+        return;
       }
+      if (filter.type == 'relation' && values[filter.name] != null) {
+        rp[filter.name] = values[filter.name];
+        fp[filter.name] = values[filter.name];
+        return;
+      }
+      fp[filter.name] = null;
     });
 
-    if (JSON.stringify(this.filterParams) != JSON.stringify(fp)) {
+    if (
+      this.initialized &&
+      JSON.stringify(this.filterParams) != JSON.stringify(fp)
+    ) {
       this.routeParams.pageNumber = 1;
     }
 
@@ -133,13 +148,16 @@ export class FilteredTable {
       rp.sort = this.routeParams.sort;
     }
 
-    this.navigate$.next(rp);
+    if (navigate) {
+      this.navigate(rp);
+    }
+    this.initialized = true;
   }
 
   paginate(event: PageEvent) {
     this.routeParams.pageNumber = event.pageIndex + 1;
 
-    this.navigate$.next(this.routeParams);
+    this.navigate(this.routeParams);
   }
 
   sort(column: ColumnDefinition) {
@@ -153,6 +171,11 @@ export class FilteredTable {
 
     this.routeParams.sort = this.sortColumn + ',' + this.sortDirection;
 
-    this.navigate$.next(this.routeParams);
+    this.navigate(this.routeParams);
+  }
+
+  navigate(routeParams: any) {
+    this.navigating = true;
+    this.navigate$.next(routeParams);
   }
 }

@@ -1,0 +1,42 @@
+<td>
+  {{ activity.date | amDateFormat: "DD.MM.YYYY" }}
+</td>
+<td>{{ type }}</td>
+<td>
+  <a
+    *ngIf="activity.crag != null"
+    [routerLink]="[
+      '/plezalisca',
+      activity.crag.country.slug,
+      activity.crag.slug
+    ]"
+    >{{ activity.crag.name }}</a
+  >
+  <span *ngIf="!(activity.crag != null)">{{ activity.name }}</span>
+</td>
+<td>{{ activity.routes.length }}</td>
+
+<td class="tools">
+  <button mat-icon-button [mat-menu-trigger-for]="menu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item>
+      <span>Odpri plezalni dan</span>
+    </button>
+    <button
+      mat-menu-item
+      *ngIf="activity.crag != null"
+      (click)="rowAction.next({ item: activity, action: 'filterByCrag' })"
+    >
+      <span>Vsi vnosi za to plezališče</span>
+    </button>
+    <button mat-menu-item>
+      <span>Uredi vnos</span>
+    </button>
+    <button mat-menu-item>
+      <span>Odstrani vnos</span>
+    </button>
+  </mat-menu>
+</td>

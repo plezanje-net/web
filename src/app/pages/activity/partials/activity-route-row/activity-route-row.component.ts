@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 import { ActivityRoute } from 'src/generated/graphql';
+import { RowAction } from '../../activity-routes/activity-routes.component';
 
 @Component({
   selector: '[app-activity-route-row]',
@@ -8,6 +10,7 @@ import { ActivityRoute } from 'src/generated/graphql';
 })
 export class ActivityRouteRowComponent implements OnInit {
   @Input() route: ActivityRoute;
+  @Input() rowAction: Subject<RowAction>;
 
   constructor() {}
 

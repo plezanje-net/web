@@ -8,9 +8,8 @@ describe('ActivityRoutesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ActivityRoutesComponent ]
-    })
-    .compileComponents();
+      declarations: [ActivityRoutesComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

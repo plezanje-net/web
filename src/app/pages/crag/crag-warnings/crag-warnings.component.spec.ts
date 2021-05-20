@@ -8,9 +8,8 @@ describe('CragWarningsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CragWarningsComponent ]
-    })
-    .compileComponents();
+      declarations: [CragWarningsComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

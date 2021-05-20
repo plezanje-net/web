@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 
 import Map from 'ol/Map';
 import { Overlay as OverlayPopup } from 'ol';
@@ -20,10 +27,9 @@ import Control from 'ol/control/Control';
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss']
+  styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit, AfterViewInit {
-
   @Input() crags: BehaviorSubject<any[]>;
   @Input() crag: any;
   @Input() height: number = 360;
@@ -33,7 +39,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   vectorLayer = new VectorLayer();
   vectorSource = new VectorSource();
-  
+
   locationLayer = new VectorLayer();
   locationSource = new VectorSource();
 
@@ -46,11 +52,11 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   locateMeIsSet = false;
   positionWatch: number;
-  currentPosition: any; 
+  currentPosition: any;
 
   map: Map;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
     if (this.crag != null && this.crag.lon != null && this.crag.lat != null) {
@@ -64,7 +70,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     const iconStyle = new Style({
       image: new Icon({
         anchor: [0, 0],
-        src: 'assets/marker.webp'
+        src: 'assets/marker.webp',
       }),
     });
     this.popupOverlay = new OverlayPopup({
@@ -73,39 +79,45 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     this.map = new Map({
       target: 'crag-map-' + this.id,
-      interactions: defaultInteractions({ doubleClickZoom: false, pinchRotate: false }),
+      interactions: defaultInteractions({
+        doubleClickZoom: false,
+        pinchRotate: false,
+      }),
       layers: [
         new TileLayer({
-          source: new OSM()
-        })
+          source: new OSM(),
+        }),
       ],
       view: new View({
         center: olProj.fromLonLat([this.lon, this.lat]),
-        zoom: this.zoom
-      })
+        zoom: this.zoom,
+      }),
     });
 
     this.map.addOverlay(this.popupOverlay);
 
     this.vectorLayer = new VectorLayer({
-      source: this.vectorSource
+      source: this.vectorSource,
     });
     this.map.addLayer(this.vectorLayer);
 
     this.crags.subscribe((crags) => {
-      const markers: AdvancedFeature[] = crags.reduce((arr: AdvancedFeature[], crag) => {
-        if (crag.lat != null && crag.lon != null) {
-          const marker = new AdvancedFeature({
-            geometry: new Point(olProj.fromLonLat([crag.lon, crag.lat]))
-          });
-          marker.crag = crag;
+      const markers: AdvancedFeature[] = crags.reduce(
+        (arr: AdvancedFeature[], crag) => {
+          if (crag.lat != null && crag.lon != null) {
+            const marker = new AdvancedFeature({
+              geometry: new Point(olProj.fromLonLat([crag.lon, crag.lat])),
+            });
+            marker.crag = crag;
 
-          marker.setStyle(iconStyle);
-          arr.push(marker);
-        }
+            marker.setStyle(iconStyle);
+            arr.push(marker);
+          }
 
-        return arr;
-      }, []);
+          return arr;
+        },
+        []
+      );
 
       this.vectorSource.clear();
       this.vectorSource.addFeatures(markers);
@@ -116,35 +128,37 @@ export class MapComponent implements OnInit, AfterViewInit {
           maxZoom: 15,
         });
       }
-    })
+    });
 
     this.map.on('click', this.mapClickEvent);
-    this.map.addControl(new Control({
-      element: this.locate.nativeElement,
-    }));
+    this.map.addControl(
+      new Control({
+        element: this.locate.nativeElement,
+      })
+    );
     this.locationLayer = new VectorLayer({
-      source: this.locationSource
-    })
+      source: this.locationSource,
+    });
     this.map.addLayer(this.locationLayer);
   }
   mapClickEvent = async (evt) => {
     this.popup.nativeElement.hidden = true;
     const featuresClick: FeatureLike[] = this.map.getFeaturesAtPixel(evt.pixel);
     if (featuresClick.length > 0) {
-      this.selectedCrag = (<AdvancedFeature> featuresClick[0]).crag;
+      this.selectedCrag = (<AdvancedFeature>featuresClick[0]).crag;
       this.popupOverlay.setPosition(evt.coordinate);
       this.popup.nativeElement.hidden = false;
-      this.map.getView().setCenter(evt.coordinate)
+      this.map.getView().setCenter(evt.coordinate);
     }
-  }
-  
+  };
+
   locateMe(event) {
-    this.locateMeIsSet = !this.locateMeIsSet
+    this.locateMeIsSet = !this.locateMeIsSet;
 
     if (this.locateMeIsSet) {
       this.locationLayer.setVisible(true);
       this.addGeolocationControl();
-      this.locate.nativeElement.classList.add('location-active')
+      this.locate.nativeElement.classList.add('location-active');
     } else {
       window.navigator.geolocation.clearWatch(this.positionWatch);
       this.locationLayer.setVisible(false);
@@ -154,32 +168,41 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
   }
   addGeolocationControl(): void {
-    this.positionWatch = window.navigator.geolocation.watchPosition(async (pos) => {
-      const coords = [pos.coords.longitude, pos.coords.latitude];
-      const accuracy = circular(coords, pos.coords.accuracy);
-      this.locationSource.clear(true);
-      this.locationSource.addFeatures([
-        new Feature(accuracy.transform('EPSG:4326', this.map.getView().getProjection())),
-        new Feature(new Point(olProj.fromLonLat(coords)))
-      ]);
+    this.positionWatch = window.navigator.geolocation.watchPosition(
+      async (pos) => {
+        const coords = [pos.coords.longitude, pos.coords.latitude];
+        const accuracy = circular(coords, pos.coords.accuracy);
+        this.locationSource.clear(true);
+        this.locationSource.addFeatures([
+          new Feature(
+            accuracy.transform('EPSG:4326', this.map.getView().getProjection())
+          ),
+          new Feature(new Point(olProj.fromLonLat(coords))),
+        ]);
 
-      if (!this.locationSource.isEmpty() && this.currentPosition === undefined) {
-        this.map.getView().fit(this.locationSource.getExtent(), {
-          maxZoom: 17,
-          duration: 500
-        });
+        if (
+          !this.locationSource.isEmpty() &&
+          this.currentPosition === undefined
+        ) {
+          this.map.getView().fit(this.locationSource.getExtent(), {
+            maxZoom: 17,
+            duration: 500,
+          });
+        }
+        if (pos.coords.accuracy < 50) {
+          this.currentPosition = pos;
+        }
+      },
+      (error) => {
+        alert(`ERROR: ${error.message}`);
+      },
+      {
+        enableHighAccuracy: true,
       }
-      if (pos.coords.accuracy < 50) {
-        this.currentPosition = pos;
-      }
-    }, (error) => {
-      alert(`ERROR: ${error.message}`);
-    }, {
-      enableHighAccuracy: true,
-    });
+    );
   }
 }
 
 class AdvancedFeature extends Feature {
-  public crag: any
+  public crag: any;
 }

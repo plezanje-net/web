@@ -5,10 +5,9 @@ import { IDistribution } from '../../../common/distribution-chart/distribution-c
 @Component({
   selector: 'app-route-info',
   templateUrl: './route-info.component.html',
-  styleUrls: ['./route-info.component.scss']
+  styleUrls: ['./route-info.component.scss'],
 })
 export class RouteInfoComponent implements OnInit {
-
   @Input() route: any;
   grades: any[];
   gradesDistribution: IDistribution[] = [];

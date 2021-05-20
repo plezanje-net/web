@@ -8,10 +8,9 @@ export interface IDistribution {
 @Component({
   selector: 'app-distribution-chart',
   templateUrl: './distribution-chart.component.html',
-  styleUrls: ['./distribution-chart.component.scss']
+  styleUrls: ['./distribution-chart.component.scss'],
 })
 export class DistributionChartComponent implements OnInit {
-
   @Input() distribution: IDistribution[] = [];
   maxValue: number;
 
@@ -24,7 +23,7 @@ export class DistributionChartComponent implements OnInit {
 
     let maxValue: number = 0;
 
-    this.distribution.forEach(element => {
+    this.distribution.forEach((element) => {
       if (element.value > maxValue) {
         maxValue = element.value;
       }

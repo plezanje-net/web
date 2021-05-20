@@ -4,10 +4,9 @@ import { Grade } from '../grade';
 @Component({
   selector: 'app-grade',
   templateUrl: './grade.component.html',
-  styleUrls: ['./grade.component.scss']
+  styleUrls: ['./grade.component.scss'],
 })
 export class GradeComponent implements OnInit {
-
   @Input('grade') numericGrade: number;
   @Input('text') alternativeText: string = '';
   @Input() showModifier: boolean = false;
@@ -17,8 +16,7 @@ export class GradeComponent implements OnInit {
 
   gradeLetters = ['a', 'a+', 'b', 'b+', 'c', 'c+'];
 
-
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
     this.grade = new Grade(this.numericGrade);

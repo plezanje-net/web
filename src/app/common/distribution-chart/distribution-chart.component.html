@@ -1,11 +1,14 @@
-<div class="distribution-container" fxLayout="column" fxLayoutAlign="start stretch">
+<div class="distribution-container"
+     fxLayout="column"
+     fxLayoutAlign="start stretch">
   <div class="distribution-bar-wrapper"
        *ngFor="let element of distribution">
     <div class="distribution-bar-label">
       {{ element.label }}
     </div>
     <div class="distribution-bar mat-elevation-z2">
-      <div class="distribution-bar-inner" [style.width.%]="element.value / maxValue * 100"></div>
+      <div class="distribution-bar-inner"
+           [style.width.%]="element.value / maxValue * 100"></div>
     </div>
   </div>
 </div>

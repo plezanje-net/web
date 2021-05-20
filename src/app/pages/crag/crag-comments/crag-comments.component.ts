@@ -6,15 +6,13 @@ import { Crag, User } from 'src/generated/graphql';
 @Component({
   selector: 'app-crag-comments',
   templateUrl: './crag-comments.component.html',
-  styleUrls: ['./crag-comments.component.scss']
+  styleUrls: ['./crag-comments.component.scss'],
 })
 export class CragCommentsComponent implements OnInit {
-
   @Input() crag: Crag;
   @Input() action: Subject<string>;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void { }
-
+  ngOnInit(): void {}
 }

@@ -1,3 +1,3 @@
 export interface DataError {
-    message: string;
+  message: string;
 }

@@ -13,9 +13,8 @@ import { SelectControlValueAccessor } from '@angular/forms';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
-
 export class AppComponent implements OnInit {
   title = 'plezanje-net';
 
@@ -25,13 +24,12 @@ export class AppComponent implements OnInit {
     private router: Router,
     private layoutService: LayoutService,
     private titleService: Title
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.authService.getCurrentUser();
 
     this.authService.openLogin$.subscribe((req) => {
-
       if (!this.router.navigated) {
         this.router.navigate(['/']);
       }
@@ -39,9 +37,10 @@ export class AppComponent implements OnInit {
       this.dialog
         .open(LoginComponent, {
           data: {
-            message: req.message
-          }
-        }).afterClosed()
+            message: req.message,
+          },
+        })
+        .afterClosed()
         .pipe(filter((data) => data != null && data != ''))
         .subscribe((data) => {
           if (req.returnUrl != null) {
@@ -52,14 +51,14 @@ export class AppComponent implements OnInit {
             req.success.next(data);
           }
         });
-    })
+    });
 
     this.layoutService.$breadcrumbs.subscribe((value) => {
-      let title = "Plezanje.net";
+      let title = 'Plezanje.net';
       if (value.length > 0) {
-        title = value[value.length - 1].name + " · " + title;
+        title = value[value.length - 1].name + ' · ' + title;
       }
       this.titleService.setTitle(title);
-    })
+    });
   }
 }
