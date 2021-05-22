@@ -87,6 +87,7 @@ import { AscentPublishOptionComponent } from './common/ascent-publish-option/asc
 import { ActivityRouteRowComponent } from './pages/activity/partials/activity-route-row/activity-route-row.component';
 import { ActivityRowComponent } from './pages/activity/partials/activity-row/activity-row.component';
 import { MaterialElevationDirective } from './shared/directives/material-elevation.directive';
+import { MatListModule } from '@angular/material/list';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -174,6 +175,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MomentModule,
     MatCardModule,
     EditorModule,
+    MatListModule,
   ],
   providers: [
     AuthGuard,

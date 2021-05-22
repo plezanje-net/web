@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { GraphQLError } from 'graphql';
 import { Subscription } from 'rxjs';
@@ -11,6 +11,7 @@ const GET_MY_CLUBS = gql`
     myClubs {
       id
       name
+      nrMembers
     }
   }
 `;
@@ -21,6 +22,7 @@ const GET_MY_CLUBS = gql`
   selector: 'app-clubs',
   templateUrl: './clubs.component.html',
   styleUrls: ['./clubs.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ClubsComponent implements OnInit, OnDestroy {
   myClubs: any = [];

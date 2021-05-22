@@ -2,13 +2,15 @@
 
 .link-card {
   cursor: pointer;
-
+  background: #fff;
+  border-radius: 0;
+  border-left: 1px solid $primary;
   .card-title {
     font-size: large;
     padding-left: 16px;
   }
 
-  .card-icon {
+  mat-icon {
     color: $primary;
   }
 }

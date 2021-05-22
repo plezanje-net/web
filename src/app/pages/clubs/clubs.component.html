@@ -4,10 +4,36 @@
   </div>
 </h1>
 
-<div class="container p15" fxLayout="row">
-  <ul>
-    <li *ngFor="let club of myClubs">
-      <a [routerLink]="['/moj-profil/moji-klubi/', club.id]">{{ club.name }}</a>
-    </li>
-  </ul>
+<div class="container p15">
+  <div class="card clubs-list-container">
+    <mat-nav-list>
+      <ng-container *ngFor="let club of myClubs; last as isLast">
+        <a mat-list-item [routerLink]="['/moj-profil/moji-klubi/', club.id]">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <img
+              matListAvatar
+              src="https://pd-ljmatica.si/wp/wp-content/uploads/2019/03/matica-logo-web.png"
+              alt="{{ club.name }}"
+            />
+            <div class="primary-text">
+              {{ club.name }}
+            </div>
+          </div>
+          <div class="metadata">
+            {{ club.nrMembers }}
+            {{
+              club.nrMembers == 1
+                ? "član"
+                : club.nrMembers == 2
+                ? "člana"
+                : club.nrMembers == 3 || club.nrMembers == 4
+                ? "člani"
+                : "članov"
+            }}
+          </div>
+        </a>
+        <mat-divider *ngIf="!isLast"></mat-divider>
+      </ng-container>
+    </mat-nav-list>
+  </div>
 </div>

@@ -1,0 +1,14 @@
+.clubs-list-container .mat-list-base {
+  padding-top: 0;
+  .mat-list-item .mat-list-item-content {
+    justify-content: space-between;
+    .primary-text {
+      padding-left: 16px;
+      font-size: 14px;
+    }
+    .metadata {
+      padding-left: 16px;
+      font-size: 12px;
+    }
+  }
+}
