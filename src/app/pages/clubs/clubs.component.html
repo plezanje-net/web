@@ -1,4 +1,10 @@
-<div>
+<h1>
+  <div class="container p15" fxLayout="row" fxLayoutAlign="start center">
+    <div fxFlex="100">Moji klubi</div>
+  </div>
+</h1>
+
+<div class="container p15" fxLayout="row">
   <ul>
     <li *ngFor="let club of myClubs">
       <a [routerLink]="['/moj-profil/moji-klubi/', club.id]">{{ club.name }}</a>

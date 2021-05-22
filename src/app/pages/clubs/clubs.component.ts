@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { GraphQLError } from 'graphql';
 import { Subscription } from 'rxjs';
-
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from 'src/app/types/data-error';
 
+// TODO: move query to gql folder
 const GET_MY_CLUBS = gql`
   {
     myClubs {
@@ -14,6 +14,8 @@ const GET_MY_CLUBS = gql`
     }
   }
 `;
+
+// TODO: finish clubs list layout...
 
 @Component({
   selector: 'app-clubs',

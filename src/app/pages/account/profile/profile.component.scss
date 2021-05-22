@@ -1,0 +1,14 @@
+@import "../../../../styles/colors.scss";
+
+.link-card {
+  cursor: pointer;
+
+  .card-title {
+    font-size: large;
+    padding-left: 16px;
+  }
+
+  .card-icon {
+    color: $primary;
+  }
+}
