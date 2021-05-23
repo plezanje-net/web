@@ -1,0 +1,7 @@
+query myClubs {
+  myClubs {
+    id
+    name
+    nrMembers
+  }
+}

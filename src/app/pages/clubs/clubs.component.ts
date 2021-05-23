@@ -1,22 +1,12 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { Apollo, gql } from 'apollo-angular';
-import { GraphQLError } from 'graphql';
-import { Subscription } from 'rxjs';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from 'src/app/types/data-error';
+import { GraphQLError } from 'graphql';
+import { Club, MyClubsGQL } from '../../../generated/graphql';
 
-// TODO: move query to gql folder
-const GET_MY_CLUBS = gql`
-  {
-    myClubs {
-      id
-      name
-      nrMembers
-    }
-  }
-`;
-
-// TODO: finish clubs list layout...
+// TODO: finish clubs list layout... add club logo/avatar do db? or drop avatar altogether...
+// TODO: display message if you have no clubs
+// TODO: handle and display error
 
 @Component({
   selector: 'app-clubs',
@@ -24,27 +14,26 @@ const GET_MY_CLUBS = gql`
   styleUrls: ['./clubs.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ClubsComponent implements OnInit, OnDestroy {
-  myClubs: any = [];
-  querySubscription: Subscription;
+export class ClubsComponent implements OnInit {
+  myClubs: Club[] = [];
+
   loading = true;
   error: DataError = null;
 
-  constructor(private apollo: Apollo, private layoutService: LayoutService) {}
+  constructor(
+    private layoutService: LayoutService,
+    private myClubsGQL: MyClubsGQL
+  ) {}
 
   ngOnInit(): void {
-    this.querySubscription = this.apollo
-      .watchQuery({
-        query: GET_MY_CLUBS,
-      })
-      .valueChanges.subscribe((result: any) => {
-        this.loading = false;
-        if (result.errors != null) {
-          this.queryError(result.errors);
-        } else {
-          this.querySuccess(result.data);
-        }
-      });
+    this.myClubsGQL.fetch().subscribe((result: any) => {
+      this.loading = false;
+      if (result.errors != null) {
+        this.queryError(result.errors);
+      } else {
+        this.querySuccess(result.data);
+      }
+    });
   }
 
   queryError(errors: GraphQLError[]) {
@@ -65,9 +54,5 @@ export class ClubsComponent implements OnInit, OnDestroy {
         name: 'Moji Klubi',
       },
     ]);
-  }
-
-  ngOnDestroy() {
-    this.querySubscription.unsubscribe();
   }
 }

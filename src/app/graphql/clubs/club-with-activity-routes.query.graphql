@@ -1,0 +1,49 @@
+query clubWithActivityRoutes(
+  $clubId: String!
+  $input: FindActivityRoutesInput
+) {
+  activityRoutesByClub(clubId: $clubId, input: $input) {
+    items {
+      date
+      user {
+        id
+        fullName
+      }
+      grade
+      name
+      ascentType
+      difficulty
+      id
+      publish
+      route {
+        crag {
+          country {
+            slug
+          }
+          slug
+          name
+          id
+        }
+        id
+      }
+    }
+    meta {
+      itemCount
+      pageCount
+      pageNumber
+      pageSize
+    }
+  }
+
+  club(id: $clubId) {
+    id
+    name
+    members {
+      admin
+      user {
+        id
+        fullName
+      }
+    }
+  }
+}

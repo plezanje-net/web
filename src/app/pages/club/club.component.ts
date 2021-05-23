@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Apollo, gql, QueryRef } from 'apollo-angular';
+import { QueryRef } from 'apollo-angular';
 import { GraphQLError } from 'graphql';
 import { Subject, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -15,68 +15,10 @@ import {
   ActivityFiltersCragGQL,
   ActivityFiltersRouteGQL,
   ActivityRoute,
+  UserFullNameGQL,
+  ClubWithActivityRoutesGQL,
 } from 'src/generated/graphql';
 
-// TODO: move queries to grapql queries folder
-const GET_MEMBER_NAME = gql`
-  query getUserById($userId: String!) {
-    user(email: "", id: $userId) {
-      fullName
-    }
-  }
-`;
-
-const GET_CLUB_ACTIVITY_ROUTES = gql`
-  query getActivityRoutesByClub(
-    $clubId: String!
-    $input: FindActivityRoutesInput
-  ) {
-    activityRoutesByClub(clubId: $clubId, input: $input) {
-      items {
-        date
-        user {
-          id
-          fullName
-        }
-        grade
-        name
-        ascentType
-        difficulty
-        id
-        publish
-        route {
-          crag {
-            country {
-              slug
-            }
-            slug
-            name
-            id
-          }
-          id
-        }
-      }
-      meta {
-        itemCount
-        pageCount
-        pageNumber
-        pageSize
-      }
-    }
-
-    club(id: $clubId) {
-      id
-      name
-      members {
-        admin
-        user {
-          id
-          fullName
-        }
-      }
-    }
-  }
-`;
 // TODO: should query only activityRoutes with the right publish type. what are the right publish types?
 // TODO: should be unable to get club data if I am not a member? BE
 // TODO: should have nice url with no id, but slug? FE/BE
@@ -97,8 +39,9 @@ export class ClubComponent implements OnInit, OnDestroy {
 
   clubQuery: QueryRef<any>;
   querySubscription: Subscription;
-  clubActivityRoutesQuery: QueryRef<any>;
-  clubActivityRoutesQuerySubscription: Subscription;
+  clubWithActivityRoutesQuery: QueryRef<any>;
+
+  clubWithActivityRoutesQuerySubscription: Subscription;
 
   activityRoutes: any; // TODO: type
   pagination: any; // TODO: type
@@ -144,13 +87,14 @@ export class ClubComponent implements OnInit, OnDestroy {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private apollo: Apollo,
     private layoutService: LayoutService,
     private dialog: MatDialog,
     private authService: AuthService,
     private router: Router,
     private activityFiltersCragGQL: ActivityFiltersCragGQL,
-    private activityFiltersRouteGQL: ActivityFiltersRouteGQL
+    private activityFiltersRouteGQL: ActivityFiltersRouteGQL,
+    private userFullNameGQL: UserFullNameGQL,
+    private clubWithActivityRoutesGQL: ClubWithActivityRoutesGQL
   ) {}
 
   ngOnInit(): void {
@@ -179,22 +123,22 @@ export class ClubComponent implements OnInit, OnDestroy {
       });
 
       const queryParams = this.filteredTable.queryParams;
-      this.clubActivityRoutesQuery = this.apollo.watchQuery({
-        query: GET_CLUB_ACTIVITY_ROUTES,
-        variables: {
-          clubId: params.club,
-          input: queryParams,
-        },
+
+      this.clubWithActivityRoutesQuery = this.clubWithActivityRoutesGQL.watch({
+        clubId: params.club,
+        input: queryParams,
       });
-      this.clubActivityRoutesQuerySubscription =
-        this.clubActivityRoutesQuery.valueChanges.subscribe((result: any) => {
-          this.loading = false;
-          if (result.errors != null) {
-            this.queryError(result.errors);
-          } else {
-            this.querySuccess(result.data);
+      this.clubWithActivityRoutesQuerySubscription =
+        this.clubWithActivityRoutesQuery.valueChanges.subscribe(
+          (result: any) => {
+            this.loading = false;
+            if (result.errors != null) {
+              this.queryError(result.errors);
+            } else {
+              this.querySuccess(result.data);
+            }
           }
-        });
+        );
     });
 
     // TODO: why datepicker fires 4 times? BUG?
@@ -300,14 +244,8 @@ export class ClubComponent implements OnInit, OnDestroy {
       if (this.activityRoutes.length) {
         this.filterMemberFullName = this.activityRoutes[0].user.fullName;
       } else {
-        // TODO: move query to queries folder
-        this.apollo
-          .query({
-            query: GET_MEMBER_NAME,
-            variables: {
-              userId: this.filters.controls.userId.value,
-            },
-          })
+        this.userFullNameGQL
+          .fetch({ userId: this.filters.controls.userId.value })
           .toPromise()
           .then(
             (member: any) =>
@@ -327,13 +265,13 @@ export class ClubComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((data) => {
         if (data) {
-          this.clubActivityRoutesQuery.refetch();
+          this.clubWithActivityRoutesQuery.refetch();
         }
       });
   }
 
   ngOnDestroy() {
-    this.clubActivityRoutesQuerySubscription.unsubscribe();
+    this.clubWithActivityRoutesQuerySubscription.unsubscribe();
     this.ftNavSubscription.unsubscribe();
   }
 }

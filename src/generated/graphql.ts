@@ -21,9 +21,9 @@ export type Scalars = {
 export type Activity = {
   __typename?: 'Activity';
   id: Scalars['String'];
-  crag: Crag;
-  iceFall: IceFall;
-  peak: Peak;
+  crag?: Maybe<Crag>;
+  iceFall?: Maybe<IceFall>;
+  peak?: Maybe<Peak>;
   type: Scalars['String'];
   name: Scalars['String'];
   date: Scalars['DateTime'];
@@ -61,9 +61,26 @@ export type Area = {
   nrCrags: Scalars['Int'];
 };
 
+export type Club = {
+  __typename?: 'Club';
+  id: Scalars['String'];
+  name: Scalars['String'];
+  created: Scalars['DateTime'];
+  updated: Scalars['DateTime'];
+  legacy: Scalars['String'];
+  members: Array<ClubMember>;
+  nrMembers: Scalars['Float'];
+};
+
 export type ClubMember = {
   __typename?: 'ClubMember';
+  id: Scalars['String'];
   admin: Scalars['Boolean'];
+  created: Scalars['DateTime'];
+  updated: Scalars['DateTime'];
+  legacy: Scalars['String'];
+  user: User;
+  club: Club;
 };
 
 export type Comment = {
@@ -158,6 +175,16 @@ export type CreateAreaInput = {
   countryId: Scalars['String'];
 };
 
+export type CreateClubInput = {
+  name: Scalars['String'];
+};
+
+export type CreateClubMemberInput = {
+  admin: Scalars['Boolean'];
+  userId: Scalars['String'];
+  clubId: Scalars['String'];
+};
+
 export type CreateCommentInput = {
   type: Scalars['String'];
   content: Scalars['String'];
@@ -223,6 +250,7 @@ export type FindActivityRoutesInput = {
   orderBy?: Maybe<OrderByInput>;
   pageNumber?: Maybe<Scalars['Int']>;
   pageSize?: Maybe<Scalars['Int']>;
+  clubId?: Maybe<Scalars['String']>;
 };
 
 export type FindCountriesInput = {
@@ -299,6 +327,11 @@ export type Mutation = {
   recover: Scalars['Boolean'];
   setPassword: Scalars['Boolean'];
   login: TokenResponse;
+  createClub: Club;
+  updateClub: Club;
+  deleteClub: Scalars['Boolean'];
+  createClubMember: ClubMember;
+  deleteClubMember: Scalars['Boolean'];
   createActivity: Activity;
 };
 
@@ -418,6 +451,31 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationCreateClubArgs = {
+  createClubInput: CreateClubInput;
+};
+
+
+export type MutationUpdateClubArgs = {
+  updateClubInput: UpdateClubInput;
+};
+
+
+export type MutationDeleteClubArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationCreateClubMemberArgs = {
+  input: CreateClubMemberInput;
+};
+
+
+export type MutationDeleteClubMemberArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationCreateActivityArgs = {
   routes: Array<CreateActivityRouteInput>;
   input: CreateActivityInput;
@@ -488,8 +546,13 @@ export type Query = {
   route: Route;
   profile: User;
   users: Array<User>;
+  user: User;
+  myClubs: Array<Club>;
+  clubs: Array<Club>;
+  club: Club;
   myActivities: PaginatedActivities;
   myActivityRoutes: PaginatedActivityRoutes;
+  activityRoutesByClub: PaginatedActivityRoutes;
 };
 
 
@@ -523,6 +586,22 @@ export type QueryRouteArgs = {
 };
 
 
+export type QueryUserArgs = {
+  id?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
+};
+
+
+export type QueryClubsArgs = {
+  userId?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryClubArgs = {
+  id: Scalars['String'];
+};
+
+
 export type QueryMyActivitiesArgs = {
   input?: Maybe<FindActivitiesInput>;
 };
@@ -530,6 +609,12 @@ export type QueryMyActivitiesArgs = {
 
 export type QueryMyActivityRoutesArgs = {
   input?: Maybe<FindActivityRoutesInput>;
+};
+
+
+export type QueryActivityRoutesByClubArgs = {
+  input?: Maybe<FindActivityRoutesInput>;
+  clubId: Scalars['String'];
 };
 
 export type RegisterInput = {
@@ -582,6 +667,11 @@ export type UpdateAreaInput = {
   id: Scalars['String'];
   name?: Maybe<Scalars['String']>;
   countryId: Scalars['String'];
+};
+
+export type UpdateClubInput = {
+  name?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
 };
 
 export type UpdateCommentInput = {
@@ -691,14 +781,14 @@ export type MyActivitiesQuery = (
       & { routes: Array<(
         { __typename?: 'ActivityRoute' }
         & Pick<ActivityRoute, 'grade'>
-      )>, crag: (
+      )>, crag?: Maybe<(
         { __typename?: 'Crag' }
         & Pick<Crag, 'id' | 'name' | 'slug'>
         & { country: (
           { __typename?: 'Country' }
           & Pick<Country, 'slug'>
         ) }
-      ) }
+      )> }
     )>, meta: (
       { __typename?: 'PaginationMeta' }
       & Pick<PaginationMeta, 'itemCount' | 'pageCount' | 'pageNumber' | 'pageSize'>
@@ -745,6 +835,76 @@ export type ProfileQuery = (
   & { profile: (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'email' | 'roles'>
+  ) }
+);
+
+export type ClubWithActivityRoutesQueryVariables = Exact<{
+  clubId: Scalars['String'];
+  input?: Maybe<FindActivityRoutesInput>;
+}>;
+
+
+export type ClubWithActivityRoutesQuery = (
+  { __typename?: 'Query' }
+  & { activityRoutesByClub: (
+    { __typename?: 'PaginatedActivityRoutes' }
+    & { items: Array<(
+      { __typename?: 'ActivityRoute' }
+      & Pick<ActivityRoute, 'date' | 'grade' | 'name' | 'ascentType' | 'difficulty' | 'id' | 'publish'>
+      & { user: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'fullName'>
+      ), route: (
+        { __typename?: 'Route' }
+        & Pick<Route, 'id'>
+        & { crag: (
+          { __typename?: 'Crag' }
+          & Pick<Crag, 'slug' | 'name' | 'id'>
+          & { country: (
+            { __typename?: 'Country' }
+            & Pick<Country, 'slug'>
+          ) }
+        ) }
+      ) }
+    )>, meta: (
+      { __typename?: 'PaginationMeta' }
+      & Pick<PaginationMeta, 'itemCount' | 'pageCount' | 'pageNumber' | 'pageSize'>
+    ) }
+  ), club: (
+    { __typename?: 'Club' }
+    & Pick<Club, 'id' | 'name'>
+    & { members: Array<(
+      { __typename?: 'ClubMember' }
+      & Pick<ClubMember, 'admin'>
+      & { user: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'fullName'>
+      ) }
+    )> }
+  ) }
+);
+
+export type MyClubsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyClubsQuery = (
+  { __typename?: 'Query' }
+  & { myClubs: Array<(
+    { __typename?: 'Club' }
+    & Pick<Club, 'id' | 'name' | 'nrMembers'>
+  )> }
+);
+
+export type UserFullNameQueryVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+
+export type UserFullNameQuery = (
+  { __typename?: 'Query' }
+  & { user: (
+    { __typename?: 'User' }
+    & Pick<User, 'fullName'>
   ) }
 );
 
@@ -1030,6 +1190,102 @@ export const ProfileDocument = gql`
       super(apollo);
     }
   }
+export const ClubWithActivityRoutesDocument = gql`
+    query clubWithActivityRoutes($clubId: String!, $input: FindActivityRoutesInput) {
+  activityRoutesByClub(clubId: $clubId, input: $input) {
+    items {
+      date
+      user {
+        id
+        fullName
+      }
+      grade
+      name
+      ascentType
+      difficulty
+      id
+      publish
+      route {
+        crag {
+          country {
+            slug
+          }
+          slug
+          name
+          id
+        }
+        id
+      }
+    }
+    meta {
+      itemCount
+      pageCount
+      pageNumber
+      pageSize
+    }
+  }
+  club(id: $clubId) {
+    id
+    name
+    members {
+      admin
+      user {
+        id
+        fullName
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ClubWithActivityRoutesGQL extends Apollo.Query<ClubWithActivityRoutesQuery, ClubWithActivityRoutesQueryVariables> {
+    document = ClubWithActivityRoutesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const MyClubsDocument = gql`
+    query myClubs {
+  myClubs {
+    id
+    name
+    nrMembers
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class MyClubsGQL extends Apollo.Query<MyClubsQuery, MyClubsQueryVariables> {
+    document = MyClubsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UserFullNameDocument = gql`
+    query userFullName($userId: String!) {
+  user(email: "", id: $userId) {
+    fullName
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UserFullNameGQL extends Apollo.Query<UserFullNameQuery, UserFullNameQueryVariables> {
+    document = UserFullNameDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const CreateCommentDocument = gql`
     mutation CreateComment($input: CreateCommentInput!) {
   createComment(input: $input) {
@@ -1227,6 +1483,9 @@ export const namedOperations = {
     MyActivities: 'MyActivities',
     MyActivityRoutes: 'MyActivityRoutes',
     Profile: 'Profile',
+    clubWithActivityRoutes: 'clubWithActivityRoutes',
+    myClubs: 'myClubs',
+    userFullName: 'userFullName',
     CountriesToc: 'CountriesToc',
     CragBySlug: 'CragBySlug',
     Crags: 'Crags'
