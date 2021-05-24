@@ -7,10 +7,9 @@ import { LayoutService } from '../../services/layout.service';
 @Component({
   selector: 'app-route',
   templateUrl: './route.component.html',
-  styleUrls: ['./route.component.scss']
+  styleUrls: ['./route.component.scss'],
 })
 export class RouteComponent implements OnInit {
-
   loading: boolean = true;
   error: DataError = null;
   route: any = {};
@@ -18,14 +17,14 @@ export class RouteComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private apollo: Apollo,
-    private layoutService: LayoutService,
-  ) { }
+    private layoutService: LayoutService
+  ) {}
 
   ngOnInit(): void {
-
     this.activatedRoute.params.subscribe((params: Params) => {
-      this.apollo.watchQuery({
-        query: gql`
+      this.apollo
+        .watchQuery({
+          query: gql`
           {
             route(id: "${params.route}") {
               id,
@@ -72,30 +71,31 @@ export class RouteComponent implements OnInit {
               }
             }
           }
-        `
-      }).valueChanges.subscribe(result => {
-        this.loading = false;
+        `,
+        })
+        .valueChanges.subscribe((result) => {
+          this.loading = false;
 
-        if (result.errors != null) {
-          this.queryError(result.errors);
-        } else {
-          this.querySuccess(result.data);
-        }
-      });
+          if (result.errors != null) {
+            this.queryError(result.errors);
+          } else {
+            this.querySuccess(result.data);
+          }
+        });
     });
   }
 
   queryError(errors: any): void {
     if (errors.length > 0 && errors[0].message === 'entity_not_found') {
       this.error = {
-        message: 'Smer ne obstaja v bazi.'
+        message: 'Smer ne obstaja v bazi.',
       };
 
       return;
     }
 
     this.error = {
-      message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.'
+      message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
     };
   }
 

@@ -5,6 +5,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { QueryRef } from 'apollo-angular';
 import { GraphQLError } from 'graphql';
 import { Subject, Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ASCENT_TYPES } from 'src/app/common/activity.constants';
 import { FilteredTable } from 'src/app/common/filtered-table';
@@ -16,7 +17,10 @@ import {
   ActivityFiltersRouteGQL,
   ActivityRoute,
   UserFullNameGQL,
-  ClubWithActivityRoutesGQL,
+  ActivityRoutesByClubGQL,
+  ClubByIdGQL,
+  Club,
+  ClubMember,
 } from 'src/generated/graphql';
 
 // TODO: should query only activityRoutes with the right publish type. what are the right publish types?
@@ -37,11 +41,7 @@ export class ClubComponent implements OnInit, OnDestroy {
   club: any = {}; // TODO: type
   clubAdmin = false;
 
-  clubQuery: QueryRef<any>;
-  querySubscription: Subscription;
-  clubWithActivityRoutesQuery: QueryRef<any>;
-
-  clubWithActivityRoutesQuerySubscription: Subscription;
+  activityRoutesQuery: QueryRef<any>;
 
   activityRoutes: any; // TODO: type
   pagination: any; // TODO: type
@@ -79,11 +79,15 @@ export class ClubComponent implements OnInit, OnDestroy {
   filterRouteName: string;
   filterMemberFullName: string;
 
-  ftNavSubscription: Subscription;
   rowAction$ = new Subject<{
     item: ActivityRoute;
     action: string;
   }>();
+
+  ftNavSubscription: Subscription;
+  filtersSubscription: Subscription;
+  arSubscription: Subscription;
+  raSubscription: Subscription;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -93,12 +97,29 @@ export class ClubComponent implements OnInit, OnDestroy {
     private router: Router,
     private activityFiltersCragGQL: ActivityFiltersCragGQL,
     private activityFiltersRouteGQL: ActivityFiltersRouteGQL,
-    private userFullNameGQL: UserFullNameGQL,
-    private clubWithActivityRoutesGQL: ClubWithActivityRoutesGQL
+    private clubByIdGQL: ClubByIdGQL,
+    private activityRoutesByClubGQL: ActivityRoutesByClubGQL,
+    private userFullNameGQL: UserFullNameGQL
   ) {}
 
   ngOnInit(): void {
+    // Get data for the club
     const clubId = this.activatedRoute.snapshot.params.club;
+    this.clubByIdGQL.fetch({ clubId: clubId }).subscribe((data: any) => {
+      if (data.errors != null) {
+        this.queryError(data.errors);
+        return;
+      }
+
+      this.club = data.data.club;
+      this.setBreadcrumbs();
+
+      // TODO: implement amAdmin on clubMember resolver on BE?
+      this.clubAdmin = this.club.members.some(
+        (member: ClubMember) =>
+          member.user.id === this.authService.currentUser.id && member.admin
+      );
+    });
 
     this.ftNavSubscription = this.filteredTable.navigate$.subscribe(
       (ftParams) => {
@@ -110,43 +131,46 @@ export class ClubComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.activatedRoute.params.subscribe((params: Params) => {
-      this.loading = true;
+    this.arSubscription = this.activatedRoute.params
+      .pipe(
+        switchMap((params: Params) => {
+          this.loading = true;
 
-      const ftParams = { ...params };
-      delete ftParams.club;
+          const ftParams = { ...params };
+          delete ftParams.club;
 
-      this.filteredTable.setRouteParams(ftParams);
+          this.filteredTable.setRouteParams(ftParams);
 
-      this.filters.patchValue(this.filteredTable.filterParams, {
-        emitEvent: false,
+          this.filters.patchValue(this.filteredTable.filterParams, {
+            emitEvent: false,
+          });
+
+          const queryParams = this.filteredTable.queryParams;
+
+          this.activityRoutesQuery = this.activityRoutesByClubGQL.watch({
+            clubId: params.club,
+            input: queryParams,
+          });
+
+          return this.activityRoutesQuery.valueChanges;
+        })
+      )
+      .subscribe((data: any) => {
+        this.loading = false;
+
+        if (data.errors != null) {
+          this.queryError(data.errors);
+        } else {
+          this.querySuccess(data.data);
+        }
       });
-
-      const queryParams = this.filteredTable.queryParams;
-
-      this.clubWithActivityRoutesQuery = this.clubWithActivityRoutesGQL.watch({
-        clubId: params.club,
-        input: queryParams,
-      });
-      this.clubWithActivityRoutesQuerySubscription =
-        this.clubWithActivityRoutesQuery.valueChanges.subscribe(
-          (result: any) => {
-            this.loading = false;
-            if (result.errors != null) {
-              this.queryError(result.errors);
-            } else {
-              this.querySuccess(result.data);
-            }
-          }
-        );
-    });
 
     // TODO: why datepicker fires 4 times? BUG?
-    this.filters.valueChanges.subscribe((values) =>
+    this.filtersSubscription = this.filters.valueChanges.subscribe((values) =>
       this.filteredTable.setFilterParams(values)
     );
 
-    this.rowAction$.subscribe((action) => {
+    this.raSubscription = this.rowAction$.subscribe((action) => {
       switch (action.action) {
         case 'filterByMember':
           this.filters.patchValue({
@@ -172,6 +196,22 @@ export class ClubComponent implements OnInit, OnDestroy {
     });
   }
 
+  setBreadcrumbs() {
+    this.layoutService.$breadcrumbs.next([
+      {
+        name: 'Moj Profil',
+        path: '/moj-profil',
+      },
+      {
+        name: 'Moji Klubi',
+        path: '/moj-profil/moji-klubi',
+      },
+      {
+        name: this.club.name,
+      },
+    ]);
+  }
+
   queryError(errors: GraphQLError[]) {
     if (
       errors.length > 0 &&
@@ -189,32 +229,9 @@ export class ClubComponent implements OnInit, OnDestroy {
   }
 
   querySuccess(data: any) {
-    this.club = data.club;
-
-    // TODO: implement amAdmin on clubMember resolver on BE?
-    this.clubAdmin = this.club.members.some(
-      (member) =>
-        member.user.id === this.authService.currentUser.id && member.admin
-    );
-
     this.activityRoutes = data.activityRoutesByClub.items;
     this.pagination = data.activityRoutesByClub.meta;
     this.applyRelationFilterDisplayValues();
-
-    // set breadcrumbs
-    this.layoutService.$breadcrumbs.next([
-      {
-        name: 'Moj Profil',
-        path: '/moj-profil',
-      },
-      {
-        name: 'Moji Klubi',
-        path: '/moj-profil/moji-klubi',
-      },
-      {
-        name: this.club.name,
-      },
-    ]);
   }
 
   applyRelationFilterDisplayValues() {
@@ -265,13 +282,15 @@ export class ClubComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((data) => {
         if (data) {
-          this.clubWithActivityRoutesQuery.refetch();
+          this.activityRoutesQuery.refetch();
         }
       });
   }
 
   ngOnDestroy() {
-    this.clubWithActivityRoutesQuerySubscription.unsubscribe();
     this.ftNavSubscription.unsubscribe();
+    this.arSubscription.unsubscribe();
+    this.filtersSubscription.unsubscribe();
+    this.raSubscription.unsubscribe();
   }
 }

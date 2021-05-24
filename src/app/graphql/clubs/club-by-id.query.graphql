@@ -1,0 +1,13 @@
+query ClubById($clubId: String!) {
+  club(id: $clubId) {
+    id
+    name
+    members {
+      admin
+      user {
+        id
+        fullName
+      }
+    }
+  }
+}

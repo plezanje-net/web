@@ -838,13 +838,13 @@ export type ProfileQuery = (
   ) }
 );
 
-export type ClubWithActivityRoutesQueryVariables = Exact<{
+export type ActivityRoutesByClubQueryVariables = Exact<{
   clubId: Scalars['String'];
   input?: Maybe<FindActivityRoutesInput>;
 }>;
 
 
-export type ClubWithActivityRoutesQuery = (
+export type ActivityRoutesByClubQuery = (
   { __typename?: 'Query' }
   & { activityRoutesByClub: (
     { __typename?: 'PaginatedActivityRoutes' }
@@ -870,7 +870,17 @@ export type ClubWithActivityRoutesQuery = (
       { __typename?: 'PaginationMeta' }
       & Pick<PaginationMeta, 'itemCount' | 'pageCount' | 'pageNumber' | 'pageSize'>
     ) }
-  ), club: (
+  ) }
+);
+
+export type ClubByIdQueryVariables = Exact<{
+  clubId: Scalars['String'];
+}>;
+
+
+export type ClubByIdQuery = (
+  { __typename?: 'Query' }
+  & { club: (
     { __typename?: 'Club' }
     & Pick<Club, 'id' | 'name'>
     & { members: Array<(
@@ -1190,8 +1200,8 @@ export const ProfileDocument = gql`
       super(apollo);
     }
   }
-export const ClubWithActivityRoutesDocument = gql`
-    query clubWithActivityRoutes($clubId: String!, $input: FindActivityRoutesInput) {
+export const ActivityRoutesByClubDocument = gql`
+    query ActivityRoutesByClub($clubId: String!, $input: FindActivityRoutesInput) {
   activityRoutesByClub(clubId: $clubId, input: $input) {
     items {
       date
@@ -1224,6 +1234,21 @@ export const ClubWithActivityRoutesDocument = gql`
       pageSize
     }
   }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ActivityRoutesByClubGQL extends Apollo.Query<ActivityRoutesByClubQuery, ActivityRoutesByClubQueryVariables> {
+    document = ActivityRoutesByClubDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ClubByIdDocument = gql`
+    query ClubById($clubId: String!) {
   club(id: $clubId) {
     id
     name
@@ -1241,15 +1266,15 @@ export const ClubWithActivityRoutesDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class ClubWithActivityRoutesGQL extends Apollo.Query<ClubWithActivityRoutesQuery, ClubWithActivityRoutesQueryVariables> {
-    document = ClubWithActivityRoutesDocument;
+  export class ClubByIdGQL extends Apollo.Query<ClubByIdQuery, ClubByIdQueryVariables> {
+    document = ClubByIdDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
   }
 export const MyClubsDocument = gql`
-    query myClubs {
+    query MyClubs {
   myClubs {
     id
     name
@@ -1269,7 +1294,7 @@ export const MyClubsDocument = gql`
     }
   }
 export const UserFullNameDocument = gql`
-    query userFullName($userId: String!) {
+    query UserFullName($userId: String!) {
   user(email: "", id: $userId) {
     fullName
   }
@@ -1483,9 +1508,10 @@ export const namedOperations = {
     MyActivities: 'MyActivities',
     MyActivityRoutes: 'MyActivityRoutes',
     Profile: 'Profile',
-    clubWithActivityRoutes: 'clubWithActivityRoutes',
-    myClubs: 'myClubs',
-    userFullName: 'userFullName',
+    ActivityRoutesByClub: 'ActivityRoutesByClub',
+    ClubById: 'ClubById',
+    MyClubs: 'MyClubs',
+    UserFullName: 'UserFullName',
     CountriesToc: 'CountriesToc',
     CragBySlug: 'CragBySlug',
     Crags: 'Crags'
