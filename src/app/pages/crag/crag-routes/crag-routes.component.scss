@@ -1,14 +1,14 @@
 .row {
-    cursor: pointer;
+  cursor: pointer;
 
-    .routes {
-        white-space: nowrap;
-        text-align: right;
-    }
-    &.header {
-        cursor: default;
-        padding-top: 12px;
-    }
+  .routes {
+    white-space: nowrap;
+    text-align: right;
+  }
+  &.header {
+    cursor: default;
+    padding-top: 12px;
+  }
 }
 
 h3 {

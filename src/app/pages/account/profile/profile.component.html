@@ -9,18 +9,8 @@
 
 <div class="container p15">
   <div fxLayout="row wrap" fxLayoutGap="8px grid">
-    <div
-      fxFlex="100%"
-      fxFlex.gt-xs="50%"
-      fxFlex.gt-sm="33%"
-      fxFlex.gt-md="25%"
-      fxFlex.gt-lg="20%"
-    >
-      <mat-card
-        class="link-card"
-        appMaterialElevation
-        [routerLink]="['/moj-profil/moji-klubi']"
-      >
+    <div fxFlex="100%" fxFlex.gt-xs="50%" fxFlex.gt-sm="33%" fxFlex.gt-md="25%" fxFlex.gt-lg="20%">
+      <mat-card class="link-card" appMaterialElevation [routerLink]="['/moj-profil/moji-klubi']">
         <mat-card-content fxLayout="row" fxLayoutAlign="start center">
           <mat-icon>groups</mat-icon>
           <div class="card-title">Moji klubi</div>

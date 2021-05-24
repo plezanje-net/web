@@ -1,53 +1,83 @@
 <div fxLayout="column" fxLayoutGap="12px" fxHide.lt-md>
-    <div class="card">
-        <h3>{{ country.name }}</h3>
-        <a [routerLink]="['/plezalisca', country.slug]" [class.active]="!areaId" class="row" fxLayout="row"
-            fxLayoutAlign="start center">
-            <div fxFlex="100">Vse regije</div>
-            <mat-icon>arrow_right</mat-icon>
-        </a>
-        <a *ngFor="let area of country.areas" [routerLink]="['/plezalisca', country.slug, { area: area.id }]"
-            [class.active]="area.id == areaId" class="row" fxLayout="row" fxLayoutAlign="start center">
-            <div fxFlex="100">{{ area.name }}</div>
-            <mat-icon>arrow_right</mat-icon>
-        </a>
-    </div>
+  <div class="card">
+    <h3>{{ country.name }}</h3>
+    <a
+      [routerLink]="['/plezalisca', country.slug]"
+      [class.active]="!areaId"
+      class="row"
+      fxLayout="row"
+      fxLayoutAlign="start center"
+    >
+      <div fxFlex="100">Vse regije</div>
+      <mat-icon>arrow_right</mat-icon>
+    </a>
+    <a
+      *ngFor="let area of country.areas"
+      [routerLink]="['/plezalisca', country.slug, { area: area.id }]"
+      [class.active]="area.id == areaId"
+      class="row"
+      fxLayout="row"
+      fxLayoutAlign="start center"
+    >
+      <div fxFlex="100">{{ area.name }}</div>
+      <mat-icon>arrow_right</mat-icon>
+    </a>
+  </div>
 
-    <div class="card" *ngIf="countries">
-        <h3 *ngIf="country.slug == 'slovenija'">Tujina</h3>
-        <ng-container *ngFor="let listCountry of countries; let i = index">
-            <ng-container *ngIf="showAllCountries || i <= 5">
-                <a *ngIf="listCountry.slug != country.slug" [routerLink]="['/plezalisca/', listCountry.slug]"
-                    class="row" fxLayout="row" fxLayoutAlign="start center">
-                    <div fxFlex="100">{{ listCountry.name }}</div>
-                    <span>{{ listCountry.nrCrags }}</span>
-                </a>
-            </ng-container>
-        </ng-container>
-        <div *ngIf="!showAllCountries" (click)="showAllCountries = true" class="show-all" fxLayout="row"
-            fxLayoutAlign="center center">
-            <div>Prikaži vseh {{ countries.length }}</div>
-            <mat-icon>arrow_drop_down</mat-icon>
-        </div>
+  <div class="card" *ngIf="countries">
+    <h3 *ngIf="country.slug == 'slovenija'">Tujina</h3>
+    <ng-container *ngFor="let listCountry of countries; let i = index">
+      <ng-container *ngIf="showAllCountries || i <= 5">
+        <a
+          *ngIf="listCountry.slug != country.slug"
+          [routerLink]="['/plezalisca/', listCountry.slug]"
+          class="row"
+          fxLayout="row"
+          fxLayoutAlign="start center"
+        >
+          <div fxFlex="100">{{ listCountry.name }}</div>
+          <span>{{ listCountry.nrCrags }}</span>
+        </a>
+      </ng-container>
+    </ng-container>
+    <div
+      *ngIf="!showAllCountries"
+      (click)="showAllCountries = true"
+      class="show-all"
+      fxLayout="row"
+      fxLayoutAlign="center center"
+    >
+      <div>Prikaži vseh {{ countries.length }}</div>
+      <mat-icon>arrow_drop_down</mat-icon>
     </div>
+  </div>
 </div>
 
 <div fxLayout="row" fxLayoutGap="12px" fxHide fxShow.lt-md>
-    <div fxFlex="100">
-        <mat-form-field class="no-hint infix-width-auto">
-            <mat-label>Država</mat-label>
-            <mat-select [value]="country.slug" (selectionChange)="changeCountry($event.value)">
-                <mat-option *ngFor="let listCountry of countries" [value]="listCountry.slug">{{ listCountry.name }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-    <div fxFlex="100">
-        <mat-form-field class="no-hint infix-width-auto" *ngIf="country.areas">
-            <mat-label>Regija</mat-label>
-            <mat-select [value]="areaId" (selectionChange)="changeArea($event.value)">
-                <mat-option [value]="null">Vse regije</mat-option>
-                <mat-option *ngFor="let area of country.areas" [value]="area.id">{{ area.name }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
+  <div fxFlex="100">
+    <mat-form-field class="no-hint infix-width-auto">
+      <mat-label>Država</mat-label>
+      <mat-select
+        [value]="country.slug"
+        (selectionChange)="changeCountry($event.value)"
+      >
+        <mat-option
+          *ngFor="let listCountry of countries"
+          [value]="listCountry.slug"
+          >{{ listCountry.name }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div fxFlex="100">
+    <mat-form-field class="no-hint infix-width-auto" *ngIf="country.areas">
+      <mat-label>Regija</mat-label>
+      <mat-select [value]="areaId" (selectionChange)="changeArea($event.value)">
+        <mat-option [value]="null">Vse regije</mat-option>
+        <mat-option *ngFor="let area of country.areas" [value]="area.id">{{
+          area.name
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 </div>

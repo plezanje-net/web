@@ -8,9 +8,8 @@ describe('CragGalleryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CragGalleryComponent ]
-    })
-    .compileComponents();
+      declarations: [CragGalleryComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

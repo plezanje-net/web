@@ -8,9 +8,8 @@ describe('AscentPublishOptionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AscentPublishOptionComponent ]
-    })
-    .compileComponents();
+      declarations: [AscentPublishOptionComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

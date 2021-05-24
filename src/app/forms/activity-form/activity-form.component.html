@@ -1,25 +1,29 @@
 <div mat-dialog-title fxLayout="row" fxLayoutAlign="start center">
   <div fxFlex="100" class="title">Dodaj v plezalni dnevnik</div>
-  <div fxFlex (click)="dialogRef.close()"><button mat-icon-button>
+  <div fxFlex (click)="dialogRef.close()">
+    <button mat-icon-button>
       <mat-icon>close</mat-icon>
-    </button></div>
+    </button>
+  </div>
 </div>
 <form [formGroup]="activityForm" (submit)="save()">
   <div mat-dialog-content>
-
     <div fxLayout="column" fxLayoutGap="12px">
       <div fxLayout="row" fxLayoutAlign="end">
-        <mat-checkbox formControlName="onlyRoutes">Dodaj samo preplezane smeri</mat-checkbox>
+        <mat-checkbox formControlName="onlyRoutes"
+          >Dodaj samo preplezane smeri</mat-checkbox
+        >
       </div>
       <ng-container *ngIf="!activityForm.value.onlyRoutes">
-        <h2>
-          Plezalni dan
-        </h2>
+        <h2>Plezalni dan</h2>
         <div fxLayout="row" fxLayoutGap="12px">
           <mat-form-field class="no-hint" fxFlex="50">
             <mat-label>Datum</mat-label>
-            <input matInput formControlName="date" [matDatepicker]="picker">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <input matInput formControlName="date" [matDatepicker]="picker" />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
           <mat-form-field class="no-hint" fxFlex="50">
@@ -36,23 +40,38 @@
       </ng-container>
     </div>
 
-    <h2>
-      Preplezane smeri
-    </h2>
+    <h2>Preplezane smeri</h2>
     <div>
-      <div *ngFor="let route of routes.controls; let first = first; let last = last; let index = index;" class="route">
-        <app-activity-form-route [route]="route" [activity]="!activityForm.value.onlyRoutes" [first]="first"
-          [last]="last" (move)="moveRoute(index, $event)"></app-activity-form-route>
+      <div
+        *ngFor="
+          let route of routes.controls;
+          let first = first;
+          let last = last;
+          let index = index
+        "
+        class="route"
+      >
+        <app-activity-form-route
+          [route]="route"
+          [activity]="!activityForm.value.onlyRoutes"
+          [first]="first"
+          [last]="last"
+          (move)="moveRoute(index, $event)"
+        ></app-activity-form-route>
       </div>
     </div>
   </div>
   <mat-dialog-actions fxLayout="row">
     <div fxFlex>
-      <button type="button" mat-button (click)="add()" [disabled]="loading">Dodaj smer</button>
+      <button type="button" mat-button (click)="add()" [disabled]="loading">
+        Dodaj smer
+      </button>
     </div>
     <div *ngIf="!loading">
-      <button type="button" mat-button mat-dialog-close >Prekliči</button>
-      <button  mat-flat-button color="primary" [disabled]="!activityForm.valid">SHRANI</button>
+      <button type="button" mat-button mat-dialog-close>Prekliči</button>
+      <button mat-flat-button color="primary" [disabled]="!activityForm.valid">
+        SHRANI
+      </button>
     </div>
     <span *ngIf="loading" class="loading">
       <mat-spinner diameter="30"></mat-spinner>
