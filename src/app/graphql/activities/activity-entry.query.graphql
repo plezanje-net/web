@@ -1,6 +1,12 @@
-query MyActivityRoutes($input: FindActivityRoutesInput) {
-  myActivityRoutes(input: $input) {
-    items {
+query ActivityEntry($id: String!) {
+  activity(id: $id) {
+    id
+    name
+    date
+    type
+    notes
+    partners
+    routes {
       difficulty
       date
       ascentType
@@ -24,11 +30,13 @@ query MyActivityRoutes($input: FindActivityRoutesInput) {
         id
       }
     }
-    meta {
-      itemCount
-      pageCount
-      pageNumber
-      pageSize
+    crag {
+      id
+      name
+      slug
+      country {
+        slug
+      }
     }
   }
 }

@@ -28,8 +28,8 @@ export type Activity = {
   name: Scalars['String'];
   date: Scalars['DateTime'];
   duration?: Maybe<Scalars['Int']>;
-  notes: Scalars['String'];
-  partners: Scalars['String'];
+  notes?: Maybe<Scalars['String']>;
+  partners?: Maybe<Scalars['String']>;
   routes: Array<ActivityRoute>;
   user: User;
 };
@@ -37,6 +37,7 @@ export type Activity = {
 export type ActivityRoute = {
   __typename?: 'ActivityRoute';
   id: Scalars['String'];
+  activity?: Maybe<Activity>;
   route: Route;
   ascentType: Scalars['String'];
   name: Scalars['String'];
@@ -552,6 +553,7 @@ export type Query = {
   clubs: Array<Club>;
   club: Club;
   myActivities: PaginatedActivities;
+  activity: Activity;
   myActivityRoutes: PaginatedActivityRoutes;
   activityRoutesByClub: PaginatedActivityRoutes;
 };
@@ -605,6 +607,11 @@ export type QueryClubArgs = {
 
 export type QueryMyActivitiesArgs = {
   input?: Maybe<FindActivitiesInput>;
+};
+
+
+export type QueryActivityArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -727,6 +734,45 @@ export type User = {
   fullName: Scalars['String'];
 };
 
+export type ActivityEntryQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type ActivityEntryQuery = (
+  { __typename?: 'Query' }
+  & { activity: (
+    { __typename?: 'Activity' }
+    & Pick<Activity, 'id' | 'name' | 'date' | 'type' | 'notes' | 'partners'>
+    & { routes: Array<(
+      { __typename?: 'ActivityRoute' }
+      & Pick<ActivityRoute, 'difficulty' | 'date' | 'ascentType' | 'grade' | 'notes' | 'partner' | 'publish'>
+      & { activity?: Maybe<(
+        { __typename?: 'Activity' }
+        & Pick<Activity, 'id'>
+      )>, route: (
+        { __typename?: 'Route' }
+        & Pick<Route, 'name' | 'id'>
+        & { crag: (
+          { __typename?: 'Crag' }
+          & Pick<Crag, 'id' | 'name' | 'slug'>
+          & { country: (
+            { __typename?: 'Country' }
+            & Pick<Country, 'slug'>
+          ) }
+        ) }
+      ) }
+    )>, crag?: Maybe<(
+      { __typename?: 'Crag' }
+      & Pick<Crag, 'id' | 'name' | 'slug'>
+      & { country: (
+        { __typename?: 'Country' }
+        & Pick<Country, 'slug'>
+      ) }
+    )> }
+  ) }
+);
+
 export type ActivityFiltersCragQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -778,7 +824,7 @@ export type MyActivitiesQuery = (
     { __typename?: 'PaginatedActivities' }
     & { items: Array<(
       { __typename?: 'Activity' }
-      & Pick<Activity, 'name' | 'date' | 'type'>
+      & Pick<Activity, 'id' | 'name' | 'date' | 'type'>
       & { routes: Array<(
         { __typename?: 'ActivityRoute' }
         & Pick<ActivityRoute, 'grade'>
@@ -809,7 +855,10 @@ export type MyActivityRoutesQuery = (
     & { items: Array<(
       { __typename?: 'ActivityRoute' }
       & Pick<ActivityRoute, 'difficulty' | 'date' | 'ascentType' | 'grade' | 'notes' | 'partner' | 'publish'>
-      & { route: (
+      & { activity?: Maybe<(
+        { __typename?: 'Activity' }
+        & Pick<Activity, 'id'>
+      )>, route: (
         { __typename?: 'Route' }
         & Pick<Route, 'name' | 'id'>
         & { crag: (
@@ -1036,6 +1085,7 @@ export type RouteQueryVariables = Exact<{
   routeId: Scalars['String'];
 }>;
 
+
 export type RouteQuery = (
   { __typename?: 'Query' }
   & { route: (
@@ -1073,6 +1123,61 @@ export type RouteQuery = (
   ) }
 );
 
+export const ActivityEntryDocument = gql`
+    query ActivityEntry($id: String!) {
+  activity(id: $id) {
+    id
+    name
+    date
+    type
+    notes
+    partners
+    routes {
+      difficulty
+      date
+      ascentType
+      grade
+      notes
+      partner
+      publish
+      activity {
+        id
+      }
+      route {
+        crag {
+          id
+          name
+          slug
+          country {
+            slug
+          }
+        }
+        name
+        id
+      }
+    }
+    crag {
+      id
+      name
+      slug
+      country {
+        slug
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ActivityEntryGQL extends Apollo.Query<ActivityEntryQuery, ActivityEntryQueryVariables> {
+    document = ActivityEntryDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const ActivityFiltersCragDocument = gql`
     query ActivityFiltersCrag($id: String!) {
   crag(id: $id) {
@@ -1087,7 +1192,7 @@ export const ActivityFiltersCragDocument = gql`
   })
   export class ActivityFiltersCragGQL extends Apollo.Query<ActivityFiltersCragQuery, ActivityFiltersCragQueryVariables> {
     document = ActivityFiltersCragDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1106,7 +1211,7 @@ export const ActivityFiltersRouteDocument = gql`
   })
   export class ActivityFiltersRouteGQL extends Apollo.Query<ActivityFiltersRouteQuery, ActivityFiltersRouteQueryVariables> {
     document = ActivityFiltersRouteDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1124,7 +1229,7 @@ export const CreateActivityDocument = gql`
   })
   export class CreateActivityGQL extends Apollo.Mutation<CreateActivityMutation, CreateActivityMutationVariables> {
     document = CreateActivityDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1133,6 +1238,7 @@ export const MyActivitiesDocument = gql`
     query MyActivities($input: FindActivitiesInput) {
   myActivities(input: $input) {
     items {
+      id
       name
       date
       type
@@ -1163,7 +1269,7 @@ export const MyActivitiesDocument = gql`
   })
   export class MyActivitiesGQL extends Apollo.Query<MyActivitiesQuery, MyActivitiesQueryVariables> {
     document = MyActivitiesDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1179,6 +1285,9 @@ export const MyActivityRoutesDocument = gql`
       notes
       partner
       publish
+      activity {
+        id
+      }
       route {
         crag {
           id
@@ -1207,7 +1316,7 @@ export const MyActivityRoutesDocument = gql`
   })
   export class MyActivityRoutesGQL extends Apollo.Query<MyActivityRoutesQuery, MyActivityRoutesQueryVariables> {
     document = MyActivityRoutesDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1227,7 +1336,7 @@ export const ProfileDocument = gql`
   })
   export class ProfileGQL extends Apollo.Query<ProfileQuery, ProfileQueryVariables> {
     document = ProfileDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1341,7 +1450,7 @@ export const CreateCommentDocument = gql`
   })
   export class CreateCommentGQL extends Apollo.Mutation<CreateCommentMutation, CreateCommentMutationVariables> {
     document = CreateCommentDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1357,7 +1466,7 @@ export const DeleteCommentDocument = gql`
   })
   export class DeleteCommentGQL extends Apollo.Mutation<DeleteCommentMutation, DeleteCommentMutationVariables> {
     document = DeleteCommentDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1376,7 +1485,7 @@ export const UpdateCommentDocument = gql`
   })
   export class UpdateCommentGQL extends Apollo.Mutation<UpdateCommentMutation, UpdateCommentMutationVariables> {
     document = UpdateCommentDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1396,7 +1505,7 @@ export const CountriesTocDocument = gql`
   })
   export class CountriesTocGQL extends Apollo.Query<CountriesTocQuery, CountriesTocQueryVariables> {
     document = CountriesTocDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1472,7 +1581,7 @@ export const CragBySlugDocument = gql`
   })
   export class CragBySlugGQL extends Apollo.Query<CragBySlugQuery, CragBySlugQueryVariables> {
     document = CragBySlugDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1513,7 +1622,7 @@ export const CragsDocument = gql`
   })
   export class CragsGQL extends Apollo.Query<CragsQuery, CragsQueryVariables> {
     document = CragsDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1581,13 +1690,14 @@ export const RouteDocument = gql`
   })
   export class RouteGQL extends Apollo.Query<RouteQuery, RouteQueryVariables> {
     document = RouteDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
   }
 export const namedOperations = {
   Query: {
+    ActivityEntry: 'ActivityEntry',
     ActivityFiltersCrag: 'ActivityFiltersCrag',
     ActivityFiltersRoute: 'ActivityFiltersRoute',
     MyActivities: 'MyActivities',

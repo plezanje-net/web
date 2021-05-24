@@ -22,7 +22,7 @@
   </button>
 
   <mat-menu #menu="matMenu">
-    <button mat-menu-item>
+    <button mat-menu-item [routerLink]="['/plezalni-dnevnik', activity.id]">
       <span>Odpri plezalni dan</span>
     </button>
     <button

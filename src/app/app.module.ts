@@ -87,6 +87,7 @@ import { ActivityRouteRowComponent } from './pages/activity/partials/activity-ro
 import { ActivityRowComponent } from './pages/activity/partials/activity-row/activity-row.component';
 import { MaterialElevationDirective } from './shared/directives/material-elevation.directive';
 import { MatListModule } from '@angular/material/list';
+import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -145,6 +146,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ActivityRouteRowComponent,
     ActivityRowComponent,
     MaterialElevationDirective,
+    ActivityEntryComponent,
   ],
   imports: [
     BrowserModule,
