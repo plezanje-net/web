@@ -179,6 +179,12 @@ export type CreateClubInput = {
   name: Scalars['String'];
 };
 
+export type CreateClubMemberByEmailInput = {
+  admin: Scalars['Boolean'];
+  userEmail: Scalars['String'];
+  clubId: Scalars['String'];
+};
+
 export type CreateClubMemberInput = {
   admin: Scalars['Boolean'];
   userId: Scalars['String'];
@@ -331,6 +337,7 @@ export type Mutation = {
   updateClub: Club;
   deleteClub: Scalars['Boolean'];
   createClubMember: ClubMember;
+  createClubMemberByEmail: ClubMember;
   deleteClubMember: Scalars['Boolean'];
   createActivity: Activity;
 };
@@ -468,6 +475,11 @@ export type MutationDeleteClubArgs = {
 
 export type MutationCreateClubMemberArgs = {
   input: CreateClubMemberInput;
+};
+
+
+export type MutationCreateClubMemberByEmailArgs = {
+  input: CreateClubMemberByEmailInput;
 };
 
 
@@ -838,6 +850,19 @@ export type ProfileQuery = (
   ) }
 );
 
+export type CreateClubMemberByEmailMutationVariables = Exact<{
+  input: CreateClubMemberByEmailInput;
+}>;
+
+
+export type CreateClubMemberByEmailMutation = (
+  { __typename?: 'Mutation' }
+  & { createClubMemberByEmail: (
+    { __typename?: 'ClubMember' }
+    & Pick<ClubMember, 'id'>
+  ) }
+);
+
 export type ActivityRoutesByClubQueryVariables = Exact<{
   clubId: Scalars['String'];
   input?: Maybe<FindActivityRoutesInput>;
@@ -1200,6 +1225,24 @@ export const ProfileDocument = gql`
       super(apollo);
     }
   }
+export const CreateClubMemberByEmailDocument = gql`
+    mutation CreateClubMemberByEmail($input: CreateClubMemberByEmailInput!) {
+  createClubMemberByEmail(input: $input) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateClubMemberByEmailGQL extends Apollo.Mutation<CreateClubMemberByEmailMutation, CreateClubMemberByEmailMutationVariables> {
+    document = CreateClubMemberByEmailDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const ActivityRoutesByClubDocument = gql`
     query ActivityRoutesByClub($clubId: String!, $input: FindActivityRoutesInput) {
   activityRoutesByClub(clubId: $clubId, input: $input) {
@@ -1518,6 +1561,7 @@ export const namedOperations = {
   },
   Mutation: {
     CreateActivity: 'CreateActivity',
+    CreateClubMemberByEmail: 'CreateClubMemberByEmail',
     CreateComment: 'CreateComment',
     DeleteComment: 'DeleteComment',
     UpdateComment: 'UpdateComment'

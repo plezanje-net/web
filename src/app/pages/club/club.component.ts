@@ -155,13 +155,13 @@ export class ClubComponent implements OnInit, OnDestroy {
           return this.activityRoutesQuery.valueChanges;
         })
       )
-      .subscribe((data: any) => {
+      .subscribe((result: any) => {
         this.loading = false;
 
-        if (data.errors != null) {
-          this.queryError(data.errors);
+        if (result.errors != null) {
+          this.queryError(result.errors);
         } else {
-          this.querySuccess(data.data);
+          this.querySuccess(result.data);
         }
       });
 
@@ -280,8 +280,8 @@ export class ClubComponent implements OnInit, OnDestroy {
         data: { clubId: this.club.id, clubName: this.club.name },
       })
       .afterClosed()
-      .subscribe((data) => {
-        if (data) {
+      .subscribe((result) => {
+        if (result) {
           this.activityRoutesQuery.refetch();
         }
       });
