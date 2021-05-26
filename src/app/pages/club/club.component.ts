@@ -24,10 +24,13 @@ import {
 } from 'src/generated/graphql';
 
 // TODO: should query only activityRoutes with the right publish type. what are the right publish types?
-// TODO: should be unable to get club data if I am not a member? BE
 // TODO: should have nice url with no id, but slug? FE/BE
 // TODO: keep scroll position when paginating? what is the expected behaviour?
 // TODO: sort on grade not working as expected -> some activityRoutes have no grade field (only difficulty field)...
+// TODO: new tab for listing members?
+// TODO: add option to remove a member
+// TODO: date filter
+// TODO: types
 
 @Component({
   selector: 'app-club',
@@ -221,6 +224,12 @@ export class ClubComponent implements OnInit, OnDestroy {
         message: 'Klub ne obstaja.',
       };
       return;
+    } else if (errors.length > 0 && errors[0].message === 'Forbidden') {
+      this.error = {
+        message:
+          'Nisi član kluba, zato nimaš pravic za prikaz podatkov o klubu.',
+      };
+      return;
     }
 
     this.error = {
@@ -271,8 +280,6 @@ export class ClubComponent implements OnInit, OnDestroy {
       }
     }
   }
-
-  // TODO: add option to remove a member
 
   addMember() {
     this.dialog

@@ -20,6 +20,23 @@
     </div>
   </h1>
 
+  <div class="container">
+    <nav mat-tab-nav-bar>
+      <a
+        mat-tab-link
+        [active]="active == 'memberList'"
+        [routerLink]="['/moj-profil/moji-klubi']"
+        >Člani kluba</a
+      >
+      <a
+        mat-tab-link
+        [active]="active == 'memberActivityRoutes'"
+        [routerLink]="['/moj-profil/moji-klubi']"
+        >Vzponi članov</a
+      >
+    </nav>
+  </div>
+
   <div class="container p15">
     <div>
       <div fxLayout="row" [formGroup]="filters" fxLayoutGap="8px">
