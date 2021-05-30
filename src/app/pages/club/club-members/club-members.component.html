@@ -1,0 +1,32 @@
+<app-data-error *ngIf="error" [error]="error"></app-data-error>
+
+<div *ngIf="!error">
+  <div class="container p15">
+    <div class="card">
+      <table class="card-table">
+        <tr class="row header">
+          <td>Ime in priimek</td>
+          <td></td>
+        </tr>
+
+        <tr
+          *ngFor="let member of (this.clubService.club$ | async).members"
+          class="row"
+        >
+          <td>{{ member.user.fullName }}</td>
+          <td class="tools">
+            <button mat-icon-button [mat-menu-trigger-for]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="deleteMember(member.id)">
+                <span>Odstrani člana</span>
+              </button>
+            </mat-menu>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

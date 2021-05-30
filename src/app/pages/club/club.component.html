@@ -1,11 +1,11 @@
 <app-data-error *ngIf="error" [error]="error"></app-data-error>
 
-<div *ngIf="!error">
+<div *ngIf="!error && !loading">
   <h1>
     <div class="container p15" fxLayout="row" fxLayoutAlign="start center">
       <div fxFlex="100">{{ club.name }}</div>
 
-      <div *ngIf="clubAdmin">
+      <div *ngIf="amClubAdmin">
         <button mat-icon-button [matMenuTriggerFor]="menu">
           <mat-icon>more_vert</mat-icon>
         </button>
@@ -24,186 +24,21 @@
     <nav mat-tab-nav-bar>
       <a
         mat-tab-link
-        [active]="active == 'memberList'"
-        [routerLink]="['/moj-profil/moji-klubi']"
+        [routerLink]="['/moj-profil/moji-klubi', club.id, 'clani']"
+        routerLinkActive
+        #rlaM="routerLinkActive"
+        [active]="rlaM.isActive"
         >Člani kluba</a
       >
       <a
         mat-tab-link
-        [active]="active == 'memberActivityRoutes'"
-        [routerLink]="['/moj-profil/moji-klubi']"
+        [routerLink]="['/moj-profil/moji-klubi', club.id, 'vzponi']"
+        routerLinkActive
+        #rlaAr="routerLinkActive"
+        [active]="rlaAr.isActive"
         >Vzponi članov</a
       >
     </nav>
   </div>
-
-  <div class="container p15">
-    <div>
-      <div fxLayout="row" [formGroup]="filters" fxLayoutGap="8px">
-        <mat-form-field>
-          <mat-label>Vrsta vzpona</mat-label>
-          <mat-select formControlName="ascentType" multiple>
-            <mat-option *ngFor="let type of ascentTypes" [value]="type.value"
-              >{{ type.label }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field
-          *ngIf="filterMemberFullName && filters.controls.userId.value"
-        >
-          <mat-label>Član</mat-label>
-          <input matInput [value]="filterMemberFullName" disabled />
-          <button
-            mat-icon-button
-            matSuffix
-            (click)="filters.patchValue({ userId: null })"
-          >
-            <mat-icon>close</mat-icon>
-          </button>
-        </mat-form-field>
-        <input type="hidden" formControlName="userId" />
-
-        <mat-form-field
-          *ngIf="filterRouteName && filters.controls.routeId.value"
-        >
-          <mat-label>Smer</mat-label>
-          <input matInput [value]="filterRouteName" disabled />
-          <button
-            mat-icon-button
-            matSuffix
-            (click)="filters.patchValue({ routeId: null })"
-          >
-            <mat-icon>close</mat-icon>
-          </button>
-        </mat-form-field>
-        <input type="hidden" formControlName="routeId" />
-
-        <mat-form-field *ngIf="filterCragName && filters.controls.cragId.value">
-          <mat-label>Plezališče</mat-label>
-          <input matInput [value]="filterCragName" disabled />
-          <button
-            mat-icon-button
-            matSuffix
-            (click)="filters.patchValue({ cragId: null })"
-          >
-            <mat-icon>close</mat-icon>
-          </button>
-        </mat-form-field>
-        <input type="hidden" formControlName="cragId" />
-      </div>
-
-      <div class="card">
-        <div class="card-loader" *ngIf="loading">
-          <app-loader></app-loader>
-        </div>
-        <table class="card-table">
-          <tr class="row header">
-            <td *ngFor="let column of filteredTable.columns">
-              <span
-                *ngIf="column.sortable"
-                class="sortable"
-                [class.sorted]="filteredTable.sortColumn == column.name"
-                (click)="filteredTable.sort(column)"
-              >
-                {{ column.label }}
-                <mat-icon inline *ngIf="filteredTable.sortColumn != column.name"
-                  >sort</mat-icon
-                >
-                <mat-icon
-                  inline
-                  *ngIf="filteredTable.sortColumn == column.name"
-                  >{{
-                    filteredTable.sortDirection == "DESC"
-                      ? "arrow_downward"
-                      : "arrow_upward"
-                  }}</mat-icon
-                >
-              </span>
-              <span *ngIf="!column.sortable">{{ column.label }}</span>
-            </td>
-            <td></td>
-          </tr>
-
-          <tr *ngFor="let route of activityRoutes" class="row">
-            <td>{{ route.user.fullName }}</td>
-            <td>{{ route.date | amDateFormat: "DD.MM.YYYY" }}</td>
-            <td>
-              <a
-                [routerLink]="[
-                  '/plezalisca',
-                  route.route.crag.country.slug,
-                  route.route.crag.slug
-                ]"
-                >{{ route.route.crag.name }}</a
-              >
-            </td>
-            <td>
-              <a
-                [routerLink]="[
-                  '/plezalisca',
-                  route.route.crag.country.slug,
-                  route.route.crag.slug,
-                  route.route.id
-                ]"
-                >{{ route.name }}</a
-              >
-            </td>
-            <td>
-              <app-grade
-                [grade]="route.grade"
-                [text]="route.difficulty"
-                [showModifier]="true"
-              ></app-grade>
-            </td>
-            <td>
-              <app-ascent-type [value]="route.ascentType"></app-ascent-type>
-            </td>
-            <td class="tools">
-              <button mat-icon-button [mat-menu-trigger-for]="menu">
-                <mat-icon>more_vert</mat-icon>
-              </button>
-
-              <mat-menu #menu="matMenu">
-                <button
-                  mat-menu-item
-                  (click)="
-                    rowAction$.next({ item: route, action: 'filterByMember' })
-                  "
-                >
-                  <span>Vsi vzponi tega člana</span>
-                </button>
-                <button
-                  mat-menu-item
-                  (click)="
-                    rowAction$.next({ item: route, action: 'filterByRoute' })
-                  "
-                >
-                  <span>Vsi vzponi za to smer</span>
-                </button>
-                <button
-                  mat-menu-item
-                  (click)="
-                    rowAction$.next({ item: route, action: 'filterByCrag' })
-                  "
-                >
-                  <span>Vsi vzponi v tem plezališču</span>
-                </button>
-              </mat-menu>
-            </td>
-          </tr>
-        </table>
-      </div>
-      <mat-paginator
-        *ngIf="pagination != null"
-        hidePageSize
-        showFirstLastButtons
-        [length]="pagination.itemCount"
-        [pageIndex]="pagination.pageNumber - 1"
-        [pageSize]="pagination.pageSize"
-        (page)="filteredTable.paginate($event)"
-      >
-      </mat-paginator>
-    </div>
-  </div>
+  <router-outlet></router-outlet>
 </div>

@@ -14,6 +14,8 @@ import { ActivityLogComponent } from './pages/activity/activity-log/activity-log
 import { ActivityRoutesComponent } from './pages/activity/activity-routes/activity-routes.component';
 import { ActivityStatisticsComponent } from './pages/activity/activity-statistics/activity-statistics.component';
 import { ClubsComponent } from './pages/clubs/clubs.component';
+import { ClubMembersComponent } from './pages/club/club-members/club-members.component';
+import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/club-activity-routes.component';
 import { ClubComponent } from './pages/club/club.component';
 
 const routes: Routes = [
@@ -39,6 +41,11 @@ const routes: Routes = [
     path: 'moj-profil/moji-klubi/:club',
     component: ClubComponent,
     canActivate: [AuthGuard],
+    children: [
+      { path: '', redirectTo: 'clani', pathMatch: 'full' },
+      { path: 'clani', component: ClubMembersComponent },
+      { path: 'vzponi', component: ClubActivityRoutesComponent },
+    ],
   },
   {
     path: 'plezalni-dnevnik',

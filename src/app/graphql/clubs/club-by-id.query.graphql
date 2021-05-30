@@ -3,6 +3,7 @@ query ClubById($clubId: String!) {
     id
     name
     members {
+      id
       admin
       user {
         id
