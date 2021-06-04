@@ -1,11 +1,13 @@
 <app-data-error *ngIf="error" [error]="error"></app-data-error>
 
+<app-loader *ngIf="loading"></app-loader>
+
 <div *ngIf="!error && !loading">
   <h1>
     <div class="container p15" fxLayout="row" fxLayoutAlign="start center">
       <div fxFlex="100">{{ club.name }}</div>
 
-      <div *ngIf="amClubAdmin">
+      <div *ngIf="clubService.amClubAdmin$ | async">
         <button mat-icon-button [matMenuTriggerFor]="menu">
           <mat-icon>more_vert</mat-icon>
         </button>
@@ -40,5 +42,6 @@
       >
     </nav>
   </div>
+
   <router-outlet></router-outlet>
 </div>

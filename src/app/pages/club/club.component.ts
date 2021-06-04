@@ -1,14 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { GraphQLError } from 'graphql';
 import { ClubMemberFormComponent } from 'src/app/forms/club-member-form/club-member-form.component';
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from 'src/app/types/data-error';
-import { Club, ClubByIdGQL, ClubMember } from 'src/generated/graphql';
-import { QueryRef } from 'apollo-angular';
-import { AuthService } from 'src/app/auth/auth.service';
+import { Club } from 'src/generated/graphql';
 import { ClubService } from './club.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-club',
@@ -16,49 +15,59 @@ import { ClubService } from './club.service';
   styleUrls: ['./club.component.scss'],
   providers: [ClubService],
 })
-export class ClubComponent implements OnInit {
+export class ClubComponent implements OnInit, OnDestroy {
   loading = true;
   error: DataError = null;
 
   club: Club;
-  amClubAdmin = false;
 
-  clubQuery: QueryRef<any>;
+  clubSubscription: Subscription;
+
+  // TODO: move breadcrumbs to service?
+  // TODO: add rename club to menu
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
-    private authService: AuthService,
     private dialog: MatDialog,
-    private clubByIdGQL: ClubByIdGQL,
-    private clubService: ClubService
+    public clubService: ClubService
   ) {}
 
   ngOnInit(): void {
     const clubId = this.activatedRoute.snapshot.params.club;
-    this.clubQuery = this.clubByIdGQL.watch({ clubId: clubId });
-
-    this.clubQuery.valueChanges.subscribe((data: any) => {
-      this.loading = false;
-      if (data.errors != null) {
-        this.queryError(data.errors);
-        return;
+    this.clubService.fetchClub(clubId);
+    this.clubSubscription = this.clubService.club$.subscribe(
+      (club: Club) => {
+        if (!club) return;
+        this.loading = false;
+        this.club = club;
+        this.setBreadcrumbs();
+      },
+      (errors) => {
+        this.loading = false;
+        this.queryError(errors);
       }
-
-      this.club = data.data.club;
-      this.clubService.club$.next(this.club);
-
-      this.setBreadcrumbs();
-
-      this.amClubAdmin = this.club.members.some(
-        (member: ClubMember) =>
-          member.user.id === this.authService.currentUser.id && member.admin
-      );
-    });
+    );
   }
 
   queryError(errors: GraphQLError[]) {
-    // TODO:handle errors
+    if (
+      errors.length > 0 &&
+      errors[0].message.startsWith('Could not find any entity of type')
+    ) {
+      this.error = {
+        message: 'Klub ne obstaja.',
+      };
+    } else if (errors.length > 0 && errors[0].message === 'Forbidden') {
+      this.error = {
+        message:
+          'Nisi član kluba, zato nimaš pravic za prikaz podatkov o klubu.',
+      };
+    } else {
+      this.error = {
+        message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
+      };
+    }
   }
 
   setBreadcrumbs() {
@@ -85,9 +94,13 @@ export class ClubComponent implements OnInit {
       .afterClosed()
       .subscribe((result) => {
         if (result) {
-          this.clubQuery.refetch();
+          this.clubService.refetchClub();
           this.clubService.memberAdded$.next();
         }
       });
+  }
+
+  ngOnDestroy() {
+    if (this.clubSubscription) this.clubSubscription.unsubscribe();
   }
 }

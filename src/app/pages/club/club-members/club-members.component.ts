@@ -1,4 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { GraphQLError } from 'graphql';
+import { Club, DeleteClubMemberGQL } from 'src/generated/graphql';
+import { Observable } from 'rxjs';
+import { filter, mergeMap } from 'rxjs/operators';
+import { ConfirmationDialogComponent } from 'src/app/common/confirmation-dialog/confirmation-dialog.component';
 import { ClubService } from '../club.service';
 
 @Component({
@@ -8,12 +15,71 @@ import { ClubService } from '../club.service';
 })
 export class ClubMembersComponent implements OnInit {
   loading = true;
-  error = null;
-  constructor(private clubService: ClubService) {}
+  club$: Observable<Club>;
 
-  ngOnInit(): void {}
+  constructor(
+    private clubService: ClubService,
+    private deleteClubMemberGQL: DeleteClubMemberGQL,
+    private snackbar: MatSnackBar,
+    private dialog: MatDialog
+  ) {}
 
-  deleteMember(id: string) {
-    console.log('deleting member with id: ' + id);
+  ngOnInit(): void {
+    this.club$ = this.clubService.club$;
+  }
+
+  deleteMember(id: string, memberFullName: string) {
+    this.dialog
+      .open(ConfirmationDialogComponent, {
+        data: {
+          message: `Ali res želiš odstraniti člana ${memberFullName} iz kluba?`,
+        },
+      })
+      .afterClosed()
+      .pipe(
+        filter((result) => !!result),
+        mergeMap((_) => {
+          return this.deleteClubMemberGQL.mutate(
+            { id },
+            {
+              errorPolicy: 'all',
+            }
+          );
+        })
+      )
+      .subscribe(
+        (data) => {
+          if (data.errors != null) {
+            this.queryError(data.errors);
+          } else {
+            // successfull deletion
+            this.clubService.refetchClub();
+            this.displaySuccess();
+          }
+        },
+        (_) => {
+          this.queryError();
+        }
+      );
+  }
+
+  queryError(errors?: readonly GraphQLError[]) {
+    let errorMessage = 'Prišlo je do nepričakovane napake.'; // set default error message
+    if (errors && errors.length > 0 && errors[0].message === 'Forbidden')
+      errorMessage = 'Nimaš pravic za odstranjevanje članov.';
+    this.displayError(errorMessage);
+  }
+
+  displayError(errorMessage: string) {
+    this.snackbar.open(errorMessage, null, {
+      panelClass: 'error',
+      duration: 3000,
+    });
+  }
+
+  displaySuccess() {
+    this.snackbar.open('Član je bil uspešno odstranjen iz kluba.', null, {
+      duration: 3000,
+    });
   }
 }

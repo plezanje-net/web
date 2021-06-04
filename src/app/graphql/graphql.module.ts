@@ -30,6 +30,15 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
             },
           },
         },
+        Club: {
+          fields: {
+            members: {
+              merge(existing, incoming) {
+                return incoming;
+              },
+            },
+          },
+        },
       },
     }),
     defaultOptions: {

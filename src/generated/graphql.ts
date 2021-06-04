@@ -863,6 +863,16 @@ export type CreateClubMemberByEmailMutation = (
   ) }
 );
 
+export type DeleteClubMemberMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteClubMemberMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteClubMember'>
+);
+
 export type ActivityRoutesByClubQueryVariables = Exact<{
   clubId: Scalars['String'];
   input?: Maybe<FindActivityRoutesInput>;
@@ -1243,6 +1253,22 @@ export const CreateClubMemberByEmailDocument = gql`
       super(apollo);
     }
   }
+export const DeleteClubMemberDocument = gql`
+    mutation DeleteClubMember($id: String!) {
+  deleteClubMember(id: $id)
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteClubMemberGQL extends Apollo.Mutation<DeleteClubMemberMutation, DeleteClubMemberMutationVariables> {
+    document = DeleteClubMemberDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const ActivityRoutesByClubDocument = gql`
     query ActivityRoutesByClub($clubId: String!, $input: FindActivityRoutesInput) {
   activityRoutesByClub(clubId: $clubId, input: $input) {
@@ -1563,6 +1589,7 @@ export const namedOperations = {
   Mutation: {
     CreateActivity: 'CreateActivity',
     CreateClubMemberByEmail: 'CreateClubMemberByEmail',
+    DeleteClubMember: 'DeleteClubMember',
     CreateComment: 'CreateComment',
     DeleteComment: 'DeleteComment',
     UpdateComment: 'UpdateComment'

@@ -1,11 +1,48 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { Club } from 'src/generated/graphql';
+import { Injectable, OnDestroy } from '@angular/core';
+import { QueryRef } from 'apollo-angular';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
+import { Club, ClubByIdGQL, ClubMember } from 'src/generated/graphql';
 
 @Injectable()
-export class ClubService {
-  club$ = new BehaviorSubject<Club>(null);
+export class ClubService implements OnDestroy {
+  private club = new BehaviorSubject<Club>(null); // source
+  club$ = this.club.asObservable(); // stream
   memberAdded$ = new Subject<void>();
 
-  constructor() {}
+  amClubAdmin = new BehaviorSubject<boolean>(false);
+  amClubAdmin$ = this.amClubAdmin.asObservable();
+
+  clubQuery: QueryRef<any>;
+  clubQuerySubscription: Subscription;
+
+  constructor(
+    private clubByIdGQL: ClubByIdGQL,
+    private authService: AuthService
+  ) {}
+
+  fetchClub(clubId: string) {
+    this.clubQuery = this.clubByIdGQL.watch({ clubId });
+    this.clubQuery.valueChanges.subscribe((data) => {
+      if (data.errors != null) {
+        this.club.error(data.errors);
+      } else {
+        const club = data.data.club;
+        const amClubAdmin = club.members.some(
+          (member: ClubMember) =>
+            member.user.id === this.authService.currentUser.id && member.admin
+        );
+        this.amClubAdmin.next(amClubAdmin);
+        this.club.next(club);
+      }
+    });
+  }
+
+  refetchClub() {
+    this.clubQuery.refetch();
+  }
+
+  ngOnDestroy() {
+    if (this.clubQuerySubscription) this.clubQuerySubscription.unsubscribe();
+  }
 }
