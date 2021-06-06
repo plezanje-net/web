@@ -24,11 +24,11 @@
               <span>Vsi vzponi tega člana</span>
             </button>
             <button
-              mat-menu-item
-              (click)="
-                deleteMember(member.id, member.user.fullName, member.user.id)
+              *ngIf="
+                (clubService.amClubAdmin$ | async) && member.user.id !== meId
               "
-              *ngIf="clubService.amClubAdmin$ | async"
+              mat-menu-item
+              (click)="deleteMember(member.id, member.user.fullName)"
             >
               <mat-icon>delete_outline</mat-icon>
               <span>Odstrani člana</span>

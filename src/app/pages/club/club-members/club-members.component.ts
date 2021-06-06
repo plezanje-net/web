@@ -12,7 +12,6 @@ import { filter, mergeMap } from 'rxjs/operators';
 import { ConfirmationDialogComponent } from 'src/app/common/confirmation-dialog/confirmation-dialog.component';
 import { ClubService } from '../club.service';
 import { AuthService } from 'src/app/auth/auth.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-club-members',
@@ -22,9 +21,9 @@ import { Router } from '@angular/router';
 export class ClubMembersComponent implements OnInit {
   loading = true;
   club$: Observable<Club>;
+  meId = this.authService.currentUser.id;
 
   constructor(
-    private router: Router,
     private clubService: ClubService,
     private authService: AuthService,
     private deleteClubMemberGQL: DeleteClubMemberGQL,
@@ -36,7 +35,7 @@ export class ClubMembersComponent implements OnInit {
     this.club$ = this.clubService.club$;
   }
 
-  deleteMember(id: string, memberFullName: string, memberUserId: string) {
+  deleteMember(id: string, memberFullName: string) {
     this.dialog
       .open(ConfirmationDialogComponent, {
         data: {
@@ -51,10 +50,7 @@ export class ClubMembersComponent implements OnInit {
             { id },
             {
               errorPolicy: 'all',
-              refetchQueries: [
-                namedOperations.Query.MyClubs, // in case memmber deletes herself
-                namedOperations.Query.ClubById,
-              ],
+              refetchQueries: [namedOperations.Query.ClubById],
             }
           );
         })
@@ -65,11 +61,6 @@ export class ClubMembersComponent implements OnInit {
             this.queryError(data.errors);
           } else {
             this.displaySuccess();
-
-            // check if maybe member deleted herself, if so, should redirect to club list
-            if (this.authService.currentUser.id === memberUserId) {
-              this.router.navigate(['/moj-profil/moji-klubi']);
-            }
           }
         },
         (_) => {
