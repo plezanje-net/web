@@ -47,8 +47,8 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
       { name: 'grade', label: 'Ocena', sortable: true },
     ],
     [
-      // { name: 'dateFrom', type: 'date' },  // TODO:
-      // { name: 'dateTo', type: 'date' },  // TODO:
+      // { name: 'dateFrom', type: 'date' },
+      // { name: 'dateTo', type: 'date' },
       { name: 'ascentType', type: 'multiselect' },
       { name: 'userId', type: 'relation' },
       { name: 'routeId', type: 'relation' },
@@ -57,8 +57,8 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
   );
 
   filters = new FormGroup({
-    // dateFrom: new FormControl(), // TODO:
-    // dateTo: new FormControl(), // TODO:
+    // dateFrom: new FormControl(),
+    // dateTo: new FormControl(),
     ascentType: new FormControl(),
     userId: new FormControl(),
     routeId: new FormControl(),

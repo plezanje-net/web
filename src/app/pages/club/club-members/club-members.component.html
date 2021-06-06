@@ -25,7 +25,9 @@
             </button>
             <button
               mat-menu-item
-              (click)="deleteMember(member.id, member.user.fullName)"
+              (click)="
+                deleteMember(member.id, member.user.fullName, member.user.id)
+              "
               *ngIf="clubService.amClubAdmin$ | async"
             >
               <mat-icon>delete_outline</mat-icon>

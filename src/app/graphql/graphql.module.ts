@@ -39,6 +39,15 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
             },
           },
         },
+        Query: {
+          fields: {
+            myClubs: {
+              merge(existing, incoming) {
+                return incoming;
+              },
+            },
+          },
+        },
       },
     }),
     defaultOptions: {

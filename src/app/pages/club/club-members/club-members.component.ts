@@ -2,11 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GraphQLError } from 'graphql';
-import { Club, DeleteClubMemberGQL } from 'src/generated/graphql';
+import {
+  Club,
+  DeleteClubMemberGQL,
+  namedOperations,
+} from 'src/generated/graphql';
 import { Observable } from 'rxjs';
 import { filter, mergeMap } from 'rxjs/operators';
 import { ConfirmationDialogComponent } from 'src/app/common/confirmation-dialog/confirmation-dialog.component';
 import { ClubService } from '../club.service';
+import { AuthService } from 'src/app/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-club-members',
@@ -18,7 +24,9 @@ export class ClubMembersComponent implements OnInit {
   club$: Observable<Club>;
 
   constructor(
+    private router: Router,
     private clubService: ClubService,
+    private authService: AuthService,
     private deleteClubMemberGQL: DeleteClubMemberGQL,
     private snackbar: MatSnackBar,
     private dialog: MatDialog
@@ -28,7 +36,7 @@ export class ClubMembersComponent implements OnInit {
     this.club$ = this.clubService.club$;
   }
 
-  deleteMember(id: string, memberFullName: string) {
+  deleteMember(id: string, memberFullName: string, memberUserId: string) {
     this.dialog
       .open(ConfirmationDialogComponent, {
         data: {
@@ -43,6 +51,10 @@ export class ClubMembersComponent implements OnInit {
             { id },
             {
               errorPolicy: 'all',
+              refetchQueries: [
+                namedOperations.Query.MyClubs, // in case memmber deletes herself
+                namedOperations.Query.ClubById,
+              ],
             }
           );
         })
@@ -52,9 +64,12 @@ export class ClubMembersComponent implements OnInit {
           if (data.errors != null) {
             this.queryError(data.errors);
           } else {
-            // successfull deletion
-            this.clubService.refetchClub();
             this.displaySuccess();
+
+            // check if maybe member deleted herself, if so, should redirect to club list
+            if (this.authService.currentUser.id === memberUserId) {
+              this.router.navigate(['/moj-profil/moji-klubi']);
+            }
           }
         },
         (_) => {

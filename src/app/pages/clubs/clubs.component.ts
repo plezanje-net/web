@@ -1,12 +1,8 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from 'src/app/types/data-error';
-import { GraphQLError } from 'graphql';
 import { Club, MyClubsGQL } from '../../../generated/graphql';
-
-// TODO: finish clubs list layout... add club logo/avatar do db? or drop avatar altogether...
-// TODO: display message if you have no clubs
-// TODO: handle and display error
 
 @Component({
   selector: 'app-clubs',
@@ -14,11 +10,11 @@ import { Club, MyClubsGQL } from '../../../generated/graphql';
   styleUrls: ['./clubs.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ClubsComponent implements OnInit {
+export class ClubsComponent implements OnInit, OnDestroy {
   myClubs: Club[] = [];
-
   loading = true;
   error: DataError = null;
+  myClubsSubscription: Subscription;
 
   constructor(
     private layoutService: LayoutService,
@@ -26,20 +22,16 @@ export class ClubsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.myClubsGQL.fetch().subscribe((result: any) => {
+    this.myClubsGQL.watch().valueChanges.subscribe((result: any) => {
       this.loading = false;
       if (result.errors != null) {
-        this.queryError(result.errors);
+        this.error = {
+          message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
+        };
       } else {
         this.querySuccess(result.data);
       }
     });
-  }
-
-  queryError(errors: GraphQLError[]) {
-    this.error = {
-      message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
-    };
   }
 
   querySuccess(data: any) {
@@ -54,5 +46,9 @@ export class ClubsComponent implements OnInit {
         name: 'Moji Klubi',
       },
     ]);
+  }
+
+  ngOnDestroy() {
+    if (this.myClubsSubscription) this.myClubsSubscription.unsubscribe();
   }
 }

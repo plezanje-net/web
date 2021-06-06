@@ -1,39 +1,43 @@
-<h1>
-  <div class="container p15" fxLayout="row" fxLayoutAlign="start center">
-    <div fxFlex="100">Moji klubi</div>
-  </div>
-</h1>
-
-<div class="container p15">
-  <div class="card clubs-list-container">
-    <mat-nav-list>
-      <ng-container *ngFor="let club of myClubs; last as isLast">
-        <a mat-list-item [routerLink]="['/moj-profil/moji-klubi/', club.id]">
-          <div fxLayout="row" fxLayoutAlign="start center">
-            <img
-              matListAvatar
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsd7-asWmK4xB6DCyEA5PrKY1TDG56RIB3cA&usqp=CAU"
-              alt="{{ club.name }}"
-            />
-            <div class="primary-text">
-              {{ club.name }}
+<app-data-error *ngIf="error" [error]="error"></app-data-error>
+<ng-container *ngIf="!error">
+  <h1>
+    <div class="container p15" fxLayout="row" fxLayoutAlign="start center">
+      <div fxFlex="100">Moji klubi</div>
+    </div>
+  </h1>
+  <app-loader *ngIf="loading"></app-loader>
+  <div *ngIf="!loading" class="container p15">
+    <div *ngIf="myClubs.length" class="card clubs-list-container">
+      <mat-nav-list>
+        <ng-container *ngFor="let club of myClubs; last as isLast">
+          <a mat-list-item [routerLink]="['/moj-profil/moji-klubi/', club.id]">
+            <div fxLayout="row" fxLayoutAlign="start center">
+              <!-- <img
+                matListAvatar
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsd7-asWmK4xB6DCyEA5PrKY1TDG56RIB3cA&usqp=CAU"
+                alt="{{ club.name }}"
+                /> -->
+              <div class="primary-text">
+                {{ club.name }}
+              </div>
             </div>
-          </div>
-          <div class="metadata">
-            {{ club.nrMembers }}
-            {{
-              club.nrMembers == 1
-                ? "član"
-                : club.nrMembers == 2
-                ? "člana"
-                : club.nrMembers == 3 || club.nrMembers == 4
-                ? "člani"
-                : "članov"
-            }}
-          </div>
-        </a>
-        <mat-divider *ngIf="!isLast"></mat-divider>
-      </ng-container>
-    </mat-nav-list>
+            <div class="metadata">
+              {{ club.nrMembers }}
+              {{
+                club.nrMembers % 100 == 1
+                  ? "član"
+                  : club.nrMembers % 100 == 2
+                  ? "člana"
+                  : club.nrMembers % 100 == 3 || club.nrMembers % 100 == 4
+                  ? "člani"
+                  : "članov"
+              }}
+            </div>
+          </a>
+          <mat-divider *ngIf="!isLast"></mat-divider>
+        </ng-container>
+      </mat-nav-list>
+    </div>
+    <div *ngIf="!myClubs.length">Nisi član nobenega kluba.</div>
   </div>
-</div>
+</ng-container>
