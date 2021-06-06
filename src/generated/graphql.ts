@@ -940,6 +940,19 @@ export type MyClubsQuery = (
   )> }
 );
 
+export type UpdateClubMutationVariables = Exact<{
+  input: UpdateClubInput;
+}>;
+
+
+export type UpdateClubMutation = (
+  { __typename?: 'Mutation' }
+  & { updateClub: (
+    { __typename?: 'Club' }
+    & Pick<Club, 'id'>
+  ) }
+);
+
 export type UserFullNameQueryVariables = Exact<{
   userId: Scalars['String'];
 }>;
@@ -1363,6 +1376,24 @@ export const MyClubsDocument = gql`
       super(apollo);
     }
   }
+export const UpdateClubDocument = gql`
+    mutation UpdateClub($input: UpdateClubInput!) {
+  updateClub(updateClubInput: $input) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateClubGQL extends Apollo.Mutation<UpdateClubMutation, UpdateClubMutationVariables> {
+    document = UpdateClubDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const UserFullNameDocument = gql`
     query UserFullName($userId: String!) {
   user(email: "", id: $userId) {
@@ -1590,6 +1621,7 @@ export const namedOperations = {
     CreateActivity: 'CreateActivity',
     CreateClubMemberByEmail: 'CreateClubMemberByEmail',
     DeleteClubMember: 'DeleteClubMember',
+    UpdateClub: 'UpdateClub',
     CreateComment: 'CreateComment',
     DeleteComment: 'DeleteComment',
     UpdateComment: 'UpdateComment'

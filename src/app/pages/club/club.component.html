@@ -13,8 +13,12 @@
         </button>
 
         <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="updateName()">
+            <mat-icon>edit</mat-icon>
+            <span>Spremeni ime kluba</span>
+          </button>
           <button mat-menu-item (click)="addMember()">
-            <mat-icon>post_add</mat-icon>
+            <mat-icon>person_add</mat-icon>
             <span>Dodaj člana</span>
           </button>
         </mat-menu>

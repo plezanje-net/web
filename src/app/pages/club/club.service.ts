@@ -1,12 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { QueryRef } from 'apollo-angular';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Club, ClubByIdGQL, ClubMember } from 'src/generated/graphql';
 
 @Injectable()
 export class ClubService implements OnDestroy {
-  private club = new BehaviorSubject<Club>(null); // source
+  private club = new ReplaySubject<Club>(1); // source
   club$ = this.club.asObservable(); // stream
   memberAdded$ = new Subject<void>();
 

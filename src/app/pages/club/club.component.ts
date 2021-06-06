@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { GraphQLError } from 'graphql';
 import { ClubMemberFormComponent } from 'src/app/forms/club-member-form/club-member-form.component';
+import { ClubFormComponent } from 'src/app/forms/club-form/club-form.component';
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from 'src/app/types/data-error';
 import { Club } from 'src/generated/graphql';
@@ -23,9 +24,6 @@ export class ClubComponent implements OnInit, OnDestroy {
 
   clubSubscription: Subscription;
 
-  // TODO: move breadcrumbs to service?
-  // TODO: add rename club to menu
-
   constructor(
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
@@ -38,7 +36,6 @@ export class ClubComponent implements OnInit, OnDestroy {
     this.clubService.fetchClub(clubId);
     this.clubSubscription = this.clubService.club$.subscribe(
       (club: Club) => {
-        if (!club) return;
         this.loading = false;
         this.club = club;
         this.setBreadcrumbs();
@@ -98,6 +95,12 @@ export class ClubComponent implements OnInit, OnDestroy {
           this.clubService.memberAdded$.next();
         }
       });
+  }
+
+  updateName() {
+    this.dialog.open(ClubFormComponent, {
+      data: { id: this.club.id, currentName: this.club.name },
+    });
   }
 
   ngOnDestroy() {

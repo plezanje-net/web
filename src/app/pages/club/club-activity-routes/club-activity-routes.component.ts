@@ -22,7 +22,6 @@ import { ClubService } from '../club.service';
 // TODO: should have nice url with no id, but slug? FE/BE
 // TODO: keep scroll position when paginating? what is the expected behaviour?
 // TODO: sort on grade not working as expected -> some activityRoutes have no grade field (only difficulty field)...
-// TODO: add option to remove a member
 // TODO: date filter
 
 @Component({
@@ -51,7 +50,7 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
       // { name: 'dateFrom', type: 'date' },  // TODO:
       // { name: 'dateTo', type: 'date' },  // TODO:
       { name: 'ascentType', type: 'multiselect' },
-      { name: 'userId', type: 'relation' }, // TODO: would multiselect be better?
+      { name: 'userId', type: 'relation' },
       { name: 'routeId', type: 'relation' },
       { name: 'cragId', type: 'relation' },
     ]

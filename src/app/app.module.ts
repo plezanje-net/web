@@ -90,6 +90,7 @@ import { MatListModule } from '@angular/material/list';
 import { ClubComponent } from './pages/club/club.component';
 import { ClubMembersComponent } from './pages/club/club-members/club-members.component';
 import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/club-activity-routes.component';
+import { ClubFormComponent } from './forms/club-form/club-form.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -151,6 +152,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ClubComponent,
     ClubMembersComponent,
     ClubActivityRoutesComponent,
+    ClubFormComponent,
   ],
   imports: [
     BrowserModule,
