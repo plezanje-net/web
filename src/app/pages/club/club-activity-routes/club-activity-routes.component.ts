@@ -18,10 +18,8 @@ import {
 } from 'src/generated/graphql';
 import { ClubService } from '../club.service';
 
-// TODO: should query only activityRoutes with the right publish type. what are the right publish types?
 // TODO: should have nice url with no id, but slug? FE/BE
 // TODO: keep scroll position when paginating? what is the expected behaviour?
-// TODO: sort on grade not working as expected -> some activityRoutes have no grade field (only difficulty field)...
 
 @Component({
   selector: 'app-club-activity-routes',
@@ -65,6 +63,7 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
   });
 
   ascentTypes = ASCENT_TYPES;
+  ALLOWED_PUBLISH_TYPES = ['club', 'log', 'public'];
 
   filterCragName: string;
   filterRouteName: string;
@@ -128,7 +127,7 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
 
           this.activityRoutesQuery = this.activityRoutesByClubGQL.watch({
             clubId: clubId,
-            input: queryParams,
+            input: { ...queryParams, publish: this.ALLOWED_PUBLISH_TYPES },
           });
 
           return this.activityRoutesQuery.valueChanges;
