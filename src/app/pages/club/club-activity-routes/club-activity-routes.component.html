@@ -4,6 +4,43 @@
   <div class="container p15">
     <div>
       <div fxLayout="row" [formGroup]="filters" fxLayoutGap="8px">
+        <mat-form-field appearance="fill">
+          <mat-label>Časovno obdobje</mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+            <input
+              matStartDate
+              formControlName="dateFrom"
+              placeholder="Start date"
+            />
+            <input matEndDate formControlName="dateTo" placeholder="End date" />
+          </mat-date-range-input>
+          <div matSuffix fxLayout="row">
+            <button
+              mat-icon-button
+              matSuffix
+              *ngIf="
+                filters.value.dateFrom != null || filters.value.dateTo != null
+              "
+              (click)="filters.patchValue({ dateFrom: null, dateTo: null })"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+          </div>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+          <mat-error
+            *ngIf="filters.controls.dateFrom.hasError('matStartDateInvalid')"
+            >Neveljaven začetni datum</mat-error
+          >
+          <mat-error
+            *ngIf="filters.controls.dateTo.hasError('matEndDateInvalid')"
+            >Neveljaven končni datum</mat-error
+          >
+        </mat-form-field>
+
         <mat-form-field>
           <mat-label>Vrsta vzpona</mat-label>
           <mat-select formControlName="ascentType" multiple>

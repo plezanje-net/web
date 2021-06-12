@@ -4,7 +4,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { QueryRef } from 'apollo-angular';
 import { GraphQLError } from 'graphql';
 import { Subject, Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { debounceTime, filter, switchMap } from 'rxjs/operators';
 import { ASCENT_TYPES } from 'src/app/common/activity.constants';
 import { FilteredTable } from 'src/app/common/filtered-table';
 import { DataError } from 'src/app/types/data-error';
@@ -22,7 +22,6 @@ import { ClubService } from '../club.service';
 // TODO: should have nice url with no id, but slug? FE/BE
 // TODO: keep scroll position when paginating? what is the expected behaviour?
 // TODO: sort on grade not working as expected -> some activityRoutes have no grade field (only difficulty field)...
-// TODO: date filter
 
 @Component({
   selector: 'app-club-activity-routes',
@@ -47,8 +46,8 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
       { name: 'grade', label: 'Ocena', sortable: true },
     ],
     [
-      // { name: 'dateFrom', type: 'date' },
-      // { name: 'dateTo', type: 'date' },
+      { name: 'dateFrom', type: 'date' },
+      { name: 'dateTo', type: 'date' },
       { name: 'ascentType', type: 'multiselect' },
       { name: 'userId', type: 'relation' },
       { name: 'routeId', type: 'relation' },
@@ -57,8 +56,8 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
   );
 
   filters = new FormGroup({
-    // dateFrom: new FormControl(),
-    // dateTo: new FormControl(),
+    dateFrom: new FormControl(),
+    dateTo: new FormControl(),
     ascentType: new FormControl(),
     userId: new FormControl(),
     routeId: new FormControl(),
@@ -77,10 +76,11 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
   }>();
 
   ftNavSubscription: Subscription;
-  filtersSubscription: Subscription;
   arSubscription: Subscription;
   raSubscription: Subscription;
   memberAddedSubscription: Subscription;
+  filtersSubscription: Subscription;
+  ignoreFormChange = true;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -119,6 +119,7 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
 
           this.filteredTable.setRouteParams(params);
 
+          this.ignoreFormChange = true;
           this.filters.patchValue(this.filteredTable.filterParams, {
             emitEvent: false,
           });
@@ -135,6 +136,7 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
       )
       .subscribe((result: any) => {
         this.loading = false;
+        this.ignoreFormChange = false;
 
         if (result.errors != null) {
           this.queryError(result.errors);
@@ -143,10 +145,17 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
         }
       });
 
-    // TODO: why datepicker fires 4 times? BUG?
-    this.filtersSubscription = this.filters.valueChanges.subscribe((values) =>
-      this.filteredTable.setFilterParams(values)
-    );
+    this.filtersSubscription = this.filters.valueChanges
+      .pipe(
+        filter((_) => {
+          return !this.ignoreFormChange; // date picker ignores emitEvent:false. This is a workaround
+        }),
+        debounceTime(100) // datepicker triggers 4 valueChanges events. this is a workaround
+      )
+      .subscribe((values) => {
+        console.log('change event fired');
+        this.filteredTable.setFilterParams(values);
+      });
 
     this.raSubscription = this.rowAction$.subscribe((action) => {
       switch (action.action) {
