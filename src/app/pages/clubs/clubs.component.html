@@ -6,17 +6,18 @@
     </div>
   </h1>
   <app-loader *ngIf="loading"></app-loader>
+  <div class="container p15 clubs-actions">
+    <button mat-flat-button color="primary" (click)="createClub()">
+      <mat-icon>add</mat-icon>
+      Ustvari nov klub
+    </button>
+  </div>
   <div *ngIf="!loading" class="container p15">
     <div *ngIf="myClubs.length" class="card clubs-list-container">
       <mat-nav-list>
         <ng-container *ngFor="let club of myClubs; last as isLast">
           <a mat-list-item [routerLink]="['/moj-profil/moji-klubi/', club.id]">
             <div fxLayout="row" fxLayoutAlign="start center">
-              <!-- <img
-                matListAvatar
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsd7-asWmK4xB6DCyEA5PrKY1TDG56RIB3cA&usqp=CAU"
-                alt="{{ club.name }}"
-                /> -->
               <div class="primary-text">
                 {{ club.name }}
               </div>

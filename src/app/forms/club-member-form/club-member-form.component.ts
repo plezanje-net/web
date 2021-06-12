@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApolloError } from '@apollo/client/errors';
 import { GraphQLError } from 'graphql';
-import { CreateClubMemberByEmailGQL } from '../../../generated/graphql';
+import { Club, CreateClubMemberByEmailGQL } from '../../../generated/graphql';
 
 @Component({
   selector: 'app-club-member-form',
@@ -17,7 +17,8 @@ export class ClubMemberFormComponent implements OnInit {
     admin: new FormControl(false),
   });
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { clubId: string; clubName: string },
+    @Inject(MAT_DIALOG_DATA)
+    public data: { clubId: string; clubName: string; club: Club },
     private dialogRef: MatDialogRef<ClubMemberFormComponent>,
     private snackbar: MatSnackBar,
     private createClubMemberByEmailGQL: CreateClubMemberByEmailGQL
@@ -38,7 +39,14 @@ export class ClubMemberFormComponent implements OnInit {
             clubId: this.data.clubId,
           },
         },
-        { errorPolicy: 'all' }
+        {
+          errorPolicy: 'all',
+          update: (cache) => {
+            cache.evict({
+              id: cache.identify(this.data.club),
+            });
+          },
+        }
       )
       .subscribe(
         (result: any) => {

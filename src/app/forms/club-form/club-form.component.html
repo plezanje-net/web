@@ -1,5 +1,10 @@
+<div mat-dialog-title fxLayout="row" fxLayoutAlign="start center">
+  <div fxFlex="100" class="title">
+    {{ title }}
+  </div>
+</div>
 <form [formGroup]="clubForm" (ngSubmit)="onSubmit()">
-  <mat-form-field>
+  <mat-form-field fxFlexFill>
     <mat-label>Ime kluba</mat-label>
     <input matInput formControlName="name" id="name" required cdkFocusInitial />
   </mat-form-field>

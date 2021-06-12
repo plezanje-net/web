@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GraphQLError } from 'graphql';
 import { ClubMemberFormComponent } from 'src/app/forms/club-member-form/club-member-form.component';
 import { ClubFormComponent } from 'src/app/forms/club-form/club-form.component';
@@ -9,6 +9,10 @@ import { DataError } from 'src/app/types/data-error';
 import { Club } from 'src/generated/graphql';
 import { ClubService } from './club.service';
 import { Subscription } from 'rxjs';
+import { ConfirmationDialogComponent } from 'src/app/common/confirmation-dialog/confirmation-dialog.component';
+import { filter, mergeMap } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DeleteClubGQL } from '../../../generated/graphql';
 
 @Component({
   selector: 'app-club',
@@ -25,10 +29,13 @@ export class ClubComponent implements OnInit, OnDestroy {
   clubSubscription: Subscription;
 
   constructor(
+    private router: Router,
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
     private dialog: MatDialog,
-    public clubService: ClubService
+    private snackbar: MatSnackBar,
+    public clubService: ClubService,
+    private deleteClubGQL: DeleteClubGQL
   ) {}
 
   ngOnInit(): void {
@@ -47,7 +54,7 @@ export class ClubComponent implements OnInit, OnDestroy {
     );
   }
 
-  queryError(errors: GraphQLError[]) {
+  queryError(errors: readonly GraphQLError[] = []) {
     if (
       errors.length > 0 &&
       errors[0].message.startsWith('Could not find any entity of type')
@@ -86,7 +93,11 @@ export class ClubComponent implements OnInit, OnDestroy {
   addMember() {
     this.dialog
       .open(ClubMemberFormComponent, {
-        data: { clubId: this.club.id, clubName: this.club.name },
+        data: {
+          clubId: this.club.id,
+          clubName: this.club.name,
+          club: this.club,
+        },
       })
       .afterClosed()
       .subscribe((result) => {
@@ -103,7 +114,64 @@ export class ClubComponent implements OnInit, OnDestroy {
     });
   }
 
+  delete() {
+    this.dialog
+      .open(ConfirmationDialogComponent, {
+        data: {
+          message:
+            'Ali res želiš odstraniti vse člane iz kluba in izbrisati klub?',
+        },
+      })
+      .afterClosed()
+      .pipe(
+        filter((result) => !!result),
+        mergeMap((_) => {
+          return this.deleteClubGQL.mutate(
+            { id: this.club.id },
+            {
+              errorPolicy: 'all',
+              update: (cache) => {
+                cache.evict({
+                  id: cache.identify(this.club),
+                });
+              },
+            }
+          );
+        })
+      )
+      .subscribe(
+        (data) => {
+          if (data.errors != null) {
+            this.queryError(data.errors);
+          } else {
+            this.displaySuccess();
+            this.router.navigate(['/moj-profil/moji-klubi']);
+          }
+        },
+        (_) => {
+          this.queryError();
+        }
+      );
+  }
+
+  displayError(errorMessage: string) {
+    this.snackbar.open(errorMessage, null, {
+      panelClass: 'error',
+      duration: 3000,
+    });
+  }
+
+  displaySuccess() {
+    this.snackbar.open(
+      'Vsi člani so bili odstranjen iz kluba in klub je bil uspešno izbrisan.',
+      null,
+      {
+        duration: 3000,
+      }
+    );
+  }
+
   ngOnDestroy() {
-    if (this.clubSubscription) this.clubSubscription.unsubscribe();
+    this.clubSubscription.unsubscribe();
   }
 }

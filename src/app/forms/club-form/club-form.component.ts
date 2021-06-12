@@ -3,7 +3,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GraphQLError } from 'graphql';
-import { namedOperations, UpdateClubGQL } from 'src/generated/graphql';
+import {
+  namedOperations,
+  UpdateClubGQL,
+  CreateClubGQL,
+} from 'src/generated/graphql';
 
 @Component({
   selector: 'app-club-form',
@@ -11,20 +15,37 @@ import { namedOperations, UpdateClubGQL } from 'src/generated/graphql';
   styleUrls: ['./club-form.component.scss'],
 })
 export class ClubFormComponent implements OnInit {
+  title: string;
   clubForm = new FormGroup({
-    name: new FormControl(this.data.currentName, [Validators.required]),
+    name: new FormControl('', [Validators.required]),
   });
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { id: string; currentName: string },
+    @Inject(MAT_DIALOG_DATA) public data: { id?: string; currentName?: string },
     private updateClubGQL: UpdateClubGQL,
-    private dialogRef: MatDialogRef<ClubFormComponent>,
+    private createClubGQL: CreateClubGQL,
+    public dialogRef: MatDialogRef<ClubFormComponent>,
     private snackbar: MatSnackBar
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.data) {
+      this.title = 'Spremeni ime kluba';
+      this.clubForm.patchValue({ name: this.data.currentName });
+    } else {
+      this.title = 'Ustvari nov klub';
+    }
+  }
 
   onSubmit() {
+    if (this.data) {
+      this.updateClub();
+    } else {
+      this.createClub();
+    }
+  }
+
+  updateClub() {
     const newName = this.clubForm.value.name;
     const updateClubInput = {
       id: this.data.id,
@@ -34,13 +55,36 @@ export class ClubFormComponent implements OnInit {
     this.updateClubGQL
       .mutate(
         { input: updateClubInput },
-        { errorPolicy: 'all', refetchQueries: [namedOperations.Query.ClubById] }
+        {
+          errorPolicy: 'all',
+          refetchQueries: [namedOperations.Query.ClubById],
+        }
       )
       .subscribe((result) => {
         if (result.errors != null) {
           this.queryError(result.errors);
         } else {
-          this.displaySuccess();
+          this.displaySuccess('Ime kluba je bilo uspešno spremenjeno.');
+        }
+        this.dialogRef.close();
+      });
+  }
+
+  createClub() {
+    const name = this.clubForm.value.name;
+
+    this.createClubGQL
+      .mutate(
+        { input: { name } },
+        {
+          errorPolicy: 'all',
+        }
+      )
+      .subscribe((result) => {
+        if (result.errors != null) {
+          this.queryError(result.errors);
+        } else {
+          this.displaySuccess('Nov klub je bil ustvarjen.');
         }
         this.dialogRef.close();
       });
@@ -56,6 +100,13 @@ export class ClubFormComponent implements OnInit {
       this.displayError(
         'Samo administratorji kluba lahko spremenijo ime kluba.'
       );
+    } else if (
+      errors.length > 0 &&
+      errors[0].message.startsWith(
+        'duplicate key value violates unique constraint'
+      )
+    ) {
+      this.displayError('Klub s tem imenom že obstaja.');
     } else {
       this.displayError();
     }
@@ -68,8 +119,8 @@ export class ClubFormComponent implements OnInit {
     });
   }
 
-  displaySuccess() {
-    this.snackbar.open('Ime kluba je bilo uspešno spremenjeno.', null, {
+  displaySuccess(successMessage: string) {
+    this.snackbar.open(successMessage, null, {
       duration: 3000,
     });
   }

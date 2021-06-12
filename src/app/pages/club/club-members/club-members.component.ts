@@ -51,6 +51,12 @@ export class ClubMembersComponent implements OnInit {
             {
               errorPolicy: 'all',
               refetchQueries: [namedOperations.Query.ClubById],
+              update: (cache) => {
+                cache.evict({
+                  id: 'ROOT_QUERY',
+                  fieldName: 'myClubs',
+                });
+              },
             }
           );
         })

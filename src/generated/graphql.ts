@@ -929,6 +929,29 @@ export type ClubByIdQuery = (
   ) }
 );
 
+export type CreateClubMutationVariables = Exact<{
+  input: CreateClubInput;
+}>;
+
+
+export type CreateClubMutation = (
+  { __typename?: 'Mutation' }
+  & { createClub: (
+    { __typename?: 'Club' }
+    & Pick<Club, 'id'>
+  ) }
+);
+
+export type DeleteClubMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteClubMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteClub'>
+);
+
 export type MyClubsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1356,6 +1379,40 @@ export const ClubByIdDocument = gql`
       super(apollo);
     }
   }
+export const CreateClubDocument = gql`
+    mutation CreateClub($input: CreateClubInput!) {
+  createClub(createClubInput: $input) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateClubGQL extends Apollo.Mutation<CreateClubMutation, CreateClubMutationVariables> {
+    document = CreateClubDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteClubDocument = gql`
+    mutation DeleteClub($id: String!) {
+  deleteClub(id: $id)
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteClubGQL extends Apollo.Mutation<DeleteClubMutation, DeleteClubMutationVariables> {
+    document = DeleteClubDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const MyClubsDocument = gql`
     query MyClubs {
   myClubs {
@@ -1621,6 +1678,8 @@ export const namedOperations = {
     CreateActivity: 'CreateActivity',
     CreateClubMemberByEmail: 'CreateClubMemberByEmail',
     DeleteClubMember: 'DeleteClubMember',
+    CreateClub: 'CreateClub',
+    DeleteClub: 'DeleteClub',
     UpdateClub: 'UpdateClub',
     CreateComment: 'CreateComment',
     DeleteComment: 'DeleteComment',

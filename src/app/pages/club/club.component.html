@@ -15,11 +15,15 @@
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="updateName()">
             <mat-icon>edit</mat-icon>
-            <span>Spremeni ime kluba</span>
+            <span>Preimenuj klub</span>
           </button>
           <button mat-menu-item (click)="addMember()">
             <mat-icon>person_add</mat-icon>
             <span>Dodaj člana</span>
+          </button>
+          <button mat-menu-item (click)="delete()">
+            <mat-icon>delete_outline</mat-icon>
+            <span>Izbriši klub</span>
           </button>
         </mat-menu>
       </div>

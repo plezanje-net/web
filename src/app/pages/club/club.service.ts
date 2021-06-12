@@ -23,19 +23,21 @@ export class ClubService implements OnDestroy {
 
   fetchClub(clubId: string) {
     this.clubQuery = this.clubByIdGQL.watch({ clubId });
-    this.clubQuery.valueChanges.subscribe((data) => {
-      if (data.errors != null) {
-        this.club.error(data.errors);
-      } else {
-        const club = data.data.club;
-        const amClubAdmin = club.members.some(
-          (member: ClubMember) =>
-            member.user.id === this.authService.currentUser.id && member.admin
-        );
-        this.amClubAdmin.next(amClubAdmin);
-        this.club.next(club);
+    this.clubQuerySubscription = this.clubQuery.valueChanges.subscribe(
+      (data) => {
+        if (data.errors != null) {
+          this.club.error(data.errors);
+        } else {
+          const club = data.data.club;
+          const amClubAdmin = club.members.some(
+            (member: ClubMember) =>
+              member.user.id === this.authService.currentUser.id && member.admin
+          );
+          this.amClubAdmin.next(amClubAdmin);
+          this.club.next(club);
+        }
       }
-    });
+    );
   }
 
   refetchClub() {
@@ -43,6 +45,6 @@ export class ClubService implements OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.clubQuerySubscription) this.clubQuerySubscription.unsubscribe();
+    this.clubQuerySubscription.unsubscribe();
   }
 }
