@@ -26,8 +26,6 @@ export class ClubsComponent implements OnInit, OnDestroy {
     private dialog: MatDialog
   ) {}
 
-  // TODO: make two lists?: clubs you are admin of, clubs you are a member of
-
   ngOnInit(): void {
     this.myClubsQuery = this.myClubsGQL.watch();
     this.myClubsSubscription = this.myClubsQuery.valueChanges.subscribe(

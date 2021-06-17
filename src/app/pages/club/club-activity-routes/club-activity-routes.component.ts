@@ -152,7 +152,6 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
         debounceTime(100) // datepicker triggers 4 valueChanges events. this is a workaround
       )
       .subscribe((values) => {
-        console.log('change event fired');
         this.filteredTable.setFilterParams(values);
       });
 
