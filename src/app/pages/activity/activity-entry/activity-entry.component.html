@@ -8,12 +8,13 @@
   <div class="container p15">
     <div>{{ activity.date | amDateFormat: "DD.MM.YYYY"}}</div>
     <h2>{{ activityType.label }} - {{activity.name}}</h2>
-    <div class="card padding no-border">
+    <div class="card padding no-border description" *ngIf="activity.partners || activity.duration || activity.notes">
       <p *ngIf="activity.partners"><b>Soplezalci:</b> {{ activity.partners }}</p>
-      {{ activity.notes }}
+      <p *ngIf="activity.duration"><b>Trajanje:</b> {{ activity.duration }}min</p>
+      <p>{{ activity.notes }}</p>
     </div>
   </div>
-  <div class="container p15">
+  <div class="container p15" *ngIf="activity.routes.length > 0">
     <div class="card">
       <table class="card-table">
         <tr class="row header">

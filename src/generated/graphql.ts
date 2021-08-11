@@ -181,6 +181,12 @@ export type CreateClubInput = {
   name: Scalars['String'];
 };
 
+export type CreateClubMemberByEmailInput = {
+  admin: Scalars['Boolean'];
+  userEmail: Scalars['String'];
+  clubId: Scalars['String'];
+};
+
 export type CreateClubMemberInput = {
   admin: Scalars['Boolean'];
   userId: Scalars['String'];
@@ -333,6 +339,7 @@ export type Mutation = {
   updateClub: Club;
   deleteClub: Scalars['Boolean'];
   createClubMember: ClubMember;
+  createClubMemberByEmail: ClubMember;
   deleteClubMember: Scalars['Boolean'];
   createActivity: Activity;
 };
@@ -470,6 +477,11 @@ export type MutationDeleteClubArgs = {
 
 export type MutationCreateClubMemberArgs = {
   input: CreateClubMemberInput;
+};
+
+
+export type MutationCreateClubMemberByEmailArgs = {
+  input: CreateClubMemberByEmailInput;
 };
 
 
@@ -743,7 +755,7 @@ export type ActivityEntryQuery = (
   { __typename?: 'Query' }
   & { activity: (
     { __typename?: 'Activity' }
-    & Pick<Activity, 'id' | 'name' | 'date' | 'type' | 'notes' | 'partners'>
+    & Pick<Activity, 'id' | 'name' | 'date' | 'type' | 'notes' | 'partners' | 'duration'>
     & { routes: Array<(
       { __typename?: 'ActivityRoute' }
       & Pick<ActivityRoute, 'difficulty' | 'date' | 'ascentType' | 'grade' | 'notes' | 'partner' | 'publish'>
@@ -1132,6 +1144,7 @@ export const ActivityEntryDocument = gql`
     type
     notes
     partners
+    duration
     routes {
       difficulty
       date
