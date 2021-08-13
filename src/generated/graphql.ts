@@ -1039,6 +1039,10 @@ export type CragBySlugQuery = (
       & { routes: Array<(
         { __typename?: 'Route' }
         & Pick<Route, 'id' | 'name' | 'grade' | 'length'>
+        & { comments: Array<(
+          { __typename?: 'Comment' }
+          & Pick<Comment, 'id'>
+        )> }
       )> }
     )>, comments: Array<(
       { __typename?: 'Comment' }
@@ -1551,6 +1555,9 @@ export const CragBySlugDocument = gql`
         name
         grade
         length
+        comments {
+          id
+        }
       }
     }
     comments {

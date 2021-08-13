@@ -4,49 +4,46 @@
     <span>{{ sector.name != "" ? " - " + sector.name : "" }}</span>
   </h3>
   <div class="card">
-    <div
-      fxLayout="row"
-      fxLayoutAlign="start center"
-      fxHide.lt-md
-      class="row header"
-      fxLayoutGap="14px"
-    >
-      <div fxFlex="50" fxFlex.lt-md="100">Ime</div>
-      <div fxFlex="25" fxFlex.lt-md>Dolžina</div>
-      <div fxFlex="25" fxFlex.lt-md>Težavnost</div>
+    <div fxLayout="row" fxLayoutAlign="start center" fxHide.lt-md class="row header" fxLayoutGap="14px">
+      <div fxFlex="12px"></div>
+      <div fxFlex="100">Ime</div>
+      <div fxFlex="80px" fxFlex.lt-md>Dolžina</div>
+      <div fxFlex="80px" fxFlex.lt-md>Težavnost</div>
+      <div fxFlex="160px"></div>
     </div>
-    <div
-      *ngFor="let route of sector.routes"
-      fxLayout="row"
-      fxLayoutAlign="start center"
-      class="row"
-      fxLayoutGap="14px"
-    >
-      <div fxFlex>
-        <mat-checkbox
-          (change)="changeSelection(route)"
-          [checked]="selectedRoutes.indexOf(route) > -1"
-        ></mat-checkbox>
+    <div *ngFor="let route of sector.routes" fxLayout="row" fxLayoutAlign="start center" class="row" fxLayoutGap="14px">
+      <!-- <div fxFlex="24px">
+        <mat-icon>done</mat-icon>
       </div>
-      <div fxFlex="50" fxFlex.lt-md="100">
-        <a
-          [routerLink]="[
+      <div fxFlex="24px">
+        <mat-icon>hide_source</mat-icon>
+      </div> -->
+      <div fxFlex="12px">
+        <mat-checkbox (change)="changeSelection(route)" [checked]="selectedRoutes.indexOf(route) > -1"></mat-checkbox>
+      </div>
+      <div fxFlex="100">
+        <a [routerLink]="[
             '/plezalisca/',
             crag.country.slug,
             crag.slug,
             route.id
-          ]"
-          >{{ route.name }}</a
-        >
+          ]">{{ route.name }}</a>
       </div>
-      <div fxFlex="25" fxFlex.lt-md fxHide.lt-md>{{ route.length }} m</div>
-      <div fxFlex="25" fxFlex.lt-md class="routes">
-        <app-grade
-          [grade]="route.grade"
-          [text]="route.difficulty"
-          [showModifier]="true"
-        >
+      <div fxFlex="80px" fxFlex.lt-md fxHide.lt-md>{{ route.length }} m</div>
+      <div fxFlex="80px" fxFlex.lt-md>
+        <app-grade [grade]="route.grade" [text]="route.difficulty" [showModifier]="true">
         </app-grade>
+      </div>
+      <div fxFlex="160px" class="routes">
+        <button mat-button *ngIf="route.comments.length > 0">
+          <mat-icon>comment</mat-icon>
+          {{ route.comments.length }}
+        </button>
+        <!-- <button mat-button inline>
+          <mat-icon>done</mat-icon>
+          2
+        </button> -->
+
       </div>
     </div>
   </div>
