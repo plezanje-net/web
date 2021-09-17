@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from '../../types/data-error';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,6 +15,7 @@ import {
   CountriesTocQuery,
 } from '../../../generated/graphql';
 import { GraphQLError } from 'graphql';
+import { FormControl } from '@angular/forms';
 
 declare var ol: any;
 
@@ -33,13 +34,16 @@ export class CragsComponent implements OnInit {
 
   crags$ = new BehaviorSubject<CragsQuery['countryBySlug']['crags']>([]);
 
-  area: Area;
-
   map: any;
+
+  search = new FormControl();
+
+  filteredCrags: CragsQuery['countryBySlug']['crags'] = [];
 
   constructor(
     private layoutService: LayoutService,
     private activatedRoute: ActivatedRoute,
+    private router: Router,
     private dialog: MatDialog,
     private cragsGQL: CragsGQL
   ) {}
@@ -55,12 +59,14 @@ export class CragsComponent implements OnInit {
 
     this.activatedRoute.params.subscribe((params) => {
       this.cragsLoading = true;
-      this.area = params.area;
 
       this.cragsGQL
         .fetch({
           country: params.country,
-          area: params.area,
+          input: {
+            area: params.area,
+            routeType: params.type,
+          },
         })
         .subscribe((result) => {
           this.loading = false;
@@ -73,6 +79,30 @@ export class CragsComponent implements OnInit {
           }
         });
     });
+
+    this.search.valueChanges.subscribe(() => this.filterCrags());
+  }
+
+  filterCrags(): void {
+    this.filteredCrags =
+      this.search.value == null
+        ? this.country.crags
+        : this.country.crags.filter(
+            (crag) =>
+              crag.name.toLowerCase().indexOf(this.search.value.toLowerCase()) >
+              -1
+          );
+    this.crags$.next(this.filteredCrags);
+  }
+
+  searchKeyDown(e: KeyboardEvent) {
+    if (e.key == 'Enter' && this.filteredCrags.length == 1) {
+      this.router.navigate([
+        '/plezalisca',
+        this.country.slug,
+        this.filteredCrags[0].slug,
+      ]);
+    }
   }
 
   queryError(errors: readonly GraphQLError[]) {
@@ -91,7 +121,7 @@ export class CragsComponent implements OnInit {
   querySuccess(country: CragsQuery['countryBySlug']) {
     this.country = country;
 
-    this.crags$.next(this.country.crags);
+    this.filterCrags();
 
     this.layoutService.$breadcrumbs.next([
       {

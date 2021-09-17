@@ -119,7 +119,7 @@ export type Country = {
 
 
 export type CountryCragsArgs = {
-  area?: Maybe<Scalars['String']>;
+  input?: Maybe<FindCragsInput>;
 };
 
 export type Crag = {
@@ -264,6 +264,13 @@ export type FindActivityRoutesInput = {
 export type FindCountriesInput = {
   hasCrags?: Maybe<Scalars['Boolean']>;
   orderBy: OrderByInput;
+};
+
+export type FindCragsInput = {
+  country?: Maybe<Scalars['String']>;
+  area?: Maybe<Scalars['String']>;
+  minStatus?: Maybe<Scalars['Float']>;
+  routeType?: Maybe<Scalars['String']>;
 };
 
 export type Grade = {
@@ -1074,7 +1081,7 @@ export type CragBySlugQuery = (
 
 export type CragsQueryVariables = Exact<{
   country: Scalars['String'];
-  area?: Maybe<Scalars['String']>;
+  input?: Maybe<FindCragsInput>;
 }>;
 
 
@@ -1607,13 +1614,13 @@ export const CragBySlugDocument = gql`
     }
   }
 export const CragsDocument = gql`
-    query Crags($country: String!, $area: String) {
+    query Crags($country: String!, $input: FindCragsInput) {
   countryBySlug(slug: $country) {
     id
     name
     slug
     code
-    crags(area: $area) {
+    crags(input: $input) {
       id
       slug
       name
