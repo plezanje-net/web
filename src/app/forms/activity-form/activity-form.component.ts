@@ -77,6 +77,7 @@ export class ActivityFormComponent implements OnInit {
         partner: new FormControl(),
         publish: new FormControl('private'),
         notes: new FormControl(),
+        gradeSuggestion: new FormControl(),
       })
     );
   }

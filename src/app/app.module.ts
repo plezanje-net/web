@@ -20,6 +20,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -176,6 +177,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MatCardModule,
     EditorModule,
     MatListModule,
+    NgxMatSelectSearchModule,
   ],
   providers: [
     AuthGuard,

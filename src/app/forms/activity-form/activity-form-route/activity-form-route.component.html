@@ -61,7 +61,7 @@
   <div fxLayout="row" fxLayoutGap="12px" fxLayout.lt-md="column">
     <div fxFlex="60" fxLayout="column" fxLayoutGap="12px">
       <div fxFlex fxLayout="row" fxLayoutGap="12px">
-        <div fxFlex="50" fxLayout="column" fxLayoutAlign="start stretch">
+        <div fxFlex="32" fxLayout="column" fxLayoutAlign="start stretch">
           <mat-form-field class="no-hint">
             <mat-label>Vrsta vzpona</mat-label>
             <mat-select formControlName="ascentType">
@@ -72,8 +72,20 @@
           </mat-form-field>
           <mat-checkbox formControlName="topRope">Top rope</mat-checkbox>
         </div>
-
-        <mat-form-field class="no-hint" fxFlex="50">
+        <mat-form-field class="no-hint" fxFlex="32">
+          <mat-label>Predlog ocene</mat-label>
+          <mat-select formControlName="gradeSuggestion">
+            <mat-option>
+              <ngx-mat-select-search placeholderLabel="Vnesi oceno" [formControl]="gradeFilterControl"></ngx-mat-select-search>
+            </mat-option>
+            <mat-option
+              *ngFor="let option of filteredGradesOptions | async"
+              [value]="option"
+              >{{ option }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="no-hint" fxFlex="32">
           <mat-label>Objava</mat-label>
           <mat-select formControlName="publish">
             <mat-option
