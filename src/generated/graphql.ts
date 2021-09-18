@@ -574,6 +574,7 @@ export type Query = {
   myActivities: PaginatedActivities;
   activity: Activity;
   myActivityRoutes: PaginatedActivityRoutes;
+  myCragSummary: Array<ActivityRoute>;
   activityRoutesByClub: PaginatedActivityRoutes;
 };
 
@@ -635,6 +636,11 @@ export type QueryActivityArgs = {
 
 
 export type QueryMyActivityRoutesArgs = {
+  input?: Maybe<FindActivityRoutesInput>;
+};
+
+
+export type QueryMyCragSummaryArgs = {
   input?: Maybe<FindActivityRoutesInput>;
 };
 
@@ -894,6 +900,23 @@ export type MyActivityRoutesQuery = (
       & Pick<PaginationMeta, 'itemCount' | 'pageCount' | 'pageNumber' | 'pageSize'>
     ) }
   ) }
+);
+
+export type MyCragSummaryQueryVariables = Exact<{
+  input?: Maybe<FindActivityRoutesInput>;
+}>;
+
+
+export type MyCragSummaryQuery = (
+  { __typename?: 'Query' }
+  & { myCragSummary: Array<(
+    { __typename?: 'ActivityRoute' }
+    & Pick<ActivityRoute, 'ascentType'>
+    & { route: (
+      { __typename?: 'Route' }
+      & Pick<Route, 'id'>
+    ) }
+  )> }
 );
 
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1345,6 +1368,27 @@ export const MyActivityRoutesDocument = gql`
       super(apollo);
     }
   }
+export const MyCragSummaryDocument = gql`
+    query MyCragSummary($input: FindActivityRoutesInput) {
+  myCragSummary(input: $input) {
+    ascentType
+    route {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class MyCragSummaryGQL extends Apollo.Query<MyCragSummaryQuery, MyCragSummaryQueryVariables> {
+    document = MyCragSummaryDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const ProfileDocument = gql`
     query Profile {
   profile {
@@ -1729,6 +1773,7 @@ export const namedOperations = {
     ActivityFiltersRoute: 'ActivityFiltersRoute',
     MyActivities: 'MyActivities',
     MyActivityRoutes: 'MyActivityRoutes',
+    MyCragSummary: 'MyCragSummary',
     Profile: 'Profile',
     clubWithActivityRoutes: 'clubWithActivityRoutes',
     myClubs: 'myClubs',

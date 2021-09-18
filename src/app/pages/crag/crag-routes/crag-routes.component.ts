@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SnackBarButtonsComponent } from 'src/app/common/snack-bar-buttons/snack-bar-buttons.component';
 import { ActivityFormComponent } from 'src/app/forms/activity-form/activity-form.component';
-import { Crag } from 'src/generated/graphql';
+import { Crag, MyCragSummaryGQL } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-crag-routes',
@@ -16,10 +16,13 @@ export class CragRoutesComponent implements OnInit {
 
   selectedRoutes: any[] = [];
 
+  ascents: any = {};
+
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private authService: AuthService
+    private authService: AuthService,
+    private myCragSummaryGQL: MyCragSummaryGQL
   ) {}
 
   ngOnInit(): void {
@@ -29,6 +32,10 @@ export class CragRoutesComponent implements OnInit {
     //   this.selectedRoutes.push(this.crag.sectors[0].routes[i])
     // }
     // this.addActivity();
+
+    if (this.authService.currentUser) {
+      this.loadActivity();
+    }
   }
 
   changeSelection(route: any) {
@@ -55,6 +62,8 @@ export class CragRoutesComponent implements OnInit {
         .subscribe(() => {
           this.addActivity();
         });
+    } else {
+      this.snackBar.dismiss();
     }
   }
 
@@ -68,5 +77,15 @@ export class CragRoutesComponent implements OnInit {
         autoFocus: false,
       });
     });
+  }
+
+  loadActivity() {
+    this.myCragSummaryGQL
+      .watch({ input: { cragId: this.crag.id } })
+      .valueChanges.subscribe((result) => {
+        result.data.myCragSummary.forEach((ascent) => {
+          this.ascents[ascent.route.id] = ascent.ascentType;
+        });
+      });
   }
 }

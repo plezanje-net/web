@@ -37,12 +37,11 @@
       <div fxFlex="160px" class="routes">
         <button mat-button *ngIf="route.comments.length > 0">
           <mat-icon>comment</mat-icon>
-          {{ route.comments.length }}
         </button>
-        <!-- <button mat-button inline>
-          <mat-icon>done</mat-icon>
-          2
-        </button> -->
+
+        <app-ascent-type *ngIf="ascents[route.id] != null" [value]="ascents[route.id]" displayType="icon">
+        </app-ascent-type>
+        <span class="ascent-type-filler" *ngIf="ascents[route.id] == undefined"></span>
 
       </div>
     </div>
