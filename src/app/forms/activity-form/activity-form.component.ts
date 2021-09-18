@@ -1,6 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, OnInit, Input } from '@angular/core';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import {
@@ -11,6 +10,7 @@ import {
 } from 'src/generated/graphql';
 
 import moment from 'moment';
+import { Router } from '@angular/router';
 
 export interface DialogData {
   crag: Crag;
@@ -35,15 +35,17 @@ export class ActivityFormComponent implements OnInit {
     routes: this.routes,
   });
 
+  @Input() crag;
+  @Input() selectedRoutes;
+
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    public dialogRef: MatDialogRef<ActivityFormComponent>,
     private snackBar: MatSnackBar,
-    private createActivityGQL: CreateActivityGQL
+    private createActivityGQL: CreateActivityGQL,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
-    this.data.routes.forEach((route) => this.addRoute(route));
+    this.selectedRoutes.forEach((route) => this.addRoute(route));
 
     this.activityForm.controls.date.valueChanges.subscribe((value) => {
       this.patchRouteDates(value);
@@ -104,12 +106,12 @@ export class ActivityFormComponent implements OnInit {
     this.routes.controls[routeIndex] = temp;
   }
 
-  add() {
+  add(): boolean {
     this.addRoute({});
     return false;
   }
 
-  save() {
+  save(): void {
     let data = this.activityForm.value;
 
     console.log(data);
@@ -119,11 +121,11 @@ export class ActivityFormComponent implements OnInit {
 
     const activity = {
       date: moment(data.date).format('YYYY-MM-DD'),
-      name: this.data.crag.name,
+      name: this.crag.name,
       type: 'crag', // TODO: resolve from parameters
       notes: data.notes,
       partners: data.partners,
-      cragId: this.data.crag.id,
+      cragId: this.crag.id,
     };
 
     const routes = this.routes.value.map((route: any, i: number) => {
@@ -143,7 +145,7 @@ export class ActivityFormComponent implements OnInit {
 
     this.createActivityGQL
       .mutate(
-        { input: activity, routes: routes },
+        { input: activity, routes },
         {
           refetchQueries: [
             namedOperations.Query.MyActivities,
@@ -156,7 +158,7 @@ export class ActivityFormComponent implements OnInit {
           this.snackBar.open('Vnos je bil shranjen v plezalni dnevnik', null, {
             duration: 3000,
           });
-          this.dialogRef.close();
+          this.router.navigate(['/plezalni-dnevnik']);
         },
         (error) => {
           this.loading = false;

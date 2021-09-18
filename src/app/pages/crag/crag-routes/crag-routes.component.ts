@@ -1,10 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SnackBarButtonsComponent } from 'src/app/common/snack-bar-buttons/snack-bar-buttons.component';
-import { ActivityFormComponent } from 'src/app/forms/activity-form/activity-form.component';
-import { Crag } from 'src/generated/graphql';
+import { Crag, Route } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-crag-routes',
@@ -18,8 +17,8 @@ export class CragRoutesComponent implements OnInit {
 
   constructor(
     private snackBar: MatSnackBar,
-    private dialog: MatDialog,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -31,7 +30,7 @@ export class CragRoutesComponent implements OnInit {
     // this.addActivity();
   }
 
-  changeSelection(route: any) {
+  changeSelection(route: Route): void {
     const i = this.selectedRoutes.indexOf(route);
     if (i > -1) {
       this.selectedRoutes.splice(i, 1);
@@ -58,15 +57,16 @@ export class CragRoutesComponent implements OnInit {
     }
   }
 
-  addActivity() {
+  addActivity(): void {
     this.authService.guardedAction({}).then(() => {
-      this.dialog.open(ActivityFormComponent, {
-        data: {
-          crag: this.crag,
-          routes: this.selectedRoutes,
-        },
-        autoFocus: false,
-      });
+      // TODO make storage key a constant
+      localStorage.setItem('activity-selection', JSON.stringify({
+        crag: this.crag,
+        routes: this.selectedRoutes,
+        created: new Date().getTime(),
+      }));
+
+      this.router.navigate(['/plezalni-dnevnik/vpis']);
     });
   }
 }
