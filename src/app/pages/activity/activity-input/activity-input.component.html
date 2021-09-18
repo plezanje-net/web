@@ -1,7 +1,8 @@
-<app-activity-header active="dnevnik"></app-activity-header>
-
-<div class="container p15">
-  <div fxLayout="row" fxLayoutGap="8px">
-    <app-activity-form [crag]="crag" [selectedRoutes]="routes"></app-activity-form>
-  </div>
+<div class="container p15 ">
+  <mat-card>
+    <mat-card-title>Vpis v plezalni dnevnik</mat-card-title>
+    <mat-card-content>
+      <app-activity-form [crag]="crag" [selectedRoutes]="routes"></app-activity-form>
+    </mat-card-content>
+  </mat-card>
 </div>
