@@ -565,6 +565,7 @@ export type Query = {
   cragBySlug: Crag;
   crags: Array<Crag>;
   route: Route;
+  search: Array<SearchResult>;
   profile: User;
   users: Array<User>;
   user: User;
@@ -606,6 +607,11 @@ export type QueryCragsArgs = {
 
 export type QueryRouteArgs = {
   id: Scalars['String'];
+};
+
+
+export type QuerySearchArgs = {
+  input?: Maybe<Scalars['String']>;
 };
 
 
@@ -679,6 +685,14 @@ export type Route = {
   images: Array<Image>;
   warnings: Array<Comment>;
   conditions: Array<Comment>;
+};
+
+export type SearchResult = {
+  __typename?: 'SearchResult';
+  name: Scalars['String'];
+  type: Scalars['String'];
+  crag?: Maybe<Crag>;
+  route?: Maybe<Route>;
 };
 
 export type Sector = {
@@ -1167,6 +1181,38 @@ export type RouteQuery = (
       & Pick<Image, 'path'>
     )> }
   ) }
+);
+
+export type HomeSearchQueryVariables = Exact<{
+  query?: Maybe<Scalars['String']>;
+}>;
+
+
+export type HomeSearchQuery = (
+  { __typename?: 'Query' }
+  & { search: Array<(
+    { __typename?: 'SearchResult' }
+    & Pick<SearchResult, 'name' | 'type'>
+    & { crag?: Maybe<(
+      { __typename?: 'Crag' }
+      & Pick<Crag, 'slug'>
+      & { country: (
+        { __typename?: 'Country' }
+        & Pick<Country, 'slug'>
+      ) }
+    )>, route?: Maybe<(
+      { __typename?: 'Route' }
+      & Pick<Route, 'id' | 'difficulty' | 'grade'>
+      & { crag: (
+        { __typename?: 'Crag' }
+        & Pick<Crag, 'name' | 'slug'>
+        & { country: (
+          { __typename?: 'Country' }
+          & Pick<Country, 'slug'>
+        ) }
+      ) }
+    )> }
+  )> }
 );
 
 export const ActivityEntryDocument = gql`
@@ -1766,6 +1812,43 @@ export const RouteDocument = gql`
       super(apollo);
     }
   }
+export const HomeSearchDocument = gql`
+    query HomeSearch($query: String) {
+  search(input: $query) {
+    name
+    type
+    crag {
+      slug
+      country {
+        slug
+      }
+    }
+    route {
+      id
+      difficulty
+      grade
+      crag {
+        name
+        slug
+        country {
+          slug
+        }
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class HomeSearchGQL extends Apollo.Query<HomeSearchQuery, HomeSearchQueryVariables> {
+    document = HomeSearchDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const namedOperations = {
   Query: {
     ActivityEntry: 'ActivityEntry',
@@ -1781,7 +1864,8 @@ export const namedOperations = {
     CountriesToc: 'CountriesToc',
     CragBySlug: 'CragBySlug',
     Crags: 'Crags',
-    Route: 'Route'
+    Route: 'Route',
+    HomeSearch: 'HomeSearch'
   },
   Mutation: {
     CreateActivity: 'CreateActivity',
