@@ -1,10 +1,13 @@
 <td>
   {{ activity.date | amDateFormat: "DD.MM.YYYY" }}
 </td>
-<td>{{ type }}</td>
+<td><a [routerLink]="['/plezalni-dnevnik', activity.id]">{{ type }}</a></td>
 <td>
-  <a *ngIf="activity.crag != null" [routerLink]="['/plezalisca', activity.crag.country.slug, activity.crag.slug]">{{
-    activity.crag.name }}</a>
+  <a *ngIf="activity.crag != null" [routerLink]="[
+      '/plezalisca',
+      activity.crag.country.slug,
+      activity.crag.slug
+    ]">{{ activity.crag.name }}</a>
   <span *ngIf="!(activity.crag != null)">{{ activity.name }}</span>
 </td>
 <td>{{ activity.routes.length }}</td>
@@ -15,7 +18,7 @@
   </button>
 
   <mat-menu #menu="matMenu">
-    <button mat-menu-item>
+    <button mat-menu-item [routerLink]="['/plezalni-dnevnik', activity.id]">
       <span>Odpri plezalni dan</span>
     </button>
     <button mat-menu-item *ngIf="activity.crag != null"
@@ -29,5 +32,4 @@
       <span>Odstrani vnos</span>
     </button>
   </mat-menu>
-
 </td>

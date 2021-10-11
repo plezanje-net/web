@@ -98,9 +98,8 @@ export class ActivityFormComponent implements OnInit {
 
     const temp = this.routes.controls[routeIndex + direction];
 
-    this.routes.controls[routeIndex + direction] = this.routes.controls[
-      routeIndex
-    ];
+    this.routes.controls[routeIndex + direction] =
+      this.routes.controls[routeIndex];
     this.routes.controls[routeIndex] = temp;
   }
 

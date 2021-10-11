@@ -9,10 +9,9 @@ import { Crag } from 'src/generated/graphql';
 @Component({
   selector: 'app-crag-routes',
   templateUrl: './crag-routes.component.html',
-  styleUrls: ['./crag-routes.component.scss']
+  styleUrls: ['./crag-routes.component.scss'],
 })
 export class CragRoutesComponent implements OnInit {
-
   @Input() crag: Crag;
 
   selectedRoutes: any[] = [];
@@ -21,7 +20,7 @@ export class CragRoutesComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private authService: AuthService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     // Used for activity development, remove after
@@ -41,33 +40,33 @@ export class CragRoutesComponent implements OnInit {
     }
 
     if (this.selectedRoutes.length > 0) {
-      this.snackBar.openFromComponent(SnackBarButtonsComponent, {
-        horizontalPosition: "end",
-        data: {
-          buttons: [
-            {
-              label: `Shrani v plezalni dnevnik (${this.selectedRoutes.length})`,
-            }
-          ]
-        }
-      }).onAction().subscribe(() => {
-        this.addActivity();
-      })
+      this.snackBar
+        .openFromComponent(SnackBarButtonsComponent, {
+          horizontalPosition: 'end',
+          data: {
+            buttons: [
+              {
+                label: `Shrani v plezalni dnevnik (${this.selectedRoutes.length})`,
+              },
+            ],
+          },
+        })
+        .onAction()
+        .subscribe(() => {
+          this.addActivity();
+        });
     }
   }
 
   addActivity() {
-    this.authService
-      .guardedAction({})
-      .then(() => {
-        this.dialog.open(ActivityFormComponent, {
-          data: {
-            crag: this.crag,
-            routes: this.selectedRoutes,
-          },
-          autoFocus: false
-        })
-      })
+    this.authService.guardedAction({}).then(() => {
+      this.dialog.open(ActivityFormComponent, {
+        data: {
+          crag: this.crag,
+          routes: this.selectedRoutes,
+        },
+        autoFocus: false,
+      });
+    });
   }
-
 }

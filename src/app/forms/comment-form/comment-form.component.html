@@ -1,20 +1,27 @@
 <div mat-dialog-title fxLayout="row" fxLayoutAlign="start center">
-  <div fxFlex="100" class="title">{{title}}</div>
-  <div fxFlex (click)="dialogRef.close()"><button mat-icon-button>
+  <div fxFlex="100" class="title">{{ title }}</div>
+  <div fxFlex (click)="dialogRef.close()">
+    <button mat-icon-button>
       <mat-icon>close</mat-icon>
-    </button></div>
+    </button>
+  </div>
 </div>
 <form [formGroup]="commentForm" (submit)="save()">
-
   <div fxLayout="row">
-    <app-editor fxFlex="100" placeholder="Komentar" [control]="commentForm.controls.content"></app-editor>
+    <app-editor
+      fxFlex="100"
+      placeholder="Komentar"
+      [control]="commentForm.controls.content"
+    ></app-editor>
   </div>
 
   <mat-dialog-actions fxLayout="row">
     <div fxFlex></div>
     <div *ngIf="!loading">
       <button type="button" mat-button mat-dialog-close>Prekliči</button>
-      <button mat-flat-button color="primary" [disabled]="!commentForm.valid">SHRANI</button>
+      <button mat-flat-button color="primary" [disabled]="!commentForm.valid">
+        SHRANI
+      </button>
     </div>
     <span *ngIf="loading" class="loading">
       <mat-spinner diameter="30"></mat-spinner>

@@ -5,36 +5,35 @@ import { Apollo, gql } from 'apollo-angular';
 
 const CountriesQuery = gql`
   query CountriesQuery {
-      countries {
+    countries {
+      id
+      name
+      areas {
         id
         name
-        areas {
-          id
-          name
-        }
-      }    
+      }
+    }
   }
-`
+`;
 
 @Component({
   selector: 'app-crag-form',
   templateUrl: './crag-form.component.html',
-  styleUrls: ['./crag-form.component.scss']
+  styleUrls: ['./crag-form.component.scss'],
 })
 export class CragFormComponent implements OnInit {
-
   cragForm = new FormGroup({
-    name: new FormControl("", [Validators.required]),
-    slug: new FormControl("", [Validators.required]),
-    lat: new FormControl(""),
-    lon: new FormControl(""),
-    orientation: new FormControl(""),
-    access: new FormControl(""),
-    description: new FormControl(""),
-    areaId: new FormControl(""),
-    countryId: new FormControl("", Validators.required),
-    status: new FormControl("", Validators.required),
-  })
+    name: new FormControl('', [Validators.required]),
+    slug: new FormControl('', [Validators.required]),
+    lat: new FormControl(''),
+    lon: new FormControl(''),
+    orientation: new FormControl(''),
+    access: new FormControl(''),
+    description: new FormControl(''),
+    areaId: new FormControl(''),
+    countryId: new FormControl('', Validators.required),
+    status: new FormControl('', Validators.required),
+  });
 
   loading: boolean = false;
 
@@ -44,87 +43,86 @@ export class CragFormComponent implements OnInit {
   statuses: any[] = [
     {
       id: -5,
-      label: 'Začasno / zasebno'
+      label: 'Začasno / zasebno',
     },
     {
       id: 0,
-      label: 'Vidno administratorjem'
+      label: 'Vidno administratorjem',
     },
     {
       id: 5,
-      label: 'Vidno prijavljenim'
+      label: 'Vidno prijavljenim',
     },
     {
       id: 10,
-      label: 'Vidno vsem'
-    }
+      label: 'Vidno vsem',
+    },
   ];
 
   orientations: any[] = [
     {
       id: 'N',
-      label: 'Sever'
+      label: 'Sever',
     },
     {
       id: 'NE',
-      label: 'Severovzhod'
+      label: 'Severovzhod',
     },
     {
       id: 'E',
-      label: 'Vzhod'
+      label: 'Vzhod',
     },
     {
       id: 'SE',
-      label: 'Jugovzhod'
+      label: 'Jugovzhod',
     },
     {
       id: 'S',
-      label: 'Jug'
+      label: 'Jug',
     },
     {
       id: 'SW',
-      label: 'Jugozahod'
+      label: 'Jugozahod',
     },
     {
       id: 'W',
-      label: 'Zahod'
+      label: 'Zahod',
     },
     {
       id: 'NW',
-      label: 'Severozahod'
-    }
+      label: 'Severozahod',
+    },
   ];
 
   constructor(
     private apollo: Apollo,
-    @Inject(MAT_DIALOG_DATA) public data: {countryId: string},
+    @Inject(MAT_DIALOG_DATA) public data: { countryId: string },
     public matDialogRef: MatDialogRef<CragFormComponent>
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.apollo.query({
-      query: CountriesQuery,
-    }).subscribe((result: any) => {
-      this.countries = result.data.countries;
+    this.apollo
+      .query({
+        query: CountriesQuery,
+      })
+      .subscribe((result: any) => {
+        this.countries = result.data.countries;
 
-      this.cragForm.controls.countryId.valueChanges.subscribe(countryId => {
-        this.cragForm.patchValue({
-          areaId: null
+        this.cragForm.controls.countryId.valueChanges.subscribe((countryId) => {
+          this.cragForm.patchValue({
+            areaId: null,
+          });
+
+          this.areas = this.countries.find(
+            (country) => country.id == countryId
+          ).areas;
         });
 
-        this.areas = this.countries.find((country) => country.id == countryId).areas;
-      })
-  
-      this.cragForm.patchValue({
-        countryId: this.data.countryId
+        this.cragForm.patchValue({
+          countryId: this.data.countryId,
+        });
       });
-    })
-
-    
   }
 
-  save(): void {
-
-  }
-
+  save(): void {}
 }

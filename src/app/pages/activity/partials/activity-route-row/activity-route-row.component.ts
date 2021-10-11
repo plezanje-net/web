@@ -11,6 +11,7 @@ import { RowAction } from '../../activity-routes/activity-routes.component';
 export class ActivityRouteRowComponent implements OnInit {
   @Input() route: ActivityRoute;
   @Input() rowAction: Subject<RowAction>;
+  @Input() displayType: 'activity' | 'routes' = 'routes';
 
   constructor() {}
 

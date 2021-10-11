@@ -1,0 +1,47 @@
+query Route($routeId: String!) {
+  route(id: $routeId) {
+    id
+    difficulty
+    name
+    grade
+    length
+    author
+    status
+    sector {
+      id
+      name
+    }
+    grades {
+      grade
+      user {
+        firstname
+        lastname
+      }
+      created
+      updated
+    }
+    comments {
+      type
+      user {
+        fullName
+      }
+      content
+      created
+      updated
+    }
+    images {
+      path
+    }
+    sector {
+      name
+      crag {
+        name
+        slug
+        country {
+          slug
+          name
+        }
+      }
+    }
+  }
+}

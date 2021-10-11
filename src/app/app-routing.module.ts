@@ -17,6 +17,7 @@ import { ClubsComponent } from './pages/clubs/clubs.component';
 import { ClubMembersComponent } from './pages/club/club-members/club-members.component';
 import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/club-activity-routes.component';
 import { ClubComponent } from './pages/club/club.component';
+import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
 
 const routes: Routes = [
   {
@@ -60,6 +61,11 @@ const routes: Routes = [
   {
     path: 'plezalni-dnevnik/statistika',
     component: ActivityStatisticsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'plezalni-dnevnik/:id',
+    component: ActivityEntryComponent,
     canActivate: [AuthGuard],
   },
   {

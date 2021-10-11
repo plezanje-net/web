@@ -8,9 +8,8 @@ describe('RouteCommentsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RouteCommentsComponent ]
-    })
-    .compileComponents();
+      declarations: [RouteCommentsComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

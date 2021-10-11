@@ -80,7 +80,7 @@
 
   <app-data-error *ngIf="error" [error]="error"></app-data-error>
 
-  <div class="card" *ngIf="!error">
+  <div class="card has-loader" *ngIf="!error">
     <div class="card-loader" *ngIf="loading">
       <app-loader></app-loader>
     </div>

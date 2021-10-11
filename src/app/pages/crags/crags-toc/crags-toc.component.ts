@@ -1,49 +1,86 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Router } from '@angular/router';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { CountriesTocGQL, CountriesTocQuery, Country } from '../../../../generated/graphql';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import {
+  CountriesTocGQL,
+  CountriesTocQuery,
+  Country,
+} from '../../../../generated/graphql';
+import { Tab } from 'src/app/types/tab';
 
 @Component({
   selector: 'app-crags-toc',
   templateUrl: './crags-toc.component.html',
-  styleUrls: ['./crags-toc.component.scss']
+  styleUrls: ['./crags-toc.component.scss'],
 })
 export class CragsTocComponent implements OnInit {
-
   @Input() country: Country;
-  @Input('area') areaId: string = '';
 
   countries: CountriesTocQuery['countries'];
 
   showAllCountries: boolean = false;
 
-  constructor(private router: Router, private countriesTocGQL: CountriesTocGQL) { }
+  params: any;
+
+  routeTypes: Tab[] = [
+    {
+      slug: 'sport',
+      label: 'Športne',
+    },
+    {
+      slug: 'boulder',
+      label: 'Balvani',
+    },
+    {
+      slug: 'multipitch',
+      label: 'Večraztežajne',
+    },
+  ];
+
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private countriesTocGQL: CountriesTocGQL
+  ) {}
 
   ngOnInit(): void {
-    this.countriesTocGQL.watch().valueChanges.subscribe((result) => this.countries = result.data.countries);
+    this.countriesTocGQL
+      .watch()
+      .valueChanges.subscribe(
+        (result) => (this.countries = result.data.countries)
+      );
+
+    this.activatedRoute.params.subscribe((params) => {
+      this.params = { ...params };
+      delete this.params.country;
+    });
   }
 
   changeArea(id: string) {
-    if (id != null) {
-      this.router.navigate([
-        '/plezalisca',
-        this.country.slug,
-        { area: id }
-      ])
-    } else {
-      this.router.navigate([
-        '/plezalisca',
-        this.country.slug
-      ])
-    }
+    this.router.navigate(this.makeRoute(this.country.slug, { area: id }));
   }
 
   changeCountry(slug: string) {
-    this.router.navigate([
-      '/plezalisca',
-      slug
-    ])
+    this.router.navigate(this.makeRoute(slug, { area: null }));
   }
 
+  changeType(slug: string) {
+    this.router.navigate(this.makeRoute(this.country.slug, { type: slug }));
+  }
+
+  makeRoute(country: string, params: any = {}) {
+    return ['/plezalisca', country, this.routeParams(params)];
+  }
+
+  routeParams(params: any): any {
+    params = { ...this.params, ...params };
+
+    Object.keys(params).forEach((key) => {
+      if (params[key] == null) {
+        delete params[key];
+      }
+    });
+
+    return params;
+  }
 }

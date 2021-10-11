@@ -10,14 +10,14 @@ export const ASCENT_TYPES: Registry[] = [
   { value: 'attempt', label: 'Neuspel poskus', color: 'yellow' },
 ];
 
-export const PUBLISH_OPTIONS: any[] = [
+export const PUBLISH_OPTIONS: Registry[] = [
   { value: 'public', label: 'Objavi povsod' },
   { value: 'club', label: 'Samo za prijatelje' },
   { value: 'log', label: 'Javno na mojem profilu' },
   { value: 'private', label: 'Samo zame' },
 ];
 
-export const ACTIVITY_TYPES: any[] = [
+export const ACTIVITY_TYPES: Registry[] = [
   { value: 'crag', label: 'Dan v plezališču' },
   { value: 'climbingGym', label: 'Plezalni center' },
   { value: 'trainingGym', label: 'Telovadnica' },

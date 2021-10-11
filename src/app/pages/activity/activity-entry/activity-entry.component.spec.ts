@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RoutePicturesComponent } from './route-pictures.component';
+import { ActivityEntryComponent } from './activity-entry.component';
 
-describe('RoutePicturesComponent', () => {
-  let component: RoutePicturesComponent;
-  let fixture: ComponentFixture<RoutePicturesComponent>;
+describe('ActivityEntryComponent', () => {
+  let component: ActivityEntryComponent;
+  let fixture: ComponentFixture<ActivityEntryComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RoutePicturesComponent ]
+      declarations: [ ActivityEntryComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RoutePicturesComponent);
+    fixture = TestBed.createComponent(ActivityEntryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

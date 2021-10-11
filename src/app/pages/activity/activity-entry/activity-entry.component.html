@@ -1,0 +1,41 @@
+<app-activity-header active="dnevnik"></app-activity-header>
+
+<app-data-error *ngIf="error" [error]="error"></app-data-error>
+
+<app-loader *ngIf="loading"></app-loader>
+
+<div *ngIf="!error && !loading">
+  <div class="container p15">
+    <div>{{ activity.date | amDateFormat: "DD.MM.YYYY"}}</div>
+    <h2>{{ activityType.label }} - {{activity.name}}</h2>
+    <div class="card padding no-border description" *ngIf="activity.partners || activity.duration || activity.notes">
+      <p *ngIf="activity.partners"><b>Soplezalci:</b> {{ activity.partners }}</p>
+      <p *ngIf="activity.duration"><b>Trajanje:</b> {{ activity.duration }}min</p>
+      <p>{{ activity.notes }}</p>
+    </div>
+  </div>
+  <div class="container p15" *ngIf="activity.routes.length > 0">
+    <div class="card">
+      <table class="card-table">
+        <tr class="row header">
+          <td>
+            Smer
+          </td>
+          <td>
+            Ocena
+          </td>
+          <td>
+            Vrsta vzpona
+          </td>
+          <td>
+            Objava
+          </td>
+        </tr>
+
+        <tr class="row" *ngFor="let route of activity.routes" app-activity-route-row [route]="route"
+          [rowAction]="rowAction$" displayType="activity"></tr>
+      </table>
+    </div>
+  </div>
+
+</div>

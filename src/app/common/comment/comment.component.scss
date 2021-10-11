@@ -1,16 +1,16 @@
 @import "../../../styles/colors.scss";
 
 .comment {
-    margin-bottom: 16px;
+  margin-bottom: 16px;
 }
 .condition {
-    margin-bottom: 16px;
-    border-left-color: $accent;
+  margin-bottom: 16px;
+  border-left-color: $accent;
 }
 .author {
-    color: #00000080;
-    margin-bottom: -4px;
-    > .actions {
-      margin: -8px;
-    }
+  color: #00000080;
+  margin-bottom: -4px;
+  > .actions {
+    margin: -8px;
+  }
 }

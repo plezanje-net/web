@@ -1,10 +1,21 @@
-<td>
+<td *ngIf="displayType != 'activity'">
   {{ route.date | amDateFormat: "DD.MM.YYYY" }}
 </td>
-<td><a [routerLink]="['/plezalisca', route.route.crag.country.slug, route.route.crag.slug]">{{
-    route.route.crag.name }}</a></td>
-<td><a [routerLink]="['/plezalisca', route.route.crag.country.slug, route.route.crag.slug, route.route.id]">{{
-    route.route.name }}</a></td>
+<td *ngIf="displayType != 'activity'">
+  <a [routerLink]="[
+      '/plezalisca',
+      route.route.crag.country.slug,
+      route.route.crag.slug
+    ]">{{ route.route.crag.name }}</a>
+</td>
+<td>
+  <a [routerLink]="[
+      '/plezalisca',
+      route.route.crag.country.slug,
+      route.route.crag.slug,
+      route.route.id
+    ]">{{ route.route.name }}</a>
+</td>
 
 <td>
   <app-grade [grade]="route.grade" [text]="route.difficulty" [showModifier]="true"></app-grade>
@@ -21,7 +32,7 @@
   </button>
 
   <mat-menu #menu="matMenu">
-    <button mat-menu-item>
+    <button *ngIf="route.activity != null" mat-menu-item [routerLink]="['/plezalni-dnevnik', route.activity.id]">
       <span>Odpri plezalni dan</span>
     </button>
     <button mat-menu-item (click)="rowAction.next({ item: route, action: 'filterByRoute' })">
@@ -37,5 +48,4 @@
       <span>Odstrani vzpon</span>
     </button>
   </mat-menu>
-
 </td>

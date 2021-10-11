@@ -1,6 +1,7 @@
 query MyActivities($input: FindActivitiesInput) {
   myActivities(input: $input) {
     items {
+      id
       name
       date
       type

@@ -71,7 +71,6 @@ import { ConfirmationDialogComponent } from './common/confirmation-dialog/confir
 import { RouteComponent } from './pages/route/route.component';
 import { RouteInfoComponent } from './pages/route/route-info/route-info.component';
 import { DistributionChartComponent } from './common/distribution-chart/distribution-chart.component';
-import { RoutePicturesComponent } from './pages/route/route-pictures/route-pictures.component';
 import { RouteCommentsComponent } from './pages/route/route-comments/route-comments.component';
 import { RouteGradesComponent } from './pages/route/route-grades/route-grades.component';
 import { ActivityLogComponent } from './pages/activity/activity-log/activity-log.component';
@@ -91,6 +90,7 @@ import { ClubComponent } from './pages/club/club.component';
 import { ClubMembersComponent } from './pages/club/club-members/club-members.component';
 import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/club-activity-routes.component';
 import { ClubFormComponent } from './forms/club-form/club-form.component';
+import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -134,7 +134,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     RouteComponent,
     RouteInfoComponent,
     DistributionChartComponent,
-    RoutePicturesComponent,
     RouteCommentsComponent,
     RouteGradesComponent,
     ActivityLogComponent,
@@ -153,6 +152,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ClubMembersComponent,
     ClubActivityRoutesComponent,
     ClubFormComponent,
+    ActivityEntryComponent,
   ],
   imports: [
     BrowserModule,
@@ -212,4 +212,4 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

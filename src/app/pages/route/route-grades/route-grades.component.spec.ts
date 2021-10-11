@@ -8,9 +8,8 @@ describe('RouteGradesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RouteGradesComponent ]
-    })
-    .compileComponents();
+      declarations: [RouteGradesComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

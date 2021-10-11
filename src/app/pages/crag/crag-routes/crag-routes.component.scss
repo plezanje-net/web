@@ -1,14 +1,18 @@
 .row {
-    cursor: pointer;
+  // cursor: pointer;
 
-    .routes {
-        white-space: nowrap;
-        text-align: right;
+  .routes {
+    white-space: nowrap;
+    text-align: right;
+    margin: -4px 0;
+    .mat-button {
+      color: #0000008a;
     }
-    &.header {
-        cursor: default;
-        padding-top: 12px;
-    }
+  }
+  &.header {
+    cursor: default;
+    padding-top: 12px;
+  }
 }
 
 h3 {

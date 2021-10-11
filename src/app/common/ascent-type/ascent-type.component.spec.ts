@@ -8,9 +8,8 @@ describe('AscentTypeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AscentTypeComponent ]
-    })
-    .compileComponents();
+      declarations: [AscentTypeComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -8,6 +8,9 @@ query MyActivityRoutes($input: FindActivityRoutesInput) {
       notes
       partner
       publish
+      activity {
+        id
+      }
       route {
         crag {
           id

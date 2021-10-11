@@ -99,9 +99,14 @@ b {
   box-shadow: 0 0px 13px 0px #314c8833;
   border-left: 1px solid $primary;
   position: relative;
-  min-height: 120px;
+  &.has-loader {
+    min-height: 120px;
+  }
   &.padding {
     padding: 16px;
+  }
+  &.no-border {
+    border: none;
   }
 
   .card-loader {
