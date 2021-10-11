@@ -32,10 +32,12 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
   constructor() {}
 
   ngOnInit(): void {
+    this.populateGradesDropdown();
+
     this.gradeFilterControl.valueChanges
       .pipe(takeUntil(this.onDestroySubject))
       .subscribe(() => {
-        this.filterGrades();
+        this.populateGradesDropdown();
       });
   }
 
@@ -44,9 +46,9 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
     this.onDestroySubject.complete();
   }
 
-  filterGrades(): void {
+  populateGradesDropdown(): void {
     let search: string = this.gradeFilterControl.value;
-
+    // TODO somehow use src/common/grade.ts instead of the gradeNames array
     if (search) {
       search = search.toLowerCase();
 
