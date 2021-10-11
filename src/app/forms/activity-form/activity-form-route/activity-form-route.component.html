@@ -65,12 +65,16 @@
           <mat-form-field class="no-hint">
             <mat-label>Vrsta vzpona</mat-label>
             <mat-select formControlName="ascentType">
-              <mat-option *ngFor="let type of ascentTypes" [value]="type.value"
+              <mat-option *ngFor="let type of nonTopRopeAscentTypes" [value]="type.value"
                 >{{ type.label }}
               </mat-option>
+              <mat-optgroup label="Top rope">
+                <mat-option *ngFor="let type of topRopeAscentTypes" [value]="type.value"
+                  >{{ type.label }}
+                </mat-option>
+              </mat-optgroup>
             </mat-select>
           </mat-form-field>
-          <mat-checkbox formControlName="topRope">Top rope</mat-checkbox>
         </div>
         <mat-form-field class="no-hint" fxFlex="25">
           <mat-label>Lepota</mat-label>

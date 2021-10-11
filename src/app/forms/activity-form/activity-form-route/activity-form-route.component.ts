@@ -20,7 +20,8 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
   @Input() last: boolean;
   @Output() move = new EventEmitter<number>();
 
-  ascentTypes = ASCENT_TYPES;
+  topRopeAscentTypes = ASCENT_TYPES.filter(ascentType => ascentType.topRope);
+  nonTopRopeAscentTypes = ASCENT_TYPES.filter(ascentType => !ascentType.topRope);
 
   publishOptions = PUBLISH_OPTIONS;
 

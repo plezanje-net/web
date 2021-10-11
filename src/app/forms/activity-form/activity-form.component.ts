@@ -75,7 +75,6 @@ export class ActivityFormComponent implements OnInit {
         grade: new FormControl(route.grade),
         difficulty: new FormControl(route.difficulty),
         ascentType: new FormControl('redpoint'),
-        topRope: new FormControl(false),
         date: new FormControl(),
         partner: new FormControl(),
         publish: new FormControl('private'),
@@ -132,7 +131,7 @@ export class ActivityFormComponent implements OnInit {
       return {
         date: route.date || activity.date,
         partner: route.partner || activity.partners,
-        ascentType: (route.topRope ? 't_' : '') + route.ascentType,
+        ascentType: route.ascentType,
         notes: route.notes,
         position: i,
         publish: route.publish,
