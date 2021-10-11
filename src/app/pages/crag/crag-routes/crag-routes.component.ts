@@ -1,10 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SnackBarButtonsComponent } from 'src/app/common/snack-bar-buttons/snack-bar-buttons.component';
-import { ActivityFormComponent } from 'src/app/forms/activity-form/activity-form.component';
 import { Crag, MyCragSummaryGQL, Route } from 'src/generated/graphql';
 
 @Component({
@@ -23,7 +21,6 @@ export class CragRoutesComponent implements OnInit {
     private snackBar: MatSnackBar,
     private authService: AuthService,
     private router: Router,
-    private dialog: MatDialog,
     private myCragSummaryGQL: MyCragSummaryGQL
   ) {}
 
