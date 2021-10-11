@@ -11,6 +11,7 @@ import {
 
 import moment from 'moment';
 import { Router } from '@angular/router';
+import { gradeNameToNumberMap } from 'src/app/common/grade-names.constants';
 
 export interface DialogData {
   crag: Crag;
@@ -79,6 +80,7 @@ export class ActivityFormComponent implements OnInit {
         partner: new FormControl(),
         publish: new FormControl('private'),
         notes: new FormControl(),
+        stars: new FormControl(),
         gradeSuggestion: new FormControl(),
       })
     );
@@ -114,8 +116,6 @@ export class ActivityFormComponent implements OnInit {
   save(): void {
     let data = this.activityForm.value;
 
-    console.log(data);
-
     this.loading = true;
     this.activityForm.disable();
 
@@ -138,8 +138,9 @@ export class ActivityFormComponent implements OnInit {
         publish: route.publish,
         routeId: route.routeId,
         name: route.name,
-        grade: route.grade,
         difficulty: route.difficulty,
+        grade: gradeNameToNumberMap[route.gradeSuggestion],
+        stars: route.stars,
       };
     });
 

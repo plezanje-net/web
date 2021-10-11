@@ -4,7 +4,7 @@ import {
   ASCENT_TYPES,
   PUBLISH_OPTIONS,
 } from '../../../common/activity.constants';
-import gradeNames from 'src/app/common/grade-names.constants';
+import { gradeNames } from 'src/app/common/grade-names.constants';
 import { ReplaySubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
