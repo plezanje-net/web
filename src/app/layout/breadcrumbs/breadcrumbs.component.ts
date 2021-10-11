@@ -15,7 +15,9 @@ export class BreadcrumbsComponent implements OnInit {
 
   ngOnInit(): void {
     this.layoutService.$breadcrumbs.subscribe(
-      (breadcrumbs: Array<Breadcrumb>) => (this.breadcrumbs = breadcrumbs)
+      (breadcrumbs: Array<Breadcrumb>) => {
+        this.breadcrumbs = breadcrumbs;
+      }
     );
   }
 }

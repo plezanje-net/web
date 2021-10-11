@@ -1,0 +1,3 @@
+mutation DeleteClubMember($id: String!) {
+  deleteClubMember(id: $id)
+}

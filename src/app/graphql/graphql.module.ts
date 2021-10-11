@@ -30,10 +30,31 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
             },
           },
         },
+        Club: {
+          fields: {
+            members: {
+              merge(existing, incoming) {
+                return incoming;
+              },
+            },
+          },
+        },
+        Query: {
+          fields: {
+            myClubs: {
+              merge(existing, incoming) {
+                return incoming;
+              },
+            },
+          },
+        },
       },
     }),
     defaultOptions: {
       watchQuery: {
+        errorPolicy: 'all',
+      },
+      query: {
         errorPolicy: 'all',
       },
     },
@@ -49,4 +70,4 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
     },
   ],
 })
-export class GraphQLModule {}
+export class GraphQLModule { }

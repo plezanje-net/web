@@ -1,0 +1,5 @@
+mutation CreateClubMemberByEmail($input: CreateClubMemberByEmailInput!) {
+  createClubMemberByEmail(input: $input) {
+    id
+  }
+}

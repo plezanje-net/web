@@ -1,0 +1,17 @@
+<div mat-dialog-title fxLayout="row" fxLayoutAlign="start center">
+  <div fxFlex="100" class="title">
+    {{ title }}
+  </div>
+</div>
+<form [formGroup]="clubForm" (ngSubmit)="onSubmit()">
+  <mat-form-field fxFlexFill>
+    <mat-label>Ime kluba</mat-label>
+    <input matInput formControlName="name" id="name" required cdkFocusInitial />
+  </mat-form-field>
+  <mat-dialog-actions align="end">
+    <button mat-button [mat-dialog-close]="">Prekliči</button>
+    <button mat-flat-button color="primary" [disabled]="!clubForm.valid">
+      SHRANI
+    </button>
+  </mat-dialog-actions>
+</form>

@@ -1,0 +1,41 @@
+<div class="container p15">
+  <div class="card">
+    <table class="card-table">
+      <tr class="row header">
+        <td>Ime in priimek</td>
+        <td></td>
+      </tr>
+      <tr *ngFor="let member of (club$ | async).members" class="row">
+        <td>{{ member.user.fullName }}</td>
+        <td class="tools">
+          <button mat-icon-button [mat-menu-trigger-for]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button
+              mat-menu-item
+              [routerLink]="[
+                '/moj-profil/moji-klubi',
+                (club$ | async).id,
+                'vzponi',
+                { userId: member.user.id }
+              ]"
+            >
+              <span>Vsi vzponi tega člana</span>
+            </button>
+            <button
+              *ngIf="
+                (clubService.amClubAdmin$ | async) && member.user.id !== meId
+              "
+              mat-menu-item
+              (click)="deleteMember(member.id, member.user.fullName)"
+            >
+              <mat-icon>delete_outline</mat-icon>
+              <span>Odstrani člana</span>
+            </button>
+          </mat-menu>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

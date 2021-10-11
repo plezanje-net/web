@@ -17,10 +17,9 @@ export class RouteComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private apollo: Apollo,
     private layoutService: LayoutService,
     private routeGQL: RouteGQL
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params: Params) => {

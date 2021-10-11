@@ -1,12 +1,11 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { QueryRef } from 'apollo-angular';
+import { Subscription } from 'rxjs';
+import { ClubFormComponent } from 'src/app/forms/club-form/club-form.component';
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from 'src/app/types/data-error';
-import { GraphQLError } from 'graphql';
 import { Club, MyClubsGQL } from '../../../generated/graphql';
-
-// TODO: finish clubs list layout... add club logo/avatar do db? or drop avatar altogether...
-// TODO: display message if you have no clubs
-// TODO: handle and display error
 
 @Component({
   selector: 'app-clubs',
@@ -14,32 +13,33 @@ import { Club, MyClubsGQL } from '../../../generated/graphql';
   styleUrls: ['./clubs.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ClubsComponent implements OnInit {
+export class ClubsComponent implements OnInit, OnDestroy {
   myClubs: Club[] = [];
-
   loading = true;
   error: DataError = null;
+  myClubsQuery: QueryRef<any>;
+  myClubsSubscription: Subscription;
 
   constructor(
     private layoutService: LayoutService,
-    private myClubsGQL: MyClubsGQL
+    private myClubsGQL: MyClubsGQL,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
-    this.myClubsGQL.fetch().subscribe((result: any) => {
-      this.loading = false;
-      if (result.errors != null) {
-        this.queryError(result.errors);
-      } else {
-        this.querySuccess(result.data);
+    this.myClubsQuery = this.myClubsGQL.watch();
+    this.myClubsSubscription = this.myClubsQuery.valueChanges.subscribe(
+      (result: any) => {
+        this.loading = false;
+        if (result.errors != null) {
+          this.error = {
+            message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
+          };
+        } else {
+          this.querySuccess(result.data);
+        }
       }
-    });
-  }
-
-  queryError(errors: GraphQLError[]) {
-    this.error = {
-      message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
-    };
+    );
   }
 
   querySuccess(data: any) {
@@ -54,5 +54,18 @@ export class ClubsComponent implements OnInit {
         name: 'Moji Klubi',
       },
     ]);
+  }
+
+  createClub() {
+    this.dialog
+      .open(ClubFormComponent)
+      .afterClosed()
+      .subscribe(() => {
+        this.myClubsQuery.refetch();
+      });
+  }
+
+  ngOnDestroy() {
+    this.myClubsSubscription.unsubscribe();
   }
 }
