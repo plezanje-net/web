@@ -46,7 +46,9 @@ export class ActivityFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.selectedRoutes.forEach((route) => this.addRoute(route));
+    if (this.selectedRoutes.length) {
+      this.selectedRoutes.forEach((route) => this.addRoute(route));
+    }
 
     this.activityForm.controls.date.valueChanges.subscribe((value) => {
       this.patchRouteDates(value);
