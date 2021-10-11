@@ -1,178 +1,60 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { QueryRef } from 'apollo-angular';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GraphQLError } from 'graphql';
-import { Subject, Subscription } from 'rxjs';
-import { AuthService } from 'src/app/auth/auth.service';
-import { ASCENT_TYPES } from 'src/app/common/activity.constants';
-import { FilteredTable } from 'src/app/common/filtered-table';
 import { ClubMemberFormComponent } from 'src/app/forms/club-member-form/club-member-form.component';
+import { ClubFormComponent } from 'src/app/forms/club-form/club-form.component';
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from 'src/app/types/data-error';
-import {
-  ActivityFiltersCragGQL,
-  ActivityFiltersRouteGQL,
-  ActivityRoute,
-  UserFullNameGQL,
-  ClubWithActivityRoutesGQL,
-} from 'src/generated/graphql';
-
-// TODO: should query only activityRoutes with the right publish type. what are the right publish types?
-// TODO: should be unable to get club data if I am not a member? BE
-// TODO: should have nice url with no id, but slug? FE/BE
-// TODO: keep scroll position when paginating? what is the expected behaviour?
-// TODO: sort on grade not working as expected -> some activityRoutes have no grade field (only difficulty field)...
+import { Club } from 'src/generated/graphql';
+import { ClubService } from './club.service';
+import { Subscription } from 'rxjs';
+import { ConfirmationDialogComponent } from 'src/app/common/confirmation-dialog/confirmation-dialog.component';
+import { filter, mergeMap } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DeleteClubGQL } from '../../../generated/graphql';
 
 @Component({
   selector: 'app-club',
   templateUrl: './club.component.html',
   styleUrls: ['./club.component.scss'],
+  providers: [ClubService],
 })
 export class ClubComponent implements OnInit, OnDestroy {
-  error: DataError = null;
   loading = true;
+  error: DataError = null;
 
-  club: any = {}; // TODO: type
-  clubAdmin = false;
+  club: Club;
 
-  clubQuery: QueryRef<any>;
-  querySubscription: Subscription;
-  clubWithActivityRoutesQuery: QueryRef<any>;
-
-  clubWithActivityRoutesQuerySubscription: Subscription;
-
-  activityRoutes: any; // TODO: type
-  pagination: any; // TODO: type
-
-  filteredTable = new FilteredTable(
-    [
-      { name: 'user', label: 'Član' },
-      { name: 'date', label: 'Datum', sortable: true, defaultSort: 'DESC' },
-      { name: 'crag', label: 'Plezališče' },
-      { name: 'route', label: 'Smer' },
-      { name: 'grade', label: 'Ocena', sortable: true },
-    ],
-    [
-      // { name: 'dateFrom', type: 'date' },  // TODO:
-      // { name: 'dateTo', type: 'date' },  // TODO:
-      { name: 'ascentType', type: 'multiselect' },
-      { name: 'userId', type: 'relation' }, // TODO: would multiselect be better?
-      { name: 'routeId', type: 'relation' },
-      { name: 'cragId', type: 'relation' },
-    ]
-  );
-
-  filters = new FormGroup({
-    // dateFrom: new FormControl(), // TODO:
-    // dateTo: new FormControl(), // TODO:
-    ascentType: new FormControl(),
-    userId: new FormControl(),
-    routeId: new FormControl(),
-    cragId: new FormControl(),
-  });
-
-  ascentTypes = ASCENT_TYPES;
-
-  filterCragName: string;
-  filterRouteName: string;
-  filterMemberFullName: string;
-
-  ftNavSubscription: Subscription;
-  rowAction$ = new Subject<{
-    item: ActivityRoute;
-    action: string;
-  }>();
+  clubSubscription: Subscription;
 
   constructor(
+    private router: Router,
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
     private dialog: MatDialog,
-    private authService: AuthService,
-    private router: Router,
-    private activityFiltersCragGQL: ActivityFiltersCragGQL,
-    private activityFiltersRouteGQL: ActivityFiltersRouteGQL,
-    private userFullNameGQL: UserFullNameGQL,
-    private clubWithActivityRoutesGQL: ClubWithActivityRoutesGQL
+    private snackbar: MatSnackBar,
+    public clubService: ClubService,
+    private deleteClubGQL: DeleteClubGQL
   ) {}
 
   ngOnInit(): void {
     const clubId = this.activatedRoute.snapshot.params.club;
-
-    this.ftNavSubscription = this.filteredTable.navigate$.subscribe(
-      (ftParams) => {
-        return this.router.navigate([
-          '/moj-profil/moji-klubi',
-          clubId,
-          ftParams,
-        ]);
+    this.clubService.fetchClub(clubId);
+    this.clubSubscription = this.clubService.club$.subscribe(
+      (club: Club) => {
+        this.loading = false;
+        this.club = club;
+        this.setBreadcrumbs();
+      },
+      (errors) => {
+        this.loading = false;
+        this.queryError(errors);
       }
     );
-
-    this.activatedRoute.params.subscribe((params: Params) => {
-      this.loading = true;
-
-      const ftParams = { ...params };
-      delete ftParams.club;
-
-      this.filteredTable.setRouteParams(ftParams);
-
-      this.filters.patchValue(this.filteredTable.filterParams, {
-        emitEvent: false,
-      });
-
-      const queryParams = this.filteredTable.queryParams;
-
-      this.clubWithActivityRoutesQuery = this.clubWithActivityRoutesGQL.watch({
-        clubId: params.club,
-        input: queryParams,
-      });
-      this.clubWithActivityRoutesQuerySubscription =
-        this.clubWithActivityRoutesQuery.valueChanges.subscribe(
-          (result: any) => {
-            this.loading = false;
-            if (result.errors != null) {
-              this.queryError(result.errors);
-            } else {
-              this.querySuccess(result.data);
-            }
-          }
-        );
-    });
-
-    // TODO: why datepicker fires 4 times? BUG?
-    this.filters.valueChanges.subscribe((values) =>
-      this.filteredTable.setFilterParams(values)
-    );
-
-    this.rowAction$.subscribe((action) => {
-      switch (action.action) {
-        case 'filterByMember':
-          this.filters.patchValue({
-            userId: action.item.user.id,
-          });
-          this.filterMemberFullName = action.item.user.fullName;
-          break;
-        case 'filterByRoute':
-          this.filters.patchValue({
-            cragId: null,
-            routeId: action.item.route.id,
-          });
-          this.filterRouteName = action.item.name;
-          break;
-        case 'filterByCrag':
-          this.filters.patchValue({
-            routeId: null,
-            cragId: action.item.route.crag.id,
-          });
-          this.filterCragName = action.item.route.crag.name;
-          break;
-      }
-    });
   }
 
-  queryError(errors: GraphQLError[]) {
+  queryError(errors: readonly GraphQLError[] = []) {
     if (
       errors.length > 0 &&
       errors[0].message.startsWith('Could not find any entity of type')
@@ -180,28 +62,19 @@ export class ClubComponent implements OnInit, OnDestroy {
       this.error = {
         message: 'Klub ne obstaja.',
       };
-      return;
+    } else if (errors.length > 0 && errors[0].message === 'Forbidden') {
+      this.error = {
+        message:
+          'Nisi član kluba, zato nimaš pravic za prikaz podatkov o klubu.',
+      };
+    } else {
+      this.error = {
+        message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
+      };
     }
-
-    this.error = {
-      message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
-    };
   }
 
-  querySuccess(data: any) {
-    this.club = data.club;
-
-    // TODO: implement amAdmin on clubMember resolver on BE?
-    this.clubAdmin = this.club.members.some(
-      (member) =>
-        member.user.id === this.authService.currentUser.id && member.admin
-    );
-
-    this.activityRoutes = data.activityRoutesByClub.items;
-    this.pagination = data.activityRoutesByClub.meta;
-    this.applyRelationFilterDisplayValues();
-
-    // set breadcrumbs
+  setBreadcrumbs() {
     this.layoutService.$breadcrumbs.next([
       {
         name: 'Moj Profil',
@@ -217,61 +90,88 @@ export class ClubComponent implements OnInit, OnDestroy {
     ]);
   }
 
-  applyRelationFilterDisplayValues() {
-    // if the filter is applied, any row should have a matching routeName, so take first
-    if (this.filters.controls.routeId.value && !this.filterRouteName) {
-      if (this.activityRoutes.length) {
-        this.filterRouteName = this.activityRoutes[0].name;
-      } else {
-        // but if result set is empty (can be on page load) we have to fetch
-        this.activityFiltersRouteGQL
-          .fetch({ id: this.filters.value.routeId })
-          .toPromise()
-          .then((route) => (this.filterRouteName = route.data.route.name));
-      }
-    }
-    if (this.filters.controls.cragId.value && !this.filterCragName) {
-      if (this.activityRoutes.length) {
-        this.filterCragName = this.activityRoutes[0].route.crag.name;
-      } else {
-        this.activityFiltersCragGQL
-          .fetch({ id: this.filters.value.cragId })
-          .toPromise()
-          .then((crag) => (this.filterCragName = crag.data.crag.name));
-      }
-    }
-    if (this.filters.controls.userId.value && !this.filterMemberFullName) {
-      if (this.activityRoutes.length) {
-        this.filterMemberFullName = this.activityRoutes[0].user.fullName;
-      } else {
-        this.userFullNameGQL
-          .fetch({ userId: this.filters.controls.userId.value })
-          .toPromise()
-          .then(
-            (member: any) =>
-              (this.filterMemberFullName = member.data.user.fullName)
-          );
-      }
-    }
-  }
-
-  // TODO: add option to remove a member
-
   addMember() {
     this.dialog
       .open(ClubMemberFormComponent, {
-        data: { clubId: this.club.id, clubName: this.club.name },
+        data: {
+          clubId: this.club.id,
+          clubName: this.club.name,
+          club: this.club,
+        },
       })
       .afterClosed()
-      .subscribe((data) => {
-        if (data) {
-          this.clubWithActivityRoutesQuery.refetch();
+      .subscribe((result) => {
+        if (result) {
+          this.clubService.refetchClub();
+          this.clubService.memberAdded$.next();
         }
       });
   }
 
+  updateName() {
+    this.dialog.open(ClubFormComponent, {
+      data: { id: this.club.id, currentName: this.club.name },
+    });
+  }
+
+  delete() {
+    this.dialog
+      .open(ConfirmationDialogComponent, {
+        data: {
+          message:
+            'Ali res želiš odstraniti vse člane iz kluba in izbrisati klub?',
+        },
+      })
+      .afterClosed()
+      .pipe(
+        filter((result) => !!result),
+        mergeMap((_) => {
+          return this.deleteClubGQL.mutate(
+            { id: this.club.id },
+            {
+              errorPolicy: 'all',
+              update: (cache) => {
+                cache.evict({
+                  id: cache.identify(this.club),
+                });
+              },
+            }
+          );
+        })
+      )
+      .subscribe(
+        (data) => {
+          if (data.errors != null) {
+            this.queryError(data.errors);
+          } else {
+            this.displaySuccess();
+            this.router.navigate(['/moj-profil/moji-klubi']);
+          }
+        },
+        (_) => {
+          this.queryError();
+        }
+      );
+  }
+
+  displayError(errorMessage: string) {
+    this.snackbar.open(errorMessage, null, {
+      panelClass: 'error',
+      duration: 3000,
+    });
+  }
+
+  displaySuccess() {
+    this.snackbar.open(
+      'Vsi člani so bili odstranjen iz kluba in klub je bil uspešno izbrisan.',
+      null,
+      {
+        duration: 3000,
+      }
+    );
+  }
+
   ngOnDestroy() {
-    this.clubWithActivityRoutesQuerySubscription.unsubscribe();
-    this.ftNavSubscription.unsubscribe();
+    this.clubSubscription.unsubscribe();
   }
 }

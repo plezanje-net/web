@@ -944,13 +944,36 @@ export type ProfileQuery = (
   ) }
 );
 
-export type ClubWithActivityRoutesQueryVariables = Exact<{
+export type CreateClubMemberByEmailMutationVariables = Exact<{
+  input: CreateClubMemberByEmailInput;
+}>;
+
+
+export type CreateClubMemberByEmailMutation = (
+  { __typename?: 'Mutation' }
+  & { createClubMemberByEmail: (
+    { __typename?: 'ClubMember' }
+    & Pick<ClubMember, 'id'>
+  ) }
+);
+
+export type DeleteClubMemberMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteClubMemberMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteClubMember'>
+);
+
+export type ActivityRoutesByClubQueryVariables = Exact<{
   clubId: Scalars['String'];
   input?: Maybe<FindActivityRoutesInput>;
 }>;
 
 
-export type ClubWithActivityRoutesQuery = (
+export type ActivityRoutesByClubQuery = (
   { __typename?: 'Query' }
   & { activityRoutesByClub: (
     { __typename?: 'PaginatedActivityRoutes' }
@@ -976,18 +999,51 @@ export type ClubWithActivityRoutesQuery = (
       { __typename?: 'PaginationMeta' }
       & Pick<PaginationMeta, 'itemCount' | 'pageCount' | 'pageNumber' | 'pageSize'>
     ) }
-  ), club: (
+  ) }
+);
+
+export type ClubByIdQueryVariables = Exact<{
+  clubId: Scalars['String'];
+}>;
+
+
+export type ClubByIdQuery = (
+  { __typename?: 'Query' }
+  & { club: (
     { __typename?: 'Club' }
     & Pick<Club, 'id' | 'name'>
     & { members: Array<(
       { __typename?: 'ClubMember' }
-      & Pick<ClubMember, 'admin'>
+      & Pick<ClubMember, 'id' | 'admin'>
       & { user: (
         { __typename?: 'User' }
         & Pick<User, 'id' | 'fullName'>
       ) }
     )> }
   ) }
+);
+
+export type CreateClubMutationVariables = Exact<{
+  input: CreateClubInput;
+}>;
+
+
+export type CreateClubMutation = (
+  { __typename?: 'Mutation' }
+  & { createClub: (
+    { __typename?: 'Club' }
+    & Pick<Club, 'id'>
+  ) }
+);
+
+export type DeleteClubMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteClubMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteClub'>
 );
 
 export type MyClubsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -999,6 +1055,19 @@ export type MyClubsQuery = (
     { __typename?: 'Club' }
     & Pick<Club, 'id' | 'name' | 'nrMembers'>
   )> }
+);
+
+export type UpdateClubMutationVariables = Exact<{
+  input: UpdateClubInput;
+}>;
+
+
+export type UpdateClubMutation = (
+  { __typename?: 'Mutation' }
+  & { updateClub: (
+    { __typename?: 'Club' }
+    & Pick<Club, 'id'>
+  ) }
 );
 
 export type UserFullNameQueryVariables = Exact<{
@@ -1455,8 +1524,42 @@ export const ProfileDocument = gql`
       super(apollo);
     }
   }
-export const ClubWithActivityRoutesDocument = gql`
-    query clubWithActivityRoutes($clubId: String!, $input: FindActivityRoutesInput) {
+export const CreateClubMemberByEmailDocument = gql`
+    mutation CreateClubMemberByEmail($input: CreateClubMemberByEmailInput!) {
+  createClubMemberByEmail(input: $input) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateClubMemberByEmailGQL extends Apollo.Mutation<CreateClubMemberByEmailMutation, CreateClubMemberByEmailMutationVariables> {
+    document = CreateClubMemberByEmailDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteClubMemberDocument = gql`
+    mutation DeleteClubMember($id: String!) {
+  deleteClubMember(id: $id)
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteClubMemberGQL extends Apollo.Mutation<DeleteClubMemberMutation, DeleteClubMemberMutationVariables> {
+    document = DeleteClubMemberDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ActivityRoutesByClubDocument = gql`
+    query ActivityRoutesByClub($clubId: String!, $input: FindActivityRoutesInput) {
   activityRoutesByClub(clubId: $clubId, input: $input) {
     items {
       date
@@ -1489,10 +1592,26 @@ export const ClubWithActivityRoutesDocument = gql`
       pageSize
     }
   }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ActivityRoutesByClubGQL extends Apollo.Query<ActivityRoutesByClubQuery, ActivityRoutesByClubQueryVariables> {
+    document = ActivityRoutesByClubDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ClubByIdDocument = gql`
+    query ClubById($clubId: String!) {
   club(id: $clubId) {
     id
     name
     members {
+      id
       admin
       user {
         id
@@ -1506,15 +1625,49 @@ export const ClubWithActivityRoutesDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class ClubWithActivityRoutesGQL extends Apollo.Query<ClubWithActivityRoutesQuery, ClubWithActivityRoutesQueryVariables> {
-    document = ClubWithActivityRoutesDocument;
+  export class ClubByIdGQL extends Apollo.Query<ClubByIdQuery, ClubByIdQueryVariables> {
+    document = ClubByIdDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateClubDocument = gql`
+    mutation CreateClub($input: CreateClubInput!) {
+  createClub(createClubInput: $input) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateClubGQL extends Apollo.Mutation<CreateClubMutation, CreateClubMutationVariables> {
+    document = CreateClubDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteClubDocument = gql`
+    mutation DeleteClub($id: String!) {
+  deleteClub(id: $id)
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteClubGQL extends Apollo.Mutation<DeleteClubMutation, DeleteClubMutationVariables> {
+    document = DeleteClubDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
   }
 export const MyClubsDocument = gql`
-    query myClubs {
+    query MyClubs {
   myClubs {
     id
     name
@@ -1533,8 +1686,26 @@ export const MyClubsDocument = gql`
       super(apollo);
     }
   }
+export const UpdateClubDocument = gql`
+    mutation UpdateClub($input: UpdateClubInput!) {
+  updateClub(updateClubInput: $input) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateClubGQL extends Apollo.Mutation<UpdateClubMutation, UpdateClubMutationVariables> {
+    document = UpdateClubDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const UserFullNameDocument = gql`
-    query userFullName($userId: String!) {
+    query UserFullName($userId: String!) {
   user(email: "", id: $userId) {
     fullName
   }
@@ -1858,9 +2029,10 @@ export const namedOperations = {
     MyActivityRoutes: 'MyActivityRoutes',
     MyCragSummary: 'MyCragSummary',
     Profile: 'Profile',
-    clubWithActivityRoutes: 'clubWithActivityRoutes',
-    myClubs: 'myClubs',
-    userFullName: 'userFullName',
+    ActivityRoutesByClub: 'ActivityRoutesByClub',
+    ClubById: 'ClubById',
+    MyClubs: 'MyClubs',
+    UserFullName: 'UserFullName',
     CountriesToc: 'CountriesToc',
     CragBySlug: 'CragBySlug',
     Crags: 'Crags',
@@ -1869,6 +2041,11 @@ export const namedOperations = {
   },
   Mutation: {
     CreateActivity: 'CreateActivity',
+    CreateClubMemberByEmail: 'CreateClubMemberByEmail',
+    DeleteClubMember: 'DeleteClubMember',
+    CreateClub: 'CreateClub',
+    DeleteClub: 'DeleteClub',
+    UpdateClub: 'UpdateClub',
     CreateComment: 'CreateComment',
     DeleteComment: 'DeleteComment',
     UpdateComment: 'UpdateComment'

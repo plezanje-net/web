@@ -79,7 +79,6 @@ import { ActivityStatisticsComponent } from './pages/activity/activity-statistic
 import { ActivityHeaderComponent } from './pages/activity/partials/activity-header/activity-header.component';
 import { CragImageComponent } from './pages/crag/crag-image/crag-image.component';
 import { ClubsComponent } from './pages/clubs/clubs.component';
-import { ClubComponent } from './pages/club/club.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ClubMemberFormComponent } from './forms/club-member-form/club-member-form.component';
 import { AscentTypeComponent } from './common/ascent-type/ascent-type.component';
@@ -88,6 +87,10 @@ import { ActivityRouteRowComponent } from './pages/activity/partials/activity-ro
 import { ActivityRowComponent } from './pages/activity/partials/activity-row/activity-row.component';
 import { MaterialElevationDirective } from './shared/directives/material-elevation.directive';
 import { MatListModule } from '@angular/material/list';
+import { ClubComponent } from './pages/club/club.component';
+import { ClubMembersComponent } from './pages/club/club-members/club-members.component';
+import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/club-activity-routes.component';
+import { ClubFormComponent } from './forms/club-form/club-form.component';
 import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
 import { HomeSearchComponent } from './pages/home/home-search/home-search.component';
 
@@ -141,13 +144,16 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ActivityHeaderComponent,
     CragImageComponent,
     ClubsComponent,
-    ClubComponent,
     ClubMemberFormComponent,
     AscentTypeComponent,
     AscentPublishOptionComponent,
     ActivityRouteRowComponent,
     ActivityRowComponent,
     MaterialElevationDirective,
+    ClubComponent,
+    ClubMembersComponent,
+    ClubActivityRoutesComponent,
+    ClubFormComponent,
     ActivityEntryComponent,
     HomeSearchComponent,
   ],

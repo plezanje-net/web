@@ -12,3 +12,17 @@
     }
   }
 }
+.card {
+  min-height: auto;
+}
+
+.clubs-actions {
+  .mat-button-wrapper {
+    display: flex;
+    align-items: center;
+    .mat-icon {
+      margin-left: -4px;
+      margin-right: 3px;
+    }
+  }
+}

@@ -1,7 +1,4 @@
-query clubWithActivityRoutes(
-  $clubId: String!
-  $input: FindActivityRoutesInput
-) {
+query ActivityRoutesByClub($clubId: String!, $input: FindActivityRoutesInput) {
   activityRoutesByClub(clubId: $clubId, input: $input) {
     items {
       date
@@ -32,18 +29,6 @@ query clubWithActivityRoutes(
       pageCount
       pageNumber
       pageSize
-    }
-  }
-
-  club(id: $clubId) {
-    id
-    name
-    members {
-      admin
-      user {
-        id
-        fullName
-      }
     }
   }
 }

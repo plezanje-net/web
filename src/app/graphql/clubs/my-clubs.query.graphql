@@ -1,4 +1,4 @@
-query myClubs {
+query MyClubs {
   myClubs {
     id
     name
