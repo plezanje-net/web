@@ -1,9 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SnackBarButtonsComponent } from 'src/app/common/snack-bar-buttons/snack-bar-buttons.component';
-import { Crag, Route } from 'src/generated/graphql';
+import { ActivityFormComponent } from 'src/app/forms/activity-form/activity-form.component';
+import { Crag, MyCragSummaryGQL, Route } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-crag-routes',
@@ -15,10 +17,14 @@ export class CragRoutesComponent implements OnInit {
 
   selectedRoutes: any[] = [];
 
+  ascents: any = {};
+
   constructor(
     private snackBar: MatSnackBar,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog,
+    private myCragSummaryGQL: MyCragSummaryGQL
   ) {}
 
   ngOnInit(): void {
@@ -28,6 +34,10 @@ export class CragRoutesComponent implements OnInit {
     //   this.selectedRoutes.push(this.crag.sectors[0].routes[i])
     // }
     // this.addActivity();
+
+    if (this.authService.currentUser) {
+      this.loadActivity();
+    }
   }
 
   changeSelection(route: Route): void {
@@ -54,6 +64,8 @@ export class CragRoutesComponent implements OnInit {
         .subscribe(() => {
           this.addActivity();
         });
+    } else {
+      this.snackBar.dismiss();
     }
   }
 
@@ -68,5 +80,15 @@ export class CragRoutesComponent implements OnInit {
 
       this.router.navigate(['/plezalni-dnevnik/vpis']);
     });
+  }
+
+  loadActivity() {
+    this.myCragSummaryGQL
+      .watch({ input: { cragId: this.crag.id } })
+      .valueChanges.subscribe((result) => {
+        result.data.myCragSummary.forEach((ascent) => {
+          this.ascents[ascent.route.id] = ascent.ascentType;
+        });
+      });
   }
 }

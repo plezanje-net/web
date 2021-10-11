@@ -9,9 +9,12 @@ import { ASCENT_TYPES } from '../activity.constants';
 })
 export class AscentTypeComponent implements OnInit {
   @Input() value: string;
+  @Input() displayType: string = 'text';
 
   topRope = false;
   ascentType: Registry;
+
+  icon: string = 'check';
 
   constructor() {}
 
@@ -24,5 +27,13 @@ export class AscentTypeComponent implements OnInit {
     }
 
     this.ascentType = ASCENT_TYPES.find((at) => at.value == value);
+
+    if (value == 'attempt') {
+      this.icon = 'close';
+    }
+
+    if (value == 'flash' || value == 'onsight') {
+      this.icon = 'done_all';
+    }
   }
 }

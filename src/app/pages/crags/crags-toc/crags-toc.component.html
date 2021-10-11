@@ -1,10 +1,9 @@
 <div fxLayout="column" fxLayoutGap="12px" fxHide.lt-md>
 
   <div class="card">
-    <h3>Tip smeri</h3>
     <a [routerLink]="makeRoute(country.slug, {type:null})" [class.active]="!params.type" class="row" fxLayout="row"
       fxLayoutAlign="start center">
-      <div fxFlex="100">Vse smeri</div>
+      <div fxFlex="100">Vse vrste smeri</div>
     </a>
     <a *ngFor="let type of routeTypes" [routerLink]="makeRoute(country.slug, {type: type.slug})"
       [class.active]="type.slug == params.type" class="row" fxLayout="row" fxLayoutAlign="start center">{{ type.label

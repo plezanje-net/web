@@ -80,6 +80,7 @@ import { ActivityStatisticsComponent } from './pages/activity/activity-statistic
 import { ActivityHeaderComponent } from './pages/activity/partials/activity-header/activity-header.component';
 import { CragImageComponent } from './pages/crag/crag-image/crag-image.component';
 import { ClubsComponent } from './pages/clubs/clubs.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ClubMemberFormComponent } from './forms/club-member-form/club-member-form.component';
 import { AscentTypeComponent } from './common/ascent-type/ascent-type.component';
 import { AscentPublishOptionComponent } from './common/ascent-publish-option/ascent-publish-option.component';
@@ -93,6 +94,7 @@ import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/c
 import { ClubFormComponent } from './forms/club-form/club-form.component';
 import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
 import { ActivityInputComponent } from './pages/activity/activity-input/activity-input.component';
+import { HomeSearchComponent } from './pages/home/home-search/home-search.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -156,6 +158,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ClubFormComponent,
     ActivityEntryComponent,
     ActivityInputComponent,
+    HomeSearchComponent,
   ],
   imports: [
     BrowserModule,
@@ -181,6 +184,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     GraphQLModule,
     HttpClientModule,
     MatMomentDateModule,
+    MatAutocompleteModule,
     MomentModule,
     MatCardModule,
     EditorModule,
@@ -216,4 +220,4 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
