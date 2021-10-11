@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LayoutService } from 'src/app/services/layout.service';
 
 @Component({
   selector: 'app-activity-input',
@@ -9,7 +10,7 @@ export class ActivityInputComponent implements OnInit {
   routes: any;
   crag: any;
 
-  constructor() { }
+  constructor(private layoutService: LayoutService) {}
 
   ngOnInit(): void {
     if (localStorage.getItem('activity-selection')) {
@@ -17,5 +18,13 @@ export class ActivityInputComponent implements OnInit {
       this.routes = routes;
       this.crag = crag;
     }
+
+    this.layoutService.$breadcrumbs.next([{
+      name: 'Plezalni dnevnik',
+      path: '/plezalni-dnevnik',
+    }, {
+      name: 'Vpis',
+      path: '/plezalni-dnevnik/vpis',
+    }]);
   }
 }
