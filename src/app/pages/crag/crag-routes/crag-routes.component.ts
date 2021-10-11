@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SnackBarButtonsComponent } from 'src/app/common/snack-bar-buttons/snack-bar-buttons.component';
 import { Crag, MyCragSummaryGQL, Route } from 'src/generated/graphql';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
   selector: 'app-crag-routes',
@@ -14,6 +15,7 @@ export class CragRoutesComponent implements OnInit {
   @Input() crag: Crag;
 
   selectedRoutes: any[] = [];
+  selectedRoutesIds: string[] = [];
 
   ascents: any = {};
 
@@ -21,7 +23,8 @@ export class CragRoutesComponent implements OnInit {
     private snackBar: MatSnackBar,
     private authService: AuthService,
     private router: Router,
-    private myCragSummaryGQL: MyCragSummaryGQL
+    private myCragSummaryGQL: MyCragSummaryGQL,
+    private localStorageService: LocalStorageService
   ) {}
 
   ngOnInit(): void {
@@ -35,6 +38,14 @@ export class CragRoutesComponent implements OnInit {
     if (this.authService.currentUser) {
       this.loadActivity();
     }
+
+    // TODO define type
+    const storedRouteSelection = this.localStorageService.getItem('activity-selection');
+    if (storedRouteSelection && storedRouteSelection.routes.length) {
+      this.selectedRoutes = storedRouteSelection.routes;
+      this.selectedRoutesIds = this.selectedRoutes.map(route => route.id);
+      this.openSnackBar();
+    }
   }
 
   changeSelection(route: Route): void {
@@ -46,35 +57,39 @@ export class CragRoutesComponent implements OnInit {
     }
 
     if (this.selectedRoutes.length > 0) {
-      this.snackBar
-        .openFromComponent(SnackBarButtonsComponent, {
-          horizontalPosition: 'end',
-          data: {
-            buttons: [
-              {
-                label: `Shrani v plezalni dnevnik (${this.selectedRoutes.length})`,
-              },
-            ],
-          },
-        })
-        .onAction()
-        .subscribe(() => {
-          this.addActivity();
-        });
+      this.openSnackBar();
+
+      this.selectedRoutesIds = this.selectedRoutes.map(selectedRoute => selectedRoute.id);
+      this.localStorageService.setItem('activity-selection', {
+        crag: this.crag,
+        routes: this.selectedRoutes,
+      });
     } else {
       this.snackBar.dismiss();
+      this.localStorageService.removeItem('activity-selection');
     }
+  }
+
+  openSnackBar(): void {
+    this.snackBar
+      .openFromComponent(SnackBarButtonsComponent, {
+        horizontalPosition: 'end',
+        data: {
+          buttons: [
+            {
+              label: `Shrani v plezalni dnevnik (${this.selectedRoutes.length})`,
+            },
+          ],
+        },
+      })
+      .onAction()
+      .subscribe(() => {
+        this.addActivity();
+      });
   }
 
   addActivity(): void {
     this.authService.guardedAction({}).then(() => {
-      // TODO make storage key a constant
-      localStorage.setItem('activity-selection', JSON.stringify({
-        crag: this.crag,
-        routes: this.selectedRoutes,
-        created: new Date().getTime(),
-      }));
-
       this.router.navigate(['/plezalni-dnevnik/vpis']);
     });
   }

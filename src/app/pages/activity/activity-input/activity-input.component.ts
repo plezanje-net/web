@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LayoutService } from 'src/app/services/layout.service';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
   selector: 'app-activity-input',
@@ -7,24 +8,28 @@ import { LayoutService } from 'src/app/services/layout.service';
   styleUrls: ['./activity-input.component.scss'],
 })
 export class ActivityInputComponent implements OnInit {
-  routes: any;
+  routes: any = [];
   crag: any;
 
-  constructor(private layoutService: LayoutService) {}
+  constructor(private layoutService: LayoutService, private localStorageService: LocalStorageService) {}
 
   ngOnInit(): void {
-    if (localStorage.getItem('activity-selection')) {
-      const { routes, crag } = JSON.parse(localStorage.getItem('activity-selection'));
+    if (this.localStorageService.getItem('activity-selection')) {
+      const { routes, crag } = this.localStorageService.getItem('activity-selection');
+
       this.routes = routes;
       this.crag = crag;
     }
 
-    this.layoutService.$breadcrumbs.next([{
-      name: 'Plezalni dnevnik',
-      path: '/plezalni-dnevnik',
-    }, {
-      name: 'Vpis',
-      path: '/plezalni-dnevnik/vpis',
-    }]);
+    this.layoutService.$breadcrumbs.next([
+      {
+        name: 'Plezalni dnevnik',
+        path: '/plezalni-dnevnik',
+      },
+      {
+        name: 'Vpis',
+        path: '/plezalni-dnevnik/vpis',
+      },
+    ]);
   }
 }
