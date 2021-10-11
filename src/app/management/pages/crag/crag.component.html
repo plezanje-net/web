@@ -1,0 +1,14 @@
+<div *ngIf="!loading">
+  <h1>
+    <div class="container p15" fxLayout="row" fxLayoutAlign="start center">
+      <div fxFlex="100">Urejanje plezališča - {{ crag.name }}</div>
+    </div>
+  </h1>
+
+  <div class="container p15">
+    Sektorji
+    <div *ngFor="let sector of crag.sectors">
+      <h3>{{ sector.label }} {{ sector.name }}</h3>
+    </div>
+  </div>
+</div>

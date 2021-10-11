@@ -93,6 +93,7 @@ import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/c
 import { ClubFormComponent } from './forms/club-form/club-form.component';
 import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
 import { HomeSearchComponent } from './pages/home/home-search/home-search.component';
+import { ManagementModule } from './management/management.module';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -159,7 +160,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
@@ -186,6 +186,8 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MatCardModule,
     EditorModule,
     MatListModule,
+    ManagementModule,
+    AppRoutingModule,
   ],
   providers: [
     AuthGuard,
@@ -216,4 +218,4 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

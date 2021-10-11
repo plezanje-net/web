@@ -1,0 +1,27 @@
+query CragManagement($id: String!) {
+  crag(id: $id) {
+    sectors {
+      id
+      label
+      name
+      status
+    }
+    slug
+    status
+    orientation
+    name
+    lon
+    lat
+    id
+    description
+    access
+    area {
+      id
+      name
+    }
+    country {
+      name
+      id
+    }
+  }
+}

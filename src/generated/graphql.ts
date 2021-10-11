@@ -1185,6 +1185,29 @@ export type CragBySlugQuery = (
   ) }
 );
 
+export type CragManagementQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type CragManagementQuery = (
+  { __typename?: 'Query' }
+  & { crag: (
+    { __typename?: 'Crag' }
+    & Pick<Crag, 'slug' | 'status' | 'orientation' | 'name' | 'lon' | 'lat' | 'id' | 'description' | 'access'>
+    & { sectors: Array<(
+      { __typename?: 'Sector' }
+      & Pick<Sector, 'id' | 'label' | 'name' | 'status'>
+    )>, area?: Maybe<(
+      { __typename?: 'Area' }
+      & Pick<Area, 'id' | 'name'>
+    )>, country: (
+      { __typename?: 'Country' }
+      & Pick<Country, 'name' | 'id'>
+    ) }
+  ) }
+);
+
 export type CragsQueryVariables = Exact<{
   country: Scalars['String'];
   input?: Maybe<FindCragsInput>;
@@ -1282,6 +1305,37 @@ export type HomeSearchQuery = (
       ) }
     )> }
   )> }
+);
+
+export type ManagementGetCragQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type ManagementGetCragQuery = (
+  { __typename?: 'Query' }
+  & { crag: (
+    { __typename?: 'Crag' }
+    & Pick<Crag, 'slug' | 'status' | 'orientation' | 'name' | 'lon' | 'lat' | 'id' | 'description' | 'access'>
+    & { sectors: Array<(
+      { __typename?: 'Sector' }
+      & Pick<Sector, 'id' | 'label' | 'name' | 'status'>
+      & { routes: Array<(
+        { __typename?: 'Route' }
+        & Pick<Route, 'author' | 'difficulty' | 'grade' | 'id' | 'length' | 'name' | 'status'>
+        & { pitches: Array<(
+          { __typename?: 'Pitch' }
+          & Pick<Pitch, 'difficulty' | 'height' | 'id' | 'number'>
+        )> }
+      )> }
+    )>, area?: Maybe<(
+      { __typename?: 'Area' }
+      & Pick<Area, 'id' | 'name'>
+    )>, country: (
+      { __typename?: 'Country' }
+      & Pick<Country, 'name' | 'id'>
+    ) }
+  ) }
 );
 
 export const ActivityEntryDocument = gql`
@@ -1874,6 +1928,46 @@ export const CragBySlugDocument = gql`
       super(apollo);
     }
   }
+export const CragManagementDocument = gql`
+    query CragManagement($id: String!) {
+  crag(id: $id) {
+    sectors {
+      id
+      label
+      name
+      status
+    }
+    slug
+    status
+    orientation
+    name
+    lon
+    lat
+    id
+    description
+    access
+    area {
+      id
+      name
+    }
+    country {
+      name
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CragManagementGQL extends Apollo.Query<CragManagementQuery, CragManagementQueryVariables> {
+    document = CragManagementDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const CragsDocument = gql`
     query Crags($country: String!, $input: FindCragsInput) {
   countryBySlug(slug: $country) {
@@ -2020,6 +2114,61 @@ export const HomeSearchDocument = gql`
       super(apollo);
     }
   }
+export const ManagementGetCragDocument = gql`
+    query ManagementGetCrag($id: String!) {
+  crag(id: $id) {
+    sectors {
+      id
+      label
+      name
+      status
+      routes {
+        author
+        difficulty
+        grade
+        id
+        length
+        name
+        status
+        pitches {
+          difficulty
+          height
+          id
+          number
+        }
+      }
+    }
+    slug
+    status
+    orientation
+    name
+    lon
+    lat
+    id
+    description
+    access
+    area {
+      id
+      name
+    }
+    country {
+      name
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ManagementGetCragGQL extends Apollo.Query<ManagementGetCragQuery, ManagementGetCragQueryVariables> {
+    document = ManagementGetCragDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const namedOperations = {
   Query: {
     ActivityEntry: 'ActivityEntry',
@@ -2035,9 +2184,11 @@ export const namedOperations = {
     UserFullName: 'UserFullName',
     CountriesToc: 'CountriesToc',
     CragBySlug: 'CragBySlug',
+    CragManagement: 'CragManagement',
     Crags: 'Crags',
     Route: 'Route',
-    HomeSearch: 'HomeSearch'
+    HomeSearch: 'HomeSearch',
+    ManagementGetCrag: 'ManagementGetCrag'
   },
   Mutation: {
     CreateActivity: 'CreateActivity',
