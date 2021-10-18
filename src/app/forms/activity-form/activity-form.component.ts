@@ -13,11 +13,6 @@ import moment from 'moment';
 import { Router } from '@angular/router';
 import { gradeNameToNumberMap } from 'src/app/common/grade-names.constants';
 
-export interface DialogData {
-  crag: Crag;
-  routes: Route[];
-}
-
 @Component({
   selector: 'app-activity-form',
   templateUrl: './activity-form.component.html',
@@ -63,13 +58,13 @@ export class ActivityFormComponent implements OnInit {
     this.activityForm.patchValue({ date: moment() });
   }
 
-  patchRouteDates(value: moment.Moment) {
+  patchRouteDates(value: moment.Moment): void {
     this.routes.controls.forEach((control) =>
       control.patchValue({ date: value })
     );
   }
 
-  addRoute(route: any) {
+  addRoute(route: any): void {
     this.routes.push(
       new FormGroup({
         routeId: new FormControl(route.id),
@@ -87,7 +82,7 @@ export class ActivityFormComponent implements OnInit {
     );
   }
 
-  moveRoute(routeIndex: number, direction: number) {
+  moveRoute(routeIndex: number, direction: number): void {
     if (direction == 0) {
       this.routes.controls.splice(routeIndex, 1);
       return;
@@ -115,7 +110,7 @@ export class ActivityFormComponent implements OnInit {
   }
 
   save(): void {
-    let data = this.activityForm.value;
+    const data = this.activityForm.value;
 
     this.loading = true;
     this.activityForm.disable();
