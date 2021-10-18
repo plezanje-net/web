@@ -7,6 +7,7 @@ import {
 import { gradeNames } from 'src/app/common/grade-names.constants';
 import { ReplaySubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { Crag } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-activity-form-route',
@@ -18,6 +19,7 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
   @Input() route: FormGroup;
   @Input() first: boolean;
   @Input() last: boolean;
+  @Input() crag: Crag;
   @Output() move = new EventEmitter<number>();
 
   topRopeAscentTypes = ASCENT_TYPES.filter(ascentType => ascentType.topRope);

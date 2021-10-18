@@ -2,7 +2,7 @@
   <div fxLayout="row" fxLayoutAlign="start center">
     <div fxFlex="100" fxLayout="row" fxLayoutGap="12px">
       <ng-container *ngIf="route.value.routeId">
-        <span class="route-name">{{ route.value.name }} </span>
+        <a [routerLink]="['/plezalisca', crag.country.slug, crag.slug, route.value.routeId]" class="route-name">{{ route.value.name }} </a>
         <app-grade
           [grade]="route.value.grade"
           [text]="route.value.difficulty"
