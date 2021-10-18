@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { SnackBarButtonsComponent } from 'src/app/common/snack-bar-buttons/snack-bar-buttons.component';
 import { Crag, MyCragSummaryGQL, Route } from 'src/generated/graphql';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import moment from 'moment';
 
 @Component({
   selector: 'app-crag-routes',
@@ -63,7 +64,7 @@ export class CragRoutesComponent implements OnInit {
       this.localStorageService.setItem('activity-selection', {
         crag: this.crag,
         routes: this.selectedRoutes,
-      });
+      }, moment(new Date()).add(1, 'day').toISOString());
     } else {
       this.snackBar.dismiss();
       this.localStorageService.removeItem('activity-selection');

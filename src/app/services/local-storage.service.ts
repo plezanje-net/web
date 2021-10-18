@@ -14,7 +14,7 @@ export class LocalStorageService {
       return;
     }
 
-    if (moment(item.createdAt).isBefore(moment(new Date()).subtract(1, 'day'))) {
+    if (moment(item.expirationDate).isBefore(moment(new Date()))) {
       this.removeItem(key);
       return;
     } else {
@@ -22,9 +22,9 @@ export class LocalStorageService {
     }
   }
 
-  setItem(key: string, payload: any): void {
+  setItem(key: string, payload: any, expirationDate: string): void {
     localStorage.setItem(key, JSON.stringify({
-      createdAt: new Date(),
+      expirationDate,
       payload,
     }));
   }
