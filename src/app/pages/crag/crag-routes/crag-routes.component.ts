@@ -41,9 +41,9 @@ export class CragRoutesComponent implements OnInit {
       this.loadActivity();
     }
 
-    const storedRouteSelection: ActivitySelection = this.localStorageService.getItem('activity-selection');
-    if (storedRouteSelection && storedRouteSelection.routes.length) {
-      this.selectedRoutes = storedRouteSelection.routes;
+    const activitySelection: ActivitySelection = this.localStorageService.getItem('activity-selection');
+    if (activitySelection && activitySelection.routes.length && activitySelection.crag.id === this.crag.id) {
+      this.selectedRoutes = activitySelection.routes;
       this.selectedRoutesIds = this.selectedRoutes.map(route => route.id);
       this.openSnackBar();
     }
