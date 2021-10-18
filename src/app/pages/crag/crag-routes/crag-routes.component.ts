@@ -44,7 +44,7 @@ export class CragRoutesComponent implements OnInit {
     const activitySelection: ActivitySelection = this.localStorageService.getItem('activity-selection');
     if (activitySelection && activitySelection.routes.length && activitySelection.crag.id === this.crag.id) {
       this.selectedRoutes = activitySelection.routes;
-      this.selectedRoutesIds = this.selectedRoutes.map(route => route.id);
+      this.selectedRoutesIds = this.selectedRoutes.map((route) => route.id);
       this.openSnackBar();
     }
   }
@@ -60,11 +60,15 @@ export class CragRoutesComponent implements OnInit {
     if (this.selectedRoutes.length > 0) {
       this.openSnackBar();
 
-      this.selectedRoutesIds = this.selectedRoutes.map(selectedRoute => selectedRoute.id);
-      this.localStorageService.setItem('activity-selection', {
-        crag: this.crag,
-        routes: this.selectedRoutes,
-      }, moment(new Date()).add(1, 'day').toISOString());
+      this.selectedRoutesIds = this.selectedRoutes.map((selectedRoute) => selectedRoute.id);
+      this.localStorageService.setItem(
+        'activity-selection',
+        {
+          crag: this.crag,
+          routes: this.selectedRoutes,
+        },
+        moment(new Date()).add(1, 'day').toISOString()
+      );
     } else {
       this.snackBar.dismiss();
       this.localStorageService.removeItem('activity-selection');
@@ -96,12 +100,10 @@ export class CragRoutesComponent implements OnInit {
   }
 
   loadActivity(): void {
-    this.myCragSummaryGQL
-      .watch({ input: { cragId: this.crag.id } })
-      .valueChanges.subscribe((result) => {
-        result.data.myCragSummary.forEach((ascent) => {
-          this.ascents[ascent.route.id] = ascent.ascentType;
-        });
+    this.myCragSummaryGQL.watch({ input: { cragId: this.crag.id } }).valueChanges.subscribe((result) => {
+      result.data.myCragSummary.forEach((ascent) => {
+        this.ascents[ascent.route.id] = ascent.ascentType;
       });
+    });
   }
 }

@@ -1,9 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import {
-  ASCENT_TYPES,
-  PUBLISH_OPTIONS,
-} from '../../../common/activity.constants';
+import { ASCENT_TYPES, PUBLISH_OPTIONS } from '../../../common/activity.constants';
 import { gradeNames } from 'src/app/common/grade-names.constants';
 import { ReplaySubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -22,8 +19,8 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
   @Input() crag: Crag;
   @Output() move = new EventEmitter<number>();
 
-  topRopeAscentTypes = ASCENT_TYPES.filter(ascentType => ascentType.topRope);
-  nonTopRopeAscentTypes = ASCENT_TYPES.filter(ascentType => !ascentType.topRope);
+  topRopeAscentTypes = ASCENT_TYPES.filter((ascentType) => ascentType.topRope);
+  nonTopRopeAscentTypes = ASCENT_TYPES.filter((ascentType) => !ascentType.topRope);
 
   publishOptions = PUBLISH_OPTIONS;
 
@@ -37,11 +34,9 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.populateGradesDropdown();
 
-    this.gradeFilterControl.valueChanges
-      .pipe(takeUntil(this.onDestroySubject))
-      .subscribe(() => {
-        this.populateGradesDropdown();
-      });
+    this.gradeFilterControl.valueChanges.pipe(takeUntil(this.onDestroySubject)).subscribe(() => {
+      this.populateGradesDropdown();
+    });
   }
 
   ngOnDestroy(): void {
@@ -55,7 +50,7 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
     if (search) {
       search = search.toLowerCase();
 
-      this.filteredGradesOptions.next(gradeNames.filter(gradeName => gradeName.indexOf(search) > -1));
+      this.filteredGradesOptions.next(gradeNames.filter((gradeName) => gradeName.indexOf(search) > -1));
     } else {
       this.filteredGradesOptions.next(gradeNames.slice());
     }
