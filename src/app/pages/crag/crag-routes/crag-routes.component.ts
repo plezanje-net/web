@@ -6,6 +6,7 @@ import { SnackBarButtonsComponent } from 'src/app/common/snack-bar-buttons/snack
 import { Crag, MyCragSummaryGQL, Route } from 'src/generated/graphql';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import moment from 'moment';
+import ActivitySelection from 'src/app/types/activity-selection.interface';
 
 @Component({
   selector: 'app-crag-routes',
@@ -15,7 +16,7 @@ import moment from 'moment';
 export class CragRoutesComponent implements OnInit {
   @Input() crag: Crag;
 
-  selectedRoutes: any[] = [];
+  selectedRoutes: Route[] = [];
   selectedRoutesIds: string[] = [];
 
   ascents: any = {};
@@ -40,8 +41,7 @@ export class CragRoutesComponent implements OnInit {
       this.loadActivity();
     }
 
-    // TODO define type
-    const storedRouteSelection = this.localStorageService.getItem('activity-selection');
+    const storedRouteSelection: ActivitySelection = this.localStorageService.getItem('activity-selection');
     if (storedRouteSelection && storedRouteSelection.routes.length) {
       this.selectedRoutes = storedRouteSelection.routes;
       this.selectedRoutesIds = this.selectedRoutes.map(route => route.id);
@@ -95,7 +95,7 @@ export class CragRoutesComponent implements OnInit {
     });
   }
 
-  loadActivity() {
+  loadActivity(): void {
     this.myCragSummaryGQL
       .watch({ input: { cragId: this.crag.id } })
       .valueChanges.subscribe((result) => {
