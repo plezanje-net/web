@@ -214,10 +214,13 @@ export type CreateCragInput = {
   name: Scalars['String'];
   slug: Scalars['String'];
   status: Scalars['String'];
-  lat: Scalars['Float'];
-  lon: Scalars['Float'];
+  lat?: Maybe<Scalars['Float']>;
+  lon?: Maybe<Scalars['Float']>;
   countryId: Scalars['String'];
   areaId?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  access?: Maybe<Scalars['String']>;
+  orientation?: Maybe<Scalars['String']>;
 };
 
 export type CreateRouteInput = {
@@ -754,7 +757,11 @@ export type UpdateCragInput = {
   status?: Maybe<Scalars['String']>;
   lat?: Maybe<Scalars['Float']>;
   lon?: Maybe<Scalars['Float']>;
+  countryId?: Maybe<Scalars['String']>;
   areaId?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  access?: Maybe<Scalars['String']>;
+  orientation?: Maybe<Scalars['String']>;
 };
 
 export type UpdateRouteInput = {
@@ -1289,6 +1296,47 @@ export type RouteQuery = (
   ) }
 );
 
+export type ManagementCragFormGetCountriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ManagementCragFormGetCountriesQuery = (
+  { __typename?: 'Query' }
+  & { countries: Array<(
+    { __typename?: 'Country' }
+    & Pick<Country, 'id' | 'name'>
+    & { areas: Array<(
+      { __typename?: 'Area' }
+      & Pick<Area, 'id' | 'name'>
+    )> }
+  )> }
+);
+
+export type ManagementCreateCragMutationVariables = Exact<{
+  input: CreateCragInput;
+}>;
+
+
+export type ManagementCreateCragMutation = (
+  { __typename?: 'Mutation' }
+  & { createCrag: (
+    { __typename?: 'Crag' }
+    & Pick<Crag, 'id'>
+  ) }
+);
+
+export type ManagementUpdateCragMutationVariables = Exact<{
+  input: UpdateCragInput;
+}>;
+
+
+export type ManagementUpdateCragMutation = (
+  { __typename?: 'Mutation' }
+  & { updateCrag: (
+    { __typename?: 'Crag' }
+    & Pick<Crag, 'id'>
+  ) }
+);
+
 export type ManagementGetCragQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -1315,7 +1363,7 @@ export type ManagementGetCragQuery = (
       & Pick<Area, 'id' | 'name'>
     )>, country: (
       { __typename?: 'Country' }
-      & Pick<Country, 'name' | 'id'>
+      & Pick<Country, 'name' | 'id' | 'slug'>
     ) }
   ) }
 );
@@ -2129,6 +2177,65 @@ export const RouteDocument = gql`
       super(apollo);
     }
   }
+export const ManagementCragFormGetCountriesDocument = gql`
+    query ManagementCragFormGetCountries {
+  countries {
+    id
+    name
+    areas {
+      id
+      name
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ManagementCragFormGetCountriesGQL extends Apollo.Query<ManagementCragFormGetCountriesQuery, ManagementCragFormGetCountriesQueryVariables> {
+    document = ManagementCragFormGetCountriesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ManagementCreateCragDocument = gql`
+    mutation ManagementCreateCrag($input: CreateCragInput!) {
+  createCrag(input: $input) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ManagementCreateCragGQL extends Apollo.Mutation<ManagementCreateCragMutation, ManagementCreateCragMutationVariables> {
+    document = ManagementCreateCragDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ManagementUpdateCragDocument = gql`
+    mutation ManagementUpdateCrag($input: UpdateCragInput!) {
+  updateCrag(input: $input) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ManagementUpdateCragGQL extends Apollo.Mutation<ManagementUpdateCragMutation, ManagementUpdateCragMutationVariables> {
+    document = ManagementUpdateCragDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const ManagementGetCragDocument = gql`
     query ManagementGetCrag($id: String!) {
   crag(id: $id) {
@@ -2169,6 +2276,7 @@ export const ManagementGetCragDocument = gql`
     country {
       name
       id
+      slug
     }
   }
 }
@@ -2288,6 +2396,7 @@ export const namedOperations = {
     CragManagement: 'CragManagement',
     Crags: 'Crags',
     Route: 'Route',
+    ManagementCragFormGetCountries: 'ManagementCragFormGetCountries',
     ManagementGetCrag: 'ManagementGetCrag',
     Search: 'Search'
   },
@@ -2300,6 +2409,8 @@ export const namedOperations = {
     UpdateClub: 'UpdateClub',
     CreateComment: 'CreateComment',
     DeleteComment: 'DeleteComment',
-    UpdateComment: 'UpdateComment'
+    UpdateComment: 'UpdateComment',
+    ManagementCreateCrag: 'ManagementCreateCrag',
+    ManagementUpdateCrag: 'ManagementUpdateCrag'
   }
 }

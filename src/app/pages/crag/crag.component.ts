@@ -23,6 +23,8 @@ export class CragComponent implements OnInit {
   loading: boolean = true;
   error: DataError = null;
 
+  canEdit: boolean = false;
+
   crag: CragBySlugQuery['cragBySlug'];
 
   map: any;
@@ -109,6 +111,10 @@ export class CragComponent implements OnInit {
           break;
       }
     });
+
+    this.canEdit =
+      this.authService.currentUser &&
+      this.authService.currentUser.roles.includes('admin');
   }
 
   queryError(errors: readonly GraphQLError[]) {

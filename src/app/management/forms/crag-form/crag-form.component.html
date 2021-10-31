@@ -1,4 +1,4 @@
-<form [formGroup]="cragForm" (submit)="save()">
+<form [formGroup]="cragForm" (submit)="save()" class="card padding no-border">
   <div fxLayout="row" fxLayoutGap="8px">
     <p fxFlex="50">
       <mat-form-field>
@@ -59,7 +59,7 @@
       <mat-form-field class="no-hint">
         <mat-label>Usmerjenost</mat-label>
         <mat-select formControlName="orientation">
-          <mat-option *ngFor="let orientation of orientations" [value]="orientation.id">{{ orientation.label }}
+          <mat-option *ngFor="let orientation of orientations" [value]="orientation.value">{{ orientation.label }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -67,17 +67,11 @@
   </div>
 
   <p>
-    <mat-form-field class="no-hint">
-      <mat-label>Opis plezališča</mat-label>
-      <textarea matInput formControlName="description"></textarea>
-    </mat-form-field>
+    <app-editor label="Opis plezališča" [control]="cragForm.controls.description"></app-editor>
   </p>
 
   <p>
-    <mat-form-field class="no-hint">
-      <mat-label>Opis dostopa</mat-label>
-      <textarea matInput formControlName="access"></textarea>
-    </mat-form-field>
+    <app-editor label="Opis dostopa" [control]="cragForm.controls.access"></app-editor>
   </p>
 
   <div fxLayout="row" fxLayoutGap="8px">
@@ -85,17 +79,15 @@
       <mat-form-field>
         <mat-label>Status</mat-label>
         <mat-select formControlName="status">
-          <mat-option *ngFor="let status of statuses" [value]="status.id">{{ status.label }}
+          <mat-option *ngFor="let status of statuses" [value]="status.value">{{ status.label }}
           </mat-option>
         </mat-select>
       </mat-form-field>
     </p>
   </div>
 
-  <div>Ta obrazec je work in progress in ga še ni mogoče shraniti</div>
-
   <div fxLayout="row" fxLayoutAlign="end center">
-    <button *ngIf="!loading" mat-flat-button color="primary" [disabled]="!cragForm.valid">
+    <button *ngIf="!loading" mat-flat-button color="primary" [disabled]="!cragForm.valid || cragForm.pristine">
       SHRANI
     </button>
     <span *ngIf="loading" class="loading">

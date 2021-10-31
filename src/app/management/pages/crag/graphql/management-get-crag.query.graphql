@@ -37,6 +37,7 @@ query ManagementGetCrag($id: String!) {
     country {
       name
       id
+      slug
     }
   }
 }

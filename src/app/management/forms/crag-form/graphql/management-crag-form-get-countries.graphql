@@ -1,0 +1,10 @@
+query ManagementCragFormGetCountries {
+  countries {
+    id
+    name
+    areas {
+      id
+      name
+    }
+  }
+}

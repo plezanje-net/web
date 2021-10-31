@@ -9,10 +9,10 @@
     <mat-tab-group animationDuration="0ms" mat-stretch-tabs>
       <mat-tab label="Podatki o plezališču">
         <ng-template matTabContent>
-          <app-crag-form></app-crag-form>
+          <app-crag-form [crag]="crag"></app-crag-form>
         </ng-template>
       </mat-tab>
-      <mat-tab label="Sektorji in smeri">
+      <mat-tab label="Sektorji in smeri" [disabled]="crag == null">
         <ng-template matTabContent>
           <div *ngFor="let sector of crag.sectors; let i = index">
 

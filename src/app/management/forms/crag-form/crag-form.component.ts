@@ -1,20 +1,20 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo, gql } from 'apollo-angular';
-
-const CountriesQuery = gql`
-  query CountriesQuery {
-    countries {
-      id
-      name
-      areas {
-        id
-        name
-      }
-    }
-  }
-`;
+import { Registry } from 'src/app/types/registry';
+import {
+  Country,
+  Crag,
+  CreateActivityMutation,
+  ManagementCragFormGetCountriesGQL,
+  ManagementCragFormGetCountriesQuery,
+  ManagementCreateCragGQL,
+  ManagementCreateCragMutation,
+  ManagementUpdateCragGQL,
+} from 'src/generated/graphql';
 
 @Component({
   selector: 'app-crag-form',
@@ -22,103 +22,179 @@ const CountriesQuery = gql`
   styleUrls: ['./crag-form.component.scss'],
 })
 export class CragFormComponent implements OnInit {
+  @Input() crag: Crag;
+
   cragForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     slug: new FormControl('', [Validators.required]),
-    lat: new FormControl(''),
-    lon: new FormControl(''),
-    orientation: new FormControl(''),
-    access: new FormControl(''),
-    description: new FormControl(''),
-    areaId: new FormControl(''),
-    countryId: new FormControl('', Validators.required),
-    status: new FormControl('', Validators.required),
+    lat: new FormControl(),
+    lon: new FormControl(),
+    orientation: new FormControl(),
+    access: new FormControl(),
+    description: new FormControl(),
+    areaId: new FormControl(),
+    countryId: new FormControl(null, Validators.required),
+    status: new FormControl(null, Validators.required),
   });
 
   loading: boolean = false;
 
-  countries: any[] = [];
-  areas: any[] = [];
+  countries: ManagementCragFormGetCountriesQuery['countries'] = [];
+  areas: ManagementCragFormGetCountriesQuery['countries'][0]['areas'] = [];
 
-  statuses: any[] = [
+  statuses: Registry[] = [
     {
-      id: -5,
+      value: 'user',
       label: 'Začasno / zasebno',
     },
     {
-      id: 0,
+      value: 'proposal',
+      label: 'Predlagaj administratorju',
+    },
+    {
+      value: 'admin',
       label: 'Vidno administratorjem',
     },
     {
-      id: 5,
+      value: 'archive',
+      label: 'Arhivirano',
+    },
+    {
+      value: 'hidden',
       label: 'Vidno prijavljenim',
     },
     {
-      id: 10,
+      value: 'public',
       label: 'Vidno vsem',
     },
   ];
 
-  orientations: any[] = [
+  orientations: Registry[] = [
     {
-      id: 'N',
+      value: 'N',
       label: 'Sever',
     },
     {
-      id: 'NE',
+      value: 'NE',
       label: 'Severovzhod',
     },
     {
-      id: 'E',
+      value: 'E',
       label: 'Vzhod',
     },
     {
-      id: 'SE',
+      value: 'SE',
       label: 'Jugovzhod',
     },
     {
-      id: 'S',
+      value: 'S',
       label: 'Jug',
     },
     {
-      id: 'SW',
+      value: 'SW',
       label: 'Jugozahod',
     },
     {
-      id: 'W',
+      value: 'W',
       label: 'Zahod',
     },
     {
-      id: 'NW',
+      value: 'NW',
       label: 'Severozahod',
     },
   ];
 
-  constructor(private apollo: Apollo) {}
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private countriesGQL: ManagementCragFormGetCountriesGQL,
+    private updateCragGQL: ManagementUpdateCragGQL,
+    private createCragGQL: ManagementCreateCragGQL
+  ) {}
 
   ngOnInit(): void {
-    this.apollo
-      .query({
-        query: CountriesQuery,
-      })
-      .subscribe((result: any) => {
-        this.countries = result.data.countries;
-
-        this.cragForm.controls.countryId.valueChanges.subscribe((countryId) => {
-          this.cragForm.patchValue({
-            areaId: null,
-          });
-
-          this.areas = this.countries.find(
-            (country) => country.id == countryId
-          ).areas;
-        });
-
-        // this.cragForm.patchValue({
-        //   countryId: this.data.countryId,
-        // });
+    if (this.crag != null) {
+      this.cragForm.patchValue({
+        ...this.crag,
+        countryId: this.crag.country?.id,
+        areaId: this.crag.area?.id,
       });
+    }
+
+    this.activatedRoute.params.subscribe((params) => {
+      if (params.country != null) {
+        this.cragForm.patchValue({
+          countryId: params.country,
+        });
+      }
+    });
+
+    this.countriesGQL
+      .fetch()
+      .toPromise()
+      .then((result) => {
+        this.countries = result.data.countries;
+        this.countryChanged(this.cragForm.value.countryId);
+      });
+
+    this.cragForm.controls.countryId.valueChanges.subscribe((v) => {
+      this.countryChanged(v);
+    });
   }
 
-  save(): void {}
+  countryChanged(value: string) {
+    const c = this.countries.find((country) => country.id == value);
+
+    if (c != null) {
+      this.areas = c != null ? c.areas : [];
+    }
+
+    if (!this.areas.find((a) => a.id == this.cragForm.value.areaId)) {
+      this.cragForm.patchValue({ areaId: null });
+    }
+  }
+
+  save(): void {
+    this.loading = true;
+
+    let operation = 'createCragGQL';
+    let value = { ...this.cragForm.value };
+
+    if (this.crag != null) {
+      operation = 'updateCragGQL';
+      value = { ...value, id: this.crag.id };
+    }
+
+    this.cragForm.disable();
+
+    this[operation].mutate({ input: value }).subscribe(
+      (result) => {
+        this.snackBar.open('Podatki o plezališču so shranjeni', null, {
+          duration: 3000,
+        });
+
+        if (operation == 'createCragGQL') {
+          console.log(result);
+          this.router.navigate([
+            '/uredi-plezalisce',
+            result.data.createCrag.id,
+          ]);
+        }
+
+        this.cragForm.enable();
+        this.cragForm.markAsPristine();
+        this.loading = false;
+      },
+      (error) => {
+        this.loading = false;
+        this.cragForm.enable();
+        this.snackBar.open(
+          'Podatkov o plezališču ni bilo mogoče shraniti',
+          null,
+          { panelClass: 'error', duration: 3000 }
+        );
+      }
+    );
+  }
 }

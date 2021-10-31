@@ -32,24 +32,33 @@ export class CragComponent implements OnInit {
           })
           .toPromise()
           .then((result) => {
-            this.loading = false;
+            this.crag = result.data.crag;
+
             this.layoutService.$breadcrumbs.next([
               {
-                name: 'Urejanje plezališča',
+                name: 'Plezališča',
+                path: '/plezalisca',
+              },
+              {
+                name: this.crag.country.name,
+                path: '/plezalisca/' + this.crag.country.slug,
+              },
+              {
+                name: this.crag.name,
               },
             ]);
 
-            this.crag = result.data.crag;
             this.heading = `Urejanje plezališča - ${this.crag.name}`;
+            this.loading = false;
           });
       } else {
-        this.loading = false;
         this.layoutService.$breadcrumbs.next([
           {
             name: 'Dodajanje plezališča',
           },
         ]);
         this.heading = `Dodajanje plezališča`;
+        this.loading = false;
       }
     });
   }

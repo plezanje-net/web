@@ -15,6 +15,10 @@ import { RouteFormComponent } from './forms/route-form/route-form.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CragFormComponent } from './forms/crag-form/crag-form.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { SharedModule } from '../shared/shared.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -33,6 +37,10 @@ import { CragFormComponent } from './forms/crag-form/crag-form.component';
     MatIconModule,
     MatMenuModule,
     MatTabsModule,
+    MatTooltipModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
+    SharedModule,
     ReactiveFormsModule,
     ManagementRoutingModule,
   ],
