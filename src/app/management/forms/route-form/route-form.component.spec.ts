@@ -8,9 +8,8 @@ describe('RouteFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RouteFormComponent ]
-    })
-    .compileComponents();
+      declarations: [RouteFormComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
