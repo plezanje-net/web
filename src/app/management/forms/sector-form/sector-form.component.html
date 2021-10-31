@@ -16,8 +16,19 @@
   </mat-form-field>
 
   <div class="tools" fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+    <button mat-icon-button [matMenuTriggerFor]="addMenu">
+      <mat-icon>add</mat-icon>
+    </button>
     <button mat-icon-button>
       <mat-icon>delete</mat-icon>
     </button>
   </div>
 </form>
+<mat-menu #addMenu="matMenu">
+  <button mat-menu-item>
+    <span>Dodaj sektor</span>
+  </button>
+  <button mat-menu-item>
+    <span>Dodaj smer</span>
+  </button>
+</mat-menu>

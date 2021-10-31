@@ -45,7 +45,6 @@ import { PasswordRecoveryComponent } from './auth/password-recovery/password-rec
 import { RegisterComponent } from './pages/account/register/register.component';
 import { ConfirmAccountComponent } from './pages/account/confirm-account/confirm-account.component';
 import { SelectPasswordComponent } from './pages/account/select-password/select-password.component';
-import { CragFormComponent } from './forms/crag-form/crag-form.component';
 import { MapComponent } from './common/map/map.component';
 import { CragRoutesComponent } from './pages/crag/crag-routes/crag-routes.component';
 import { CragInfoComponent } from './pages/crag/crag-info/crag-info.component';
@@ -119,7 +118,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     RegisterComponent,
     ConfirmAccountComponent,
     SelectPasswordComponent,
-    CragFormComponent,
     MapComponent,
     CragRoutesComponent,
     CragInfoComponent,

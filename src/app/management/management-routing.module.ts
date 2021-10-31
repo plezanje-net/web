@@ -9,10 +9,15 @@ const routes: Routes = [
     component: CragComponent,
     canActivate: [AuthGuard],
   },
+  {
+    path: 'dodaj-plezalisce',
+    component: CragComponent,
+    canActivate: [AuthGuard],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class ManagementRoutingModule { }
+export class ManagementRoutingModule {}

@@ -1,20 +1,34 @@
 <div *ngIf="!loading">
   <h1>
     <div class="container p15" fxLayout="row" fxLayoutAlign="start center">
-      <div fxFlex="100">Urejanje plezališča - {{ crag.name }}</div>
+      <div fxFlex="100">{{ heading }}</div>
     </div>
   </h1>
 
-  <div *ngFor="let sector of crag.sectors; let i = index">
-    <div class="container p15">
-      <h3>Sektor #{{ i+1 }}</h3>
-      <app-sector-form [sector]="sector"></app-sector-form>
+  <div class="container p15">
+    <mat-tab-group animationDuration="0ms" mat-stretch-tabs>
+      <mat-tab label="Podatki o plezališču">
+        <ng-template matTabContent>
+          <app-crag-form></app-crag-form>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="Sektorji in smeri">
+        <ng-template matTabContent>
+          <div *ngFor="let sector of crag.sectors; let i = index">
 
-      <div class="routes">
-        <div *ngFor="let route of sector.routes">
-          <app-route-form [route]="route"></app-route-form>
-        </div>
-      </div>
-    </div>
+            <h3>Sektor #{{ i+1 }}</h3>
+            <app-sector-form [sector]="sector"></app-sector-form>
+
+            <div class="routes">
+              <div *ngFor="let route of sector.routes">
+                <app-route-form [route]="route"></app-route-form>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
   </div>
+
+
 </div>

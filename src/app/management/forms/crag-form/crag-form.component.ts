@@ -94,11 +94,7 @@ export class CragFormComponent implements OnInit {
     },
   ];
 
-  constructor(
-    private apollo: Apollo,
-    @Inject(MAT_DIALOG_DATA) public data: { countryId: string },
-    public matDialogRef: MatDialogRef<CragFormComponent>
-  ) {}
+  constructor(private apollo: Apollo) {}
 
   ngOnInit(): void {
     this.apollo
@@ -118,9 +114,9 @@ export class CragFormComponent implements OnInit {
           ).areas;
         });
 
-        this.cragForm.patchValue({
-          countryId: this.data.countryId,
-        });
+        // this.cragForm.patchValue({
+        //   countryId: this.data.countryId,
+        // });
       });
   }
 

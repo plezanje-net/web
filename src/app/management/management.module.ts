@@ -12,9 +12,17 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouteFormComponent } from './forms/route-form/route-form.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTabsModule } from '@angular/material/tabs';
+import { CragFormComponent } from './forms/crag-form/crag-form.component';
 
 @NgModule({
-  declarations: [CragComponent, SectorFormComponent, RouteFormComponent],
+  declarations: [
+    CragComponent,
+    CragFormComponent,
+    SectorFormComponent,
+    RouteFormComponent,
+  ],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -23,6 +31,8 @@ import { RouteFormComponent } from './forms/route-form/route-form.component';
     MatSelectModule,
     MatButtonModule,
     MatIconModule,
+    MatMenuModule,
+    MatTabsModule,
     ReactiveFormsModule,
     ManagementRoutingModule,
   ],
