@@ -1,4 +1,6 @@
-<span class="grade-name">{{ grade.name }}<ng-container *ngIf="showModifier"> </ng-container></span>
+<span class="grade-name"
+  >{{ grade.name }}<ng-container *ngIf="showModifier"> </ng-container
+></span>
 <span *ngIf="showModifier && grade.modifier == 1" class="grade-modifier hard">
   <mat-icon>arrow_drop_up</mat-icon>
 </span>

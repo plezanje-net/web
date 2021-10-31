@@ -18,6 +18,8 @@ import { ClubMembersComponent } from './pages/club/club-members/club-members.com
 import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/club-activity-routes.component';
 import { ClubComponent } from './pages/club/club.component';
 import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
+import { SearchComponent } from './pages/search/search.component';
+import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
 
 const routes: Routes = [
   {
@@ -94,6 +96,10 @@ const routes: Routes = [
     component: RouteComponent,
   },
   {
+    path: 'iskanje/:search',
+    component: SearchResultsComponent,
+  },
+  {
     path: '**',
     component: NotFoundComponent,
   },
@@ -103,4 +109,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'top' })],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

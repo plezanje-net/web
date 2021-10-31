@@ -1,0 +1,16 @@
+<form [formGroup]="form" fxLayout="row" fxLayoutGap="12px" fxLayoutAlign="start center">
+  <mat-form-field>
+    <mat-label>Ime smeri</mat-label>
+    <input matInput formControlName="name" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Ocena smeri</mat-label>
+    <input matInput formControlName="grade" />
+  </mat-form-field>
+
+  <div class="tools" fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+    <button mat-icon-button>
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</form>

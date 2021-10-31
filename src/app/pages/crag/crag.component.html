@@ -19,6 +19,9 @@
         <button mat-menu-item (click)="addComment('warning')">
           <span>Dodaj opozorilo</span>
         </button>
+        <a mat-menu-item [routerLink]="['/uredi-plezalisce', crag.id]"
+          >Uredi plezališče</a
+        >
       </mat-menu>
     </div>
   </h1>

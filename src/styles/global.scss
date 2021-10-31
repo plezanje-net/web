@@ -4,7 +4,6 @@
 @import "reset.scss";
 @import "colors.scss";
 @import "editor.scss";
-
 html,
 body {
   height: 100%;
@@ -218,4 +217,11 @@ body {
 
 .star {
   color: #dd0;
+}
+
+span.highlight {
+  // background-color: #ffd740;
+  background-color: #ffe57f;
+  // TODO: extract from theme? -> accent light = amber-A200 #ffd740
+  //                           -> amber-A100 = #FFE57F
 }
