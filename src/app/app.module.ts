@@ -92,7 +92,8 @@ import { ClubMembersComponent } from './pages/club/club-members/club-members.com
 import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/club-activity-routes.component';
 import { ClubFormComponent } from './forms/club-form/club-form.component';
 import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
-import { HomeSearchComponent } from './pages/home/home-search/home-search.component';
+import { SearchComponent } from './pages/search/search.component';
+import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -155,7 +156,8 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ClubActivityRoutesComponent,
     ClubFormComponent,
     ActivityEntryComponent,
-    HomeSearchComponent,
+    SearchComponent,
+    SearchResultsComponent,
   ],
   imports: [
     BrowserModule,

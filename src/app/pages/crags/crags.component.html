@@ -25,7 +25,13 @@
     </div>
   </div>
 
-  <div class="container" fxLayout="row" fxLayoutGap="12px" *ngIf="!loading" fxLayout.lt-md="column">
+  <div
+    class="container"
+    fxLayout="row"
+    fxLayoutGap="12px"
+    *ngIf="!loading"
+    fxLayout.lt-md="column"
+  >
     <div fxFlex="320px" fxFlex.lt-md>
       <app-crags-toc [country]="country"></app-crags-toc>
     </div>
@@ -36,23 +42,39 @@
       <div *ngIf="!cragsLoading" fxLayout="row">
         <mat-form-field fxFlex="100">
           <mat-label>Išči po seznamu</mat-label>
-          <input matInput autofocus [formControl]="search" autocomplete="off" (keydown)="searchKeyDown($event)" />
+          <input
+            matInput
+            autofocus
+            [formControl]="search"
+            autocomplete="off"
+            (keydown)="searchKeyDown($event)"
+          />
         </mat-form-field>
       </div>
 
       <div class="card" *ngIf="!cragsLoading">
-        <div fxLayout="row" fxLayoutAlign="start center" fxHide.lt-md class="row header">
+        <div
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          fxHide.lt-md
+          class="row header"
+        >
           <div fxFlex="50" fxFlex.lt-md="100">Plezališče</div>
           <div fxFlex="25" fxFlex.lt-md>Število smeri</div>
           <div fxFlex="20px" fxFlex.lt-md>U</div>
           <div fxFlex="25" class="routes" fxFlex.lt-md>Težavnost</div>
         </div>
-        <div *ngFor="let crag of filteredCrags" [routerLink]="['/plezalisca/', country.slug, crag.slug]" fxLayout="row"
-          fxLayoutAlign="start center" class="row">
+        <div
+          *ngFor="let crag of filteredCrags"
+          [routerLink]="['/plezalisca/', country.slug, crag.slug]"
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          class="row"
+        >
           <div fxFlex="50" fxFlex.lt-md="100">
             <a [routerLink]="['/plezalisca/', country.slug, crag.slug]">{{
               crag.name
-              }}</a>
+            }}</a>
           </div>
           <div fxFlex="25" fxFlex.lt-md fxHide.lt-md>{{ crag.nrRoutes }}</div>
           <div fxFlex="20px" fxFlex.lt-md fxHide.lt-md>

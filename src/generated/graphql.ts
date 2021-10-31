@@ -92,8 +92,8 @@ export type Comment = {
   content?: Maybe<Scalars['String']>;
   created: Scalars['DateTime'];
   updated: Scalars['DateTime'];
-  crag: Crag;
-  route: Route;
+  crag?: Maybe<Crag>;
+  route?: Maybe<Route>;
   iceFall: IceFall;
   peak: Peak;
   images: Array<Image>;
@@ -565,7 +565,7 @@ export type Query = {
   cragBySlug: Crag;
   crags: Array<Crag>;
   route: Route;
-  search: Array<SearchResult>;
+  search: StructuredSearchResult;
   profile: User;
   users: Array<User>;
   user: User;
@@ -687,14 +687,6 @@ export type Route = {
   conditions: Array<Comment>;
 };
 
-export type SearchResult = {
-  __typename?: 'SearchResult';
-  name: Scalars['String'];
-  type: Scalars['String'];
-  crag?: Maybe<Crag>;
-  route?: Maybe<Route>;
-};
-
 export type Sector = {
   __typename?: 'Sector';
   id: Scalars['String'];
@@ -703,6 +695,15 @@ export type Sector = {
   status: Scalars['Int'];
   crag: Crag;
   routes: Array<Route>;
+};
+
+export type StructuredSearchResult = {
+  __typename?: 'StructuredSearchResult';
+  crags: Array<Crag>;
+  routes: Array<Route>;
+  sectors: Array<Sector>;
+  comments: Array<Comment>;
+  users: Array<User>;
 };
 
 export type TokenResponse = {
@@ -1252,26 +1253,25 @@ export type RouteQuery = (
   ) }
 );
 
-export type HomeSearchQueryVariables = Exact<{
+export type SearchQueryVariables = Exact<{
   query?: Maybe<Scalars['String']>;
 }>;
 
 
-export type HomeSearchQuery = (
+export type SearchQuery = (
   { __typename?: 'Query' }
-  & { search: Array<(
-    { __typename?: 'SearchResult' }
-    & Pick<SearchResult, 'name' | 'type'>
-    & { crag?: Maybe<(
-      { __typename?: 'Crag' }
-      & Pick<Crag, 'slug'>
+  & { search: (
+    { __typename?: 'StructuredSearchResult' }
+    & { crags: Array<(
+      { __typename: 'Crag' }
+      & Pick<Crag, 'name' | 'slug' | 'nrRoutes' | 'orientation' | 'minGrade' | 'maxGrade'>
       & { country: (
         { __typename?: 'Country' }
         & Pick<Country, 'slug'>
       ) }
-    )>, route?: Maybe<(
-      { __typename?: 'Route' }
-      & Pick<Route, 'id' | 'difficulty' | 'grade'>
+    )>, routes: Array<(
+      { __typename: 'Route' }
+      & Pick<Route, 'id' | 'name' | 'difficulty' | 'grade' | 'length'>
       & { crag: (
         { __typename?: 'Crag' }
         & Pick<Crag, 'name' | 'slug'>
@@ -1280,8 +1280,47 @@ export type HomeSearchQuery = (
           & Pick<Country, 'slug'>
         ) }
       ) }
+    )>, sectors: Array<(
+      { __typename: 'Sector' }
+      & Pick<Sector, 'name'>
+      & { crag: (
+        { __typename?: 'Crag' }
+        & Pick<Crag, 'name' | 'slug'>
+        & { country: (
+          { __typename?: 'Country' }
+          & Pick<Country, 'slug'>
+        ) }
+      ) }
+    )>, comments: Array<(
+      { __typename: 'Comment' }
+      & Pick<Comment, 'content' | 'created'>
+      & { crag?: Maybe<(
+        { __typename?: 'Crag' }
+        & Pick<Crag, 'name' | 'slug'>
+        & { country: (
+          { __typename?: 'Country' }
+          & Pick<Country, 'slug'>
+        ) }
+      )>, route?: Maybe<(
+        { __typename: 'Route' }
+        & Pick<Route, 'id' | 'name'>
+        & { crag: (
+          { __typename?: 'Crag' }
+          & Pick<Crag, 'name' | 'slug'>
+          & { country: (
+            { __typename?: 'Country' }
+            & Pick<Country, 'slug'>
+          ) }
+        ) }
+      )>, user?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'fullName'>
+      )> }
+    )>, users: Array<(
+      { __typename: 'User' }
+      & Pick<User, 'fullName'>
     )> }
-  )> }
+  ) }
 );
 
 export const ActivityEntryDocument = gql`
@@ -1983,21 +2022,28 @@ export const RouteDocument = gql`
       super(apollo);
     }
   }
-export const HomeSearchDocument = gql`
-    query HomeSearch($query: String) {
+export const SearchDocument = gql`
+    query Search($query: String) {
   search(input: $query) {
-    name
-    type
-    crag {
+    crags {
+      __typename
+      name
       slug
+      nrRoutes
+      orientation
+      minGrade
+      maxGrade
       country {
         slug
       }
     }
-    route {
+    routes {
+      __typename
       id
+      name
       difficulty
       grade
+      length
       crag {
         name
         slug
@@ -2006,6 +2052,48 @@ export const HomeSearchDocument = gql`
         }
       }
     }
+    sectors {
+      __typename
+      name
+      crag {
+        name
+        slug
+        country {
+          slug
+        }
+      }
+    }
+    comments {
+      __typename
+      content
+      crag {
+        name
+        slug
+        country {
+          slug
+        }
+      }
+      route {
+        __typename
+        id
+        name
+        crag {
+          name
+          slug
+          country {
+            slug
+          }
+        }
+      }
+      user {
+        fullName
+      }
+      created
+    }
+    users {
+      __typename
+      fullName
+    }
   }
 }
     `;
@@ -2013,8 +2101,8 @@ export const HomeSearchDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class HomeSearchGQL extends Apollo.Query<HomeSearchQuery, HomeSearchQueryVariables> {
-    document = HomeSearchDocument;
+  export class SearchGQL extends Apollo.Query<SearchQuery, SearchQueryVariables> {
+    document = SearchDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -2037,7 +2125,7 @@ export const namedOperations = {
     CragBySlug: 'CragBySlug',
     Crags: 'Crags',
     Route: 'Route',
-    HomeSearch: 'HomeSearch'
+    Search: 'Search'
   },
   Mutation: {
     CreateActivity: 'CreateActivity',

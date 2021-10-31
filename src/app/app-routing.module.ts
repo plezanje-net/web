@@ -18,6 +18,8 @@ import { ClubMembersComponent } from './pages/club/club-members/club-members.com
 import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/club-activity-routes.component';
 import { ClubComponent } from './pages/club/club.component';
 import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
+import { SearchComponent } from './pages/search/search.component';
+import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
 
 const routes: Routes = [
   {
@@ -92,6 +94,10 @@ const routes: Routes = [
   {
     path: 'plezalisca/:country/:crag/:route',
     component: RouteComponent,
+  },
+  {
+    path: 'iskanje/:search',
+    component: SearchResultsComponent,
   },
   {
     path: '**',
