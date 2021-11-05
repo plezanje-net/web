@@ -30,9 +30,20 @@
           ]">{{ route.name }}</a>
       </div>
       <div fxFlex="80px" fxFlex.lt-md fxHide.lt-md>{{ route.length }} m</div>
-      <div fxFlex="80px" fxFlex.lt-md>
-        <app-grade [grade]="route.grade" [text]="route.difficulty" [showModifier]="true">
-        </app-grade>
+      <div fxFlex="80px" fxFlex.lt-md (mouseenter)="displayRouteGrades(route)" (mouseleave)="hideRouteGrades(route)" class="grades-popover-container">
+        <app-grade [grade]="route.grade" [text]="route.difficulty" [showModifier]="true"></app-grade>
+        <div class="grades-popover" *ngIf="activeGradesPopupId === route.id && !routeGradesLoading">
+          <div class="grades-popover-title">Ocene smeri {{ route.name }}</div>
+          <table>
+            <tbody>
+              <tr *ngFor="let grade of routeGrades">
+                <td><app-grade class="grade" [grade]="grade.grade"></app-grade></td>
+                <td class="grade-author">{{ grade.user ? grade.user.firstname + ' ' + grade.user.lastname : '' }}</td>
+                <td class="grade-date">{{ grade.created | amDateFormat:'D. M. Y' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <div fxFlex="160px" class="routes">
         <button mat-button *ngIf="route.comments.length > 0">

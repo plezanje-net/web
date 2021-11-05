@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SnackBarButtonsComponent } from 'src/app/common/snack-bar-buttons/snack-bar-buttons.component';
 import { ActivityFormComponent } from 'src/app/forms/activity-form/activity-form.component';
-import { Crag, MyCragSummaryGQL } from 'src/generated/graphql';
+import { Crag, MyCragSummaryGQL, Route, RouteGradesGQL, RouteGradesQuery } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-crag-routes',
@@ -15,14 +15,17 @@ export class CragRoutesComponent implements OnInit {
   @Input() crag: Crag;
 
   selectedRoutes: any[] = [];
-
   ascents: any = {};
+  routeGradesLoading: boolean;
+  routeGrades: Record<string, string | any>[];
+  activeGradesPopupId: string | null = null;
 
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private authService: AuthService,
-    private myCragSummaryGQL: MyCragSummaryGQL
+    private myCragSummaryGQL: MyCragSummaryGQL,
+    private routeGradesGQL: RouteGradesGQL,
   ) {}
 
   ngOnInit(): void {
@@ -38,7 +41,7 @@ export class CragRoutesComponent implements OnInit {
     }
   }
 
-  changeSelection(route: any) {
+  changeSelection(route: any): void {
     const i = this.selectedRoutes.indexOf(route);
     if (i > -1) {
       this.selectedRoutes.splice(i, 1);
@@ -67,7 +70,7 @@ export class CragRoutesComponent implements OnInit {
     }
   }
 
-  addActivity() {
+  addActivity(): void {
     this.authService.guardedAction({}).then(() => {
       this.dialog.open(ActivityFormComponent, {
         data: {
@@ -79,7 +82,7 @@ export class CragRoutesComponent implements OnInit {
     });
   }
 
-  loadActivity() {
+  loadActivity(): void {
     this.myCragSummaryGQL
       .watch({ input: { cragId: this.crag.id } })
       .valueChanges.subscribe((result) => {
@@ -87,5 +90,35 @@ export class CragRoutesComponent implements OnInit {
           this.ascents[ascent.route.id] = ascent.ascentType;
         });
       });
+  }
+
+  displayRouteGrades(route: Route): void {
+    this.activeGradesPopupId = route.id;
+    this.routeGradesLoading = true;
+
+    this.routeGradesGQL
+      .watch({ routeId: route.id })
+      .valueChanges
+      .subscribe((result) => {
+        this.routeGradesLoading = false;
+
+        if (!result.errors) {
+          this.routeGradesQuerySuccess(result.data);
+        } else {
+          this.routeGradesQueryError();
+        }
+      });
+  }
+
+  hideRouteGrades(route: Route): void {
+    this.activeGradesPopupId = null;
+  }
+
+  routeGradesQuerySuccess(queryData: RouteGradesQuery): void {
+    this.routeGrades = queryData.route.grades.slice().sort((a, b) => a.grade - b.grade);
+  }
+
+  routeGradesQueryError(): void {
+    console.error('TODO');
   }
 }
