@@ -36,7 +36,7 @@
           <div class="grades-popover-title">Ocene smeri {{ route.name }}</div>
           <table>
             <tbody>
-              <tr *ngFor="let grade of routeGrades">
+              <tr *ngFor="let grade of routeGrades" [ngClass]="grade.includedInCalculation ? 'grade-included' : ''">
                 <td><app-grade class="grade" [grade]="grade.grade"></app-grade></td>
                 <td class="grade-author">{{ grade.user ? grade.user.firstname + ' ' + grade.user.lastname : '' }}</td>
                 <td class="grade-date">{{ grade.created | amDateFormat:'D. M. Y' }}</td>

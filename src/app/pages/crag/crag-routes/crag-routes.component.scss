@@ -52,15 +52,19 @@ h3 {
   font-weight: bold;
 }
 
-.grade-author {
-  padding-right: 20px;
+.grade-included {
+  font-weight: bold;
 }
 
-.grade-date {
-  text-align: right;
+.grade-author {
+  padding-right: 20px;
 }
 
 .grade {
   width: 50px;
   display: block;
+}
+
+.grade-date {
+  text-align: right;
 }
