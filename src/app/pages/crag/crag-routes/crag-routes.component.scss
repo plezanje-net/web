@@ -1,3 +1,6 @@
+@import '~@angular/material/theming';
+
+
 .row {
   // cursor: pointer;
   padding: 6px 2px 6px 10px;
@@ -6,10 +9,12 @@
     white-space: nowrap;
     text-align: right;
     margin: -4px 0;
+
     .mat-button {
       color: #0000008a;
     }
   }
+
   &.header {
     cursor: default;
     padding-top: 12px;
@@ -19,7 +24,47 @@
 h3 {
   padding-top: 28px;
 }
+
 .ascent-type-filler {
   width: 36px;
   display: inline-block;
+}
+
+.grades-popover-container {
+  position: relative;
+}
+
+.grades-popover {
+  position: absolute;
+  z-index: 100;
+  background: #ffffff;
+  border: 1px solid #d1d7db;
+  padding: 10px;
+  @include mat-elevation(5);
+
+  td {
+    white-space: nowrap;
+  }
+}
+
+.grades-popover-title {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.grade-included {
+  font-weight: bold;
+}
+
+.grade-author {
+  padding-right: 20px;
+}
+
+.grade {
+  width: 50px;
+  display: block;
+}
+
+.grade-date {
+  text-align: right;
 }

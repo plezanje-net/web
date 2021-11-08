@@ -1,0 +1,5 @@
+mutation ManagementUpdateCrag($input: UpdateCragInput!) {
+  updateCrag(input: $input) {
+    id
+  }
+}
