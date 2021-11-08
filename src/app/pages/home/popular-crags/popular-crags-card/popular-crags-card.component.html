@@ -1,0 +1,62 @@
+<mat-card *ngIf="!loading">
+  <mat-card-title>{{ title }}</mat-card-title>
+  <mat-card-content>
+    <div
+      *ngIf="popularCrags.length"
+      class="table-wrapper"
+      ngClass.gt-sm="scrollable"
+    >
+      <table class="stats-card-table">
+        <thead>
+          <tr>
+            <th>Plezališče</th>
+            <th>Št. obiskov</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let popularCrag of popularCrags; let i = index"
+            [fxHide]="i >= 10 && !expand"
+            fxShow.gt-sm
+          >
+            <td>
+              <a
+                [routerLink]="[
+                  '/plezalisca/',
+                  popularCrag.crag.country.slug,
+                  popularCrag.crag.slug
+                ]"
+                >{{ popularCrag.crag.name }}</a
+              >
+            </td>
+            <td>{{ popularCrag.nrVisits }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="!popularCrags.length" class="message">
+      V tem obdobju ni bilo obiskano nobeno plezališče.
+    </div>
+  </mat-card-content>
+
+  <mat-divider [fxHide]="popularCrags.length <= 10" fxHide.gt-sm></mat-divider>
+
+  <mat-card-actions>
+    <button
+      [fxHide]="popularCrags.length <= 10 || expand"
+      fxHide.gt-sm
+      mat-button
+      (click)="expand = true"
+    >
+      RAZŠIRI
+    </button>
+    <button
+      [fxHide]="popularCrags.length <= 10 || !expand"
+      fxHide.gt-sm
+      mat-button
+      (click)="expand = false"
+    >
+      SKRČI
+    </button>
+  </mat-card-actions>
+</mat-card>

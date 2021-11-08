@@ -1,0 +1,12 @@
+query PopularCrags($dateFrom: String, $top: Int) {
+  popularCrags(dateFrom: $dateFrom, top: $top) {
+    nrVisits
+    crag {
+      name
+      slug
+      country {
+        slug
+      }
+    }
+  }
+}

@@ -94,6 +94,8 @@ import { ClubFormComponent } from './forms/club-form/club-form.component';
 import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
 import { SearchComponent } from './pages/search/search.component';
 import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
+import { PopularCragsComponent } from './pages/home/popular-crags/popular-crags.component';
+import { PopularCragsCardComponent } from './pages/home/popular-crags/popular-crags-card/popular-crags-card.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -158,6 +160,8 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ActivityEntryComponent,
     SearchComponent,
     SearchResultsComponent,
+    PopularCragsComponent,
+    PopularCragsCardComponent,
   ],
   imports: [
     BrowserModule,

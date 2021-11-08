@@ -48,6 +48,7 @@ export type ActivityRoute = {
   notes?: Maybe<Scalars['String']>;
   partner?: Maybe<Scalars['String']>;
   user: User;
+  stars?: Maybe<Scalars['Float']>;
 };
 
 export type Area = {
@@ -127,7 +128,7 @@ export type Crag = {
   id: Scalars['String'];
   name: Scalars['String'];
   slug: Scalars['String'];
-  status: Scalars['Int'];
+  status: Scalars['String'];
   lat?: Maybe<Scalars['Float']>;
   lon?: Maybe<Scalars['Float']>;
   orientation?: Maybe<Scalars['String']>;
@@ -143,6 +144,7 @@ export type Crag = {
   maxGrade?: Maybe<Scalars['String']>;
   comments: Array<Comment>;
   images: Array<Image>;
+  activities: Array<Activity>;
   warnings: Array<Comment>;
   conditions: Array<Comment>;
 };
@@ -170,6 +172,7 @@ export type CreateActivityRouteInput = {
   position?: Maybe<Scalars['Int']>;
   grade?: Maybe<Scalars['Float']>;
   difficulty?: Maybe<Scalars['String']>;
+  stars?: Maybe<Scalars['Float']>;
 };
 
 export type CreateAreaInput = {
@@ -211,7 +214,7 @@ export type CreateCountryInput = {
 export type CreateCragInput = {
   name: Scalars['String'];
   slug: Scalars['String'];
-  status: Scalars['Float'];
+  status: Scalars['String'];
   lat: Scalars['Float'];
   lon: Scalars['Float'];
   countryId: Scalars['String'];
@@ -223,7 +226,7 @@ export type CreateRouteInput = {
   length: Scalars['String'];
   author: Scalars['String'];
   position: Scalars['Float'];
-  status: Scalars['Float'];
+  status: Scalars['String'];
   sectorId: Scalars['String'];
 };
 
@@ -231,7 +234,7 @@ export type CreateSectorInput = {
   name: Scalars['String'];
   label: Scalars['String'];
   position: Scalars['Float'];
-  status: Scalars['Float'];
+  status: Scalars['String'];
   cragId: Scalars['String'];
 };
 
@@ -269,7 +272,7 @@ export type FindCountriesInput = {
 export type FindCragsInput = {
   country?: Maybe<Scalars['String']>;
   area?: Maybe<Scalars['String']>;
-  minStatus?: Maybe<Scalars['Float']>;
+  minStatus?: Maybe<Scalars['String']>;
   routeType?: Maybe<Scalars['String']>;
 };
 
@@ -557,6 +560,12 @@ export type Pitch = {
   height: Scalars['Float'];
 };
 
+export type PopularCrag = {
+  __typename?: 'PopularCrag';
+  nrVisits: Scalars['Int'];
+  crag: Crag;
+};
+
 export type Query = {
   __typename?: 'Query';
   countryBySlug: Country;
@@ -564,8 +573,9 @@ export type Query = {
   crag: Crag;
   cragBySlug: Crag;
   crags: Array<Crag>;
+  popularCrags: Array<PopularCrag>;
   route: Route;
-  search: StructuredSearchResult;
+  search: SearchResults;
   profile: User;
   users: Array<User>;
   user: User;
@@ -602,6 +612,12 @@ export type QueryCragBySlugArgs = {
 
 export type QueryCragsArgs = {
   country?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryPopularCragsArgs = {
+  top?: Maybe<Scalars['Int']>;
+  dateFrom?: Maybe<Scalars['String']>;
 };
 
 
@@ -656,6 +672,16 @@ export type QueryActivityRoutesByClubArgs = {
   clubId: Scalars['String'];
 };
 
+export type Rating = {
+  __typename?: 'Rating';
+  id: Scalars['String'];
+  stars: Scalars['Float'];
+  user?: Maybe<User>;
+  created: Scalars['DateTime'];
+  updated: Scalars['DateTime'];
+  route: Route;
+};
+
 export type RegisterInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -676,10 +702,11 @@ export type Route = {
   grade?: Maybe<Scalars['Float']>;
   length: Scalars['String'];
   author?: Maybe<Scalars['String']>;
-  status: Scalars['Int'];
+  status: Scalars['String'];
   crag: Crag;
   sector: Sector;
   grades: Array<Grade>;
+  ratings: Array<Rating>;
   pitches: Array<Pitch>;
   comments: Array<Comment>;
   images: Array<Image>;
@@ -687,23 +714,23 @@ export type Route = {
   conditions: Array<Comment>;
 };
 
-export type Sector = {
-  __typename?: 'Sector';
-  id: Scalars['String'];
-  name: Scalars['String'];
-  label: Scalars['String'];
-  status: Scalars['Int'];
-  crag: Crag;
-  routes: Array<Route>;
-};
-
-export type StructuredSearchResult = {
-  __typename?: 'StructuredSearchResult';
+export type SearchResults = {
+  __typename?: 'SearchResults';
   crags: Array<Crag>;
   routes: Array<Route>;
   sectors: Array<Sector>;
   comments: Array<Comment>;
   users: Array<User>;
+};
+
+export type Sector = {
+  __typename?: 'Sector';
+  id: Scalars['String'];
+  name: Scalars['String'];
+  label: Scalars['String'];
+  status: Scalars['String'];
+  crag: Crag;
+  routes: Array<Route>;
 };
 
 export type TokenResponse = {
@@ -738,7 +765,7 @@ export type UpdateCragInput = {
   id: Scalars['String'];
   name?: Maybe<Scalars['String']>;
   slug?: Maybe<Scalars['String']>;
-  status?: Maybe<Scalars['Float']>;
+  status?: Maybe<Scalars['String']>;
   lat?: Maybe<Scalars['Float']>;
   lon?: Maybe<Scalars['Float']>;
   areaId?: Maybe<Scalars['String']>;
@@ -750,7 +777,7 @@ export type UpdateRouteInput = {
   author?: Maybe<Scalars['String']>;
   label?: Maybe<Scalars['String']>;
   position?: Maybe<Scalars['Float']>;
-  status?: Maybe<Scalars['Float']>;
+  status?: Maybe<Scalars['String']>;
   sectorId?: Maybe<Scalars['String']>;
 };
 
@@ -759,7 +786,7 @@ export type UpdateSectorInput = {
   name?: Maybe<Scalars['String']>;
   label?: Maybe<Scalars['String']>;
   position?: Maybe<Scalars['Float']>;
-  status?: Maybe<Scalars['Float']>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type User = {
@@ -1253,6 +1280,28 @@ export type RouteQuery = (
   ) }
 );
 
+export type PopularCragsQueryVariables = Exact<{
+  dateFrom?: Maybe<Scalars['String']>;
+  top?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type PopularCragsQuery = (
+  { __typename?: 'Query' }
+  & { popularCrags: Array<(
+    { __typename?: 'PopularCrag' }
+    & Pick<PopularCrag, 'nrVisits'>
+    & { crag: (
+      { __typename?: 'Crag' }
+      & Pick<Crag, 'name' | 'slug'>
+      & { country: (
+        { __typename?: 'Country' }
+        & Pick<Country, 'slug'>
+      ) }
+    ) }
+  )> }
+);
+
 export type SearchQueryVariables = Exact<{
   query?: Maybe<Scalars['String']>;
 }>;
@@ -1261,7 +1310,7 @@ export type SearchQueryVariables = Exact<{
 export type SearchQuery = (
   { __typename?: 'Query' }
   & { search: (
-    { __typename?: 'StructuredSearchResult' }
+    { __typename?: 'SearchResults' }
     & { crags: Array<(
       { __typename: 'Crag' }
       & Pick<Crag, 'name' | 'slug' | 'nrRoutes' | 'orientation' | 'minGrade' | 'maxGrade'>
@@ -2022,6 +2071,31 @@ export const RouteDocument = gql`
       super(apollo);
     }
   }
+export const PopularCragsDocument = gql`
+    query PopularCrags($dateFrom: String, $top: Int) {
+  popularCrags(dateFrom: $dateFrom, top: $top) {
+    nrVisits
+    crag {
+      name
+      slug
+      country {
+        slug
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class PopularCragsGQL extends Apollo.Query<PopularCragsQuery, PopularCragsQueryVariables> {
+    document = PopularCragsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const SearchDocument = gql`
     query Search($query: String) {
   search(input: $query) {
@@ -2125,6 +2199,7 @@ export const namedOperations = {
     CragBySlug: 'CragBySlug',
     Crags: 'Crags',
     Route: 'Route',
+    PopularCrags: 'PopularCrags',
     Search: 'Search'
   },
   Mutation: {
