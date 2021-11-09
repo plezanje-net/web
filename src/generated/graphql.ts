@@ -1331,26 +1331,6 @@ export type RouteQuery = (
   ) }
 );
 
-export type PopularCragsQueryVariables = Exact<{
-  dateFrom?: Maybe<Scalars['String']>;
-  top?: Maybe<Scalars['Int']>;
-}>;
-
-
-export type PopularCragsQuery = (
-  { __typename?: 'Query' }
-  & { popularCrags: Array<(
-    { __typename?: 'PopularCrag' }
-    & Pick<PopularCrag, 'nrVisits'>
-    & { crag: (
-      { __typename?: 'Crag' }
-      & Pick<Crag, 'name' | 'slug'>
-      & { country: (
-        { __typename?: 'Country' }
-        & Pick<Country, 'slug'>
-      ) }
-    ) }
-  )> }
 export type ManagementCragFormGetCountriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1421,6 +1401,28 @@ export type ManagementGetCragQuery = (
       & Pick<Country, 'name' | 'id' | 'slug'>
     ) }
   ) }
+);
+
+export type PopularCragsQueryVariables = Exact<{
+  dateFrom?: Maybe<Scalars['String']>;
+  top?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type PopularCragsQuery = (
+  { __typename?: 'Query' }
+  & { popularCrags: Array<(
+    { __typename?: 'PopularCrag' }
+    & Pick<PopularCrag, 'nrVisits'>
+    & { crag: (
+      { __typename?: 'Crag' }
+      & Pick<Crag, 'name' | 'slug'>
+      & { country: (
+        { __typename?: 'Country' }
+        & Pick<Country, 'slug'>
+      ) }
+    ) }
+  )> }
 );
 
 export type SearchQueryVariables = Exact<{
@@ -1544,7 +1546,7 @@ export const ActivityEntryDocument = gql`
   })
   export class ActivityEntryGQL extends Apollo.Query<ActivityEntryQuery, ActivityEntryQueryVariables> {
     document = ActivityEntryDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1563,7 +1565,7 @@ export const ActivityFiltersCragDocument = gql`
   })
   export class ActivityFiltersCragGQL extends Apollo.Query<ActivityFiltersCragQuery, ActivityFiltersCragQueryVariables> {
     document = ActivityFiltersCragDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1582,7 +1584,7 @@ export const ActivityFiltersRouteDocument = gql`
   })
   export class ActivityFiltersRouteGQL extends Apollo.Query<ActivityFiltersRouteQuery, ActivityFiltersRouteQueryVariables> {
     document = ActivityFiltersRouteDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1600,7 +1602,7 @@ export const CreateActivityDocument = gql`
   })
   export class CreateActivityGQL extends Apollo.Mutation<CreateActivityMutation, CreateActivityMutationVariables> {
     document = CreateActivityDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1640,7 +1642,7 @@ export const MyActivitiesDocument = gql`
   })
   export class MyActivitiesGQL extends Apollo.Query<MyActivitiesQuery, MyActivitiesQueryVariables> {
     document = MyActivitiesDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1687,7 +1689,7 @@ export const MyActivityRoutesDocument = gql`
   })
   export class MyActivityRoutesGQL extends Apollo.Query<MyActivityRoutesQuery, MyActivityRoutesQueryVariables> {
     document = MyActivityRoutesDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1708,7 +1710,7 @@ export const MyCragSummaryDocument = gql`
   })
   export class MyCragSummaryGQL extends Apollo.Query<MyCragSummaryQuery, MyCragSummaryQueryVariables> {
     document = MyCragSummaryDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1728,7 +1730,7 @@ export const ProfileDocument = gql`
   })
   export class ProfileGQL extends Apollo.Query<ProfileQuery, ProfileQueryVariables> {
     document = ProfileDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1746,7 +1748,7 @@ export const CreateClubMemberByEmailDocument = gql`
   })
   export class CreateClubMemberByEmailGQL extends Apollo.Mutation<CreateClubMemberByEmailMutation, CreateClubMemberByEmailMutationVariables> {
     document = CreateClubMemberByEmailDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1762,7 +1764,7 @@ export const DeleteClubMemberDocument = gql`
   })
   export class DeleteClubMemberGQL extends Apollo.Mutation<DeleteClubMemberMutation, DeleteClubMemberMutationVariables> {
     document = DeleteClubMemberDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1809,7 +1811,7 @@ export const ActivityRoutesByClubDocument = gql`
   })
   export class ActivityRoutesByClubGQL extends Apollo.Query<ActivityRoutesByClubQuery, ActivityRoutesByClubQueryVariables> {
     document = ActivityRoutesByClubDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1836,7 +1838,7 @@ export const ClubByIdDocument = gql`
   })
   export class ClubByIdGQL extends Apollo.Query<ClubByIdQuery, ClubByIdQueryVariables> {
     document = ClubByIdDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1854,7 +1856,7 @@ export const CreateClubDocument = gql`
   })
   export class CreateClubGQL extends Apollo.Mutation<CreateClubMutation, CreateClubMutationVariables> {
     document = CreateClubDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1870,7 +1872,7 @@ export const DeleteClubDocument = gql`
   })
   export class DeleteClubGQL extends Apollo.Mutation<DeleteClubMutation, DeleteClubMutationVariables> {
     document = DeleteClubDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1890,7 +1892,7 @@ export const MyClubsDocument = gql`
   })
   export class MyClubsGQL extends Apollo.Query<MyClubsQuery, MyClubsQueryVariables> {
     document = MyClubsDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1908,7 +1910,7 @@ export const UpdateClubDocument = gql`
   })
   export class UpdateClubGQL extends Apollo.Mutation<UpdateClubMutation, UpdateClubMutationVariables> {
     document = UpdateClubDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1926,7 +1928,7 @@ export const UserFullNameDocument = gql`
   })
   export class UserFullNameGQL extends Apollo.Query<UserFullNameQuery, UserFullNameQueryVariables> {
     document = UserFullNameDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1944,7 +1946,7 @@ export const CreateCommentDocument = gql`
   })
   export class CreateCommentGQL extends Apollo.Mutation<CreateCommentMutation, CreateCommentMutationVariables> {
     document = CreateCommentDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1960,7 +1962,7 @@ export const DeleteCommentDocument = gql`
   })
   export class DeleteCommentGQL extends Apollo.Mutation<DeleteCommentMutation, DeleteCommentMutationVariables> {
     document = DeleteCommentDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1979,7 +1981,7 @@ export const UpdateCommentDocument = gql`
   })
   export class UpdateCommentGQL extends Apollo.Mutation<UpdateCommentMutation, UpdateCommentMutationVariables> {
     document = UpdateCommentDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1999,7 +2001,7 @@ export const CountriesTocDocument = gql`
   })
   export class CountriesTocGQL extends Apollo.Query<CountriesTocQuery, CountriesTocQueryVariables> {
     document = CountriesTocDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -2078,7 +2080,7 @@ export const CragBySlugDocument = gql`
   })
   export class CragBySlugGQL extends Apollo.Query<CragBySlugQuery, CragBySlugQueryVariables> {
     document = CragBySlugDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -2118,7 +2120,7 @@ export const CragManagementDocument = gql`
   })
   export class CragManagementGQL extends Apollo.Query<CragManagementQuery, CragManagementQueryVariables> {
     document = CragManagementDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -2159,7 +2161,7 @@ export const CragsDocument = gql`
   })
   export class CragsGQL extends Apollo.Query<CragsQuery, CragsQueryVariables> {
     document = CragsDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -2190,7 +2192,7 @@ export const RouteGradesDocument = gql`
   })
   export class RouteGradesGQL extends Apollo.Query<RouteGradesQuery, RouteGradesQueryVariables> {
     document = RouteGradesDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -2258,7 +2260,7 @@ export const RouteDocument = gql`
   })
   export class RouteGQL extends Apollo.Query<RouteQuery, RouteQueryVariables> {
     document = RouteDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -2281,7 +2283,7 @@ export const ManagementCragFormGetCountriesDocument = gql`
   })
   export class ManagementCragFormGetCountriesGQL extends Apollo.Query<ManagementCragFormGetCountriesQuery, ManagementCragFormGetCountriesQueryVariables> {
     document = ManagementCragFormGetCountriesDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -2299,7 +2301,7 @@ export const ManagementCreateCragDocument = gql`
   })
   export class ManagementCreateCragGQL extends Apollo.Mutation<ManagementCreateCragMutation, ManagementCreateCragMutationVariables> {
     document = ManagementCreateCragDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -2317,7 +2319,7 @@ export const ManagementUpdateCragDocument = gql`
   })
   export class ManagementUpdateCragGQL extends Apollo.Mutation<ManagementUpdateCragMutation, ManagementUpdateCragMutationVariables> {
     document = ManagementUpdateCragDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -2373,7 +2375,7 @@ export const ManagementGetCragDocument = gql`
   })
   export class ManagementGetCragGQL extends Apollo.Query<ManagementGetCragQuery, ManagementGetCragQueryVariables> {
     document = ManagementGetCragDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -2484,7 +2486,7 @@ export const SearchDocument = gql`
   })
   export class SearchGQL extends Apollo.Query<SearchQuery, SearchQueryVariables> {
     document = SearchDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -2508,9 +2510,9 @@ export const namedOperations = {
     Crags: 'Crags',
     RouteGrades: 'RouteGrades',
     Route: 'Route',
-    PopularCrags: 'PopularCrags',
     ManagementCragFormGetCountries: 'ManagementCragFormGetCountries',
     ManagementGetCrag: 'ManagementGetCrag',
+    PopularCrags: 'PopularCrags',
     Search: 'Search'
   },
   Mutation: {

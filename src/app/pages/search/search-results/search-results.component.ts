@@ -82,7 +82,8 @@ export class SearchResultsComponent implements OnInit {
     searchString = searchString.replace(/[sš]/gi, '[sš]');
     searchString = searchString.replace(/[zž]/gi, '[zž]');
 
-    searchString = '(?<![^\\s])' + '(' + searchString + ')';
+    // each term should start with nothing, a space, or a closing of an html tag
+    searchString = '(?<![^\\s>])' + '(' + searchString + ')';
 
     // exclude matching text inside html tags
     if (searchingInHtml) {
