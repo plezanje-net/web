@@ -2,7 +2,7 @@
   <div fxLayout="row" fxLayoutAlign="start center">
     <div fxFlex="100" fxLayout="row" fxLayoutGap="12px">
       <ng-container *ngIf="route.value.routeId">
-        <span class="route-name">{{ route.value.name }} </span>
+        <a [routerLink]="['/plezalisca', crag.country.slug, crag.slug, route.value.routeId]" class="route-name">{{ route.value.name }} </a>
         <app-grade
           [grade]="route.value.grade"
           [text]="route.value.difficulty"
@@ -59,21 +59,45 @@
     </div>
   </div>
   <div fxLayout="row" fxLayoutGap="12px" fxLayout.lt-md="column">
-    <div fxFlex="60" fxLayout="column" fxLayoutGap="12px">
-      <div fxFlex fxLayout="row" fxLayoutGap="12px">
-        <div fxFlex="50" fxLayout="column" fxLayoutAlign="start stretch">
+    <div fxFlex="60" fxLayout="column">
+      <div fxFlex fxLayout="row" fxLayoutGap="12px grid">
+        <div fxFlex="25" fxLayout="column" fxLayoutAlign="start stretch">
           <mat-form-field class="no-hint">
             <mat-label>Vrsta vzpona</mat-label>
             <mat-select formControlName="ascentType">
-              <mat-option *ngFor="let type of ascentTypes" [value]="type.value"
+              <mat-option *ngFor="let type of nonTopRopeAscentTypes" [value]="type.value"
                 >{{ type.label }}
               </mat-option>
+              <mat-optgroup label="Top rope">
+                <mat-option *ngFor="let type of topRopeAscentTypes" [value]="type.value"
+                  >{{ type.label }}
+                </mat-option>
+              </mat-optgroup>
             </mat-select>
           </mat-form-field>
-          <mat-checkbox formControlName="topRope">Top rope</mat-checkbox>
         </div>
-
-        <mat-form-field class="no-hint" fxFlex="50">
+        <mat-form-field class="no-hint" fxFlex="25">
+          <mat-label>Lepota</mat-label>
+          <mat-select formControlName="stars">
+            <mat-option [value]="1">1</mat-option>
+            <mat-option [value]="2">2</mat-option>
+            <mat-option [value]="3">3</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="no-hint" fxFlex="25">
+          <mat-label>Predlog ocene</mat-label>
+          <mat-select formControlName="gradeSuggestion">
+            <mat-option>
+              <ngx-mat-select-search placeholderLabel="Vnesi oceno" [formControl]="gradeFilterControl"></ngx-mat-select-search>
+            </mat-option>
+            <mat-option
+              *ngFor="let option of filteredGradesOptions | async"
+              [value]="option"
+              >{{ option }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="no-hint" fxFlex="25">
           <mat-label>Objava</mat-label>
           <mat-select formControlName="publish">
             <mat-option
