@@ -1,6 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { Registry } from 'src/app/types/registry';
 import { ManagementGetCragQuery, Sector } from 'src/generated/graphql';
+import { SectorAction } from '../../pages/crag/crag-sectors/crag-sectors.component';
 
 @Component({
   selector: 'app-sector-form',
@@ -8,17 +11,18 @@ import { ManagementGetCragQuery, Sector } from 'src/generated/graphql';
   styleUrls: ['./sector-form.component.scss'],
 })
 export class SectorFormComponent implements OnInit {
-  @Input() sector: Sector;
+  @Input('sector') form: FormGroup;
 
-  form = new FormGroup({
-    label: new FormControl(),
-    name: new FormControl(),
-    status: new FormControl(),
-  });
+  statusOptions: Registry[] = [
+    { value: 'public', label: 'Vidijo vsi' },
+    { value: 'hidden', label: 'Samo za prijavljene' },
+    { value: 'admin', label: 'Samo za admine' },
+    { value: 'archive', label: 'Arhivirano' },
+    // { value: 'proposal', label: 'Predlagaj administratorju' },
+    // { value: 'user', label: 'Samo zame' },
+  ];
 
   constructor() {}
 
-  ngOnInit(): void {
-    this.form.patchValue(this.sector);
-  }
+  ngOnInit(): void {}
 }

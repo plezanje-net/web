@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Route } from 'src/generated/graphql';
 
@@ -8,16 +8,9 @@ import { Route } from 'src/generated/graphql';
   styleUrls: ['./route-form.component.scss'],
 })
 export class RouteFormComponent implements OnInit {
-  @Input() route: Route;
-
-  form = new FormGroup({
-    name: new FormControl(),
-    grade: new FormControl(),
-  });
+  @Input('route') form: FormGroup;
 
   constructor() {}
 
-  ngOnInit(): void {
-    this.form.patchValue(this.route);
-  }
+  ngOnInit(): void {}
 }

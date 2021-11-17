@@ -52,7 +52,6 @@ import { CragCommentsComponent } from './pages/crag/crag-comments/crag-comments.
 import { MomentModule } from 'ngx-moment';
 import { CragLocationComponent } from './pages/crag/crag-location/crag-location.component';
 import { CragWarningsComponent } from './pages/crag/crag-warnings/crag-warnings.component';
-import { SnackBarButtonsComponent } from './common/snack-bar-buttons/snack-bar-buttons.component';
 import { ActivityFormComponent } from './forms/activity-form/activity-form.component';
 import { ActivityFormRouteComponent } from './forms/activity-form/activity-form-route/activity-form-route.component';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -126,7 +125,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     CragCommentsComponent,
     CragLocationComponent,
     CragWarningsComponent,
-    SnackBarButtonsComponent,
     ActivityFormComponent,
     ActivityFormRouteComponent,
     CragGalleryComponent,

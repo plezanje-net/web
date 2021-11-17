@@ -19,6 +19,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from '../shared/shared.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CragSectorsComponent } from './pages/crag/crag-sectors/crag-sectors.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     CragFormComponent,
     SectorFormComponent,
     RouteFormComponent,
+    CragSectorsComponent,
   ],
   imports: [
     CommonModule,
