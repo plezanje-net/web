@@ -1,6 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
 import { LayoutService } from 'src/app/services/layout.service';
+import { Crag, Route } from 'src/generated/graphql';
+
+// const searchGQL = gql`
+//   query crags($search: String) {
+//     crags(search: $search) {
+//       id
+//       name
+//       country {
+//         slug
+//       }
+//       slug
+//     }
+//   }
+// `;
+
+// const searchRouteGQL = gql`
+//   query routes($search: String!) {
+//     routes(search: $search) {
+//       id
+//       name
+//     }
+//   }
+// `;
 
 @Component({
   selector: 'app-home',

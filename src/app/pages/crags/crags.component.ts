@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { CragFormComponent } from 'src/app/forms/crag-form/crag-form.component';
+import { CragFormComponent } from 'src/app/management/forms/crag-form/crag-form.component';
 import {
   CragsQuery,
   CragsGQL,
@@ -132,18 +132,5 @@ export class CragsComponent implements OnInit {
         name: this.country.name,
       },
     ]);
-  }
-
-  addCrag() {
-    this.dialog
-      .open(CragFormComponent, {
-        data: {
-          countryId: this.country.id,
-        },
-      })
-      .afterClosed()
-      .subscribe((data) => {
-        console.log(data);
-      });
   }
 }

@@ -46,7 +46,6 @@ import { PasswordRecoveryComponent } from './auth/password-recovery/password-rec
 import { RegisterComponent } from './pages/account/register/register.component';
 import { ConfirmAccountComponent } from './pages/account/confirm-account/confirm-account.component';
 import { SelectPasswordComponent } from './pages/account/select-password/select-password.component';
-import { CragFormComponent } from './forms/crag-form/crag-form.component';
 import { MapComponent } from './common/map/map.component';
 import { CragRoutesComponent } from './pages/crag/crag-routes/crag-routes.component';
 import { CragInfoComponent } from './pages/crag/crag-info/crag-info.component';
@@ -64,8 +63,7 @@ import {
 } from '@angular/material-moment-adapter';
 import { CragGalleryComponent } from './pages/crag/crag-gallery/crag-gallery.component';
 import { CommentFormComponent } from './forms/comment-form/comment-form.component';
-import { EditorComponent } from './forms/editor/editor.component';
-import { EditorModule } from '@tinymce/tinymce-angular';
+
 import { CommentComponent } from './common/comment/comment.component';
 import { CommentOptionsComponent } from './common/comment/comment-options/comment-options.component';
 import { ConfirmationDialogComponent } from './common/confirmation-dialog/confirmation-dialog.component';
@@ -94,7 +92,12 @@ import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/c
 import { ClubFormComponent } from './forms/club-form/club-form.component';
 import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
 import { ActivityInputComponent } from './pages/activity/activity-input/activity-input.component';
-import { HomeSearchComponent } from './pages/home/home-search/home-search.component';
+import { ManagementModule } from './management/management.module';
+import { SharedModule } from './shared/shared.module';
+import { SearchComponent } from './pages/search/search.component';
+import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
+import { PopularCragsComponent } from './pages/home/popular-crags/popular-crags.component';
+import { PopularCragsCardComponent } from './pages/home/popular-crags/popular-crags-card/popular-crags-card.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -119,7 +122,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     RegisterComponent,
     ConfirmAccountComponent,
     SelectPasswordComponent,
-    CragFormComponent,
     MapComponent,
     CragRoutesComponent,
     CragInfoComponent,
@@ -131,7 +133,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ActivityFormRouteComponent,
     CragGalleryComponent,
     CommentFormComponent,
-    EditorComponent,
     CommentComponent,
     CommentOptionsComponent,
     ConfirmationDialogComponent,
@@ -158,11 +159,13 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ClubFormComponent,
     ActivityEntryComponent,
     ActivityInputComponent,
-    HomeSearchComponent,
+    SearchComponent,
+    SearchResultsComponent,
+    PopularCragsComponent,
+    PopularCragsCardComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
@@ -187,9 +190,11 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MatAutocompleteModule,
     MomentModule,
     MatCardModule,
-    EditorModule,
     MatListModule,
     NgxMatSelectSearchModule,
+    SharedModule,
+    ManagementModule,
+    AppRoutingModule,
   ],
   providers: [
     AuthGuard,

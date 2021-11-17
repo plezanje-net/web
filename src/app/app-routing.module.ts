@@ -19,6 +19,7 @@ import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/c
 import { ClubComponent } from './pages/club/club.component';
 import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
 import { ActivityInputComponent } from './pages/activity/activity-input/activity-input.component';
+import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
 
 const routes: Routes = [
   {
@@ -100,6 +101,10 @@ const routes: Routes = [
     component: RouteComponent,
   },
   {
+    path: 'iskanje/:search',
+    component: SearchResultsComponent,
+  },
+  {
     path: '**',
     component: NotFoundComponent,
   },
@@ -109,4 +114,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'top' })],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

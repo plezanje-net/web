@@ -6,13 +6,13 @@ import { Apollo, gql } from 'apollo-angular';
 import { GuardedActionOptions } from '../types/guarded-action-options';
 import { RecursiveTemplateAstVisitor } from '@angular/compiler';
 import { filter } from 'rxjs/operators';
-import { ProfileGQL } from 'src/generated/graphql';
+import { ProfileGQL, ProfileQuery } from 'src/generated/graphql';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  public currentUser: any = null;
+  public currentUser: ProfileQuery['profile'] = null;
 
   public openLogin$ = new Subject<LoginRequest>();
 

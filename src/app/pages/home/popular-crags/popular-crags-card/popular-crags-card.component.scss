@@ -1,0 +1,89 @@
+@import "../../../../../styles/colors.scss";
+
+$border-color: rgba(0, 0, 0, 0.08); // very light gray
+$table-header-text-color: #0000008a; // light gray
+
+div.table-wrapper {
+  &.scrollable {
+    max-height: 650px;
+  }
+  width: 100%;
+  overflow-y: auto;
+
+  table.stats-card-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+
+    tr {
+      padding: 0;
+      outline: none;
+
+      &:hover {
+        background: #f6f9ff;
+      }
+
+      td,
+      th {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        padding: 1px 16px;
+
+        vertical-align: middle;
+
+        &:last-child {
+          text-align: right;
+          border-bottom: none;
+        }
+      }
+
+      td {
+        height: 42px;
+        border-top: 1px solid $border-color;
+      }
+
+      th {
+        height: 56px;
+
+        text-align: left;
+        position: sticky;
+        top: 0px;
+
+        font-weight: 400;
+        color: $table-header-text-color;
+        background-color: #fff;
+
+        &:last-child {
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+}
+
+.message {
+  padding-top: 18px;
+}
+
+.mat-card {
+  border-radius: 0;
+
+  .mat-card-title {
+    font-weight: 400;
+    font-size: 20px;
+    padding-top: 4px;
+    line-height: 20px;
+    margin: 0;
+  }
+
+  .mat-card-actions {
+    button {
+      color: $primary;
+    }
+  }
+
+  .mat-card-content {
+    margin-top: 20px;
+    margin-bottom: 0;
+  }
+}

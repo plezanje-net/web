@@ -1,0 +1,230 @@
+<div class="container p15">
+  <app-search></app-search>
+
+  <app-loader *ngIf="loading"></app-loader>
+
+  <div *ngIf="!loading">
+    <div *ngIf="searchStringTooShort">
+      Iskalni niz "{{ searchString }}" je prekratek. Za uspešno iskanje moraš
+      vnesti vsaj 3 znake.
+    </div>
+    <div *ngIf="!searchStringTooShort && noResults">
+      Za iskalni niz "{{ searchString }}" ni rezultatov :(
+    </div>
+    <div *ngIf="!searchStringTooShort && !noResults">
+      <mat-tab-group
+        animationDuration="0ms"
+        mat-stretch-tabs
+        [selectedIndex]="firstNonEmptyTabIndex"
+      >
+        <mat-tab label="Plezališča ({{ searchResults.crags.length }})">
+          <div *ngIf="!searchResults.crags.length" class="results-tab">
+            Za iskalni niz "{{ searchString }}" med plezališči ni rezultatov :(
+          </div>
+          <div *ngIf="searchResults.crags.length" class="card results-tab">
+            <div
+              fxLayout="row"
+              fxLayoutAlign="start center"
+              fxLayoutGap="5px"
+              class="row header"
+            >
+              <div fxFlex="50%">Plezališče</div>
+              <div fxFlex="25%">Število smeri</div>
+              <div fxFlex="20px">U</div>
+              <div fxFlex class="lastColumn">Težavnost</div>
+            </div>
+            <div
+              *ngFor="let crag of searchResults.crags"
+              [routerLink]="['/plezalisca', crag.country.slug, crag.slug]"
+              fxLayout="row"
+              fxLayoutAlign="start center"
+              fxLayoutGap="5px"
+              class="row"
+            >
+              <div fxFlex="50%">
+                <a [innerHtml]="highlight(crag.name, searchString)"></a>
+              </div>
+
+              <div fxFlex="25%">{{ crag.nrRoutes }} smeri</div>
+              <div fxFlex="20px">
+                {{ crag.orientation }}
+              </div>
+              <div fxFlex class="lastColumn">
+                <app-grade [grade]="crag.minGrade"></app-grade>
+                {{
+                  crag.minGrade != null && crag.maxGrade != null ? " do " : ""
+                }}
+                <app-grade [grade]="crag.maxGrade"></app-grade>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Smeri ({{ searchResults.routes.length }})">
+          <div *ngIf="!searchResults.routes.length" class="results-tab">
+            Za iskalni niz "{{ searchString }}" med smermi ni rezultatov :(
+          </div>
+          <div *ngIf="searchResults.routes.length" class="card results-tab">
+            <div
+              fxLayout="row"
+              fxLayoutAlign="start center"
+              fxLayoutGap="5px"
+              class="row header"
+            >
+              <div fxFlex>Smer</div>
+              <div fxFlex>Težavnost</div>
+              <div fxFlex>Dolžina</div>
+              <div fxFlex class="lastColumn">Plezališče</div>
+            </div>
+            <div
+              *ngFor="let route of searchResults.routes"
+              fxLayout="row"
+              fxLayoutAlign="start center"
+              fxLayoutGap="5px"
+              class="row"
+              [routerLink]="[
+                '/plezalisca',
+                route.crag.country.slug,
+                route.crag.slug,
+                route.id
+              ]"
+            >
+              <div fxFlex>
+                <a [innerHtml]="highlight(route.name, searchString)"></a>
+              </div>
+              <div fxFlex>
+                <app-grade
+                  [grade]="route.grade"
+                  [text]="route.difficulty"
+                  [showModifier]="false"
+                >
+                </app-grade>
+              </div>
+              <div fxFlex>{{ route.length }} m</div>
+              <div fxFlex class="lastColumn">
+                {{ route.crag.name }}
+              </div>
+            </div>
+          </div>
+          <p *ngFor="let route of searchResults.routes"></p>
+        </mat-tab>
+
+        <mat-tab label="Sektorji ({{ searchResults.sectors.length }})">
+          <div *ngIf="!searchResults.sectors.length" class="results-tab">
+            Za iskalni niz "{{ searchString }}" med sektorji ni rezultatov :(
+          </div>
+          <div *ngIf="searchResults.sectors.length" class="card results-tab">
+            <div fxLayout="row" fxLayoutAlign="start center" class="row header">
+              <div fxFlex>Sektor</div>
+              <div fxFlex class="lastColumn">Plezališče</div>
+            </div>
+            <div
+              *ngFor="let sector of searchResults.sectors"
+              fxLayout="row"
+              fxLayoutAlign="start center"
+              class="row"
+              [routerLink]="[
+                '/plezalisca',
+                sector.crag.country.slug,
+                sector.crag.slug
+              ]"
+            >
+              <div fxFlex>
+                <a [innerHtml]="highlight(sector.name, searchString)"></a>
+              </div>
+              <div fxFlex class="lastColumn">{{ sector.crag.name }}</div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Uporabniki ({{ searchResults.users.length }})">
+          <div *ngIf="!searchResults.users.length" class="results-tab">
+            Za iskalni niz "{{ searchString }}" med uporabniki ni rezultatov :(
+          </div>
+          <div *ngIf="searchResults.users.length" class="card results-tab">
+            <div
+              class="row header"
+              fxLayout="row"
+              fxLayoutAlign="start center"
+              fxLayoutGap="5px"
+            >
+              <div fxFlex>Uporabnik</div>
+            </div>
+            <div
+              *ngFor="let user of searchResults.users"
+              flLayout="row"
+              fxLayoutAlign="start center"
+              fxLayoutGap="5px"
+              class="row"
+              [routerLink]="['/uporabniki', user.fullName]"
+            >
+              <div fxFlex>
+                <a [innerHTML]="highlight(user.fullName, searchString)">
+                  {{ user.fullName }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Komentarji ({{ searchResults.comments.length }})">
+          <div *ngIf="!searchResults.comments.length" class="results-tab">
+            Za iskalni niz "{{ searchString }}" med komentarji ni rezultatov :(
+          </div>
+          <div *ngIf="searchResults.comments.length" class="card results-tab">
+            <div
+              class="row header"
+              fxLayout="row"
+              fxLayoutAlign="start center"
+              fxLayoutGap="5px"
+            >
+              <div fxFlex="50%">Komentar</div>
+              <div fxFlex>Smer</div>
+              <div fxFlex>Plezališče</div>
+              <div fxFlex>Uporabnik</div>
+              <div fxFlex class="lastColumn">Datum</div>
+            </div>
+            <div
+              *ngFor="let comment of searchResults.comments"
+              flLayout="row"
+              fxLayoutAlign="start center"
+              fxLayoutGap="5px"
+              class="row"
+              [routerLink]="
+                comment?.route
+                  ? [
+                      '/plezalisca',
+                      comment.route.crag.country.slug,
+                      comment.route.crag.slug,
+                      comment.route.id
+                    ]
+                  : [
+                      '/plezalisca',
+                      comment.crag.country.slug,
+                      comment.crag.slug
+                    ]
+              "
+            >
+              <div
+                fxFlex="50%"
+                [innerHTML]="highlight(comment.content, searchString, true)"
+              ></div>
+              <div fxFlex>
+                {{ comment.route ? comment.route.name : "-" }}
+              </div>
+              <div fxFlex>
+                {{ comment.crag ? comment.crag.name : comment.route.crag.name }}
+              </div>
+              <div fxFlex>
+                {{ comment.user ? comment.user.fullName : "anonimnež" }}
+              </div>
+              <div fxFlex class="lastColumn">
+                {{ comment.created | amDateFormat: "D.M.Y H:mm" }}
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

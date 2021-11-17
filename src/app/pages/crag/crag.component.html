@@ -19,87 +19,45 @@
         <button mat-menu-item (click)="addComment('warning')">
           <span>Dodaj opozorilo</span>
         </button>
+        <a mat-menu-item [routerLink]="['/uredi-plezalisce', crag.id]" *ngIf="canEdit">Uredi plezališče</a>
       </mat-menu>
     </div>
   </h1>
 
   <app-crag-warnings [crag]="crag"></app-crag-warnings>
 
-  <div
-    class="container"
-    fxLayout="row"
-    fxLayoutGap="12px"
-    fxLayout.lt-md="column"
-  >
+  <div class="container" fxLayout="row" fxLayoutGap="12px" fxLayout.lt-md="column">
     <div fxFlex="320px" fxFlex.lt-md *ngIf="crag">
       <nav mat-tab-nav-bar fxHide.lt-md>
         <a mat-tab-link disabled> Lokacija & dostop </a>
       </nav>
 
-      <app-crag-location
-        [crag]="crag"
-        id="primary"
-        fxHide.lt-md
-      ></app-crag-location>
+      <app-crag-location [crag]="crag" id="primary" fxHide.lt-md></app-crag-location>
 
-      <app-crag-image
-        [crag]="crag"
-        fxHide.lt-md
-        (click)="onImageClicked()"
-      ></app-crag-image>
+      <app-crag-image [crag]="crag" fxHide.lt-md (click)="onImageClicked()"></app-crag-image>
     </div>
 
-    <div
-      fxFlex="100"
-      fxFlex.lt-md
-      fxLayout="column"
-      fxLayoutGap="0px"
-      fxLayoutGap.lt-md="12px"
-    >
+    <div fxFlex="100" fxFlex.lt-md fxLayout="column" fxLayoutGap="0px" fxLayoutGap.lt-md="12px">
       <nav mat-tab-nav-bar fxHide.lt-md>
         <ng-container *ngFor="let tab of tabs">
-          <a
-            mat-tab-link
-            *ngIf="tab.slug != 'lokacija'"
-            [active]="tab.slug == activeTab"
-            (click)="setActiveTab(tab)"
-          >
+          <a mat-tab-link *ngIf="tab.slug != 'lokacija'" [active]="tab.slug == activeTab" (click)="setActiveTab(tab)">
             {{ tab.label }}
           </a>
         </ng-container>
       </nav>
 
       <nav fxHide fxShow.lt-md fxLayout="row wrap">
-        <button
-          mat-button
-          class="tab-button"
-          *ngFor="let tab of tabs"
-          fxFlex="100"
-          [class.active]="tab.slug == activeTab"
-          (click)="setActiveTab(tab)"
-        >
+        <button mat-button class="tab-button" *ngFor="let tab of tabs" fxFlex="100"
+          [class.active]="tab.slug == activeTab" (click)="setActiveTab(tab)">
           {{ tab.label }}
         </button>
       </nav>
 
-      <app-crag-location
-        [crag]="crag"
-        *ngIf="activeTab == 'lokacija'"
-      ></app-crag-location>
-      <app-crag-routes
-        [crag]="crag"
-        *ngIf="activeTab == 'smeri'"
-      ></app-crag-routes>
-      <app-crag-comments
-        [crag]="crag"
-        *ngIf="activeTab == 'komentarji'"
-        [action]="action$"
-      ></app-crag-comments>
+      <app-crag-location [crag]="crag" *ngIf="activeTab == 'lokacija'"></app-crag-location>
+      <app-crag-routes [crag]="crag" *ngIf="activeTab == 'smeri'"></app-crag-routes>
+      <app-crag-comments [crag]="crag" *ngIf="activeTab == 'komentarji'" [action]="action$"></app-crag-comments>
       <app-crag-info [crag]="crag" *ngIf="activeTab == 'info'"></app-crag-info>
-      <app-crag-gallery
-        [images]="crag.images"
-        *ngIf="activeTab == 'galerija'"
-      ></app-crag-gallery>
+      <app-crag-gallery [images]="crag.images" *ngIf="activeTab == 'galerija'"></app-crag-gallery>
     </div>
   </div>
 </div>

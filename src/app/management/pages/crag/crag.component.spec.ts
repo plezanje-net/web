@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HomeSearchComponent } from './home-search.component';
+import { CragComponent } from './crag.component';
 
-describe('HomeSearchComponent', () => {
-  let component: HomeSearchComponent;
-  let fixture: ComponentFixture<HomeSearchComponent>;
+describe('CragComponent', () => {
+  let component: CragComponent;
+  let fixture: ComponentFixture<CragComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HomeSearchComponent ]
+      declarations: [ CragComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HomeSearchComponent);
+    fixture = TestBed.createComponent(CragComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

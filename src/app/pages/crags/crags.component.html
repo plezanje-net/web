@@ -9,8 +9,8 @@
       </button>
 
       <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="addCrag()">
-          <mat-icon>post_add</mat-icon>
+        <button mat-menu-item [routerLink]="['/dodaj-plezalisce', { country: country?.id }]">
+          <mat-icon>add</mat-icon>
           <span>Dodaj plezališče</span>
         </button>
       </mat-menu>

@@ -1,0 +1,73 @@
+query Search($query: String) {
+  search(input: $query) {
+    crags {
+      __typename
+      name
+      slug
+      nrRoutes
+      orientation
+      minGrade
+      maxGrade
+      country {
+        slug
+      }
+    }
+    routes {
+      __typename
+      id
+      name
+      difficulty
+      grade
+      length
+      crag {
+        name
+        slug
+        country {
+          slug
+        }
+      }
+    }
+    sectors {
+      __typename
+      name
+      crag {
+        name
+        slug
+        country {
+          slug
+        }
+      }
+    }
+    comments {
+      __typename
+      content
+      crag {
+        name
+        slug
+        country {
+          slug
+        }
+      }
+      route {
+        __typename
+        id
+        name
+        crag {
+          name
+          slug
+          country {
+            slug
+          }
+        }
+      }
+      user {
+        fullName
+      }
+      created
+    }
+    users {
+      __typename
+      fullName
+    }
+  }
+}

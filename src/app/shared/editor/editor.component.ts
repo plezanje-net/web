@@ -9,12 +9,14 @@ import { FormControl } from '@angular/forms';
 export class EditorComponent implements OnInit {
   @Input() placeholder: string;
   @Input() control: FormControl;
+  @Input() label: string = '';
 
   focus: boolean = false;
 
   settings = {
     height: 250,
     menubar: false,
+    entity_encoding: 'raw',
     setup: (editor) => {
       editor.on('focusin', () => {
         this.focus = true;

@@ -1,0 +1,5 @@
+mutation ManagementCreateCrag($input: CreateCragInput!) {
+  createCrag(input: $input) {
+    id
+  }
+}

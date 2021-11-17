@@ -1,15 +1,40 @@
 <div class="container p15">
-  <app-home-search></app-home-search>
+  <app-search></app-search>
 </div>
+
+<app-popular-crags></app-popular-crags>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
 <div class="container p15" fxLayout="row" fxLayout.lt-sm="column">
   <div fxFlex="70">aaa</div>
   <div fxFlex="30">
     <h3>Moj Plezanje.net</h3>
     <div class="card padding">
       <div fxLayout="column" fxLayoutAlign="space-between">
-        <button mat-button color="primary" (click)="login()" fxLayout="row" fxLayoutAlign="start">Prijava</button>
-        <a [routerLink]="['/registracija']" mat-button color="primary" fxLayout="row" fxLayoutAlign="start">Ustvari
-          račun</a>
+        <button
+          mat-button
+          color="primary"
+          (click)="login()"
+          fxLayout="row"
+          fxLayospace-n="start"
+        >
+          Prijava
+        </button>
+        <a
+          [routerLink]="['/registracija']"
+          mat-button
+          color="primary"
+          fxLayout="row"
+          fxLayoutAlign="start"
+          >Ustvari račun</a
+        >
       </div>
     </div>
   </div>
