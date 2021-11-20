@@ -20,6 +20,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -89,6 +90,7 @@ import { ClubMembersComponent } from './pages/club/club-members/club-members.com
 import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/club-activity-routes.component';
 import { ClubFormComponent } from './forms/club-form/club-form.component';
 import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
+import { ActivityInputComponent } from './pages/activity/activity-input/activity-input.component';
 import { ManagementModule } from './management/management.module';
 import { SharedModule } from './shared/shared.module';
 import { SearchComponent } from './pages/search/search.component';
@@ -154,6 +156,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ClubActivityRoutesComponent,
     ClubFormComponent,
     ActivityEntryComponent,
+    ActivityInputComponent,
     SearchComponent,
     SearchResultsComponent,
     PopularCragsComponent,
@@ -186,6 +189,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MomentModule,
     MatCardModule,
     MatListModule,
+    NgxMatSelectSearchModule,
     SharedModule,
     ManagementModule,
     AppRoutingModule,
