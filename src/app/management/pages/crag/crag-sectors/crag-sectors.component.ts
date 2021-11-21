@@ -96,6 +96,7 @@ export class CragSectorsComponent implements OnInit {
   addRoute(sector: FormGroup, data?: Route) {
     const route = new FormGroup({
       id: new FormControl(),
+      type: new FormControl(),
       name: new FormControl(),
       grade: new FormControl(),
     });

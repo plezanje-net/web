@@ -700,6 +700,7 @@ export type Role = {
 export type Route = {
   __typename?: 'Route';
   id: Scalars['String'];
+  type: Scalars['String'];
   name: Scalars['String'];
   difficulty: Scalars['String'];
   grade?: Maybe<Scalars['Float']>;
@@ -1387,7 +1388,7 @@ export type ManagementGetCragQuery = (
       & Pick<Sector, 'id' | 'label' | 'name' | 'status'>
       & { routes: Array<(
         { __typename?: 'Route' }
-        & Pick<Route, 'author' | 'difficulty' | 'grade' | 'id' | 'length' | 'name' | 'status'>
+        & Pick<Route, 'type' | 'author' | 'difficulty' | 'grade' | 'id' | 'length' | 'name' | 'status'>
         & { pitches: Array<(
           { __typename?: 'Pitch' }
           & Pick<Pitch, 'difficulty' | 'height' | 'id' | 'number'>
@@ -2333,6 +2334,7 @@ export const ManagementGetCragDocument = gql`
       name
       status
       routes {
+        type
         author
         difficulty
         grade
