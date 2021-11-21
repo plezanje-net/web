@@ -11,6 +11,7 @@ import {
 
 import moment from 'moment';
 import { Router } from '@angular/router';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
   selector: 'app-activity-form',
@@ -37,6 +38,7 @@ export class ActivityFormComponent implements OnInit {
     private snackBar: MatSnackBar,
     private createActivityGQL: CreateActivityGQL,
     private router: Router,
+    private localStorageService: LocalStorageService
   ) {}
 
   ngOnInit(): void {
@@ -151,6 +153,7 @@ export class ActivityFormComponent implements OnInit {
       )
       .subscribe(
         () => {
+          this.localStorageService.removeItem('activity-selection');
           this.snackBar.open('Vnos je bil shranjen v plezalni dnevnik', null, {
             duration: 3000,
           });
