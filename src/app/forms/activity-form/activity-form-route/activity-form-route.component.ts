@@ -25,10 +25,14 @@ export class ActivityFormRouteComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.controls.publish.valueChanges.subscribe((publish: PublishOptionsEnum) => {
-      if (publish === PublishOptionsEnum.private) {
-        this.route.controls.gradeSuggestion.disable();
+      const gradeSuggestionControl = this.route.controls.gradeSuggestion;
+
+      if (publish === PublishOptionsEnum.private && !gradeSuggestionControl.disabled) {
+        gradeSuggestionControl.disable();
       } else {
-        this.route.controls.gradeSuggestion.enable();
+        if (gradeSuggestionControl.disabled) {
+          gradeSuggestionControl.enable();
+        }
       }
     });
   }
