@@ -1,6 +1,13 @@
 import { Registry } from '../types/registry';
 import { AscentType } from '../types/ascent-type';
 
+export enum PublishOptionsEnum {
+  public = 'public',
+  club = 'club',
+  log = 'log',
+  private = 'private',
+}
+
 export const ASCENT_TYPES: AscentType[] = [
   { value: 'onsight', label: 'Na pogled', color: 'green', topRope: false  },
   { value: 'flash', label: 'Flash', color: 'green', topRope: false  },
@@ -19,10 +26,10 @@ export const ASCENT_TYPES: AscentType[] = [
 ];
 
 export const PUBLISH_OPTIONS: Registry[] = [
-  { value: 'public', label: 'Objavi povsod' },
-  { value: 'club', label: 'Samo za prijatelje' },
-  { value: 'log', label: 'Javno na mojem profilu' },
-  { value: 'private', label: 'Samo zame' },
+  { value: PublishOptionsEnum.public, label: 'Objavi povsod' },
+  { value: PublishOptionsEnum.club, label: 'Samo za prijatelje' },
+  { value: PublishOptionsEnum.log, label: 'Javno na mojem profilu' },
+  { value: PublishOptionsEnum.private, label: 'Samo zame' },
 ];
 
 export const ACTIVITY_TYPES: Registry[] = [

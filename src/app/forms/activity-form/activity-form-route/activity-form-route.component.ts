@@ -1,9 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { ASCENT_TYPES, PUBLISH_OPTIONS } from '../../../common/activity.constants';
-import { gradeNames } from 'src/app/common/grade-names.constants';
-import { ReplaySubject, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { FormGroup } from '@angular/forms';
+import { ASCENT_TYPES, PublishOptionsEnum, PUBLISH_OPTIONS } from '../../../common/activity.constants';
 import { Crag } from 'src/generated/graphql';
 
 @Component({
@@ -11,7 +8,7 @@ import { Crag } from 'src/generated/graphql';
   templateUrl: './activity-form-route.component.html',
   styleUrls: ['./activity-form-route.component.scss'],
 })
-export class ActivityFormRouteComponent implements OnInit, OnDestroy {
+export class ActivityFormRouteComponent implements OnInit {
   @Input() activity = true;
   @Input() route: FormGroup;
   @Input() first: boolean;
@@ -24,35 +21,15 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
 
   publishOptions = PUBLISH_OPTIONS;
 
-  filteredGradesOptions: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
-  gradeFilterControl: FormControl = new FormControl();
-
-  onDestroySubject = new Subject<void>();
-
   constructor() {}
 
   ngOnInit(): void {
-    this.populateGradesDropdown();
-
-    this.gradeFilterControl.valueChanges.pipe(takeUntil(this.onDestroySubject)).subscribe(() => {
-      this.populateGradesDropdown();
+    this.route.controls.publish.valueChanges.subscribe((publish: PublishOptionsEnum) => {
+      if (publish === PublishOptionsEnum.private) {
+        this.route.controls.gradeSuggestion.disable();
+      } else {
+        this.route.controls.gradeSuggestion.enable();
+      }
     });
-  }
-
-  ngOnDestroy(): void {
-    this.onDestroySubject.next();
-    this.onDestroySubject.complete();
-  }
-
-  populateGradesDropdown(): void {
-    let search: string = this.gradeFilterControl.value;
-    // TODO somehow use src/common/grade.ts instead of the gradeNames array
-    if (search) {
-      search = search.toLowerCase();
-
-      this.filteredGradesOptions.next(gradeNames.filter((gradeName) => gradeName.indexOf(search) > -1));
-    } else {
-      this.filteredGradesOptions.next(gradeNames.slice());
-    }
   }
 }

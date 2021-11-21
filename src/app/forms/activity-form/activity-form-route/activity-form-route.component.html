@@ -84,9 +84,6 @@
             <mat-option [value]="3">3</mat-option>
           </mat-select>
         </mat-form-field>
-
-        <app-grade-select class="no-hint" fxFlex="25" [control]="route.controls.gradeSuggestion" label="Predlog ocene"></app-grade-select>
-
         <mat-form-field class="no-hint" fxFlex="25">
           <mat-label>Objava</mat-label>
           <mat-select formControlName="publish">
@@ -97,6 +94,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-grade-select class="no-hint" fxFlex="25" [control]="route.controls.gradeSuggestion" label="Predlog ocene"></app-grade-select>
       </div>
       <div fxFlex="100" fxHide.lt-md></div>
       <div fxFlex fxLayout="row" fxLayoutGap="12px" *ngIf="!activity">

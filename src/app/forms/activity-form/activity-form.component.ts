@@ -12,6 +12,7 @@ import {
 import moment from 'moment';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { PublishOptionsEnum } from 'src/app/common/activity.constants';
 
 @Component({
   selector: 'app-activity-form',
@@ -75,7 +76,7 @@ export class ActivityFormComponent implements OnInit {
         ascentType: new FormControl('redpoint'),
         date: new FormControl(),
         partner: new FormControl(),
-        publish: new FormControl('private'),
+        publish: new FormControl('public'),
         notes: new FormControl(),
         stars: new FormControl(),
         gradeSuggestion: new FormControl(),
@@ -84,12 +85,12 @@ export class ActivityFormComponent implements OnInit {
   }
 
   moveRoute(routeIndex: number, direction: number): void {
-    if (direction == 0) {
+    if (direction === 0) {
       this.routes.controls.splice(routeIndex, 1);
       return;
     }
 
-    if (direction == 2) {
+    if (direction === 2) {
       this.routes.controls.splice(
         routeIndex,
         0,
@@ -136,7 +137,7 @@ export class ActivityFormComponent implements OnInit {
         routeId: route.routeId,
         name: route.name,
         difficulty: route.difficulty,
-        grade: route.gradeSuggestion,
+        grade: route.publish === PublishOptionsEnum.private ? undefined : route.gradeSuggestion,
         stars: route.stars,
       };
     });
