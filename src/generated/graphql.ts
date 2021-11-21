@@ -287,6 +287,8 @@ export type Grade = {
   created: Scalars['DateTime'];
   updated: Scalars['DateTime'];
   route: Route;
+  includedInCalculation: Scalars['Boolean'];
+  isBase: Scalars['Boolean'];
 };
 
 export type IceFall = {
@@ -716,6 +718,11 @@ export type Route = {
   images: Array<Image>;
   warnings: Array<Comment>;
   conditions: Array<Comment>;
+};
+
+
+export type RouteGradesArgs = {
+  id: Scalars['String'];
 };
 
 export type SearchResults = {
@@ -1281,7 +1288,7 @@ export type RouteGradesQuery = (
     & Pick<Route, 'id' | 'difficulty' | 'name' | 'grade' | 'length'>
     & { grades: Array<(
       { __typename?: 'Grade' }
-      & Pick<Grade, 'grade' | 'created' | 'updated'>
+      & Pick<Grade, 'id' | 'grade' | 'created' | 'updated' | 'isBase' | 'includedInCalculation'>
       & { user?: Maybe<(
         { __typename?: 'User' }
         & Pick<User, 'firstname' | 'lastname'>
@@ -1313,7 +1320,7 @@ export type RouteQuery = (
       ) }
     ), grades: Array<(
       { __typename?: 'Grade' }
-      & Pick<Grade, 'grade' | 'created' | 'updated'>
+      & Pick<Grade, 'grade' | 'created' | 'updated' | 'isBase' | 'includedInCalculation'>
       & { user?: Maybe<(
         { __typename?: 'User' }
         & Pick<User, 'firstname' | 'lastname'>
@@ -2175,7 +2182,8 @@ export const RouteGradesDocument = gql`
     name
     grade
     length
-    grades {
+    grades(id: $routeId) {
+      id
       grade
       user {
         firstname
@@ -2183,6 +2191,8 @@ export const RouteGradesDocument = gql`
       }
       created
       updated
+      isBase
+      includedInCalculation
     }
   }
 }
@@ -2220,7 +2230,7 @@ export const RouteDocument = gql`
         }
       }
     }
-    grades {
+    grades(id: $routeId) {
       grade
       user {
         firstname
@@ -2228,6 +2238,8 @@ export const RouteDocument = gql`
       }
       created
       updated
+      isBase
+      includedInCalculation
     }
     comments {
       type

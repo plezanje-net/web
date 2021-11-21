@@ -141,25 +141,7 @@ export class CragRoutesComponent implements OnInit {
   }
 
   routeGradesQuerySuccess(queryData: RouteGradesQuery): void {
-    this.routeGrades = queryData.route.grades
-      .slice()
-      .sort((a, b) => a.grade - b.grade);
-
-    // https://www.plezanje.net/climbing/help/IzracunOcen.pdf
-    if (this.routeGrades.length === 2) {
-      // TODO: ignore the grade that isn't the base grade
-    } else if (this.routeGrades.length > 2) {
-      // 20% of min and 20% of max grades (rounded to the whole number) get excluded from the calculation of grade average
-      const roundedFifth = Math.round(this.routeGrades.length * 0.2);
-
-      this.routeGrades = this.routeGrades.map((routeGrade, i) => {
-        return {
-          ...routeGrade,
-          includedInCalculation:
-            i >= roundedFifth && i < this.routeGrades.length - roundedFifth,
-        };
-      });
-    }
+    this.routeGrades = queryData.route.grades;
   }
 
   routeGradesQueryError(): void {
