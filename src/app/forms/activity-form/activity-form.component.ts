@@ -11,7 +11,6 @@ import {
 
 import moment from 'moment';
 import { Router } from '@angular/router';
-import { gradeNameToNumberMap } from 'src/app/common/grade-names.constants';
 
 @Component({
   selector: 'app-activity-form',
@@ -135,7 +134,7 @@ export class ActivityFormComponent implements OnInit {
         routeId: route.routeId,
         name: route.name,
         difficulty: route.difficulty,
-        grade: gradeNameToNumberMap[route.gradeSuggestion],
+        grade: route.gradeSuggestion,
         stars: route.stars,
       };
     });
