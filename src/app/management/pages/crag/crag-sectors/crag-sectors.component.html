@@ -1,0 +1,67 @@
+<form [formGroup]="form">
+  <div *ngFor="let sector of form.controls; let i = index">
+
+    <h3>Sektor #{{ i+1 }}</h3>
+    <div fxLayout="row" fxLayoutGap="12px" class="form-row sector-row">
+      <app-sector-form fxFlex="100" [sector]="sector"></app-sector-form>
+      <div class="tools" fxLayout="row" fxLayoutAlign="end center" fxLayout.lt-md="column"
+        fxLayoutAlign="center center">
+        <button mat-icon-button [matMenuTriggerFor]="reorderSector" [matMenuTriggerData]="{ pos: i }">
+          <mat-icon>reorder</mat-icon>
+        </button>
+        <button mat-icon-button (click)="deleteSector(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="routes">
+      <div *ngFor="let route of sector.controls.routes.controls; let r = index">
+
+        <div fxLayout="row" fxLayoutGap="12px" class="form-row route-row">
+          <app-route-form fxFlex="100" [route]="route"></app-route-form>
+          <div class="tools" fxLayout="row" fxLayoutAlign="end center" fxLayout.lt-md="column"
+            fxLayoutAlign="center center">
+            <button mat-icon-button [matMenuTriggerFor]="reorderRoute"
+              [matMenuTriggerData]="{ pos: r, sector: sector }">
+              <mat-icon>reorder</mat-icon>
+            </button>
+            <button mat-icon-button (click)="deleteRoute(sector, i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="buttons">
+      <button mat-button color="primary" (click)="addRoute(sector)">
+        Dodaj smer
+      </button>
+    </div>
+  </div>
+</form>
+<div class="buttons">
+  <button mat-flat-button color="primary" (click)="addSector()">
+    Dodaj sektor
+  </button>
+</div>
+
+<mat-menu #reorderSector="matMenu">
+  <div class="menu-heading">Premakni na mesto</div>
+  <ng-template matMenuContent let-pos="pos">
+    <button mat-menu-item *ngFor="let sector of form.controls; let i = index" [disabled]="i == pos"
+      (click)="moveSector(pos, i)">
+      <span>#{{ i}} - {{ sector.value.label }} {{ sector.value.name }}</span>
+    </button>
+  </ng-template>
+</mat-menu>
+
+<mat-menu #reorderRoute="matMenu">
+  <div class="menu-heading">Premakni na mesto</div>
+  <ng-template matMenuContent let-pos="pos" let-sector="sector">
+    <button mat-menu-item *ngFor="let route of sector.controls.routes.controls; let i = index" [disabled]="i == pos"
+      (click)="moveRoute(sector, pos, i)">
+      <span>#{{ i}} - {{ route.value.name }}</span>
+    </button>
+  </ng-template>
+</mat-menu>

@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Registry } from 'src/app/types/registry';
 import { Route } from 'src/generated/graphql';
 
 @Component({
@@ -8,16 +9,19 @@ import { Route } from 'src/generated/graphql';
   styleUrls: ['./route-form.component.scss'],
 })
 export class RouteFormComponent implements OnInit {
-  @Input() route: Route;
+  @Input('route') form: FormGroup;
 
-  form = new FormGroup({
-    name: new FormControl(),
-    grade: new FormControl(),
-  });
+  typeOptions: Registry[] = [
+    { value: 'sport', label: 'Športna' },
+    { value: 'multipitch', label: 'Večraztežajna' },
+    { value: 'boulder', label: 'Balvan' },
+  ];
 
   constructor() {}
 
   ngOnInit(): void {
-    this.form.patchValue(this.route);
+    this.form.valueChanges.subscribe(() => {
+      console.log(this.form.value);
+    });
   }
 }

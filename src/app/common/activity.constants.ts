@@ -1,20 +1,35 @@
 import { Registry } from '../types/registry';
+import { AscentType } from '../types/ascent-type';
 
-export const ASCENT_TYPES: Registry[] = [
-  { value: 'onsight', label: 'Na pogled', color: 'green' },
-  { value: 'flash', label: 'Flash', color: 'green' },
-  { value: 'redpoint', label: 'Z rdečo piko', color: 'green' },
-  { value: 'repeat', label: 'Ponovitev', color: 'green' },
-  { value: 'allfree', label: 'Vse prosto', color: 'yellow' },
-  { value: 'aid', label: 'Tehnično plezanje', color: 'yellow' },
-  { value: 'attempt', label: 'Neuspel poskus', color: 'yellow' },
+export enum PublishOptionsEnum {
+  public = 'public',
+  club = 'club',
+  log = 'log',
+  private = 'private',
+}
+
+export const ASCENT_TYPES: AscentType[] = [
+  { value: 'onsight', label: 'Na pogled', color: 'green', topRope: false  },
+  { value: 'flash', label: 'Flash', color: 'green', topRope: false  },
+  { value: 'redpoint', label: 'Z rdečo piko', color: 'green', topRope: false  },
+  { value: 'repeat', label: 'Ponovitev', color: 'green', topRope: false  },
+  { value: 'allfree', label: 'Vse prosto', color: 'yellow', topRope: false  },
+  { value: 'aid', label: 'Tehnično plezanje', color: 'yellow', topRope: false  },
+  { value: 'attempt', label: 'Neuspel poskus', color: 'yellow', topRope: false  },
+  { value: 't_onsight', label: 'Na pogled', color: 'green', topRope: true },
+  { value: 't_flash', label: 'Flash', color: 'green', topRope: true },
+  { value: 't_redpoint', label: 'Z rdečo piko', color: 'green', topRope: true },
+  { value: 't_repeat', label: 'Ponovitev', color: 'green', topRope: true },
+  { value: 't_allfree', label: 'Vse prosto', color: 'yellow', topRope: true },
+  { value: 't_aid', label: 'Tehnično plezanje', color: 'yellow', topRope: true },
+  { value: 't_attempt', label: 'Neuspel poskus', color: 'yellow', topRope: true },
 ];
 
 export const PUBLISH_OPTIONS: Registry[] = [
-  { value: 'public', label: 'Objavi povsod' },
-  { value: 'club', label: 'Samo za prijatelje' },
-  { value: 'log', label: 'Javno na mojem profilu' },
-  { value: 'private', label: 'Samo zame' },
+  { value: PublishOptionsEnum.public, label: 'Objavi povsod' },
+  { value: PublishOptionsEnum.club, label: 'Samo za prijatelje' },
+  { value: PublishOptionsEnum.log, label: 'Javno na mojem profilu' },
+  { value: PublishOptionsEnum.private, label: 'Samo zame' },
 ];
 
 export const ACTIVITY_TYPES: Registry[] = [

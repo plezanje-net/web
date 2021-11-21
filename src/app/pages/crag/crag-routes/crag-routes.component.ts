@@ -1,8 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
-import { SnackBarButtonsComponent } from 'src/app/common/snack-bar-buttons/snack-bar-buttons.component';
+import { SnackBarButtonsComponent } from 'src/app/shared/snack-bar-buttons/snack-bar-buttons.component';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
+import moment from 'moment';
+import ActivitySelection from 'src/app/types/activity-selection.interface';
 import { ActivityFormComponent } from 'src/app/forms/activity-form/activity-form.component';
 import {
   Crag,
@@ -20,7 +23,8 @@ import {
 export class CragRoutesComponent implements OnInit {
   @Input() crag: Crag;
 
-  selectedRoutes: any[] = [];
+  selectedRoutes: Route[] = [];
+  selectedRoutesIds: string[] = [];
   ascents: any = {};
   routeGradesLoading: boolean;
   routeGrades: Record<string, string | any>[];
@@ -28,27 +32,33 @@ export class CragRoutesComponent implements OnInit {
 
   constructor(
     private snackBar: MatSnackBar,
-    private dialog: MatDialog,
     private authService: AuthService,
+    private router: Router,
     private myCragSummaryGQL: MyCragSummaryGQL,
+    private localStorageService: LocalStorageService,
     private routeGradesGQL: RouteGradesGQL
   ) {}
 
   ngOnInit(): void {
-    // Used for activity development, remove after
-    // const n = 3;
-    // for (let i = 0; i < n; i++) {
-    //   this.selectedRoutes.push(this.crag.sectors[0].routes[i])
-    // }
-    // this.addActivity();
-
     if (this.authService.currentUser) {
       this.loadActivity();
     }
+
+    const activitySelection: ActivitySelection =
+      this.localStorageService.getItem('activity-selection');
+    if (
+      activitySelection &&
+      activitySelection.routes.length &&
+      activitySelection.crag.id === this.crag.id
+    ) {
+      this.selectedRoutes = activitySelection.routes;
+      this.selectedRoutesIds = this.selectedRoutes.map((route) => route.id);
+      this.openSnackBar();
+    }
   }
 
-  changeSelection(route: any): void {
-    const i = this.selectedRoutes.indexOf(route);
+  changeSelection(route: Route): void {
+    const i = this.selectedRoutes.findIndex((r) => r.id === route.id);
     if (i > -1) {
       this.selectedRoutes.splice(i, 1);
     } else {
@@ -56,35 +66,46 @@ export class CragRoutesComponent implements OnInit {
     }
 
     if (this.selectedRoutes.length > 0) {
-      this.snackBar
-        .openFromComponent(SnackBarButtonsComponent, {
-          horizontalPosition: 'end',
-          data: {
-            buttons: [
-              {
-                label: `Shrani v plezalni dnevnik (${this.selectedRoutes.length})`,
-              },
-            ],
-          },
-        })
-        .onAction()
-        .subscribe(() => {
-          this.addActivity();
-        });
+      this.openSnackBar();
+
+      this.selectedRoutesIds = this.selectedRoutes.map(
+        (selectedRoute) => selectedRoute.id
+      );
+      this.localStorageService.setItem(
+        'activity-selection',
+        {
+          crag: this.crag,
+          routes: this.selectedRoutes,
+        },
+        moment(new Date()).add(1, 'day').toISOString()
+      );
     } else {
       this.snackBar.dismiss();
+      this.localStorageService.removeItem('activity-selection');
     }
+  }
+
+  openSnackBar(): void {
+    this.snackBar
+      .openFromComponent(SnackBarButtonsComponent, {
+        horizontalPosition: 'end',
+        data: {
+          buttons: [
+            {
+              label: `Shrani v plezalni dnevnik (${this.selectedRoutes.length})`,
+            },
+          ],
+        },
+      })
+      .onAction()
+      .subscribe(() => {
+        this.addActivity();
+      });
   }
 
   addActivity(): void {
     this.authService.guardedAction({}).then(() => {
-      this.dialog.open(ActivityFormComponent, {
-        data: {
-          crag: this.crag,
-          routes: this.selectedRoutes,
-        },
-        autoFocus: false,
-      });
+      this.router.navigate(['/plezalni-dnevnik/vpis']);
     });
   }
 
@@ -120,25 +141,7 @@ export class CragRoutesComponent implements OnInit {
   }
 
   routeGradesQuerySuccess(queryData: RouteGradesQuery): void {
-    this.routeGrades = queryData.route.grades
-      .slice()
-      .sort((a, b) => a.grade - b.grade);
-
-    // https://www.plezanje.net/climbing/help/IzracunOcen.pdf
-    if (this.routeGrades.length === 2) {
-      // TODO: ignore the grade that isn't the base grade
-    } else if (this.routeGrades.length > 2) {
-      // 20% of min and 20% of max grades (rounded to the whole number) get excluded from the calculation of grade average
-      const roundedFifth = Math.round(this.routeGrades.length * 0.2);
-
-      this.routeGrades = this.routeGrades.map((routeGrade, i) => {
-        return {
-          ...routeGrade,
-          includedInCalculation:
-            i >= roundedFifth && i < this.routeGrades.length - roundedFifth,
-        };
-      });
-    }
+    this.routeGrades = queryData.route.grades;
   }
 
   routeGradesQueryError(): void {

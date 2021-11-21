@@ -1,16 +1,14 @@
-<form [formGroup]="form" fxLayout="row" fxLayoutGap="12px" fxLayoutAlign="start center">
+<div class="form" fxLayout="row" fxLayoutGap="12px" fxLayoutAlign="start center" fxLayout.lt-md="column"
+  fxLayoutAlign.lt-md="stretch">
+  <mat-form-field>
+    <mat-label>Tip smeri</mat-label>
+    <mat-select [formControl]="form.controls.type">
+      <mat-option *ngFor="let option of typeOptions" [value]="option.value">{{ option.label }}</mat-option>
+    </mat-select>
+  </mat-form-field>
   <mat-form-field>
     <mat-label>Ime smeri</mat-label>
-    <input matInput formControlName="name" />
+    <input matInput [formControl]="form.controls.name" />
   </mat-form-field>
-  <mat-form-field>
-    <mat-label>Ocena smeri</mat-label>
-    <input matInput formControlName="grade" />
-  </mat-form-field>
-
-  <div class="tools" fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
-    <button mat-icon-button>
-      <mat-icon>delete</mat-icon>
-    </button>
-  </div>
-</form>
+  <app-grade-select [control]="form.controls.grade" label="Bazna ocena"></app-grade-select>
+</div>

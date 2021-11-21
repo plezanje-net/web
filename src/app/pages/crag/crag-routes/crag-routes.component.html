@@ -19,7 +19,7 @@
         <mat-icon>hide_source</mat-icon>
       </div> -->
       <div fxFlex="12px">
-        <mat-checkbox (change)="changeSelection(route)" [checked]="selectedRoutes.indexOf(route) > -1"></mat-checkbox>
+        <mat-checkbox (change)="changeSelection(route)" [checked]="selectedRoutesIds.indexOf(route.id) > -1"></mat-checkbox>
       </div>
       <div fxFlex="100">
         <a [routerLink]="[
@@ -38,7 +38,10 @@
             <tbody>
               <tr *ngFor="let grade of routeGrades" [ngClass]="grade.includedInCalculation ? 'grade-included' : ''">
                 <td><app-grade class="grade" [grade]="grade.grade"></app-grade></td>
-                <td class="grade-author">{{ grade.user ? grade.user.firstname + ' ' + grade.user.lastname : '' }}</td>
+                <td class="grade-author">
+                  <ng-container *ngIf="grade.isBase">Bazna ocena</ng-container>
+                  <ng-container *ngIf="!grade.isBase && grade.user">{{ grade.user.firstname + ' ' + grade.user.lastname }}</ng-container>
+                </td>
                 <td class="grade-date">{{ grade.created | amDateFormat:'D. M. Y' }}</td>
               </tr>
             </tbody>

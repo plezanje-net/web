@@ -20,6 +20,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -52,7 +53,6 @@ import { CragCommentsComponent } from './pages/crag/crag-comments/crag-comments.
 import { MomentModule } from 'ngx-moment';
 import { CragLocationComponent } from './pages/crag/crag-location/crag-location.component';
 import { CragWarningsComponent } from './pages/crag/crag-warnings/crag-warnings.component';
-import { SnackBarButtonsComponent } from './common/snack-bar-buttons/snack-bar-buttons.component';
 import { ActivityFormComponent } from './forms/activity-form/activity-form.component';
 import { ActivityFormRouteComponent } from './forms/activity-form/activity-form-route/activity-form-route.component';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -90,6 +90,7 @@ import { ClubMembersComponent } from './pages/club/club-members/club-members.com
 import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/club-activity-routes.component';
 import { ClubFormComponent } from './forms/club-form/club-form.component';
 import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
+import { ActivityInputComponent } from './pages/activity/activity-input/activity-input.component';
 import { ManagementModule } from './management/management.module';
 import { SharedModule } from './shared/shared.module';
 import { SearchComponent } from './pages/search/search.component';
@@ -127,7 +128,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     CragCommentsComponent,
     CragLocationComponent,
     CragWarningsComponent,
-    SnackBarButtonsComponent,
     ActivityFormComponent,
     ActivityFormRouteComponent,
     CragGalleryComponent,
@@ -157,6 +157,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ClubActivityRoutesComponent,
     ClubFormComponent,
     ActivityEntryComponent,
+    ActivityInputComponent,
     SearchComponent,
     SearchResultsComponent,
     PopularCragsComponent,
@@ -190,6 +191,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MomentModule,
     MatCardModule,
     MatListModule,
+    NgxMatSelectSearchModule,
     SharedModule,
     ManagementModule,
     AppRoutingModule,

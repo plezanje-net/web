@@ -11,7 +11,7 @@ query Route($routeId: String!) {
       id
       name
     }
-    grades {
+    grades(id: $routeId) {
       grade
       user {
         firstname
@@ -19,6 +19,8 @@ query Route($routeId: String!) {
       }
       created
       updated
+      isBase
+      includedInCalculation
     }
     comments {
       type

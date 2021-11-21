@@ -6,7 +6,7 @@
   </h1>
 
   <div class="container p15">
-    <mat-tab-group animationDuration="0ms" mat-stretch-tabs>
+    <mat-tab-group animationDuration="0ms" mat-stretch-tabs selectedIndex="1">
       <mat-tab label="Podatki o plezališču">
         <ng-template matTabContent>
           <app-crag-form [crag]="crag"></app-crag-form>
@@ -14,17 +14,7 @@
       </mat-tab>
       <mat-tab label="Sektorji in smeri" [disabled]="crag == null">
         <ng-template matTabContent>
-          <div *ngFor="let sector of crag.sectors; let i = index">
-
-            <h3>Sektor #{{ i+1 }}</h3>
-            <app-sector-form [sector]="sector"></app-sector-form>
-
-            <div class="routes">
-              <div *ngFor="let route of sector.routes">
-                <app-route-form [route]="route"></app-route-form>
-              </div>
-            </div>
-          </div>
+          <app-crag-sectors [crag]="crag"></app-crag-sectors>
         </ng-template>
       </mat-tab>
     </mat-tab-group>

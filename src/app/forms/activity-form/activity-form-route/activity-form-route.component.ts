@@ -1,9 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import {
-  ASCENT_TYPES,
-  PUBLISH_OPTIONS,
-} from '../../../common/activity.constants';
+import { ASCENT_TYPES, PublishOptionsEnum, PUBLISH_OPTIONS } from '../../../common/activity.constants';
+import { Crag } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-activity-form-route',
@@ -11,17 +9,31 @@ import {
   styleUrls: ['./activity-form-route.component.scss'],
 })
 export class ActivityFormRouteComponent implements OnInit {
-  @Input() activity: boolean = true;
+  @Input() activity = true;
   @Input() route: FormGroup;
   @Input() first: boolean;
   @Input() last: boolean;
+  @Input() crag: Crag;
   @Output() move = new EventEmitter<number>();
 
-  ascentTypes = ASCENT_TYPES;
+  topRopeAscentTypes = ASCENT_TYPES.filter((ascentType) => ascentType.topRope);
+  nonTopRopeAscentTypes = ASCENT_TYPES.filter((ascentType) => !ascentType.topRope);
 
   publishOptions = PUBLISH_OPTIONS;
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.route.controls.publish.valueChanges.subscribe((publish: PublishOptionsEnum) => {
+      const gradeSuggestionControl = this.route.controls.gradeSuggestion;
+
+      if (publish === PublishOptionsEnum.private && !gradeSuggestionControl.disabled) {
+        gradeSuggestionControl.disable();
+      } else {
+        if (gradeSuggestionControl.disabled) {
+          gradeSuggestionControl.enable();
+        }
+      }
+    });
+  }
 }

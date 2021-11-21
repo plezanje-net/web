@@ -1,6 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, OnInit, Input } from '@angular/core';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import {
@@ -11,11 +10,9 @@ import {
 } from 'src/generated/graphql';
 
 import moment from 'moment';
-
-export interface DialogData {
-  crag: Crag;
-  routes: Route[];
-}
+import { Router } from '@angular/router';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { PublishOptionsEnum } from 'src/app/common/activity.constants';
 
 @Component({
   selector: 'app-activity-form',
@@ -35,15 +32,20 @@ export class ActivityFormComponent implements OnInit {
     routes: this.routes,
   });
 
+  @Input() crag;
+  @Input() selectedRoutes;
+
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    public dialogRef: MatDialogRef<ActivityFormComponent>,
     private snackBar: MatSnackBar,
-    private createActivityGQL: CreateActivityGQL
+    private createActivityGQL: CreateActivityGQL,
+    private router: Router,
+    private localStorageService: LocalStorageService
   ) {}
 
   ngOnInit(): void {
-    this.data.routes.forEach((route) => this.addRoute(route));
+    if (this.selectedRoutes.length) {
+      this.selectedRoutes.forEach((route) => this.addRoute(route));
+    }
 
     this.activityForm.controls.date.valueChanges.subscribe((value) => {
       this.patchRouteDates(value);
@@ -58,13 +60,13 @@ export class ActivityFormComponent implements OnInit {
     this.activityForm.patchValue({ date: moment() });
   }
 
-  patchRouteDates(value: moment.Moment) {
+  patchRouteDates(value: moment.Moment): void {
     this.routes.controls.forEach((control) =>
       control.patchValue({ date: value })
     );
   }
 
-  addRoute(route: any) {
+  addRoute(route: any): void {
     this.routes.push(
       new FormGroup({
         routeId: new FormControl(route.id),
@@ -72,22 +74,23 @@ export class ActivityFormComponent implements OnInit {
         grade: new FormControl(route.grade),
         difficulty: new FormControl(route.difficulty),
         ascentType: new FormControl('redpoint'),
-        topRope: new FormControl(false),
         date: new FormControl(),
         partner: new FormControl(),
-        publish: new FormControl('private'),
+        publish: new FormControl('public'),
         notes: new FormControl(),
+        stars: new FormControl(),
+        gradeSuggestion: new FormControl(),
       })
     );
   }
 
-  moveRoute(routeIndex: number, direction: number) {
-    if (direction == 0) {
+  moveRoute(routeIndex: number, direction: number): void {
+    if (direction === 0) {
       this.routes.controls.splice(routeIndex, 1);
       return;
     }
 
-    if (direction == 2) {
+    if (direction === 2) {
       this.routes.controls.splice(
         routeIndex,
         0,
@@ -103,46 +106,45 @@ export class ActivityFormComponent implements OnInit {
     this.routes.controls[routeIndex] = temp;
   }
 
-  add() {
+  add(): boolean {
     this.addRoute({});
     return false;
   }
 
-  save() {
-    let data = this.activityForm.value;
-
-    console.log(data);
+  save(): void {
+    const data = this.activityForm.value;
 
     this.loading = true;
     this.activityForm.disable();
 
     const activity = {
       date: moment(data.date).format('YYYY-MM-DD'),
-      name: this.data.crag.name,
+      name: this.crag.name,
       type: 'crag', // TODO: resolve from parameters
       notes: data.notes,
       partners: data.partners,
-      cragId: this.data.crag.id,
+      cragId: this.crag.id,
     };
 
     const routes = this.routes.value.map((route: any, i: number) => {
       return {
         date: route.date || activity.date,
         partner: route.partner || activity.partners,
-        ascentType: (route.topRope ? 't_' : '') + route.ascentType,
+        ascentType: route.ascentType,
         notes: route.notes,
         position: i,
         publish: route.publish,
         routeId: route.routeId,
         name: route.name,
-        grade: route.grade,
         difficulty: route.difficulty,
+        grade: route.publish === PublishOptionsEnum.private ? undefined : route.gradeSuggestion,
+        stars: route.stars,
       };
     });
 
     this.createActivityGQL
       .mutate(
-        { input: activity, routes: routes },
+        { input: activity, routes },
         {
           refetchQueries: [
             namedOperations.Query.MyActivities,
@@ -152,10 +154,11 @@ export class ActivityFormComponent implements OnInit {
       )
       .subscribe(
         () => {
+          this.localStorageService.removeItem('activity-selection');
           this.snackBar.open('Vnos je bil shranjen v plezalni dnevnik', null, {
             duration: 3000,
           });
-          this.dialogRef.close();
+          this.router.navigate(['/plezalni-dnevnik']);
         },
         (error) => {
           this.loading = false;

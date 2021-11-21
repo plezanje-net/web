@@ -1,18 +1,10 @@
-<div mat-dialog-title fxLayout="row" fxLayoutAlign="start center">
-  <div fxFlex="100" class="title">Dodaj v plezalni dnevnik</div>
-  <div fxFlex (click)="dialogRef.close()">
-    <button mat-icon-button>
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
-</div>
-<form [formGroup]="activityForm" (submit)="save()">
-  <div mat-dialog-content>
+<form [formGroup]="activityForm" (submit)="save()" fxFlex fxLayout="column">
+  <div>
     <div fxLayout="column" fxLayoutGap="12px">
       <div fxLayout="row" fxLayoutAlign="end">
-        <mat-checkbox formControlName="onlyRoutes"
-          >Dodaj samo preplezane smeri</mat-checkbox
-        >
+        <mat-checkbox formControlName="onlyRoutes">
+          Vpiši samo preplezane smeri
+        </mat-checkbox>
       </div>
       <ng-container *ngIf="!activityForm.value.onlyRoutes">
         <h2>Plezalni dan</h2>
@@ -53,6 +45,7 @@
       >
         <app-activity-form-route
           [route]="route"
+          [crag]="crag"
           [activity]="!activityForm.value.onlyRoutes"
           [first]="first"
           [last]="last"
@@ -61,7 +54,7 @@
       </div>
     </div>
   </div>
-  <mat-dialog-actions fxLayout="row">
+  <div fxFlex>
     <div fxFlex>
       <button type="button" mat-button (click)="add()" [disabled]="loading">
         Dodaj smer
@@ -76,5 +69,5 @@
     <span *ngIf="loading" class="loading">
       <mat-spinner diameter="30"></mat-spinner>
     </span>
-  </mat-dialog-actions>
+  </div>
 </form>
