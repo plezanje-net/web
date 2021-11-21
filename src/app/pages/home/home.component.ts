@@ -1,29 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
 import { LayoutService } from 'src/app/services/layout.service';
-import { Crag, Route } from 'src/generated/graphql';
-
-// const searchGQL = gql`
-//   query crags($search: String) {
-//     crags(search: $search) {
-//       id
-//       name
-//       country {
-//         slug
-//       }
-//       slug
-//     }
-//   }
-// `;
-
-// const searchRouteGQL = gql`
-//   query routes($search: String!) {
-//     routes(search: $search) {
-//       id
-//       name
-//     }
-//   }
-// `;
+import { DataError } from 'src/app/types/data-error';
 
 @Component({
   selector: 'app-home',
@@ -31,6 +9,8 @@ import { Crag, Route } from 'src/generated/graphql';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+  error: DataError;
+
   constructor(
     private layoutService: LayoutService,
     private authService: AuthService
@@ -49,5 +29,9 @@ export class HomeComponent implements OnInit {
       message:
         'Prijavite se za pregled svojega dnevnika ali oddajanje komentarjev.',
     });
+  }
+
+  handleError(error: DataError) {
+    this.error = error;
   }
 }

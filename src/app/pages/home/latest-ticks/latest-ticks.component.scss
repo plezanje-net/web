@@ -1,0 +1,76 @@
+@import "../../../../styles/colors.scss";
+
+$border-color: rgba(0, 0, 0, 0.08); // very light gray
+$table-header-text-color: #0000008a; // light gray
+
+h2 {
+  color: $primary;
+  background-color: transparent;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: normal;
+  margin-top: 32px;
+  margin-bottom: 24px;
+  padding: 0;
+  box-shadow: none;
+}
+
+div.table-wrapper {
+  width: 100%;
+
+  table.stats-card-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+
+    tr {
+      padding: 0;
+      outline: none;
+
+      &:hover {
+        background: #f6f9ff;
+      }
+
+      td {
+        height: 42px;
+        border-bottom: 1px solid $border-color;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        padding: 1px 16px;
+
+        vertical-align: middle;
+      }
+
+      &:last-child {
+        td {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+}
+
+.mat-card {
+  border-radius: 0;
+
+  .mat-card-title {
+    font-weight: 400;
+    font-size: 20px;
+    padding-top: 4px;
+    line-height: 20px;
+    margin: 0;
+  }
+
+  .mat-card-actions {
+    button {
+      color: $primary;
+    }
+  }
+
+  .mat-card-content {
+    margin-top: 20px;
+    margin-bottom: 0;
+  }
+}
+
+// TODO: global?
