@@ -58,7 +58,7 @@ export class CragRoutesComponent implements OnInit {
   }
 
   changeSelection(route: Route): void {
-    const i = this.selectedRoutes.indexOf(route);
+    const i = this.selectedRoutes.findIndex((r) => r.id === route.id);
     if (i > -1) {
       this.selectedRoutes.splice(i, 1);
     } else {
