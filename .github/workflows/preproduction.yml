@@ -1,0 +1,20 @@
+name: preproduction
+on:
+  push:
+    branches: [preproduction]
+jobs:
+  deploy:
+    runs-on: preproduction
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Use Node 16.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+      - name: List files in the repository
+        run: ls ${{ github.workspace }}
+      - run: npm install
+      - run: npm run build-production
+      - run: rm -rf /var/www/plezanjenet/web/*
+      - run: cp -r ./dist/plezanje-net/* /var/www/plezanjenet/web/
