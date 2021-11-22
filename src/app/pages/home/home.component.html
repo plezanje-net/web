@@ -1,18 +1,15 @@
-<div class="container p15">
-  <app-search></app-search>
+<app-data-error *ngIf="error" [error]="error"></app-data-error>
+
+<div *ngIf="!error">
+  <div class="container p15">
+    <app-search></app-search>
+  </div>
+
+  <app-popular-crags (errorEvent)="handleError($event)"></app-popular-crags>
+  <app-latest-ticks (errorEvent)="handleError($event)"></app-latest-ticks>
 </div>
 
-<app-popular-crags></app-popular-crags>
-
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-
-<div class="container p15" fxLayout="row" fxLayout.lt-sm="column">
+<!-- <div class="container p15" fxLayout="row" fxLayout.lt-sm="column">
   <div fxFlex="70">aaa</div>
   <div fxFlex="30">
     <h3>Moj Plezanje.net</h3>
@@ -38,4 +35,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->

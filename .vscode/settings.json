@@ -1,4 +1,5 @@
 {
-    "javascript.implicitProjectConfig.experimentalDecorators": true,
-    "todo-tree.tree.scanMode": "workspace only"
+  "javascript.implicitProjectConfig.experimentalDecorators": true,
+  "todo-tree.tree.scanMode": "workspace only",
+  "angular.enable-strict-mode-prompt": false
 }

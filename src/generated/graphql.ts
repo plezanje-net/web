@@ -287,6 +287,8 @@ export type Grade = {
   created: Scalars['DateTime'];
   updated: Scalars['DateTime'];
   route: Route;
+  includedInCalculation: Scalars['Boolean'];
+  isBase: Scalars['Boolean'];
 };
 
 export type IceFall = {
@@ -590,6 +592,7 @@ export type Query = {
   myActivityRoutes: PaginatedActivityRoutes;
   myCragSummary: Array<ActivityRoute>;
   activityRoutesByClub: PaginatedActivityRoutes;
+  latestTicks: Array<ActivityRoute>;
 };
 
 
@@ -675,6 +678,11 @@ export type QueryActivityRoutesByClubArgs = {
   clubId: Scalars['String'];
 };
 
+
+export type QueryLatestTicksArgs = {
+  latest: Scalars['Int'];
+};
+
 export type Rating = {
   __typename?: 'Rating';
   id: Scalars['String'];
@@ -716,6 +724,11 @@ export type Route = {
   images: Array<Image>;
   warnings: Array<Comment>;
   conditions: Array<Comment>;
+};
+
+
+export type RouteGradesArgs = {
+  id: Scalars['String'];
 };
 
 export type SearchResults = {
@@ -804,6 +817,7 @@ export type User = {
   firstname: Scalars['String'];
   lastname: Scalars['String'];
   www?: Maybe<Scalars['String']>;
+  gender?: Maybe<Scalars['String']>;
   roles: Array<Scalars['String']>;
   clubs: Array<ClubMember>;
   fullName: Scalars['String'];
@@ -1281,7 +1295,7 @@ export type RouteGradesQuery = (
     & Pick<Route, 'id' | 'difficulty' | 'name' | 'grade' | 'length'>
     & { grades: Array<(
       { __typename?: 'Grade' }
-      & Pick<Grade, 'grade' | 'created' | 'updated'>
+      & Pick<Grade, 'id' | 'grade' | 'created' | 'updated' | 'isBase' | 'includedInCalculation'>
       & { user?: Maybe<(
         { __typename?: 'User' }
         & Pick<User, 'firstname' | 'lastname'>
@@ -1313,7 +1327,7 @@ export type RouteQuery = (
       ) }
     ), grades: Array<(
       { __typename?: 'Grade' }
-      & Pick<Grade, 'grade' | 'created' | 'updated'>
+      & Pick<Grade, 'grade' | 'created' | 'updated' | 'isBase' | 'includedInCalculation'>
       & { user?: Maybe<(
         { __typename?: 'User' }
         & Pick<User, 'firstname' | 'lastname'>
@@ -1422,6 +1436,37 @@ export type PopularCragsQuery = (
         { __typename?: 'Country' }
         & Pick<Country, 'slug'>
       ) }
+    ) }
+  )> }
+);
+
+export type LatestTicksQueryVariables = Exact<{
+  latest: Scalars['Int'];
+}>;
+
+
+export type LatestTicksQuery = (
+  { __typename?: 'Query' }
+  & { latestTicks: Array<(
+    { __typename?: 'ActivityRoute' }
+    & Pick<ActivityRoute, 'ascentType'>
+    & { activity?: Maybe<(
+      { __typename?: 'Activity' }
+      & Pick<Activity, 'date' | 'type'>
+    )>, route: (
+      { __typename?: 'Route' }
+      & Pick<Route, 'grade' | 'name' | 'id'>
+      & { crag: (
+        { __typename?: 'Crag' }
+        & Pick<Crag, 'name' | 'slug'>
+        & { country: (
+          { __typename?: 'Country' }
+          & Pick<Country, 'slug' | 'name'>
+        ) }
+      ) }
+    ), user: (
+      { __typename?: 'User' }
+      & Pick<User, 'fullName' | 'gender'>
     ) }
   )> }
 );
@@ -2175,7 +2220,8 @@ export const RouteGradesDocument = gql`
     name
     grade
     length
-    grades {
+    grades(id: $routeId) {
+      id
       grade
       user {
         firstname
@@ -2183,6 +2229,8 @@ export const RouteGradesDocument = gql`
       }
       created
       updated
+      isBase
+      includedInCalculation
     }
   }
 }
@@ -2220,7 +2268,7 @@ export const RouteDocument = gql`
         }
       }
     }
-    grades {
+    grades(id: $routeId) {
       grade
       user {
         firstname
@@ -2228,6 +2276,8 @@ export const RouteDocument = gql`
       }
       created
       updated
+      isBase
+      includedInCalculation
     }
     comments {
       type
@@ -2407,6 +2457,45 @@ export const PopularCragsDocument = gql`
       super(apollo);
     }
   }
+export const LatestTicksDocument = gql`
+    query LatestTicks($latest: Int!) {
+  latestTicks(latest: $latest) {
+    activity {
+      date
+      type
+    }
+    ascentType
+    route {
+      grade
+      name
+      crag {
+        name
+        country {
+          slug
+          name
+        }
+        slug
+      }
+      id
+    }
+    user {
+      fullName
+      gender
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class LatestTicksGQL extends Apollo.Query<LatestTicksQuery, LatestTicksQueryVariables> {
+    document = LatestTicksDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const SearchDocument = gql`
     query Search($query: String) {
   search(input: $query) {
@@ -2515,6 +2604,7 @@ export const namedOperations = {
     ManagementCragFormGetCountries: 'ManagementCragFormGetCountries',
     ManagementGetCrag: 'ManagementGetCrag',
     PopularCrags: 'PopularCrags',
+    LatestTicks: 'LatestTicks',
     Search: 'Search'
   },
   Mutation: {

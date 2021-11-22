@@ -97,6 +97,7 @@ import { SearchComponent } from './pages/search/search.component';
 import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
 import { PopularCragsComponent } from './pages/home/popular-crags/popular-crags.component';
 import { PopularCragsCardComponent } from './pages/home/popular-crags/popular-crags-card/popular-crags-card.component';
+import { LatestTicksComponent } from './pages/home/latest-ticks/latest-ticks.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -161,6 +162,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     SearchResultsComponent,
     PopularCragsComponent,
     PopularCragsCardComponent,
+    LatestTicksComponent,
   ],
   imports: [
     BrowserModule,

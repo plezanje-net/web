@@ -1,0 +1,63 @@
+<div class="container p15">
+  <h2>Zadnji vzponi</h2>
+
+  <app-loader *ngIf="loading"></app-loader>
+  <div *ngIf="!loading" fxLayout="column" fxLayoutGap="16px">
+    <mat-card *ngFor="let tickGroup of latestTicks">
+      <mat-card-title>{{
+        tickGroup.date | amDateFormat: "DD.MM.YYYY"
+      }}</mat-card-title>
+      <mat-card-content>
+        <div class="table-wrapper">
+          <table class="stats-card-table">
+            <tbody>
+              <tr *ngFor="let tick of tickGroup.ticks">
+                <td>
+                  <a [routerLink]="['/uporabniki', tick.user.fullName]">
+                    {{ tick.user.fullName }}
+                  </a>
+                  je
+                  {{ tick.ascentType | ascentType }}
+                  {{ "preplezal" | genderizeVerb: tick.user.gender }}
+                  smer
+                  <a
+                    [routerLink]="[
+                      '/plezalisca',
+                      tick.route.crag.country.slug,
+                      tick.route.crag.slug,
+                      tick.route.id
+                    ]"
+                  >
+                    {{ tick.route.name }}
+                  </a>
+                  z oceno
+                  <app-grade
+                    [grade]="tick.route.grade"
+                    [text]="tick.route.difficulty"
+                    [showModifier]="false"
+                  >
+                  </app-grade>
+                  v plezališču
+                  <a
+                    [routerLink]="[
+                      '/plezalisca',
+                      tick.route.crag.country.slug,
+                      tick.route.crag.slug
+                    ]"
+                  >
+                    {{ tick.route.crag.name }}</a
+                  >,
+                  <a
+                    [routerLink]="['/plezalisca', tick.route.crag.country.slug]"
+                  >
+                    {{ tick.route.crag.country.name }} </a
+                  >.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

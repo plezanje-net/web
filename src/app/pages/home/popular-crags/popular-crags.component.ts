@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import moment from 'moment';
 import { DataError } from 'src/app/types/data-error';
 
@@ -10,7 +10,7 @@ import { DataError } from 'src/app/types/data-error';
 export class PopularCragsComponent implements OnInit {
   constructor() {}
 
-  error: DataError = null;
+  @Output() errorEvent = new EventEmitter<DataError>();
 
   oneWeekAgo: string;
   oneMonthAgo: string;
@@ -28,6 +28,6 @@ export class PopularCragsComponent implements OnInit {
   }
 
   handleError(error: DataError) {
-    this.error = error;
+    this.errorEvent.emit(error);
   }
 }

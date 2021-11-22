@@ -1,0 +1,26 @@
+query LatestTicks($latest: Int!) {
+  latestTicks(latest: $latest) {
+    activity {
+      date
+      type
+    }
+    ascentType
+    route {
+      grade
+      name
+      crag {
+        name
+        country {
+          slug
+          name
+        }
+        slug
+      }
+      id
+    }
+    user {
+      fullName
+      gender
+    }
+  }
+}

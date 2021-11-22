@@ -85,19 +85,6 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field class="no-hint" fxFlex="25">
-          <mat-label>Predlog ocene</mat-label>
-          <mat-select formControlName="gradeSuggestion">
-            <mat-option>
-              <ngx-mat-select-search placeholderLabel="Vnesi oceno" [formControl]="gradeFilterControl"></ngx-mat-select-search>
-            </mat-option>
-            <mat-option
-              *ngFor="let option of filteredGradesOptions | async"
-              [value]="option"
-              >{{ option }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="no-hint" fxFlex="25">
           <mat-label>Objava</mat-label>
           <mat-select formControlName="publish">
             <mat-option
@@ -107,6 +94,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-grade-select class="no-hint" fxFlex="25" [control]="route.controls.gradeSuggestion" label="Predlog ocene"></app-grade-select>
       </div>
       <div fxFlex="100" fxHide.lt-md></div>
       <div fxFlex fxLayout="row" fxLayoutGap="12px" *ngIf="!activity">
