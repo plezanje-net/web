@@ -10,7 +10,7 @@ import { IDistribution } from '../../../common/distribution-chart/distribution-c
 export class RouteInfoComponent implements OnInit {
   @Input() route: any;
   grades: any[];
-  gradesDistribution: IDistribution[] = [];
+  gradesDistribution: IDistribution[] = [];
   author: string;
   firstAscent: string;
 
@@ -19,10 +19,12 @@ export class RouteInfoComponent implements OnInit {
   ngOnInit(): void {
     if (this.route) {
       this.grades = this.route.grades.slice();
+      console.log(this.grades);
       this.grades.sort((a, b) => a.grade - b.grade);
 
       // this.gradesDisribution.findIndex((distribution) => distribution.label === grade.grade) > -1
       const dist = {};
+
       this.grades.forEach((grade) => {
         if (dist[grade.grade]) {
           dist[grade.grade]++;
@@ -33,7 +35,7 @@ export class RouteInfoComponent implements OnInit {
 
       Object.entries(dist).forEach(([grade, count]: [string, number]) => {
         this.gradesDistribution.push({
-          label: new Grade(Number(grade)).name,
+          label: new Grade(Number(grade)).legacyName,
           value: count,
         });
       });

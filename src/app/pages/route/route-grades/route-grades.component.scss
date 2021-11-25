@@ -1,7 +1,20 @@
 .grade-date {
   margin-left: auto;
+  white-space: nowrap;
 }
 
+.grades-list {
+  margin: 0 -14px;
+}
+.row {
+  min-height: auto;
+  padding: 4px 14px;
+  color: #6d7084;
+  &:first-child {
+    border-top: none;
+  }
+}
 .grade-included-in-calc {
-  font-weight: bold;
+  font-weight: 500;
+  color: #000;
 }

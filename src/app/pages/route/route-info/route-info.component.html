@@ -1,23 +1,32 @@
-<mat-card>
-  <div fxLayout="column"
-       fxLayoutAlign="start start"
-       fxLayoutGap="8px">
-    <div *ngIf="route.description">
-      <strong>Opis:</strong> {{ description }}
-    </div>
-    <div *ngIf="author">
-      <strong>Avtor:</strong> {{ author }}
-    </div>
-    <div *ngIf="firstAscent">
-      <strong>Prvi vzpon:</strong> {{ firstAscent }}
-    </div>
-    <div>
-      <strong>Ocene:</strong>
-    </div>
-    <app-distribution-chart [distribution]="gradesDistribution"
-                            fxFlexAlign="stretch"></app-distribution-chart>
-    <app-route-grades fxFlexAlign="stretch"
-                      [grades]="grades"
-                      [difficulty]="route.difficulty"></app-route-grades>
+<div class="card no-border">
+  <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
+    <div class="label"><b>Težavnost</b></div>
+    <b>
+      <app-grade [grade]="route.grade" [showModifier]="true"></app-grade>
+    </b>
   </div>
-</mat-card>
+  <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
+    <div class="label"><b>Dolžina</b></div>
+    <b>
+      {{ route.length }}m
+    </b>
+  </div>
+  <div class="row" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="author">
+    <div class="label"><b>Avtor</b></div>
+    <b>
+      {{ author }}
+    </b>
+  </div>
+  <div class="row" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="firstAscent">
+    <div class="label"><b>Prvi vzpon</b></div>
+    <b>
+      {{ firstAscent }}
+    </b>
+  </div>
+</div>
+
+<div class="card padding">
+  <h4>Ocene uporabnikov</h4>
+  <app-distribution-chart [distribution]="gradesDistribution" fxFlexAlign="stretch"></app-distribution-chart>
+  <app-route-grades fxFlexAlign="stretch" [grades]="grades" [difficulty]="route.difficulty"></app-route-grades>
+</div>
