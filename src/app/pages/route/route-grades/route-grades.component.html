@@ -1,15 +1,11 @@
-<div *ngIf="grades.length > 0">
-  <div *ngFor="let grade of grades"
-       [ngClass]="{ 'grade-included-in-calc': grade.includedInCalculation }"
-       fxLayout="row"
-       fxLayoutAlign="start"
-       fxLayoutGap="12px">
-    <app-grade [grade]="grade.grade"
-               [text]="difficulty"
-               [showModifier]="true"></app-grade>
+<div *ngIf="grades.length > 0" class="grades-list" fxLayout="column">
+  <div *ngFor="let grade of grades" [ngClass]="{ 'grade-included-in-calc': grade.includedInCalculation }" fxLayout="row"
+    fxLayoutAlign="start center" fxLayoutGap="12px" class="row">
+    <app-grade [grade]="grade.grade" [text]="difficulty" [legacy]="true"></app-grade>
     <div>
       <ng-container *ngIf="grade.isBase">Bazna ocena</ng-container>
-      <ng-container *ngIf="!grade.isBase && grade.user">{{ grade.user.firstname + ' ' + grade.user.lastname }}</ng-container>
+      <ng-container *ngIf="!grade.isBase && grade.user">{{ grade.user.firstname + ' ' + grade.user.lastname }}
+      </ng-container>
     </div>
     <div class="grade-date">{{ grade.created | amDateFormat:'D. M. Y' }}</div>
   </div>
