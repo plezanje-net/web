@@ -1,0 +1,9 @@
+<div class="wrap" (click)="onClick()">
+  <div>
+    <img
+      [src]="storageUrl + '/images/' + data.image.path"
+      [alt]="data.image.title"
+    />
+    <div class="title">{{ data.image.title }}</div>
+  </div>
+</div>

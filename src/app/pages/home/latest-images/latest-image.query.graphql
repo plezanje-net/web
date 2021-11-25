@@ -1,0 +1,6 @@
+query LatestImages($latest: Int!) {
+  latestImages(latest: $latest) {
+    path
+    title
+  }
+}

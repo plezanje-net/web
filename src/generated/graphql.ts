@@ -581,6 +581,7 @@ export type Query = {
   popularCrags: Array<PopularCrag>;
   route: Route;
   search: SearchResults;
+  latestImages: Array<Image>;
   profile: User;
   users: Array<User>;
   user: User;
@@ -634,6 +635,11 @@ export type QueryRouteArgs = {
 
 export type QuerySearchArgs = {
   input?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryLatestImagesArgs = {
+  latest: Scalars['Int'];
 };
 
 
@@ -1437,6 +1443,19 @@ export type PopularCragsQuery = (
         & Pick<Country, 'slug'>
       ) }
     ) }
+  )> }
+);
+
+export type LatestImagesQueryVariables = Exact<{
+  latest: Scalars['Int'];
+}>;
+
+
+export type LatestImagesQuery = (
+  { __typename?: 'Query' }
+  & { latestImages: Array<(
+    { __typename?: 'Image' }
+    & Pick<Image, 'path' | 'title'>
   )> }
 );
 
@@ -2457,6 +2476,25 @@ export const PopularCragsDocument = gql`
       super(apollo);
     }
   }
+export const LatestImagesDocument = gql`
+    query LatestImages($latest: Int!) {
+  latestImages(latest: $latest) {
+    path
+    title
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class LatestImagesGQL extends Apollo.Query<LatestImagesQuery, LatestImagesQueryVariables> {
+    document = LatestImagesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const LatestTicksDocument = gql`
     query LatestTicks($latest: Int!) {
   latestTicks(latest: $latest) {
@@ -2604,6 +2642,7 @@ export const namedOperations = {
     ManagementCragFormGetCountries: 'ManagementCragFormGetCountries',
     ManagementGetCrag: 'ManagementGetCrag',
     PopularCrags: 'PopularCrags',
+    LatestImages: 'LatestImages',
     LatestTicks: 'LatestTicks',
     Search: 'Search'
   },

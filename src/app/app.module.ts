@@ -98,6 +98,9 @@ import { SearchResultsComponent } from './pages/search/search-results/search-res
 import { PopularCragsComponent } from './pages/home/popular-crags/popular-crags.component';
 import { PopularCragsCardComponent } from './pages/home/popular-crags/popular-crags-card/popular-crags-card.component';
 import { LatestTicksComponent } from './pages/home/latest-ticks/latest-ticks.component';
+import { LatestImagesComponent } from './pages/home/latest-images/latest-images.component';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { ImageFullComponent } from './common/image-full/image-full.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -163,6 +166,8 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     PopularCragsComponent,
     PopularCragsCardComponent,
     LatestTicksComponent,
+    LatestImagesComponent,
+    ImageFullComponent,
   ],
   imports: [
     BrowserModule,
@@ -195,6 +200,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     SharedModule,
     ManagementModule,
     AppRoutingModule,
+    MatGridListModule,
   ],
   providers: [
     AuthGuard,
