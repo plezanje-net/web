@@ -8,6 +8,7 @@ import { LayoutService } from './services/layout.service';
 import { Title } from '@angular/platform-browser';
 
 import { filter } from 'rxjs/operators';
+import * as _ from 'lodash'
 import { SelectControlValueAccessor } from '@angular/forms';
 
 @Component({
@@ -41,7 +42,12 @@ export class AppComponent implements OnInit {
           },
         })
         .afterClosed()
-        .pipe(filter((data) => data != null && data != ''))
+        .pipe(filter((data) => {
+          if (req.success != null && _.isNil(data)) {
+            req.success.next(false);
+          }
+          return data != null && data != '';
+        }))
         .subscribe((data) => {
           if (req.returnUrl != null) {
             this.router.navigateByUrl(req.returnUrl);

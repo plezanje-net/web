@@ -69,7 +69,7 @@ export class AuthService {
     return this.getCurrentUser().then((user: any) => {
       return new Promise((resolve, reject) => {
         if (user != null) {
-          resolve({});
+          resolve(true);
           return;
         }
 
@@ -79,8 +79,8 @@ export class AuthService {
           success: success,
         });
 
-        success.subscribe(() => {
-          resolve({});
+        success.subscribe((data) => {
+          resolve(data);
         });
       });
     });
