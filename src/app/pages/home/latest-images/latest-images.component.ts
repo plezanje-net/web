@@ -51,17 +51,21 @@ export class LatestImagesComponent implements OnInit {
     this.latestImagesGQL
       .fetch({ latest: 12 })
       .toPromise()
-      .then((result) => {
-        this.loading = false;
-        this.loadingSpinnerService.popLoader();
-        if (result.errors == null) {
-          this.latestImages = result.data.latestImages;
-        } else {
-          this.errorEvent.emit({
-            message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
-          });
+      .then(
+        (result) => {
+          this.loading = false;
+          this.loadingSpinnerService.popLoader();
+          if (result.errors == null) {
+            this.latestImages = result.data.latestImages;
+          } else {
+            this.queryError();
+          }
+        },
+        (_error) => {
+          this.loadingSpinnerService.popLoader();
+          this.queryError();
         }
-      });
+      );
   }
 
   onImageClick(image: LatestImagesQuery['latestImages'][0]) {
@@ -71,6 +75,12 @@ export class LatestImagesComponent implements OnInit {
       maxWidth: '100vw',
       maxHeight: '100vh',
       data: { image },
+    });
+  }
+
+  queryError() {
+    this.errorEvent.emit({
+      message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
     });
   }
 }

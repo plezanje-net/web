@@ -29,28 +29,38 @@ export class LatestTicksComponent implements OnInit {
     this.latestTicksGQL
       .fetch({ latest: 10 })
       .toPromise()
-      .then((result) => {
-        this.loading = false;
-        this.loadingSpinnerService.popLoader();
-        if (result.errors == null) {
-          let currDate = '';
-          result.data.latestTicks.forEach((tick) => {
-            // we assume dates of ticks are in desc order
-            if (currDate != tick.activity.date) {
-              currDate = tick.activity.date;
-              this.latestTicks.push({
-                date: currDate,
-                ticks: [],
-              });
-            }
-            this.latestTicks[this.latestTicks.length - 1].ticks.push(tick);
-          });
-        } else {
-          this.errorEvent.emit({
-            message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
-          });
+      .then(
+        (result) => {
+          this.loading = false;
+          this.loadingSpinnerService.popLoader();
+          if (result.errors == null) {
+            let currDate = '';
+            result.data.latestTicks.forEach((tick) => {
+              // we assume dates of ticks are in desc order
+              if (currDate != tick.activity.date) {
+                currDate = tick.activity.date;
+                this.latestTicks.push({
+                  date: currDate,
+                  ticks: [],
+                });
+              }
+              this.latestTicks[this.latestTicks.length - 1].ticks.push(tick);
+            });
+          } else {
+            this.queryError();
+          }
+        },
+        (_error) => {
+          this.loadingSpinnerService.popLoader();
+          this.queryError();
         }
-      });
+      );
+  }
+
+  queryError() {
+    this.errorEvent.emit({
+      message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
+    });
   }
 }
 

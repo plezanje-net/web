@@ -33,16 +33,26 @@ export class PopularCragsCardComponent implements OnInit {
         top: this.top,
       })
       .toPromise()
-      .then((result) => {
-        this.loading = false;
-        this.loadingSpinnerService.popLoader();
-        if (result.errors != null) {
-          this.errorEvent.emit({
-            message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
-          });
-        } else {
-          this.popularCrags = result.data.popularCrags;
+      .then(
+        (result) => {
+          this.loading = false;
+          this.loadingSpinnerService.popLoader();
+          if (result.errors != null) {
+            this.queryError();
+          } else {
+            this.popularCrags = result.data.popularCrags;
+          }
+        },
+        (_error) => {
+          this.loadingSpinnerService.popLoader();
+          this.queryError();
         }
-      });
+      );
+  }
+
+  queryError() {
+    this.errorEvent.emit({
+      message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
+    });
   }
 }
