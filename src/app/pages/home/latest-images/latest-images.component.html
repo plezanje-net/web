@@ -3,15 +3,16 @@
   <mat-grid-list
     [cols]="ncols"
     rowHeight="1:1"
-    gutterSize="8px"
+    gutterSize="4px"
     *ngIf="!loading"
   >
     <mat-grid-tile *ngFor="let image of latestImages">
-      <img
-        (click)="onImageClick(image)"
-        style="object-fit: cover; width: 100%; height: 100%"
-        [src]="storageUrl + '/images/' + image.path"
-      />
+      <div class="wrap" (click)="onImageClick(image)">
+        <img [src]="storageUrl + '/images/' + image.path" />
+        <div class="info" fxLayout="row" fxLayoutAlign="center center">
+          <div>{{ image.title }}</div>
+        </div>
+      </div>
     </mat-grid-tile>
   </mat-grid-list>
 </div>
