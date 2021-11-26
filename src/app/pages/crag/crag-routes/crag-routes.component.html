@@ -30,10 +30,10 @@
           ]">{{ route.name }}</a>
       </div>
       <div fxFlex="80px" fxFlex.lt-md fxHide.lt-md>{{ route.length }} m</div>
-      <div fxFlex="80px" fxFlex.lt-md (mouseenter)="displayRouteGrades(route)" (mouseleave)="hideRouteGrades(route)" class="grades-popover-container">
+      <div fxFlex="56px" fxFlex.lt-md (mouseenter)="displayRouteGrades(route)" (mouseleave)="hideRouteGrades(route)" class="popover-container">
         <app-grade [grade]="route.grade" [text]="route.difficulty" [showModifier]="true"></app-grade>
-        <div class="grades-popover" *ngIf="activeGradesPopupId === route.id && !routeGradesLoading">
-          <div class="grades-popover-title">Ocene smeri {{ route.name }}</div>
+        <div class="popover" *ngIf="activeGradesPopupId === route.id && !routeGradesLoading">
+          <div class="popover-title">Ocene smeri {{ route.name }}</div>
           <table>
             <tbody>
               <tr *ngFor="let grade of routeGrades" [ngClass]="grade.includedInCalculation ? 'grade-included' : ''">
@@ -46,17 +46,27 @@
               </tr>
             </tbody>
           </table>
+          <div class="popover-arrow"></div>
         </div>
       </div>
-      <div fxFlex="160px" class="routes">
-        <button mat-button *ngIf="route.comments.length > 0">
-          <mat-icon>comment</mat-icon>
-        </button>
-
-        <app-ascent-type *ngIf="ascents[route.id] != null" [value]="ascents[route.id]" displayType="icon">
-        </app-ascent-type>
+      <div fxFlex="160px" fxLayout="row" fxLayoutAlign="end center" class="routes">
+        <div *ngIf="route.comments.length > 0" class="popover-container">
+          <button mat-button (mouseenter)="displayRouteComments(route)" (mouseleave)="hideRouteComments(route)">
+            <mat-icon>comment</mat-icon>
+          </button>
+          <div class="popover" *ngIf="activeCommentsPopupId === route.id && !routeCommentsLoading">
+            <div class="popover-title">Komentarji</div>
+            <div>
+              <div *ngFor="let comment of routeComments">
+                <div>{{ comment.content }}</div>
+                <div>{{ comment.user.firstname + ' ' + comment.user.lastname + ', ' + comment.created }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="popover-arrow"></div>
+        </div>
+        <app-ascent-type *ngIf="ascents[route.id] != null" [value]="ascents[route.id]" displayType="icon"></app-ascent-type>
         <span class="ascent-type-filler" *ngIf="ascents[route.id] == undefined"></span>
-
       </div>
     </div>
   </div>

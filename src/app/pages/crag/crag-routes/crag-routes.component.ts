@@ -6,13 +6,15 @@ import { SnackBarButtonsComponent } from 'src/app/shared/snack-bar-buttons/snack
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import moment from 'moment';
 import ActivitySelection from 'src/app/types/activity-selection.interface';
-import { ActivityFormComponent } from 'src/app/forms/activity-form/activity-form.component';
+
 import {
   Crag,
   MyCragSummaryGQL,
   Route,
   RouteGradesGQL,
   RouteGradesQuery,
+  RouteCommentsGQL,
+  RouteCommentsQuery,
 } from 'src/generated/graphql';
 
 @Component({
@@ -29,6 +31,9 @@ export class CragRoutesComponent implements OnInit {
   routeGradesLoading: boolean;
   routeGrades: Record<string, string | any>[];
   activeGradesPopupId: string | null = null;
+  activeCommentsPopupId: string | null = null;
+  routeCommentsLoading: boolean;
+  routeComments: Record<string, string | any>[];
 
   constructor(
     private snackBar: MatSnackBar,
@@ -36,7 +41,8 @@ export class CragRoutesComponent implements OnInit {
     private router: Router,
     private myCragSummaryGQL: MyCragSummaryGQL,
     private localStorageService: LocalStorageService,
-    private routeGradesGQL: RouteGradesGQL
+    private routeGradesGQL: RouteGradesGQL,
+    private routeCommentsGQL: RouteCommentsGQL
   ) {}
 
   ngOnInit(): void {
@@ -121,6 +127,7 @@ export class CragRoutesComponent implements OnInit {
 
   displayRouteGrades(route: Route): void {
     this.activeGradesPopupId = route.id;
+    this.activeCommentsPopupId = null;
     this.routeGradesLoading = true;
 
     this.routeGradesGQL
@@ -145,6 +152,37 @@ export class CragRoutesComponent implements OnInit {
   }
 
   routeGradesQueryError(): void {
+    console.error('TODO');
+  }
+
+  displayRouteComments(route: Route): void {
+    this.activeCommentsPopupId = route.id;
+    this.activeGradesPopupId = null;
+    this.routeCommentsLoading = true;
+
+    this.routeCommentsGQL
+      .watch({ routeId: route.id })
+      .valueChanges.subscribe((result) => {
+        this.routeCommentsLoading = false;
+
+        if (!result.errors) {
+          this.routeCommentsQuerySuccess(result.data);
+        } else {
+          this.routeCommentsQueryError();
+        }
+      });
+  }
+
+  hideRouteComments(route: Route): void {
+    this.activeCommentsPopupId = null;
+  }
+
+  routeCommentsQuerySuccess(queryData: RouteCommentsQuery): void {
+    this.routeComments = queryData.route.comments;
+    // TODO filter out conditions and warnings? ask in slack
+  }
+
+  routeCommentsQueryError(): void {
     console.error('TODO');
   }
 }
