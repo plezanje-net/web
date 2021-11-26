@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { delay } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from 'src/app/types/data-error';
+import { LoadingSpinnerService } from './loading-spinner.service';
 
 @Component({
   selector: 'app-home',
@@ -10,13 +12,19 @@ import { DataError } from 'src/app/types/data-error';
 })
 export class HomeComponent implements OnInit {
   error: DataError;
+  loading = true;
 
   constructor(
     private layoutService: LayoutService,
-    private authService: AuthService
+    private authService: AuthService,
+    public loadingSpinnerService: LoadingSpinnerService
   ) {}
 
   ngOnInit(): void {
+    this.loadingSpinnerService.showLoader$
+      .pipe(delay(0))
+      .subscribe((isLoading) => (this.loading = isLoading));
+
     this.layoutService.$breadcrumbs.next([
       {
         name: 'Prva stran',

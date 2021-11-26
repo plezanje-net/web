@@ -1,0 +1,17 @@
+<div class="container p15">
+  <h2>Zadnje fotografije</h2>
+  <mat-grid-list
+    [cols]="ncols"
+    rowHeight="1:1"
+    gutterSize="8px"
+    *ngIf="!loading"
+  >
+    <mat-grid-tile *ngFor="let image of latestImages">
+      <img
+        (click)="onImageClick(image)"
+        style="object-fit: cover; width: 100%; height: 100%"
+        [src]="storageUrl + '/images/' + image.path"
+      />
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>
