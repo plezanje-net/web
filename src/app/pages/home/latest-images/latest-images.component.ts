@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MediaObserver } from '@angular/flex-layout';
 import { MatDialog } from '@angular/material/dialog';
 import { ImageFullComponent } from 'src/app/common/image-full/image-full.component';
+import { DataError } from 'src/app/types/data-error';
 import { environment } from 'src/environments/environment';
 import { LatestImagesGQL, LatestImagesQuery } from 'src/generated/graphql';
+import { LoadingSpinnerService } from '../loading-spinner.service';
 
 @Component({
   selector: 'app-latest-images',
@@ -11,6 +13,9 @@ import { LatestImagesGQL, LatestImagesQuery } from 'src/generated/graphql';
   styleUrls: ['./latest-images.component.scss'],
 })
 export class LatestImagesComponent implements OnInit {
+  @Output() errorEvent = new EventEmitter<DataError>();
+  loading = true;
+
   latestImages: LatestImagesQuery['latestImages'];
 
   ncols = 4;
@@ -20,12 +25,12 @@ export class LatestImagesComponent implements OnInit {
   constructor(
     private mediaObserver: MediaObserver,
     private latestImagesGQL: LatestImagesGQL,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private loadingSpinnerService: LoadingSpinnerService
   ) {}
 
   ngOnInit(): void {
     this.mediaObserver.asObservable().subscribe((change) => {
-      console.log(change[0].mqAlias);
       switch (change[0].mqAlias) {
         case 'lg':
         case 'xl':
@@ -42,12 +47,20 @@ export class LatestImagesComponent implements OnInit {
       }
     });
 
+    this.loadingSpinnerService.pushLoader();
     this.latestImagesGQL
       .fetch({ latest: 12 })
       .toPromise()
       .then((result) => {
-        this.latestImages = result.data.latestImages;
-        console.log(result);
+        this.loading = false;
+        this.loadingSpinnerService.popLoader();
+        if (result.errors == null) {
+          this.latestImages = result.data.latestImages;
+        } else {
+          this.errorEvent.emit({
+            message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
+          });
+        }
       });
   }
 

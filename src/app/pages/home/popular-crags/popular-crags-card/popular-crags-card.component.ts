@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DataError } from 'src/app/types/data-error';
 import { PopularCragsGQL, PopularCragsQuery } from 'src/generated/graphql';
+import { LoadingSpinnerService } from '../../loading-spinner.service';
 
 @Component({
   selector: 'app-popular-crags-card',
@@ -8,7 +9,10 @@ import { PopularCragsGQL, PopularCragsQuery } from 'src/generated/graphql';
   styleUrls: ['./popular-crags-card.component.scss'],
 })
 export class PopularCragsCardComponent implements OnInit {
-  constructor(private popularCragsGQL: PopularCragsGQL) {}
+  constructor(
+    private popularCragsGQL: PopularCragsGQL,
+    private loadingSpinnerService: LoadingSpinnerService
+  ) {}
 
   loading = true;
 
@@ -22,6 +26,7 @@ export class PopularCragsCardComponent implements OnInit {
   @Output() errorEvent = new EventEmitter<DataError>();
 
   ngOnInit(): void {
+    this.loadingSpinnerService.pushLoader();
     this.popularCragsGQL
       .fetch({
         dateFrom: this.dateFrom,
@@ -30,6 +35,7 @@ export class PopularCragsCardComponent implements OnInit {
       .toPromise()
       .then((result) => {
         this.loading = false;
+        this.loadingSpinnerService.popLoader();
         if (result.errors != null) {
           this.errorEvent.emit({
             message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
