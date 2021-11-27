@@ -3,6 +3,7 @@ export const maxGrade = 1500; // 9c
 
 export class Grade {
   public name: string;
+  public legacyName: string;
   public modifier: number = 0;
   public number?: number;
 
@@ -12,6 +13,8 @@ export class Grade {
     if (grade != null) {
       this.parseGrade(grade);
       this.number = grade;
+
+      this.parseLegacyGrade(grade);
     }
   }
 
@@ -42,6 +45,15 @@ export class Grade {
 
     if (diff <= -13) {
       this.modifier = -1;
+    }
+  }
+
+  private parseLegacyGrade(grade: number): void {
+    this.legacyName = this.name;
+
+    if (grade % 25 == 0 && grade % 50 != 0) {
+      const nextGrade = new Grade(grade + 25);
+      this.legacyName += `/${nextGrade.name}`;
     }
   }
 }

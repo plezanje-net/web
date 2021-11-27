@@ -312,6 +312,7 @@ export type Image = {
   description?: Maybe<Scalars['String']>;
   path: Scalars['String'];
   extension: Scalars['String'];
+  author?: Maybe<User>;
   area?: Maybe<Area>;
   crag?: Maybe<Crag>;
   route?: Maybe<Route>;
@@ -581,6 +582,7 @@ export type Query = {
   popularCrags: Array<PopularCrag>;
   route: Route;
   search: SearchResults;
+  latestImages: Array<Image>;
   profile: User;
   users: Array<User>;
   user: User;
@@ -634,6 +636,11 @@ export type QueryRouteArgs = {
 
 export type QuerySearchArgs = {
   input?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryLatestImagesArgs = {
+  latest: Scalars['Int'];
 };
 
 
@@ -820,6 +827,7 @@ export type User = {
   gender?: Maybe<Scalars['String']>;
   roles: Array<Scalars['String']>;
   clubs: Array<ClubMember>;
+  images: Array<Image>;
   fullName: Scalars['String'];
 };
 
@@ -1283,6 +1291,26 @@ export type CragsQuery = (
   ) }
 );
 
+export type RouteCommentsQueryVariables = Exact<{
+  routeId: Scalars['String'];
+}>;
+
+
+export type RouteCommentsQuery = (
+  { __typename?: 'Query' }
+  & { route: (
+    { __typename?: 'Route' }
+    & { comments: Array<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'id' | 'type' | 'content' | 'updated' | 'created'>
+      & { user?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'firstname' | 'lastname'>
+      )> }
+    )> }
+  ) }
+);
+
 export type RouteGradesQueryVariables = Exact<{
   routeId: Scalars['String'];
 }>;
@@ -1437,6 +1465,41 @@ export type PopularCragsQuery = (
         & Pick<Country, 'slug'>
       ) }
     ) }
+  )> }
+);
+
+export type LatestImagesQueryVariables = Exact<{
+  latest: Scalars['Int'];
+}>;
+
+
+export type LatestImagesQuery = (
+  { __typename?: 'Query' }
+  & { latestImages: Array<(
+    { __typename?: 'Image' }
+    & Pick<Image, 'path' | 'title'>
+    & { author?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'fullName'>
+    )>, crag?: Maybe<(
+      { __typename?: 'Crag' }
+      & Pick<Crag, 'name' | 'slug'>
+      & { country: (
+        { __typename?: 'Country' }
+        & Pick<Country, 'slug'>
+      ) }
+    )>, route?: Maybe<(
+      { __typename?: 'Route' }
+      & Pick<Route, 'id' | 'name'>
+      & { crag: (
+        { __typename?: 'Crag' }
+        & Pick<Crag, 'name' | 'slug'>
+        & { country: (
+          { __typename?: 'Country' }
+          & Pick<Country, 'slug'>
+        ) }
+      ) }
+    )> }
   )> }
 );
 
@@ -2212,6 +2275,34 @@ export const CragsDocument = gql`
       super(apollo);
     }
   }
+export const RouteCommentsDocument = gql`
+    query RouteComments($routeId: String!) {
+  route(id: $routeId) {
+    comments {
+      id
+      type
+      user {
+        firstname
+        lastname
+      }
+      content
+      updated
+      created
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class RouteCommentsGQL extends Apollo.Query<RouteCommentsQuery, RouteCommentsQueryVariables> {
+    document = RouteCommentsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const RouteGradesDocument = gql`
     query RouteGrades($routeId: String!) {
   route(id: $routeId) {
@@ -2457,6 +2548,46 @@ export const PopularCragsDocument = gql`
       super(apollo);
     }
   }
+export const LatestImagesDocument = gql`
+    query LatestImages($latest: Int!) {
+  latestImages(latest: $latest) {
+    path
+    title
+    author {
+      fullName
+    }
+    crag {
+      name
+      slug
+      country {
+        slug
+      }
+    }
+    route {
+      id
+      name
+      crag {
+        name
+        slug
+        country {
+          slug
+        }
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class LatestImagesGQL extends Apollo.Query<LatestImagesQuery, LatestImagesQueryVariables> {
+    document = LatestImagesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const LatestTicksDocument = gql`
     query LatestTicks($latest: Int!) {
   latestTicks(latest: $latest) {
@@ -2599,11 +2730,13 @@ export const namedOperations = {
     CragBySlug: 'CragBySlug',
     CragManagement: 'CragManagement',
     Crags: 'Crags',
+    RouteComments: 'RouteComments',
     RouteGrades: 'RouteGrades',
     Route: 'Route',
     ManagementCragFormGetCountries: 'ManagementCragFormGetCountries',
     ManagementGetCrag: 'ManagementGetCrag',
     PopularCrags: 'PopularCrags',
+    LatestImages: 'LatestImages',
     LatestTicks: 'LatestTicks',
     Search: 'Search'
   },

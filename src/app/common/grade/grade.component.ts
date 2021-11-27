@@ -10,6 +10,7 @@ export class GradeComponent implements OnInit {
   @Input('grade') numericGrade: number;
   @Input('text') alternativeText: string = '';
   @Input() showModifier: boolean = false;
+  @Input() legacy: boolean = false;
 
   grade: Grade;
   modifier: number = 0;

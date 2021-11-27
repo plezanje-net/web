@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   apiUrl: 'http://localhost:3000/graphql',
   webUrl: 'http://localhost:4200/',
-  storageUrl: 'https://mx3.zakotnik.net/storage',
+  storageUrl: 'https://plezanje.info/storage',
 };
 
 /*
