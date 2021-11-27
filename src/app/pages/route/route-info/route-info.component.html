@@ -1,27 +1,27 @@
 <div class="card no-border">
   <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
-    <div class="label"><b>Težavnost</b></div>
-    <b>
+    <div class="label">Težavnost</div>
+    <span class="text-right">
       <app-grade [grade]="route.grade" [showModifier]="true"></app-grade>
-    </b>
+    </span>
   </div>
   <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
-    <div class="label"><b>Dolžina</b></div>
-    <b>
+    <div class="label">Dolžina</div>
+    <span class="text-right">
       {{ route.length }}m
-    </b>
+    </span>
   </div>
   <div class="row" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="author">
-    <div class="label"><b>Avtor</b></div>
-    <b>
+    <div class="label">Avtor</div>
+    <span class="text-right">
       {{ author }}
-    </b>
+    </span>
   </div>
   <div class="row" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="firstAscent">
-    <div class="label"><b>Prvi vzpon</b></div>
-    <b>
+    <div class="label">Prvi vzpon</div>
+    <span class="text-right">
       {{ firstAscent }}
-    </b>
+    </span>
   </div>
 </div>
 
