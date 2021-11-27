@@ -20,8 +20,12 @@ h1 {
   box-shadow: 0 2px 6px 0 #6494ff26;
   padding-left: 8px;
   color: $primary;
+
   @include layout-bp(lt-md) {
     font-size: 18px;
+  }
+  > div {
+    min-height: 70px;
   }
 }
 
