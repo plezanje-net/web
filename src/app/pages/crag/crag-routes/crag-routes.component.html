@@ -54,7 +54,7 @@
           <button mat-button (mouseenter)="displayRouteComments(route)" (mouseleave)="hideRouteComments(route)">
             <mat-icon>comment</mat-icon>
           </button>
-          <div class="popover" *ngIf="activeCommentsPopupId === route.id && !routeCommentsLoading">
+          <div class="popover comments" *ngIf="activeCommentsPopupId === route.id && !routeCommentsLoading">
             <div class="popover-title">Komentarji</div>
             <div>
               <ng-container *ngFor="let comment of routeComments; let i = index">
