@@ -1291,6 +1291,26 @@ export type CragsQuery = (
   ) }
 );
 
+export type RouteCommentsQueryVariables = Exact<{
+  routeId: Scalars['String'];
+}>;
+
+
+export type RouteCommentsQuery = (
+  { __typename?: 'Query' }
+  & { route: (
+    { __typename?: 'Route' }
+    & { comments: Array<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'id' | 'type' | 'content' | 'updated' | 'created'>
+      & { user?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'firstname' | 'lastname'>
+      )> }
+    )> }
+  ) }
+);
+
 export type RouteGradesQueryVariables = Exact<{
   routeId: Scalars['String'];
 }>;
@@ -2255,6 +2275,34 @@ export const CragsDocument = gql`
       super(apollo);
     }
   }
+export const RouteCommentsDocument = gql`
+    query RouteComments($routeId: String!) {
+  route(id: $routeId) {
+    comments {
+      id
+      type
+      user {
+        firstname
+        lastname
+      }
+      content
+      updated
+      created
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class RouteCommentsGQL extends Apollo.Query<RouteCommentsQuery, RouteCommentsQueryVariables> {
+    document = RouteCommentsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const RouteGradesDocument = gql`
     query RouteGrades($routeId: String!) {
   route(id: $routeId) {
@@ -2682,6 +2730,7 @@ export const namedOperations = {
     CragBySlug: 'CragBySlug',
     CragManagement: 'CragManagement',
     Crags: 'Crags',
+    RouteComments: 'RouteComments',
     RouteGrades: 'RouteGrades',
     Route: 'Route',
     ManagementCragFormGetCountries: 'ManagementCragFormGetCountries',
