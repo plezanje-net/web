@@ -30,13 +30,13 @@ h1 {
 }
 
 .mat-typography h2 {
-  color: #0000008a;
+  color: $text-gray;
   font-weight: 500;
   font-size: 20px;
 }
 
 .mat-typography h3 {
-  color: #0000008a;
+  color: $text-gray;
   padding: 14px 16px;
   margin: 0;
   font-weight: 500;
@@ -140,7 +140,7 @@ b {
   padding: 6px 14px;
   outline: none;
   &.header {
-    color: #0000008a;
+    color: $text-gray;
     border-top: none;
     padding-top: 20px;
     padding-bottom: 12px;
