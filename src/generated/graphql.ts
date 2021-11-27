@@ -312,6 +312,7 @@ export type Image = {
   description?: Maybe<Scalars['String']>;
   path: Scalars['String'];
   extension: Scalars['String'];
+  author?: Maybe<User>;
   area?: Maybe<Area>;
   crag?: Maybe<Crag>;
   route?: Maybe<Route>;
@@ -826,6 +827,7 @@ export type User = {
   gender?: Maybe<Scalars['String']>;
   roles: Array<Scalars['String']>;
   clubs: Array<ClubMember>;
+  images: Array<Image>;
   fullName: Scalars['String'];
 };
 
@@ -1476,6 +1478,28 @@ export type LatestImagesQuery = (
   & { latestImages: Array<(
     { __typename?: 'Image' }
     & Pick<Image, 'path' | 'title'>
+    & { author?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'fullName'>
+    )>, crag?: Maybe<(
+      { __typename?: 'Crag' }
+      & Pick<Crag, 'name' | 'slug'>
+      & { country: (
+        { __typename?: 'Country' }
+        & Pick<Country, 'slug'>
+      ) }
+    )>, route?: Maybe<(
+      { __typename?: 'Route' }
+      & Pick<Route, 'id' | 'name'>
+      & { crag: (
+        { __typename?: 'Crag' }
+        & Pick<Crag, 'name' | 'slug'>
+        & { country: (
+          { __typename?: 'Country' }
+          & Pick<Country, 'slug'>
+        ) }
+      ) }
+    )> }
   )> }
 );
 
@@ -2529,6 +2553,27 @@ export const LatestImagesDocument = gql`
   latestImages(latest: $latest) {
     path
     title
+    author {
+      fullName
+    }
+    crag {
+      name
+      slug
+      country {
+        slug
+      }
+    }
+    route {
+      id
+      name
+      crag {
+        name
+        slug
+        country {
+          slug
+        }
+      }
+    }
   }
 }
     `;
