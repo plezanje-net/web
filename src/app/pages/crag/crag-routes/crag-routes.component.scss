@@ -1,5 +1,5 @@
 @import '~@angular/material/theming';
-
+@import "../../../../styles/colors.scss";
 
 .row {
   // cursor: pointer;
@@ -88,3 +88,19 @@ h3 {
 .grade-date {
   text-align: right;
 }
+
+.route-comment:not(.first) {
+  margin-top: 4px;
+  padding-top: 10px;
+}
+
+.route-comment-content {
+  white-space: normal;
+}
+
+.route-comment-author {
+  margin-top: 5px;
+  text-align: right;
+  color: $text-gray;
+}
+

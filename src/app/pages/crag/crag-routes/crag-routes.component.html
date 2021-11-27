@@ -57,10 +57,15 @@
           <div class="popover" *ngIf="activeCommentsPopupId === route.id && !routeCommentsLoading">
             <div class="popover-title">Komentarji</div>
             <div>
-              <div *ngFor="let comment of routeComments">
-                <div>{{ comment.content }}</div>
-                <div>{{ comment.user.firstname + ' ' + comment.user.lastname + ', ' + comment.created }}</div>
-              </div>
+              <ng-container *ngFor="let comment of routeComments; let i = index">
+                <div class="row route-comment" [ngClass]="{ first: i === 0 }">
+                  <div class="route-comment-content">{{ comment.content }}</div>
+                  <div class="route-comment-author">
+                    <span *ngIf="comment.user">{{ comment.user.firstname + ' ' + comment.user.lastname + ', ' }}</span>
+                    <span>{{ comment.created | amDateFormat:'D. M. Y' }}</span>
+                  </div>
+                </div>
+              </ng-container>
             </div>
           </div>
           <div class="popover-arrow"></div>
