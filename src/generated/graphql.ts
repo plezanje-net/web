@@ -312,7 +312,7 @@ export type Image = {
   description?: Maybe<Scalars['String']>;
   path: Scalars['String'];
   extension: Scalars['String'];
-  author?: Maybe<User>;
+  user?: Maybe<User>;
   area?: Maybe<Area>;
   crag?: Maybe<Crag>;
   route?: Maybe<Route>;
@@ -1458,7 +1458,7 @@ export type LatestImagesQuery = (
   & { latestImages: Array<(
     { __typename?: 'Image' }
     & Pick<Image, 'path' | 'title'>
-    & { author?: Maybe<(
+    & { user?: Maybe<(
       { __typename?: 'User' }
       & Pick<User, 'fullName'>
     )>, crag?: Maybe<(
@@ -2505,7 +2505,7 @@ export const LatestImagesDocument = gql`
   latestImages(latest: $latest) {
     path
     title
-    author {
+    user {
       fullName
     }
     crag {

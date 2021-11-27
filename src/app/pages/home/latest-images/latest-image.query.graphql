@@ -2,7 +2,7 @@ query LatestImages($latest: Int!) {
   latestImages(latest: $latest) {
     path
     title
-    author {
+    user {
       fullName
     }
     crag {
