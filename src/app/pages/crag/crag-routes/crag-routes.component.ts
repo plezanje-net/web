@@ -6,7 +6,6 @@ import { SnackBarButtonsComponent } from 'src/app/shared/snack-bar-buttons/snack
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import moment from 'moment';
 import ActivitySelection from 'src/app/types/activity-selection.interface';
-
 import {
   Crag,
   MyCragSummaryGQL,
@@ -111,8 +110,12 @@ export class CragRoutesComponent implements OnInit {
   }
 
   addActivity(): void {
-    this.authService.guardedAction({}).then(() => {
-      this.router.navigate(['/plezalni-dnevnik/vpis']);
+    this.authService.guardedAction({}).then((success) => {
+      if (success) {
+        this.router.navigate(['/plezalni-dnevnik/vpis']);
+      } else {
+        this.openSnackBar();
+      }
     });
   }
 

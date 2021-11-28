@@ -1183,64 +1183,6 @@ export type CountriesTocQuery = (
   )> }
 );
 
-export type CragBySlugQueryVariables = Exact<{
-  crag: Scalars['String'];
-}>;
-
-
-export type CragBySlugQuery = (
-  { __typename?: 'Query' }
-  & { cragBySlug: (
-    { __typename?: 'Crag' }
-    & Pick<Crag, 'id' | 'slug' | 'name' | 'lat' | 'lon' | 'access' | 'description'>
-    & { area?: Maybe<(
-      { __typename?: 'Area' }
-      & Pick<Area, 'id' | 'name'>
-    )>, country: (
-      { __typename?: 'Country' }
-      & Pick<Country, 'id' | 'name' | 'slug'>
-    ), sectors: Array<(
-      { __typename?: 'Sector' }
-      & Pick<Sector, 'id' | 'name' | 'label'>
-      & { routes: Array<(
-        { __typename?: 'Route' }
-        & Pick<Route, 'id' | 'name' | 'grade' | 'length'>
-        & { comments: Array<(
-          { __typename?: 'Comment' }
-          & Pick<Comment, 'id'>
-        )>, pitches: Array<(
-          { __typename?: 'Pitch' }
-          & Pick<Pitch, 'difficulty' | 'number' | 'height'>
-        )> }
-      )> }
-    )>, comments: Array<(
-      { __typename?: 'Comment' }
-      & Pick<Comment, 'id' | 'content' | 'created'>
-      & { user?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'fullName'>
-      )> }
-    )>, conditions: Array<(
-      { __typename?: 'Comment' }
-      & Pick<Comment, 'id' | 'content' | 'created'>
-      & { user?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'fullName'>
-      )> }
-    )>, warnings: Array<(
-      { __typename?: 'Comment' }
-      & Pick<Comment, 'id' | 'content' | 'created'>
-      & { user?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'fullName'>
-      )> }
-    )>, images: Array<(
-      { __typename?: 'Image' }
-      & Pick<Image, 'id' | 'title' | 'path'>
-    )> }
-  ) }
-);
-
 export type CragManagementQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -1447,26 +1389,62 @@ export type ManagementGetCragQuery = (
   ) }
 );
 
-export type PopularCragsQueryVariables = Exact<{
-  dateFrom?: Maybe<Scalars['String']>;
-  top?: Maybe<Scalars['Int']>;
+export type CragBySlugQueryVariables = Exact<{
+  crag: Scalars['String'];
 }>;
 
 
-export type PopularCragsQuery = (
+export type CragBySlugQuery = (
   { __typename?: 'Query' }
-  & { popularCrags: Array<(
-    { __typename?: 'PopularCrag' }
-    & Pick<PopularCrag, 'nrVisits'>
-    & { crag: (
-      { __typename?: 'Crag' }
-      & Pick<Crag, 'name' | 'slug'>
-      & { country: (
-        { __typename?: 'Country' }
-        & Pick<Country, 'slug'>
-      ) }
-    ) }
-  )> }
+  & { cragBySlug: (
+    { __typename?: 'Crag' }
+    & Pick<Crag, 'id' | 'slug' | 'name' | 'orientation' | 'lat' | 'lon' | 'access' | 'description'>
+    & { area?: Maybe<(
+      { __typename?: 'Area' }
+      & Pick<Area, 'id' | 'name'>
+    )>, country: (
+      { __typename?: 'Country' }
+      & Pick<Country, 'id' | 'name' | 'slug'>
+    ), sectors: Array<(
+      { __typename?: 'Sector' }
+      & Pick<Sector, 'id' | 'name' | 'label'>
+      & { routes: Array<(
+        { __typename?: 'Route' }
+        & Pick<Route, 'id' | 'name' | 'grade' | 'length'>
+        & { comments: Array<(
+          { __typename?: 'Comment' }
+          & Pick<Comment, 'id'>
+        )>, pitches: Array<(
+          { __typename?: 'Pitch' }
+          & Pick<Pitch, 'difficulty' | 'number' | 'height'>
+        )> }
+      )> }
+    )>, comments: Array<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'id' | 'content' | 'created'>
+      & { user?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'fullName'>
+      )> }
+    )>, conditions: Array<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'id' | 'content' | 'created'>
+      & { user?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'fullName'>
+      )> }
+    )>, warnings: Array<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'id' | 'content' | 'created'>
+      & { user?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'fullName'>
+      )> }
+    )>, images: Array<(
+      { __typename?: 'Image' }
+      & Pick<Image, 'id' | 'title' | 'path'>
+    )> }
+  ) }
 );
 
 export type LatestImagesQueryVariables = Exact<{
@@ -1531,6 +1509,28 @@ export type LatestTicksQuery = (
     ), user: (
       { __typename?: 'User' }
       & Pick<User, 'fullName' | 'gender'>
+    ) }
+  )> }
+);
+
+export type PopularCragsQueryVariables = Exact<{
+  dateFrom?: Maybe<Scalars['String']>;
+  top?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type PopularCragsQuery = (
+  { __typename?: 'Query' }
+  & { popularCrags: Array<(
+    { __typename?: 'PopularCrag' }
+    & Pick<PopularCrag, 'nrVisits'>
+    & { crag: (
+      { __typename?: 'Crag' }
+      & Pick<Crag, 'name' | 'slug'>
+      & { country: (
+        { __typename?: 'Country' }
+        & Pick<Country, 'slug'>
+      ) }
     ) }
   )> }
 );
@@ -2116,90 +2116,6 @@ export const CountriesTocDocument = gql`
       super(apollo);
     }
   }
-export const CragBySlugDocument = gql`
-    query CragBySlug($crag: String!) {
-  cragBySlug(slug: $crag) {
-    id
-    slug
-    name
-    lat
-    lon
-    access
-    description
-    area {
-      id
-      name
-    }
-    country {
-      id
-      name
-      slug
-    }
-    sectors {
-      id
-      name
-      label
-      routes {
-        id
-        name
-        grade
-        length
-        comments {
-          id
-        }
-        pitches {
-          difficulty
-          number
-          height
-        }
-      }
-    }
-    comments {
-      id
-      content
-      created
-      user {
-        id
-        fullName
-      }
-    }
-    conditions {
-      id
-      content
-      created
-      user {
-        id
-        fullName
-      }
-    }
-    warnings {
-      id
-      content
-      created
-      user {
-        id
-        fullName
-      }
-    }
-    images {
-      id
-      title
-      path
-    }
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class CragBySlugGQL extends Apollo.Query<CragBySlugQuery, CragBySlugQueryVariables> {
-    document = CragBySlugDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
 export const CragManagementDocument = gql`
     query CragManagement($id: String!) {
   crag(id: $id) {
@@ -2534,16 +2450,76 @@ export const ManagementGetCragDocument = gql`
       super(apollo);
     }
   }
-export const PopularCragsDocument = gql`
-    query PopularCrags($dateFrom: String, $top: Int) {
-  popularCrags(dateFrom: $dateFrom, top: $top) {
-    nrVisits
-    crag {
+export const CragBySlugDocument = gql`
+    query CragBySlug($crag: String!) {
+  cragBySlug(slug: $crag) {
+    id
+    slug
+    name
+    orientation
+    lat
+    lon
+    access
+    description
+    area {
+      id
+      name
+    }
+    country {
+      id
       name
       slug
-      country {
-        slug
+    }
+    sectors {
+      id
+      name
+      label
+      routes {
+        id
+        name
+        grade
+        length
+        comments {
+          id
+        }
+        pitches {
+          difficulty
+          number
+          height
+        }
       }
+    }
+    comments {
+      id
+      content
+      created
+      user {
+        id
+        fullName
+      }
+    }
+    conditions {
+      id
+      content
+      created
+      user {
+        id
+        fullName
+      }
+    }
+    warnings {
+      id
+      content
+      created
+      user {
+        id
+        fullName
+      }
+    }
+    images {
+      id
+      title
+      path
     }
   }
 }
@@ -2552,8 +2528,8 @@ export const PopularCragsDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class PopularCragsGQL extends Apollo.Query<PopularCragsQuery, PopularCragsQueryVariables> {
-    document = PopularCragsDocument;
+  export class CragBySlugGQL extends Apollo.Query<CragBySlugQuery, CragBySlugQueryVariables> {
+    document = CragBySlugDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -2633,6 +2609,31 @@ export const LatestTicksDocument = gql`
   })
   export class LatestTicksGQL extends Apollo.Query<LatestTicksQuery, LatestTicksQueryVariables> {
     document = LatestTicksDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const PopularCragsDocument = gql`
+    query PopularCrags($dateFrom: String, $top: Int) {
+  popularCrags(dateFrom: $dateFrom, top: $top) {
+    nrVisits
+    crag {
+      name
+      slug
+      country {
+        slug
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class PopularCragsGQL extends Apollo.Query<PopularCragsQuery, PopularCragsQueryVariables> {
+    document = PopularCragsDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -2738,7 +2739,6 @@ export const namedOperations = {
     MyClubs: 'MyClubs',
     UserFullName: 'UserFullName',
     CountriesToc: 'CountriesToc',
-    CragBySlug: 'CragBySlug',
     CragManagement: 'CragManagement',
     Crags: 'Crags',
     RouteComments: 'RouteComments',
@@ -2746,9 +2746,10 @@ export const namedOperations = {
     Route: 'Route',
     ManagementCragFormGetCountries: 'ManagementCragFormGetCountries',
     ManagementGetCrag: 'ManagementGetCrag',
-    PopularCrags: 'PopularCrags',
+    CragBySlug: 'CragBySlug',
     LatestImages: 'LatestImages',
     LatestTicks: 'LatestTicks',
+    PopularCrags: 'PopularCrags',
     Search: 'Search'
   },
   Mutation: {
