@@ -9,16 +9,10 @@
       <div fxFlex="100">Ime</div>
       <div fxFlex="80px" fxFlex.lt-md>Dolžina</div>
       <div fxFlex="80px" fxFlex.lt-md>Težavnost</div>
-      <div fxFlex="80px" fxFlex.lt-md>Raztežaji</div>
       <div fxFlex="160px"></div>
     </div>
     <div *ngFor="let route of sector.routes" fxLayout="row" fxLayoutAlign="start center" class="row" fxLayoutGap="14px">
-      <!-- <div fxFlex="24px">
-        <mat-icon>done</mat-icon>
-      </div>
-      <div fxFlex="24px">
-        <mat-icon>hide_source</mat-icon>
-      </div> -->
+
       <div fxFlex="12px">
         <mat-checkbox (change)="changeSelection(route)" [checked]="selectedRoutesIds.indexOf(route.id) > -1">
         </mat-checkbox>
@@ -32,7 +26,7 @@
           ]">{{ route.name }}</a>
       </div>
       <div fxFlex="80px" fxFlex.lt-md fxHide.lt-md>{{ route.length }} m</div>
-      <div fxFlex="56px" fxFlex.lt-md (mouseenter)="displayRouteGrades(route)" (mouseleave)="hideRouteGrades(route)"
+      <div fxFlex="80px" fxFlex.lt-md (mouseenter)="displayRouteGrades(route)" (mouseleave)="hideRouteGrades(route)"
         class="popover-container">
         <app-grade [grade]="route.grade" [text]="route.difficulty" [showModifier]="true"></app-grade>
         <div class="popover" *ngIf="activeGradesPopupId === route.id && !routeGradesLoading">
@@ -55,14 +49,22 @@
           <div class="popover-arrow"></div>
         </div>
       </div>
-      <div fxFlex="80px" fxFlex.lt-md>
-        <div *ngIf="route.pitches.length > 0">
-           (<text *ngFor="let pitch of route.pitches; let isLast=last">{{pitch.difficulty}}{{isLast ? '' : ', '}}</text>)
+
+      <div fxLayout="row" fxFlex="160px" fxLayoutAlign="center" class="icons">
+        <div *ngIf="route.pitches.length > 0" class="popover-container">
+          <button mat-icon-button color="primary" (mouseenter)="displayRoutePitches(route)"
+            (mouseleave)="hideRoutePitches(route)">MP</button>
+          <div class="popover" *ngIf="activePitchesPopupId === route.id">
+            <div class="popover-title">Raztežaji</div>
+            <div>
+              <text *ngFor="let pitch of route.pitches; let isLast=last">{{ pitch.difficulty }} {{ isLast ? '' : ', '
+                }}</text>
+            </div>
+          </div>
+          <div class="popover-arrow"></div>
         </div>
-      </div>
-      <div fxFlex="160px" fxLayout="row" fxLayoutAlign="end center" class="routes">
         <div *ngIf="route.comments.length > 0" class="popover-container">
-          <button mat-button (mouseenter)="displayRouteComments(route)" (mouseleave)="hideRouteComments(route)">
+          <button mat-icon-button (mouseenter)="displayRouteComments(route)" (mouseleave)="hideRouteComments(route)">
             <mat-icon>comment</mat-icon>
           </button>
           <div class="popover comments" *ngIf="activeCommentsPopupId === route.id && !routeCommentsLoading">
@@ -72,7 +74,8 @@
                 <div class="row route-comment" [ngClass]="{ first: i === 0 }">
                   <div class="route-comment-content">{{ comment.content }}</div>
                   <div class="route-comment-author">
-                    <span *ngIf="comment.user">{{ comment.user.firstname + ' ' + comment.user.lastname + ', ' }}</span>
+                    <span *ngIf="comment.user">{{ comment.user.firstname + ' ' + comment.user.lastname + ', '
+                      }}</span>
                     <span>{{ comment.created | amDateFormat:'D. M. Y' }}</span>
                   </div>
                 </div>
@@ -83,7 +86,6 @@
         </div>
         <app-ascent-type *ngIf="ascents[route.id] != null" [value]="ascents[route.id]" displayType="icon">
         </app-ascent-type>
-        <span class="ascent-type-filler" *ngIf="ascents[route.id] == undefined"></span>
       </div>
     </div>
   </div>
