@@ -8,8 +8,7 @@ import { LayoutService } from './services/layout.service';
 import { Title } from '@angular/platform-browser';
 
 import { filter } from 'rxjs/operators';
-import * as _ from 'lodash'
-import { SelectControlValueAccessor } from '@angular/forms';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +17,7 @@ import { SelectControlValueAccessor } from '@angular/forms';
 })
 export class AppComponent implements OnInit {
   title = 'plezanje-net';
+  nowYear = new Date().getFullYear();
 
   constructor(
     private authService: AuthService,
@@ -42,12 +42,14 @@ export class AppComponent implements OnInit {
           },
         })
         .afterClosed()
-        .pipe(filter((data) => {
-          if (req.success != null && _.isNil(data)) {
-            req.success.next(false);
-          }
-          return data != null && data != '';
-        }))
+        .pipe(
+          filter((data) => {
+            if (req.success != null && _.isNil(data)) {
+              req.success.next(false);
+            }
+            return data != null && data != '';
+          })
+        )
         .subscribe((data) => {
           if (req.returnUrl != null) {
             this.router.navigateByUrl(req.returnUrl);

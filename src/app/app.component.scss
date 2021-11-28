@@ -1,7 +1,17 @@
-.main {
-  // padding-top: 60px;
-  // min-height: calc(100% - 60px);
-}
-footer {
-  padding: 15px;
+.whole-page-wrap {
+  position: relative;
+  min-height: 100vh;
+
+  .content-above-footer-wrap {
+    padding-bottom: 50px;
+  }
+
+  footer {
+    position: absolute;
+    bottom: 0;
+    height: 50px;
+    width: 100%;
+    padding: 15px;
+    line-height: 20px;
+  }
 }
