@@ -733,11 +733,6 @@ export type Route = {
   conditions: Array<Comment>;
 };
 
-
-export type RouteGradesArgs = {
-  id: Scalars['String'];
-};
-
 export type SearchResults = {
   __typename?: 'SearchResults';
   crags: Array<Crag>;
@@ -1213,6 +1208,9 @@ export type CragBySlugQuery = (
         & { comments: Array<(
           { __typename?: 'Comment' }
           & Pick<Comment, 'id'>
+        )>, pitches: Array<(
+          { __typename?: 'Pitch' }
+          & Pick<Pitch, 'difficulty' | 'number' | 'height'>
         )> }
       )> }
     )>, comments: Array<(
@@ -1353,7 +1351,10 @@ export type RouteQuery = (
           & Pick<Country, 'slug' | 'name'>
         ) }
       ) }
-    ), grades: Array<(
+    ), pitches: Array<(
+      { __typename?: 'Pitch' }
+      & Pick<Pitch, 'difficulty' | 'number' | 'height'>
+    )>, grades: Array<(
       { __typename?: 'Grade' }
       & Pick<Grade, 'grade' | 'created' | 'updated' | 'isBase' | 'includedInCalculation'>
       & { user?: Maybe<(
@@ -1478,40 +1479,6 @@ export type LatestImagesQuery = (
   & { latestImages: Array<(
     { __typename?: 'Image' }
     & Pick<Image, 'path' | 'title'>
-    & { user?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'fullName'>
-    )>, crag?: Maybe<(
-      { __typename?: 'Crag' }
-      & Pick<Crag, 'name' | 'slug'>
-      & { country: (
-        { __typename?: 'Country' }
-        & Pick<Country, 'slug'>
-      ) }
-    )>, route?: Maybe<(
-      { __typename?: 'Route' }
-      & Pick<Route, 'id' | 'name'>
-      & { crag: (
-        { __typename?: 'Crag' }
-        & Pick<Crag, 'name' | 'slug'>
-        & { country: (
-          { __typename?: 'Country' }
-          & Pick<Country, 'slug'>
-        ) }
-      ) }
-    )> }
-  )> }
-);
-
-export type LatestImages2QueryVariables = Exact<{
-  latest: Scalars['Int'];
-}>;
-
-
-export type LatestImages2Query = (
-  { __typename?: 'Query' }
-  & { latestImages: Array<(
-    { __typename?: 'Image' }
     & { user?: Maybe<(
       { __typename?: 'User' }
       & Pick<User, 'fullName'>
@@ -2180,6 +2147,11 @@ export const CragBySlugDocument = gql`
         comments {
           id
         }
+        pitches {
+          difficulty
+          number
+          height
+        }
       }
     }
     comments {
@@ -2345,7 +2317,7 @@ export const RouteGradesDocument = gql`
     name
     grade
     length
-    grades(id: $routeId) {
+    grades {
       id
       grade
       user {
@@ -2393,7 +2365,12 @@ export const RouteDocument = gql`
         }
       }
     }
-    grades(id: $routeId) {
+    pitches {
+      difficulty
+      number
+      height
+    }
+    grades {
       grade
       user {
         firstname
@@ -2622,44 +2599,6 @@ export const LatestImagesDocument = gql`
       super(apollo);
     }
   }
-export const LatestImages2Document = gql`
-    query LatestImages2($latest: Int!) {
-  latestImages(latest: $latest) {
-    user {
-      fullName
-    }
-    crag {
-      name
-      slug
-      country {
-        slug
-      }
-    }
-    route {
-      id
-      name
-      crag {
-        name
-        slug
-        country {
-          slug
-        }
-      }
-    }
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class LatestImages2GQL extends Apollo.Query<LatestImages2Query, LatestImages2QueryVariables> {
-    document = LatestImages2Document;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
 export const LatestTicksDocument = gql`
     query LatestTicks($latest: Int!) {
   latestTicks(latest: $latest) {
@@ -2809,7 +2748,6 @@ export const namedOperations = {
     ManagementGetCrag: 'ManagementGetCrag',
     PopularCrags: 'PopularCrags',
     LatestImages: 'LatestImages',
-    LatestImages2: 'LatestImages2',
     LatestTicks: 'LatestTicks',
     Search: 'Search'
   },

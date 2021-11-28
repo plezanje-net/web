@@ -5,7 +5,7 @@ query RouteGrades($routeId: String!) {
     name
     grade
     length
-    grades(id: $routeId) {
+    grades {
       id
       grade
       user {
