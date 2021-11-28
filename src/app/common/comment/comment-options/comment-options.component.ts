@@ -28,8 +28,9 @@ export class CommentOptionsComponent implements OnInit {
   ngOnInit(): void {}
 
   edit() {
-    this.authService.guardedAction({}).then(() => {
-      this.dialog
+    this.authService.guardedAction({}).then((success) => {
+      if(success) {
+        this.dialog
         .open(CommentFormComponent, {
           data: {
             comment: this.comment,
@@ -38,6 +39,7 @@ export class CommentOptionsComponent implements OnInit {
         })
         .afterClosed()
         .subscribe(() => {});
+      }
     });
   }
 
