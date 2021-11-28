@@ -68,16 +68,22 @@ export class CragsComponent implements OnInit {
             routeType: params.type,
           },
         })
-        .subscribe((result) => {
-          this.loading = false;
-          this.cragsLoading = false;
+        .subscribe(
+          (result) => {
+            this.loading = false;
+            this.cragsLoading = false;
 
-          if (result.errors != null) {
-            this.queryError(result.errors);
-          } else {
-            this.querySuccess(result.data.countryBySlug);
+            if (result.errors != null) {
+              this.queryError(result.errors);
+            } else {
+              this.querySuccess(result.data.countryBySlug);
+            }
+          },
+          (_) => {
+            this.loading = false;
+            this.queryError();
           }
-        });
+        );
     });
 
     this.search.valueChanges.subscribe(() => this.filterCrags());
@@ -105,8 +111,12 @@ export class CragsComponent implements OnInit {
     }
   }
 
-  queryError(errors: readonly GraphQLError[]) {
-    if (errors.length > 0 && errors[0].message == 'entity_not_found') {
+  queryError(errors?: readonly GraphQLError[]) {
+    if (
+      errors &&
+      errors.length > 0 &&
+      errors[0].message == 'entity_not_found'
+    ) {
       this.error = {
         message: 'Država ne obstaja v bazi.',
       };
