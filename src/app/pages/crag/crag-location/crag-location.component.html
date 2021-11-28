@@ -3,13 +3,15 @@
 </div>
 
 <div class="title">Usmerjenost</div>
-<div class="content">jugovzhod</div>
+<div class="content">{{ crag.orientation | orientation }}</div>
 
-<div class="title">Koordinate</div>
-<div class="content">
-  {{ crag.lat }},<br />
-  {{ crag.lon }}
-</div>
+<ng-container *ngIf="crag.lat && crag.lon">
+  <div class="title">Koordinate</div>
+  <div class="content">
+    {{ crag.lat | number: "1.5-5" }},<br />
+    {{ crag.lon | number: "1.5-5" }}
+  </div>
+</ng-container>
 
 <div class="map">
   <app-map [height]="260" [crag]="crag" [crags]="crags$" [id]="id"></app-map>
