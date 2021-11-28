@@ -16,7 +16,7 @@
               mat-menu-item
               [routerLink]="[
                 '/moj-profil/moji-klubi',
-                (club$ | async).id,
+                (club$ | async).slug,
                 'vzponi',
                 { userId: member.user.id }
               ]"

@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { QueryRef } from 'apollo-angular';
 import { BehaviorSubject, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
-import { Club, ClubByIdGQL, ClubMember } from 'src/generated/graphql';
+import { Club, ClubBySlugGQL, ClubMember } from 'src/generated/graphql';
 
 @Injectable()
 export class ClubService implements OnDestroy {
@@ -17,18 +17,18 @@ export class ClubService implements OnDestroy {
   clubQuerySubscription: Subscription;
 
   constructor(
-    private clubByIdGQL: ClubByIdGQL,
+    private clubBySlugGQL: ClubBySlugGQL,
     private authService: AuthService
   ) {}
 
-  fetchClub(clubId: string) {
-    this.clubQuery = this.clubByIdGQL.watch({ clubId });
+  fetchClub(clubSlug: string) {
+    this.clubQuery = this.clubBySlugGQL.watch({ clubSlug });
     this.clubQuerySubscription = this.clubQuery.valueChanges.subscribe(
       (data) => {
         if (data.errors != null) {
           this.club.error(data.errors);
         } else {
-          const club = data.data.club;
+          const club = data.data.clubBySlug;
           const amClubAdmin = club.members.some(
             (member: ClubMember) =>
               member.user.id === this.authService.currentUser.id && member.admin

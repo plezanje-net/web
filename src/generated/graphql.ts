@@ -67,6 +67,7 @@ export type Club = {
   __typename?: 'Club';
   id: Scalars['String'];
   name: Scalars['String'];
+  slug: Scalars['String'];
   created: Scalars['DateTime'];
   updated: Scalars['DateTime'];
   legacy: Scalars['String'];
@@ -589,11 +590,12 @@ export type Query = {
   myClubs: Array<Club>;
   clubs: Array<Club>;
   club: Club;
+  clubBySlug: Club;
   myActivities: PaginatedActivities;
   activity: Activity;
   myActivityRoutes: PaginatedActivityRoutes;
   myCragSummary: Array<ActivityRoute>;
-  activityRoutesByClub: PaginatedActivityRoutes;
+  activityRoutesByClubSlug: PaginatedActivityRoutes;
   latestTicks: Array<ActivityRoute>;
 };
 
@@ -660,6 +662,11 @@ export type QueryClubArgs = {
 };
 
 
+export type QueryClubBySlugArgs = {
+  slug: Scalars['String'];
+};
+
+
 export type QueryMyActivitiesArgs = {
   input?: Maybe<FindActivitiesInput>;
 };
@@ -680,9 +687,9 @@ export type QueryMyCragSummaryArgs = {
 };
 
 
-export type QueryActivityRoutesByClubArgs = {
+export type QueryActivityRoutesByClubSlugArgs = {
   input?: Maybe<FindActivityRoutesInput>;
-  clubId: Scalars['String'];
+  clubSlug: Scalars['String'];
 };
 
 
@@ -830,6 +837,45 @@ export type User = {
   images: Array<Image>;
   fullName: Scalars['String'];
 };
+
+export type CreateClubMutationVariables = Exact<{
+  input: CreateClubInput;
+}>;
+
+
+export type CreateClubMutation = (
+  { __typename?: 'Mutation' }
+  & { createClub: (
+    { __typename?: 'Club' }
+    & Pick<Club, 'id'>
+  ) }
+);
+
+export type UpdateClubMutationVariables = Exact<{
+  input: UpdateClubInput;
+}>;
+
+
+export type UpdateClubMutation = (
+  { __typename?: 'Mutation' }
+  & { updateClub: (
+    { __typename?: 'Club' }
+    & Pick<Club, 'id'>
+  ) }
+);
+
+export type CreateClubMemberByEmailMutationVariables = Exact<{
+  input: CreateClubMemberByEmailInput;
+}>;
+
+
+export type CreateClubMemberByEmailMutation = (
+  { __typename?: 'Mutation' }
+  & { createClubMemberByEmail: (
+    { __typename?: 'ClubMember' }
+    & Pick<ClubMember, 'id'>
+  ) }
+);
 
 export type ActivityEntryQueryVariables = Exact<{
   id: Scalars['String'];
@@ -999,145 +1045,6 @@ export type ProfileQuery = (
   & { profile: (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'email' | 'roles'>
-  ) }
-);
-
-export type CreateClubMemberByEmailMutationVariables = Exact<{
-  input: CreateClubMemberByEmailInput;
-}>;
-
-
-export type CreateClubMemberByEmailMutation = (
-  { __typename?: 'Mutation' }
-  & { createClubMemberByEmail: (
-    { __typename?: 'ClubMember' }
-    & Pick<ClubMember, 'id'>
-  ) }
-);
-
-export type DeleteClubMemberMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteClubMemberMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteClubMember'>
-);
-
-export type ActivityRoutesByClubQueryVariables = Exact<{
-  clubId: Scalars['String'];
-  input?: Maybe<FindActivityRoutesInput>;
-}>;
-
-
-export type ActivityRoutesByClubQuery = (
-  { __typename?: 'Query' }
-  & { activityRoutesByClub: (
-    { __typename?: 'PaginatedActivityRoutes' }
-    & { items: Array<(
-      { __typename?: 'ActivityRoute' }
-      & Pick<ActivityRoute, 'date' | 'grade' | 'name' | 'ascentType' | 'difficulty' | 'id' | 'publish'>
-      & { user: (
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'fullName'>
-      ), route: (
-        { __typename?: 'Route' }
-        & Pick<Route, 'id'>
-        & { crag: (
-          { __typename?: 'Crag' }
-          & Pick<Crag, 'slug' | 'name' | 'id'>
-          & { country: (
-            { __typename?: 'Country' }
-            & Pick<Country, 'slug'>
-          ) }
-        ) }
-      ) }
-    )>, meta: (
-      { __typename?: 'PaginationMeta' }
-      & Pick<PaginationMeta, 'itemCount' | 'pageCount' | 'pageNumber' | 'pageSize'>
-    ) }
-  ) }
-);
-
-export type ClubByIdQueryVariables = Exact<{
-  clubId: Scalars['String'];
-}>;
-
-
-export type ClubByIdQuery = (
-  { __typename?: 'Query' }
-  & { club: (
-    { __typename?: 'Club' }
-    & Pick<Club, 'id' | 'name'>
-    & { members: Array<(
-      { __typename?: 'ClubMember' }
-      & Pick<ClubMember, 'id' | 'admin'>
-      & { user: (
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'fullName'>
-      ) }
-    )> }
-  ) }
-);
-
-export type CreateClubMutationVariables = Exact<{
-  input: CreateClubInput;
-}>;
-
-
-export type CreateClubMutation = (
-  { __typename?: 'Mutation' }
-  & { createClub: (
-    { __typename?: 'Club' }
-    & Pick<Club, 'id'>
-  ) }
-);
-
-export type DeleteClubMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteClubMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteClub'>
-);
-
-export type MyClubsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MyClubsQuery = (
-  { __typename?: 'Query' }
-  & { myClubs: Array<(
-    { __typename?: 'Club' }
-    & Pick<Club, 'id' | 'name' | 'nrMembers'>
-  )> }
-);
-
-export type UpdateClubMutationVariables = Exact<{
-  input: UpdateClubInput;
-}>;
-
-
-export type UpdateClubMutation = (
-  { __typename?: 'Mutation' }
-  & { updateClub: (
-    { __typename?: 'Club' }
-    & Pick<Club, 'id'>
-  ) }
-);
-
-export type UserFullNameQueryVariables = Exact<{
-  userId: Scalars['String'];
-}>;
-
-
-export type UserFullNameQuery = (
-  { __typename?: 'Query' }
-  & { user: (
-    { __typename?: 'User' }
-    & Pick<User, 'fullName'>
   ) }
 );
 
@@ -1446,25 +1353,124 @@ export type ManagementGetCragQuery = (
   ) }
 );
 
-export type PopularCragsQueryVariables = Exact<{
-  dateFrom?: Maybe<Scalars['String']>;
-  top?: Maybe<Scalars['Int']>;
+export type ActivityRoutesByClubSlugQueryVariables = Exact<{
+  clubSlug: Scalars['String'];
+  input?: Maybe<FindActivityRoutesInput>;
 }>;
 
 
-export type PopularCragsQuery = (
+export type ActivityRoutesByClubSlugQuery = (
   { __typename?: 'Query' }
-  & { popularCrags: Array<(
-    { __typename?: 'PopularCrag' }
-    & Pick<PopularCrag, 'nrVisits'>
-    & { crag: (
-      { __typename?: 'Crag' }
-      & Pick<Crag, 'name' | 'slug'>
-      & { country: (
-        { __typename?: 'Country' }
-        & Pick<Country, 'slug'>
+  & { activityRoutesByClubSlug: (
+    { __typename?: 'PaginatedActivityRoutes' }
+    & { items: Array<(
+      { __typename?: 'ActivityRoute' }
+      & Pick<ActivityRoute, 'date' | 'grade' | 'name' | 'ascentType' | 'difficulty' | 'id' | 'publish'>
+      & { user: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'fullName'>
+      ), route: (
+        { __typename?: 'Route' }
+        & Pick<Route, 'id'>
+        & { crag: (
+          { __typename?: 'Crag' }
+          & Pick<Crag, 'slug' | 'name' | 'id'>
+          & { country: (
+            { __typename?: 'Country' }
+            & Pick<Country, 'slug'>
+          ) }
+        ) }
       ) }
+    )>, meta: (
+      { __typename?: 'PaginationMeta' }
+      & Pick<PaginationMeta, 'itemCount' | 'pageCount' | 'pageNumber' | 'pageSize'>
     ) }
+  ) }
+);
+
+export type UserFullNameQueryVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+
+export type UserFullNameQuery = (
+  { __typename?: 'Query' }
+  & { user: (
+    { __typename?: 'User' }
+    & Pick<User, 'fullName'>
+  ) }
+);
+
+export type ClubByIdQueryVariables = Exact<{
+  clubId: Scalars['String'];
+}>;
+
+
+export type ClubByIdQuery = (
+  { __typename?: 'Query' }
+  & { club: (
+    { __typename?: 'Club' }
+    & Pick<Club, 'id' | 'slug' | 'name'>
+    & { members: Array<(
+      { __typename?: 'ClubMember' }
+      & Pick<ClubMember, 'id' | 'admin'>
+      & { user: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'fullName'>
+      ) }
+    )> }
+  ) }
+);
+
+export type ClubBySlugQueryVariables = Exact<{
+  clubSlug: Scalars['String'];
+}>;
+
+
+export type ClubBySlugQuery = (
+  { __typename?: 'Query' }
+  & { clubBySlug: (
+    { __typename?: 'Club' }
+    & Pick<Club, 'id' | 'slug' | 'name'>
+    & { members: Array<(
+      { __typename?: 'ClubMember' }
+      & Pick<ClubMember, 'id' | 'admin'>
+      & { user: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'fullName'>
+      ) }
+    )> }
+  ) }
+);
+
+export type DeleteClubMemberMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteClubMemberMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteClubMember'>
+);
+
+export type DeleteClubMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteClubMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteClub'>
+);
+
+export type MyClubsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyClubsQuery = (
+  { __typename?: 'Query' }
+  & { myClubs: Array<(
+    { __typename?: 'Club' }
+    & Pick<Club, 'id' | 'slug' | 'name' | 'nrMembers'>
   )> }
 );
 
@@ -1478,40 +1484,6 @@ export type LatestImagesQuery = (
   & { latestImages: Array<(
     { __typename?: 'Image' }
     & Pick<Image, 'path' | 'title'>
-    & { user?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'fullName'>
-    )>, crag?: Maybe<(
-      { __typename?: 'Crag' }
-      & Pick<Crag, 'name' | 'slug'>
-      & { country: (
-        { __typename?: 'Country' }
-        & Pick<Country, 'slug'>
-      ) }
-    )>, route?: Maybe<(
-      { __typename?: 'Route' }
-      & Pick<Route, 'id' | 'name'>
-      & { crag: (
-        { __typename?: 'Crag' }
-        & Pick<Crag, 'name' | 'slug'>
-        & { country: (
-          { __typename?: 'Country' }
-          & Pick<Country, 'slug'>
-        ) }
-      ) }
-    )> }
-  )> }
-);
-
-export type LatestImages2QueryVariables = Exact<{
-  latest: Scalars['Int'];
-}>;
-
-
-export type LatestImages2Query = (
-  { __typename?: 'Query' }
-  & { latestImages: Array<(
-    { __typename?: 'Image' }
     & { user?: Maybe<(
       { __typename?: 'User' }
       & Pick<User, 'fullName'>
@@ -1564,6 +1536,28 @@ export type LatestTicksQuery = (
     ), user: (
       { __typename?: 'User' }
       & Pick<User, 'fullName' | 'gender'>
+    ) }
+  )> }
+);
+
+export type PopularCragsQueryVariables = Exact<{
+  dateFrom?: Maybe<Scalars['String']>;
+  top?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type PopularCragsQuery = (
+  { __typename?: 'Query' }
+  & { popularCrags: Array<(
+    { __typename?: 'PopularCrag' }
+    & Pick<PopularCrag, 'nrVisits'>
+    & { crag: (
+      { __typename?: 'Crag' }
+      & Pick<Crag, 'name' | 'slug'>
+      & { country: (
+        { __typename?: 'Country' }
+        & Pick<Country, 'slug'>
+      ) }
     ) }
   )> }
 );
@@ -1638,6 +1632,60 @@ export type SearchQuery = (
   ) }
 );
 
+export const CreateClubDocument = gql`
+    mutation CreateClub($input: CreateClubInput!) {
+  createClub(createClubInput: $input) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateClubGQL extends Apollo.Mutation<CreateClubMutation, CreateClubMutationVariables> {
+    document = CreateClubDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateClubDocument = gql`
+    mutation UpdateClub($input: UpdateClubInput!) {
+  updateClub(updateClubInput: $input) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateClubGQL extends Apollo.Mutation<UpdateClubMutation, UpdateClubMutationVariables> {
+    document = UpdateClubDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateClubMemberByEmailDocument = gql`
+    mutation CreateClubMemberByEmail($input: CreateClubMemberByEmailInput!) {
+  createClubMemberByEmail(input: $input) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateClubMemberByEmailGQL extends Apollo.Mutation<CreateClubMemberByEmailMutation, CreateClubMemberByEmailMutationVariables> {
+    document = CreateClubMemberByEmailDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const ActivityEntryDocument = gql`
     query ActivityEntry($id: String!) {
   activity(id: $id) {
@@ -1873,204 +1921,6 @@ export const ProfileDocument = gql`
   })
   export class ProfileGQL extends Apollo.Query<ProfileQuery, ProfileQueryVariables> {
     document = ProfileDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const CreateClubMemberByEmailDocument = gql`
-    mutation CreateClubMemberByEmail($input: CreateClubMemberByEmailInput!) {
-  createClubMemberByEmail(input: $input) {
-    id
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class CreateClubMemberByEmailGQL extends Apollo.Mutation<CreateClubMemberByEmailMutation, CreateClubMemberByEmailMutationVariables> {
-    document = CreateClubMemberByEmailDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const DeleteClubMemberDocument = gql`
-    mutation DeleteClubMember($id: String!) {
-  deleteClubMember(id: $id)
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class DeleteClubMemberGQL extends Apollo.Mutation<DeleteClubMemberMutation, DeleteClubMemberMutationVariables> {
-    document = DeleteClubMemberDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const ActivityRoutesByClubDocument = gql`
-    query ActivityRoutesByClub($clubId: String!, $input: FindActivityRoutesInput) {
-  activityRoutesByClub(clubId: $clubId, input: $input) {
-    items {
-      date
-      user {
-        id
-        fullName
-      }
-      grade
-      name
-      ascentType
-      difficulty
-      id
-      publish
-      route {
-        crag {
-          country {
-            slug
-          }
-          slug
-          name
-          id
-        }
-        id
-      }
-    }
-    meta {
-      itemCount
-      pageCount
-      pageNumber
-      pageSize
-    }
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class ActivityRoutesByClubGQL extends Apollo.Query<ActivityRoutesByClubQuery, ActivityRoutesByClubQueryVariables> {
-    document = ActivityRoutesByClubDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const ClubByIdDocument = gql`
-    query ClubById($clubId: String!) {
-  club(id: $clubId) {
-    id
-    name
-    members {
-      id
-      admin
-      user {
-        id
-        fullName
-      }
-    }
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class ClubByIdGQL extends Apollo.Query<ClubByIdQuery, ClubByIdQueryVariables> {
-    document = ClubByIdDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const CreateClubDocument = gql`
-    mutation CreateClub($input: CreateClubInput!) {
-  createClub(createClubInput: $input) {
-    id
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class CreateClubGQL extends Apollo.Mutation<CreateClubMutation, CreateClubMutationVariables> {
-    document = CreateClubDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const DeleteClubDocument = gql`
-    mutation DeleteClub($id: String!) {
-  deleteClub(id: $id)
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class DeleteClubGQL extends Apollo.Mutation<DeleteClubMutation, DeleteClubMutationVariables> {
-    document = DeleteClubDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const MyClubsDocument = gql`
-    query MyClubs {
-  myClubs {
-    id
-    name
-    nrMembers
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class MyClubsGQL extends Apollo.Query<MyClubsQuery, MyClubsQueryVariables> {
-    document = MyClubsDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const UpdateClubDocument = gql`
-    mutation UpdateClub($input: UpdateClubInput!) {
-  updateClub(updateClubInput: $input) {
-    id
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class UpdateClubGQL extends Apollo.Mutation<UpdateClubMutation, UpdateClubMutationVariables> {
-    document = UpdateClubDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const UserFullNameDocument = gql`
-    query UserFullName($userId: String!) {
-  user(email: "", id: $userId) {
-    fullName
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class UserFullNameGQL extends Apollo.Query<UserFullNameQuery, UserFullNameQueryVariables> {
-    document = UserFullNameDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -2557,15 +2407,83 @@ export const ManagementGetCragDocument = gql`
       super(apollo);
     }
   }
-export const PopularCragsDocument = gql`
-    query PopularCrags($dateFrom: String, $top: Int) {
-  popularCrags(dateFrom: $dateFrom, top: $top) {
-    nrVisits
-    crag {
+export const ActivityRoutesByClubSlugDocument = gql`
+    query ActivityRoutesByClubSlug($clubSlug: String!, $input: FindActivityRoutesInput) {
+  activityRoutesByClubSlug(clubSlug: $clubSlug, input: $input) {
+    items {
+      date
+      user {
+        id
+        fullName
+      }
+      grade
       name
-      slug
-      country {
-        slug
+      ascentType
+      difficulty
+      id
+      publish
+      route {
+        crag {
+          country {
+            slug
+          }
+          slug
+          name
+          id
+        }
+        id
+      }
+    }
+    meta {
+      itemCount
+      pageCount
+      pageNumber
+      pageSize
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ActivityRoutesByClubSlugGQL extends Apollo.Query<ActivityRoutesByClubSlugQuery, ActivityRoutesByClubSlugQueryVariables> {
+    document = ActivityRoutesByClubSlugDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UserFullNameDocument = gql`
+    query UserFullName($userId: String!) {
+  user(email: "", id: $userId) {
+    fullName
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UserFullNameGQL extends Apollo.Query<UserFullNameQuery, UserFullNameQueryVariables> {
+    document = UserFullNameDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ClubByIdDocument = gql`
+    query ClubById($clubId: String!) {
+  club(id: $clubId) {
+    id
+    slug
+    name
+    members {
+      id
+      admin
+      user {
+        id
+        fullName
       }
     }
   }
@@ -2575,8 +2493,89 @@ export const PopularCragsDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class PopularCragsGQL extends Apollo.Query<PopularCragsQuery, PopularCragsQueryVariables> {
-    document = PopularCragsDocument;
+  export class ClubByIdGQL extends Apollo.Query<ClubByIdQuery, ClubByIdQueryVariables> {
+    document = ClubByIdDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ClubBySlugDocument = gql`
+    query ClubBySlug($clubSlug: String!) {
+  clubBySlug(slug: $clubSlug) {
+    id
+    slug
+    name
+    members {
+      id
+      admin
+      user {
+        id
+        fullName
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ClubBySlugGQL extends Apollo.Query<ClubBySlugQuery, ClubBySlugQueryVariables> {
+    document = ClubBySlugDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteClubMemberDocument = gql`
+    mutation DeleteClubMember($id: String!) {
+  deleteClubMember(id: $id)
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteClubMemberGQL extends Apollo.Mutation<DeleteClubMemberMutation, DeleteClubMemberMutationVariables> {
+    document = DeleteClubMemberDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteClubDocument = gql`
+    mutation DeleteClub($id: String!) {
+  deleteClub(id: $id)
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteClubGQL extends Apollo.Mutation<DeleteClubMutation, DeleteClubMutationVariables> {
+    document = DeleteClubDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const MyClubsDocument = gql`
+    query MyClubs {
+  myClubs {
+    id
+    slug
+    name
+    nrMembers
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class MyClubsGQL extends Apollo.Query<MyClubsQuery, MyClubsQueryVariables> {
+    document = MyClubsDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -2622,44 +2621,6 @@ export const LatestImagesDocument = gql`
       super(apollo);
     }
   }
-export const LatestImages2Document = gql`
-    query LatestImages2($latest: Int!) {
-  latestImages(latest: $latest) {
-    user {
-      fullName
-    }
-    crag {
-      name
-      slug
-      country {
-        slug
-      }
-    }
-    route {
-      id
-      name
-      crag {
-        name
-        slug
-        country {
-          slug
-        }
-      }
-    }
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class LatestImages2GQL extends Apollo.Query<LatestImages2Query, LatestImages2QueryVariables> {
-    document = LatestImages2Document;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
 export const LatestTicksDocument = gql`
     query LatestTicks($latest: Int!) {
   latestTicks(latest: $latest) {
@@ -2694,6 +2655,31 @@ export const LatestTicksDocument = gql`
   })
   export class LatestTicksGQL extends Apollo.Query<LatestTicksQuery, LatestTicksQueryVariables> {
     document = LatestTicksDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const PopularCragsDocument = gql`
+    query PopularCrags($dateFrom: String, $top: Int) {
+  popularCrags(dateFrom: $dateFrom, top: $top) {
+    nrVisits
+    crag {
+      name
+      slug
+      country {
+        slug
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class PopularCragsGQL extends Apollo.Query<PopularCragsQuery, PopularCragsQueryVariables> {
+    document = PopularCragsDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -2794,10 +2780,6 @@ export const namedOperations = {
     MyActivityRoutes: 'MyActivityRoutes',
     MyCragSummary: 'MyCragSummary',
     Profile: 'Profile',
-    ActivityRoutesByClub: 'ActivityRoutesByClub',
-    ClubById: 'ClubById',
-    MyClubs: 'MyClubs',
-    UserFullName: 'UserFullName',
     CountriesToc: 'CountriesToc',
     CragBySlug: 'CragBySlug',
     CragManagement: 'CragManagement',
@@ -2807,23 +2789,27 @@ export const namedOperations = {
     Route: 'Route',
     ManagementCragFormGetCountries: 'ManagementCragFormGetCountries',
     ManagementGetCrag: 'ManagementGetCrag',
-    PopularCrags: 'PopularCrags',
+    ActivityRoutesByClubSlug: 'ActivityRoutesByClubSlug',
+    UserFullName: 'UserFullName',
+    ClubById: 'ClubById',
+    ClubBySlug: 'ClubBySlug',
+    MyClubs: 'MyClubs',
     LatestImages: 'LatestImages',
-    LatestImages2: 'LatestImages2',
     LatestTicks: 'LatestTicks',
+    PopularCrags: 'PopularCrags',
     Search: 'Search'
   },
   Mutation: {
-    CreateActivity: 'CreateActivity',
-    CreateClubMemberByEmail: 'CreateClubMemberByEmail',
-    DeleteClubMember: 'DeleteClubMember',
     CreateClub: 'CreateClub',
-    DeleteClub: 'DeleteClub',
     UpdateClub: 'UpdateClub',
+    CreateClubMemberByEmail: 'CreateClubMemberByEmail',
+    CreateActivity: 'CreateActivity',
     CreateComment: 'CreateComment',
     DeleteComment: 'DeleteComment',
     UpdateComment: 'UpdateComment',
     ManagementCreateCrag: 'ManagementCreateCrag',
-    ManagementUpdateCrag: 'ManagementUpdateCrag'
+    ManagementUpdateCrag: 'ManagementUpdateCrag',
+    DeleteClubMember: 'DeleteClubMember',
+    DeleteClub: 'DeleteClub'
   }
 }

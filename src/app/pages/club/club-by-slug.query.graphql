@@ -1,6 +1,7 @@
-query ClubById($clubId: String!) {
-  club(id: $clubId) {
+query ClubBySlug($clubSlug: String!) {
+  clubBySlug(slug: $clubSlug) {
     id
+    slug
     name
     members {
       id

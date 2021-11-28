@@ -16,11 +16,12 @@
     <div *ngIf="myClubs.length" class="card clubs-list-container">
       <mat-nav-list>
         <ng-container *ngFor="let club of myClubs; last as isLast">
-          <a mat-list-item [routerLink]="['/moj-profil/moji-klubi/', club.id]">
+          <a
+            mat-list-item
+            [routerLink]="['/moj-profil/moji-klubi/', club.slug]"
+          >
             <div fxLayout="row" fxLayoutAlign="start center">
-              <div class="primary-text">
-                {{ club.name }}
-              </div>
+              <div class="primary-text">{{ club.name }}</div>
             </div>
             <div class="metadata">
               {{ club.nrMembers }}
