@@ -14,6 +14,7 @@ import { GradeSelectComponent } from './components/grade-select/grade-select.com
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatSelectModule } from '@angular/material/select';
+import { OrientationPipe } from './pipes/orientation.pipe';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { MatSelectModule } from '@angular/material/select';
     GradeSelectComponent,
     AscentTypePipe,
     GenderizeVerbPipe,
+    OrientationPipe,
   ],
   imports: [
     CommonModule,
@@ -41,6 +43,7 @@ import { MatSelectModule } from '@angular/material/select';
     GradeSelectComponent,
     AscentTypePipe,
     GenderizeVerbPipe,
+    OrientationPipe,
   ],
 })
 export class SharedModule {}
