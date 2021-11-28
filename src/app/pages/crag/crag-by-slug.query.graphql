@@ -3,6 +3,7 @@ query CragBySlug($crag: String!) {
     id
     slug
     name
+    orientation
     lat
     lon
     access

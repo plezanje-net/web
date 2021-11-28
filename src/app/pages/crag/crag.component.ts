@@ -163,8 +163,9 @@ export class CragComponent implements OnInit {
   }
 
   addComment(type: string) {
-    this.authService.guardedAction({}).then(() => {
-      this.dialog
+    this.authService.guardedAction({}).then((success) => {
+      if(success) {
+        this.dialog
         .open(CommentFormComponent, {
           data: {
             crag: this.crag,
@@ -174,6 +175,7 @@ export class CragComponent implements OnInit {
         })
         .afterClosed()
         .subscribe(() => {});
+      }
     });
   }
 

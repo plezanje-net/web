@@ -1,7 +1,4 @@
-<div *ngIf="crag.images.length > 0">
-  <img
-    [src]="storageUrl + '/images/' + crag.images[0].path"
-    [alt]="crag.images[0].title"
-  />
+<div *ngIf="crag.images.length > 0" class="card no-border">
+  <img [src]="storageUrl + '/images/' + crag.images[0].path" [alt]="crag.images[0].title" />
   <!-- TODO: Should have crag-cover-image field on crag instead of simply displaying first image? -->
 </div>
