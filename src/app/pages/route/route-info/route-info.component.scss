@@ -11,3 +11,6 @@
 .row {
   font-weight: 500;
 }
+.row:first-child {
+  min-height: 54px;
+}
