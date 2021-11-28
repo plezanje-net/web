@@ -1,11 +1,15 @@
-<app-header></app-header>
+<div class="whole-page-wrap">
+  <div class="content-above-footer-wrap">
+    <app-header></app-header>
 
-<div class="main">
-  <div class="container p15">
-    <app-breadcrumbs></app-breadcrumbs>
+    <div class="main">
+      <div class="container p15">
+        <app-breadcrumbs></app-breadcrumbs>
+      </div>
+
+      <router-outlet></router-outlet>
+    </div>
   </div>
 
-  <router-outlet></router-outlet>
+  <footer class="text-center">© www.plezanje.net, 2004-{{ nowYear }}</footer>
 </div>
-
-<footer class="container text-center">© www.plezanje.net, 2004-2021</footer>
