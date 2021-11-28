@@ -1,0 +1,15 @@
+query RouteComments($routeId: String!) {
+  route(id: $routeId) {
+    comments {
+      id
+      type
+      user {
+        firstname
+        lastname
+      }
+      content
+      updated
+      created
+    }
+  }
+}

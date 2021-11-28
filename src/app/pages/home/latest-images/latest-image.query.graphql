@@ -2,5 +2,26 @@ query LatestImages($latest: Int!) {
   latestImages(latest: $latest) {
     path
     title
+    user {
+      fullName
+    }
+    crag {
+      name
+      slug
+      country {
+        slug
+      }
+    }
+    route {
+      id
+      name
+      crag {
+        name
+        slug
+        country {
+          slug
+        }
+      }
+    }
   }
 }

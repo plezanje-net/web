@@ -5,7 +5,7 @@
        fxLayout="row"
        fxLayoutAlign="center center">
     <div class="card">
-      <img [src]="storageUrl + '/images/' + image.path" />
+      <img [src]="storageUrl + '/images/' + image.path" (click)="onImageClick(image)" />
       <div class="title">{{ image.title }}</div>
     </div>
   </div>

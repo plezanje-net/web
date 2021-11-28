@@ -1,8 +1,15 @@
+@import "../../../../styles/colors.scss";
+
 .card {
   margin-bottom: 16px;
 }
+
 .label {
-  color: #0000008a;
+  color: $text-gray;
+}
+
+.row {
+  font-weight: 500;
 }
 .row:first-child {
   min-height: 54px;

@@ -1,9 +1,76 @@
-<div class="wrap" (click)="onClick()">
-  <div>
-    <img
-      [src]="storageUrl + '/images/' + data.image.path"
-      [alt]="data.image.title"
-    />
-    <div class="title">{{ data.image.title }}</div>
+<div fxFlexFill fxLayout="column" (click)="onClick()">
+  <div class="button-row">
+    <button mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div
+    class="image-row"
+    fxFlex="1 1 0%"
+    fxLayout="column"
+    fxLayoutAlign="center center"
+  >
+    <div fxLayout="column" class="image-w-caption-wrap">
+      <img
+        [src]="storageUrl + '/images/' + data.image.path"
+        [alt]="data.image.title"
+        fxFlex="90%"
+        fxLayoutAlign="center center"
+      />
+
+      <div class="caption">
+        <div>
+          <span *ngIf="data.image.title">
+            <span>{{ data.image.title }}</span>
+            <span *ngIf="data.image.route || data.image.crag">, </span>
+          </span>
+
+          <span *ngIf="data.image.route">
+            <span>smer </span>
+            <a
+              *ngIf="data.image.route"
+              [routerLink]="[
+                '/plezalisca',
+                data.image.route.crag.country.slug,
+                data.image.route.crag.slug,
+                data.image.route.id
+              ]"
+              >{{ data.image.route.name }}</a
+            >, plezališče
+            <a
+              [routerLink]="[
+                '/plezalisca',
+                data.image.route.crag.country.slug,
+                data.image.route.crag.slug
+              ]"
+              >{{ data.image.route.crag.name }}</a
+            >
+          </span>
+
+          <span *ngIf="data.image.crag && !data.image.route">plezališče </span>
+          <a
+            *ngIf="data.image.crag"
+            [routerLink]="[
+              '/plezalisca',
+              data.image.crag.country.slug,
+              data.image.crag.slug
+            ]"
+            >{{ data.image.crag.name }}</a
+          >
+        </div>
+        <div
+          *ngIf="data.image.user"
+          class="author"
+          fxLayout="row"
+          fxLayoutAlign="center center"
+        >
+          <mat-icon>photo_camera</mat-icon>
+          <span>
+            {{ data.image.user.fullName }}
+          </span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

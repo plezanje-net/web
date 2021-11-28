@@ -11,3 +11,37 @@ h2 {
   box-shadow: none;
 }
 //TODO: global?
+
+.wrap {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+
+  img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+
+  .info {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    opacity: 0;
+    text-align: center;
+    padding: 16px;
+    transition: all 0.25s ease-out;
+  }
+
+  &:hover .info {
+    background-color: rgba(255, 255, 255, 0.8);
+    opacity: 1;
+  }
+
+  &:hover img {
+    filter: grayscale(100%);
+  }
+}

@@ -75,6 +75,7 @@ export class LatestImagesComponent implements OnInit {
       maxWidth: '100vw',
       maxHeight: '100vh',
       data: { image },
+      autoFocus: false,
     });
   }
 

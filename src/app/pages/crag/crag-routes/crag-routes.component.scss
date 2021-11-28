@@ -1,5 +1,5 @@
 @import '~@angular/material/theming';
-
+@import "../../../../styles/colors.scss";
 
 .row {
   // cursor: pointer;
@@ -30,14 +30,20 @@ h3 {
   display: inline-block;
 }
 
-.grades-popover-container {
+.popover-container {
   position: relative;
+
+  text-align: center;
 }
 
-.grades-popover {
+.popover {
   position: absolute;
+  bottom: calc(100% + 5px);
+  transform: translateX(-50%);
+  left: 50%;
   z-index: 100;
   background: #ffffff;
+  text-align: left;
   border: 1px solid #d1d7db;
   padding: 10px;
   @include mat-elevation(5);
@@ -45,9 +51,27 @@ h3 {
   td {
     white-space: nowrap;
   }
+
+  .popover-arrow {
+    height: 10px;
+    width: 10px;
+
+    background-color: #fff;
+    position: absolute;
+    bottom: -11px;
+    left: 50%;
+
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    border-right: 1px solid rgba(0, 0, 0, 0.3);
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  &.comments {
+    min-width: 400px;
+  }
 }
 
-.grades-popover-title {
+.popover-title {
   margin-bottom: 10px;
   font-weight: bold;
 }
@@ -68,3 +92,19 @@ h3 {
 .grade-date {
   text-align: right;
 }
+
+.route-comment:not(.first) {
+  margin-top: 4px;
+  padding-top: 10px;
+}
+
+.route-comment-content {
+  white-space: normal;
+}
+
+.route-comment-author {
+  margin-top: 5px;
+  text-align: right;
+  color: $text-gray;
+}
+
