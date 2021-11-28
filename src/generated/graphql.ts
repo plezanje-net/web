@@ -1503,6 +1503,40 @@ export type LatestImagesQuery = (
   )> }
 );
 
+export type LatestImages2QueryVariables = Exact<{
+  latest: Scalars['Int'];
+}>;
+
+
+export type LatestImages2Query = (
+  { __typename?: 'Query' }
+  & { latestImages: Array<(
+    { __typename?: 'Image' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'fullName'>
+    )>, crag?: Maybe<(
+      { __typename?: 'Crag' }
+      & Pick<Crag, 'name' | 'slug'>
+      & { country: (
+        { __typename?: 'Country' }
+        & Pick<Country, 'slug'>
+      ) }
+    )>, route?: Maybe<(
+      { __typename?: 'Route' }
+      & Pick<Route, 'id' | 'name'>
+      & { crag: (
+        { __typename?: 'Crag' }
+        & Pick<Crag, 'name' | 'slug'>
+        & { country: (
+          { __typename?: 'Country' }
+          & Pick<Country, 'slug'>
+        ) }
+      ) }
+    )> }
+  )> }
+);
+
 export type LatestTicksQueryVariables = Exact<{
   latest: Scalars['Int'];
 }>;
@@ -2588,6 +2622,44 @@ export const LatestImagesDocument = gql`
       super(apollo);
     }
   }
+export const LatestImages2Document = gql`
+    query LatestImages2($latest: Int!) {
+  latestImages(latest: $latest) {
+    user {
+      fullName
+    }
+    crag {
+      name
+      slug
+      country {
+        slug
+      }
+    }
+    route {
+      id
+      name
+      crag {
+        name
+        slug
+        country {
+          slug
+        }
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class LatestImages2GQL extends Apollo.Query<LatestImages2Query, LatestImages2QueryVariables> {
+    document = LatestImages2Document;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const LatestTicksDocument = gql`
     query LatestTicks($latest: Int!) {
   latestTicks(latest: $latest) {
@@ -2737,6 +2809,7 @@ export const namedOperations = {
     ManagementGetCrag: 'ManagementGetCrag',
     PopularCrags: 'PopularCrags',
     LatestImages: 'LatestImages',
+    LatestImages2: 'LatestImages2',
     LatestTicks: 'LatestTicks',
     Search: 'Search'
   },
