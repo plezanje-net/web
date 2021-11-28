@@ -57,7 +57,7 @@ export class ClubFormComponent implements OnInit {
         { input: updateClubInput },
         {
           errorPolicy: 'all',
-          refetchQueries: [namedOperations.Query.ClubById],
+          refetchQueries: [namedOperations.Query.ClubBySlug],
         }
       )
       .subscribe((result) => {

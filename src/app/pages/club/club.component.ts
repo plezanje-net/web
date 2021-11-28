@@ -39,8 +39,8 @@ export class ClubComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    const clubId = this.activatedRoute.snapshot.params.club;
-    this.clubService.fetchClub(clubId);
+    const clubSlug = this.activatedRoute.snapshot.params.club;
+    this.clubService.fetchClub(clubSlug);
     this.clubSubscription = this.clubService.club$.subscribe(
       (club: Club) => {
         this.loading = false;

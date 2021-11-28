@@ -1,5 +1,8 @@
-query ActivityRoutesByClub($clubId: String!, $input: FindActivityRoutesInput) {
-  activityRoutesByClub(clubId: $clubId, input: $input) {
+query ActivityRoutesByClubSlug(
+  $clubSlug: String!
+  $input: FindActivityRoutesInput
+) {
+  activityRoutesByClubSlug(clubSlug: $clubSlug, input: $input) {
     items {
       date
       user {
