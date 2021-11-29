@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
-import { Crag, User } from 'src/generated/graphql';
+import { Comment, Crag, User } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-crag-comments',
@@ -12,7 +12,13 @@ export class CragCommentsComponent implements OnInit {
   @Input() crag: Crag;
   @Input() action: Subject<string>;
 
+  comments: Comment[];
+  conditions: Comment[];
+
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.comments = this.crag.comments.filter((c) => c.type == 'comment');
+    this.conditions = this.crag.comments.filter((c) => c.type == 'condition');
+  }
 }

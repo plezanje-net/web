@@ -146,8 +146,6 @@ export type Crag = {
   comments: Array<Comment>;
   images: Array<Image>;
   activities: Array<Activity>;
-  warnings: Array<Comment>;
-  conditions: Array<Comment>;
 };
 
 export type CreateActivityInput = {
@@ -736,8 +734,6 @@ export type Route = {
   pitches: Array<Pitch>;
   comments: Array<Comment>;
   images: Array<Image>;
-  warnings: Array<Comment>;
-  conditions: Array<Comment>;
 };
 
 
@@ -1448,21 +1444,7 @@ export type CragBySlugQuery = (
       )> }
     )>, comments: Array<(
       { __typename?: 'Comment' }
-      & Pick<Comment, 'id' | 'content' | 'created'>
-      & { user?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'fullName'>
-      )> }
-    )>, conditions: Array<(
-      { __typename?: 'Comment' }
-      & Pick<Comment, 'id' | 'content' | 'created'>
-      & { user?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'fullName'>
-      )> }
-    )>, warnings: Array<(
-      { __typename?: 'Comment' }
-      & Pick<Comment, 'id' | 'content' | 'created'>
+      & Pick<Comment, 'id' | 'content' | 'created' | 'type'>
       & { user?: Maybe<(
         { __typename?: 'User' }
         & Pick<User, 'id' | 'fullName'>
@@ -2540,24 +2522,7 @@ export const CragBySlugDocument = gql`
       id
       content
       created
-      user {
-        id
-        fullName
-      }
-    }
-    conditions {
-      id
-      content
-      created
-      user {
-        id
-        fullName
-      }
-    }
-    warnings {
-      id
-      content
-      created
+      type
       user {
         id
         fullName

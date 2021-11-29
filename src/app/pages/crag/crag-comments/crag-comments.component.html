@@ -6,7 +6,7 @@
     </button>
   </div>
 </h3>
-<ng-container *ngFor="let comment of crag.conditions">
+<ng-container *ngFor="let comment of conditions">
   <app-comment [comment]="comment" commentType="condition"></app-comment>
 </ng-container>
 
@@ -18,6 +18,6 @@
     </button>
   </div>
 </h3>
-<ng-container *ngFor="let comment of crag.comments">
+<ng-container *ngFor="let comment of comments">
   <app-comment [comment]="comment"></app-comment>
 </ng-container>

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
+import { Comment, Crag } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-crag-warnings',
@@ -7,9 +8,13 @@ import { AuthService } from 'src/app/auth/auth.service';
   styleUrls: ['./crag-warnings.component.scss'],
 })
 export class CragWarningsComponent implements OnInit {
-  @Input() crag: any;
+  @Input() crag: Crag;
+
+  warnings: Comment[];
 
   constructor(public authService: AuthService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.warnings = this.crag.comments.filter((c) => c.type == 'warning');
+  }
 }

@@ -18,16 +18,6 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
                 return incoming;
               },
             },
-            warnings: {
-              merge(existing, incoming) {
-                return incoming;
-              },
-            },
-            conditions: {
-              merge(existing, incoming) {
-                return incoming;
-              },
-            },
           },
         },
         Club: {
@@ -70,4 +60,4 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
     },
   ],
 })
-export class GraphQLModule { }
+export class GraphQLModule {}
