@@ -16,10 +16,6 @@
           <div class="route-icons"></div>
         </div>
       </div>
-      <div fxFlex="100">Ime</div>
-      <div fxFlex="80px" fxFlex.lt-md>Dolžina</div>
-      <div fxFlex="80px" fxFlex.lt-md>Težavnost</div>
-      <div fxFlex="160px"></div>
     </div>
     <div *ngFor="let route of sector.routes" fxLayout="row" fxLayoutAlign="start center" class="row" fxLayoutGap="14px">
       <div class="route-checkbox">
@@ -96,7 +92,7 @@
                         <span>{{ comment.created | amDateFormat:'D. M. Y' }}</span>
                       </div>
                     </div>
-                  </div>
+                  </ng-container>
                   <div class="popover-arrow"></div>
                 </div>
                 <app-ascent-type *ngIf="ascents[route.id] != null" [value]="ascents[route.id]" displayType="icon">
