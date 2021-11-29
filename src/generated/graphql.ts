@@ -1444,7 +1444,7 @@ export type CragBySlugQuery = (
       )> }
     )>, comments: Array<(
       { __typename?: 'Comment' }
-      & Pick<Comment, 'id' | 'content' | 'created' | 'type'>
+      & Pick<Comment, 'id' | 'content' | 'created' | 'updated' | 'type'>
       & { user?: Maybe<(
         { __typename?: 'User' }
         & Pick<User, 'id' | 'fullName'>
@@ -2522,6 +2522,7 @@ export const CragBySlugDocument = gql`
       id
       content
       created
+      updated
       type
       user {
         id

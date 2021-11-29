@@ -35,6 +35,7 @@ query CragBySlug($crag: String!) {
       id
       content
       created
+      updated
       type
       user {
         id
