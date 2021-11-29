@@ -35,24 +35,8 @@ query CragBySlug($crag: String!) {
       id
       content
       created
-      user {
-        id
-        fullName
-      }
-    }
-    conditions {
-      id
-      content
-      created
-      user {
-        id
-        fullName
-      }
-    }
-    warnings {
-      id
-      content
-      created
+      updated
+      type
       user {
         id
         fullName
