@@ -11,7 +11,7 @@ query Route($routeId: String!) {
       id
       name
     }
-    grades(id: $routeId) {
+    grades {
       grade
       user {
         firstname
