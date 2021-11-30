@@ -327,12 +327,23 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createCountry: Country;
-  updateCountry: Country;
-  deleteCountry: Scalars['Boolean'];
+  register: Scalars['Boolean'];
+  confirm: Scalars['Boolean'];
+  recover: Scalars['Boolean'];
+  setPassword: Scalars['Boolean'];
+  login: TokenResponse;
+  createClub: Club;
+  updateClub: Club;
+  deleteClub: Scalars['Boolean'];
+  createClubMember: ClubMember;
+  createClubMemberByEmail: ClubMember;
+  deleteClubMember: Scalars['Boolean'];
   createCrag: Crag;
   updateCrag: Crag;
   deleteCrag: Scalars['Boolean'];
+  createCountry: Country;
+  updateCountry: Country;
+  deleteCountry: Scalars['Boolean'];
   createSector: Sector;
   updateSector: Sector;
   deleteSector: Scalars['Boolean'];
@@ -345,32 +356,61 @@ export type Mutation = {
   createComment: Comment;
   updateComment: Comment;
   deleteComment: Scalars['Boolean'];
-  register: Scalars['Boolean'];
-  confirm: Scalars['Boolean'];
-  recover: Scalars['Boolean'];
-  setPassword: Scalars['Boolean'];
-  login: TokenResponse;
-  createClub: Club;
-  updateClub: Club;
-  deleteClub: Scalars['Boolean'];
-  createClubMember: ClubMember;
-  createClubMemberByEmail: ClubMember;
-  deleteClubMember: Scalars['Boolean'];
   createActivity: Activity;
 };
 
 
-export type MutationCreateCountryArgs = {
-  input: CreateCountryInput;
+export type MutationRegisterArgs = {
+  input: RegisterInput;
 };
 
 
-export type MutationUpdateCountryArgs = {
-  input: UpdateCountryInput;
+export type MutationConfirmArgs = {
+  input: ConfirmInput;
 };
 
 
-export type MutationDeleteCountryArgs = {
+export type MutationRecoverArgs = {
+  email: Scalars['String'];
+};
+
+
+export type MutationSetPasswordArgs = {
+  input: PasswordInput;
+};
+
+
+export type MutationLoginArgs = {
+  input: LoginInput;
+};
+
+
+export type MutationCreateClubArgs = {
+  createClubInput: CreateClubInput;
+};
+
+
+export type MutationUpdateClubArgs = {
+  updateClubInput: UpdateClubInput;
+};
+
+
+export type MutationDeleteClubArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationCreateClubMemberArgs = {
+  input: CreateClubMemberInput;
+};
+
+
+export type MutationCreateClubMemberByEmailArgs = {
+  input: CreateClubMemberByEmailInput;
+};
+
+
+export type MutationDeleteClubMemberArgs = {
   id: Scalars['String'];
 };
 
@@ -386,6 +426,21 @@ export type MutationUpdateCragArgs = {
 
 
 export type MutationDeleteCragArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationCreateCountryArgs = {
+  input: CreateCountryInput;
+};
+
+
+export type MutationUpdateCountryArgs = {
+  input: UpdateCountryInput;
+};
+
+
+export type MutationDeleteCountryArgs = {
   id: Scalars['String'];
 };
 
@@ -446,61 +501,6 @@ export type MutationUpdateCommentArgs = {
 
 
 export type MutationDeleteCommentArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationRegisterArgs = {
-  input: RegisterInput;
-};
-
-
-export type MutationConfirmArgs = {
-  input: ConfirmInput;
-};
-
-
-export type MutationRecoverArgs = {
-  email: Scalars['String'];
-};
-
-
-export type MutationSetPasswordArgs = {
-  input: PasswordInput;
-};
-
-
-export type MutationLoginArgs = {
-  input: LoginInput;
-};
-
-
-export type MutationCreateClubArgs = {
-  createClubInput: CreateClubInput;
-};
-
-
-export type MutationUpdateClubArgs = {
-  updateClubInput: UpdateClubInput;
-};
-
-
-export type MutationDeleteClubArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationCreateClubMemberArgs = {
-  input: CreateClubMemberInput;
-};
-
-
-export type MutationCreateClubMemberByEmailArgs = {
-  input: CreateClubMemberByEmailInput;
-};
-
-
-export type MutationDeleteClubMemberArgs = {
   id: Scalars['String'];
 };
 
@@ -573,15 +573,6 @@ export type PopularCrag = {
 
 export type Query = {
   __typename?: 'Query';
-  countryBySlug: Country;
-  countries: Array<Country>;
-  crag: Crag;
-  cragBySlug: Crag;
-  crags: Array<Crag>;
-  popularCrags: Array<PopularCrag>;
-  route: Route;
-  search: SearchResults;
-  latestImages: Array<Image>;
   profile: User;
   users: Array<User>;
   user: User;
@@ -589,6 +580,15 @@ export type Query = {
   clubs: Array<Club>;
   club: Club;
   clubBySlug: Club;
+  crag: Crag;
+  cragBySlug: Crag;
+  crags: Array<Crag>;
+  popularCrags: Array<PopularCrag>;
+  countryBySlug: Country;
+  countries: Array<Country>;
+  route: Route;
+  search: SearchResults;
+  latestImages: Array<Image>;
   myActivities: PaginatedActivities;
   activity: Activity;
   myActivityRoutes: PaginatedActivityRoutes;
@@ -598,13 +598,24 @@ export type Query = {
 };
 
 
-export type QueryCountryBySlugArgs = {
-  slug: Scalars['String'];
+export type QueryUserArgs = {
+  id?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
 };
 
 
-export type QueryCountriesArgs = {
-  input?: Maybe<FindCountriesInput>;
+export type QueryClubsArgs = {
+  userId?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryClubArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryClubBySlugArgs = {
+  slug: Scalars['String'];
 };
 
 
@@ -629,6 +640,16 @@ export type QueryPopularCragsArgs = {
 };
 
 
+export type QueryCountryBySlugArgs = {
+  slug: Scalars['String'];
+};
+
+
+export type QueryCountriesArgs = {
+  input?: Maybe<FindCountriesInput>;
+};
+
+
 export type QueryRouteArgs = {
   id: Scalars['String'];
 };
@@ -641,27 +662,6 @@ export type QuerySearchArgs = {
 
 export type QueryLatestImagesArgs = {
   latest: Scalars['Int'];
-};
-
-
-export type QueryUserArgs = {
-  id?: Maybe<Scalars['String']>;
-  email: Scalars['String'];
-};
-
-
-export type QueryClubsArgs = {
-  userId?: Maybe<Scalars['String']>;
-};
-
-
-export type QueryClubArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QueryClubBySlugArgs = {
-  slug: Scalars['String'];
 };
 
 
@@ -734,11 +734,6 @@ export type Route = {
   pitches: Array<Pitch>;
   comments: Array<Comment>;
   images: Array<Image>;
-};
-
-
-export type RouteGradesArgs = {
-  id: Scalars['String'];
 };
 
 export type SearchResults = {
@@ -2098,7 +2093,7 @@ export const RouteGradesDocument = gql`
     name
     grade
     length
-    grades(id: $routeId) {
+    grades {
       id
       grade
       user {
@@ -2146,7 +2141,7 @@ export const RouteDocument = gql`
         }
       }
     }
-    grades(id: $routeId) {
+    grades {
       grade
       user {
         firstname
