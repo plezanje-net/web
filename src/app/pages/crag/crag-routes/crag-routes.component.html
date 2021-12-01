@@ -35,28 +35,30 @@
               {{ route.name }}
             </a>
           </div>
-          <div class="route-length">{{ route.length }} m</div>
-          <div class="route-grade" (mouseenter)="displayRouteGrades(route)" (mouseleave)="hideRouteGrades(route)">
-            <app-grade [grade]="route.grade" [text]="route.difficulty" [showModifier]="true"></app-grade>
-            <div class="popover" *ngIf="activeGradesPopupId === route.id && !routeGradesLoading">
-              <!-- TODO move to separate component or make a directive out of this -->
-              <div class="popover-title">Ocene smeri {{ route.name }}</div>
-              <table>
-                <tbody>
-                  <tr *ngFor="let grade of routeGrades" [ngClass]="grade.includedInCalculation ? 'grade-included' : ''">
-                    <td>
-                      <app-grade class="grade" [grade]="grade.grade"></app-grade>
-                    </td>
-                    <td class="grade-author">
-                      <ng-container *ngIf="grade.isBase">Bazna ocena</ng-container>
-                      <ng-container *ngIf="!grade.isBase && grade.user">{{ grade.user.firstname + ' ' + grade.user.lastname
-                        }}</ng-container>
-                    </td>
-                    <td class="grade-date">{{ grade.created | amDateFormat:'D. M. Y' }}</td>
-                  </tr>
-                </tbody>
-              </table>
-              <div class="popover-arrow"></div>
+          <div class="route-numbers">
+            <div class="route-length">{{ route.length + ' m' }}</div>
+            <div class="route-grade" (mouseenter)="displayRouteGrades(route)" (mouseleave)="hideRouteGrades(route)">
+              <app-grade [grade]="route.grade" [text]="route.difficulty" [showModifier]="true"></app-grade>
+              <div class="popover" *ngIf="activeGradesPopupId === route.id && !routeGradesLoading">
+                <!-- TODO move to separate component or make a directive out of this -->
+                <div class="popover-title">Ocene smeri {{ route.name }}</div>
+                <table>
+                  <tbody>
+                    <tr *ngFor="let grade of routeGrades" [ngClass]="grade.includedInCalculation ? 'grade-included' : ''">
+                      <td>
+                        <app-grade class="grade" [grade]="grade.grade"></app-grade>
+                      </td>
+                      <td class="grade-author">
+                        <ng-container *ngIf="grade.isBase">Bazna ocena</ng-container>
+                        <ng-container *ngIf="!grade.isBase && grade.user">{{ grade.user.firstname + ' ' + grade.user.lastname
+                          }}</ng-container>
+                      </td>
+                      <td class="grade-date">{{ grade.created | amDateFormat:'D. M. Y' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="popover-arrow"></div>
+              </div>
             </div>
           </div>
         </div>

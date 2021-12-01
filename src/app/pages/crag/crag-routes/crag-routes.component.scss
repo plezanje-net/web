@@ -25,11 +25,6 @@
   justify-content: flex-start;
   align-items: center;
   text-align: left;
-
-  @media (max-width: $breakpoint-sm) {
-    flex-direction: column;
-    align-items: stretch;
-  }
 }
 
 .route-details {
@@ -37,20 +32,20 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  // TODO gap
 
   &.left {
     flex: 1 1 100%;
+
+    @media (max-width: $breakpoint-sm) {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
   }
 
   &.right {
     flex: 0 0 110px;
-
-    @media (max-width: $breakpoint-sm) {
-      flex: 1 1 100%;
-      white-space: nowrap;
-      justify-content: space-between;
-    }
   }
 }
 
@@ -63,6 +58,16 @@
 
 .route-name {
   flex: 1 1 100%;
+}
+
+.route-numbers {
+  display: flex;
+  flex: 0 0 160px;
+
+  @media (max-width: $breakpoint-sm) {
+    flex-direction: row;
+    flex: 1 1 auto;
+  }
 }
 
 .route-length {
@@ -111,8 +116,6 @@ h3 {
 
 .popover-container {
   position: relative;
-
-  // text-align: center;
 }
 .pitches {
   text-align: center;
