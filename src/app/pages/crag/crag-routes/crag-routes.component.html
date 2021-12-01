@@ -4,7 +4,7 @@
     <span>{{ sector.name != "" ? " - " + sector.name : "" }}</span>
   </h3>
   <div class="card">
-    <div fxLayout="row" fxLayoutAlign="start center" fxHide.lt-md class="row header" fxLayoutGap="14px">
+    <div class="row header route-row" fxLayoutGap="14px">
       <div class="route-checkbox"></div>
       <div class="route-details-container">
         <div class="route-details left" fxLayoutGap="14px">
@@ -17,12 +17,12 @@
         </div>
       </div>
     </div>
-    <div *ngFor="let route of sector.routes" fxLayout="row" fxLayoutAlign="start center" class="row" fxLayoutGap="14px">
+    <div *ngFor="let route of sector.routes" class="row route-row" fxLayoutGap="14px">
       <div class="route-checkbox">
         <mat-checkbox (change)="changeSelection(route)" [checked]="selectedRoutesIds.indexOf(route.id) > -1">
         </mat-checkbox>
       </div>
-      <div class="route-details-container" [ngClass.lt-sm]="{ 'column': true }">
+      <div class="route-details-container">
         <div class="route-details left" fxLayoutGap="14px">
           <div class="route-name">
             <a [routerLink]="[
@@ -60,7 +60,7 @@
             </div>
           </div>
         </div>
-        <div class="route-details right" fxLayoutGap="14px" [ngClass.lt-sm]="{ 'compact': true }">
+        <div class="route-details right" fxLayoutGap="14px">
           <div class="route-icons">
             <div *ngIf="route.pitches.length > 0" class="popover-container">
               <button mat-icon-button color="primary" (mouseenter)="displayRoutePitches(route)"
