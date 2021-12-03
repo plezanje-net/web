@@ -587,6 +587,7 @@ export type Query = {
   countryBySlug: Country;
   countries: Array<Country>;
   route: Route;
+  latestWarnings: Array<Comment>;
   search: SearchResults;
   latestImages: Array<Image>;
   myActivities: PaginatedActivities;
@@ -652,6 +653,11 @@ export type QueryCountriesArgs = {
 
 export type QueryRouteArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryLatestWarningsArgs = {
+  latest: Scalars['Int'];
 };
 
 
@@ -1514,6 +1520,41 @@ export type LatestTicksQuery = (
       { __typename?: 'User' }
       & Pick<User, 'fullName' | 'gender'>
     ) }
+  )> }
+);
+
+export type LatestWarningsQueryVariables = Exact<{
+  latest: Scalars['Int'];
+}>;
+
+
+export type LatestWarningsQuery = (
+  { __typename?: 'Query' }
+  & { latestWarnings: Array<(
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'content' | 'updated'>
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'fullName'>
+    )>, crag?: Maybe<(
+      { __typename?: 'Crag' }
+      & Pick<Crag, 'name' | 'slug'>
+      & { country: (
+        { __typename?: 'Country' }
+        & Pick<Country, 'slug'>
+      ) }
+    )>, route?: Maybe<(
+      { __typename?: 'Route' }
+      & Pick<Route, 'id' | 'name'>
+      & { crag: (
+        { __typename?: 'Crag' }
+        & Pick<Crag, 'name' | 'slug'>
+        & { country: (
+          { __typename?: 'Country' }
+          & Pick<Country, 'slug'>
+        ) }
+      ) }
+    )> }
   )> }
 );
 
@@ -2622,6 +2663,46 @@ export const LatestTicksDocument = gql`
       super(apollo);
     }
   }
+export const LatestWarningsDocument = gql`
+    query latestWarnings($latest: Int!) {
+  latestWarnings(latest: $latest) {
+    content
+    user {
+      fullName
+    }
+    updated
+    crag {
+      name
+      slug
+      country {
+        slug
+      }
+    }
+    route {
+      id
+      name
+      crag {
+        name
+        slug
+        country {
+          slug
+        }
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class LatestWarningsGQL extends Apollo.Query<LatestWarningsQuery, LatestWarningsQueryVariables> {
+    document = LatestWarningsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const PopularCragsDocument = gql`
     query PopularCrags($dateFrom: String, $top: Int) {
   popularCrags(dateFrom: $dateFrom, top: $top) {
@@ -2758,6 +2839,7 @@ export const namedOperations = {
     CragBySlug: 'CragBySlug',
     LatestImages: 'LatestImages',
     LatestTicks: 'LatestTicks',
+    latestWarnings: 'latestWarnings',
     PopularCrags: 'PopularCrags',
     Search: 'Search'
   },

@@ -1,0 +1,27 @@
+query latestWarnings($latest: Int!) {
+  latestWarnings(latest: $latest) {
+    content
+    user {
+      fullName
+    }
+    updated
+    crag {
+      name
+      slug
+      country {
+        slug
+      }
+    }
+    route {
+      id
+      name
+      crag {
+        name
+        slug
+        country {
+          slug
+        }
+      }
+    }
+  }
+}
