@@ -1,5 +1,5 @@
-query latestWarnings($latest: Int!) {
-  latestWarnings(latest: $latest) {
+query exposedWarnings {
+  exposedWarnings {
     content
     user {
       fullName

@@ -6,7 +6,9 @@
     <app-search></app-search>
   </div>
 
-  <app-latest-warnings (errorEvent)="handleError($event)"></app-latest-warnings>
+  <app-exposed-warnings
+    (errorEvent)="handleError($event)"
+  ></app-exposed-warnings>
   <app-popular-crags (errorEvent)="handleError($event)"></app-popular-crags>
   <app-latest-images (errorEvent)="handleError($event)"></app-latest-images>
   <app-latest-ticks (errorEvent)="handleError($event)"></app-latest-ticks>

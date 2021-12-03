@@ -1,18 +1,21 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DataError } from 'src/app/types/data-error';
-import { LatestWarningsGQL, LatestWarningsQuery } from 'src/generated/graphql';
+import {
+  ExposedWarningsGQL,
+  ExposedWarningsQuery,
+} from 'src/generated/graphql';
 import $ from 'jquery';
 import { LoadingSpinnerService } from '../loading-spinner.service';
 
 @Component({
-  selector: 'app-latest-warnings',
-  templateUrl: './latest-warnings.component.html',
-  styleUrls: ['./latest-warnings.component.scss'],
+  selector: 'app-exposed-warnings',
+  templateUrl: './exposed-warnings.component.html',
+  styleUrls: ['./exposed-warnings.component.scss'],
 })
-export class LatestWarningsComponent implements OnInit {
+export class ExposedWarningsComponent implements OnInit {
   @Output() errorEvent = new EventEmitter<DataError>();
 
-  warnings: LatestWarningsQuery['latestWarnings'];
+  warnings: ExposedWarningsQuery['exposedWarnings'];
 
   slideConfig = {
     slidesToShow: 2,
@@ -36,7 +39,7 @@ export class LatestWarningsComponent implements OnInit {
   };
 
   constructor(
-    private latestWarningsGQL: LatestWarningsGQL,
+    private exposedWarnings: ExposedWarningsGQL,
     private loadingSpinnerService: LoadingSpinnerService
   ) {
     jQuery(window).on('load', () => {
@@ -50,12 +53,12 @@ export class LatestWarningsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadingSpinnerService.pushLoader();
-    this.latestWarningsGQL
-      .fetch({ latest: 10 }) // TODO: see todo below... all 'active'
+    this.exposedWarnings
+      .fetch()
       .toPromise()
       .then((result) => {
         if (!result.errors) {
-          this.warnings = result.data.latestWarnings;
+          this.warnings = result.data.exposedWarnings;
         } else {
           this.queryError();
         }
@@ -102,5 +105,3 @@ export class LatestWarningsComponent implements OnInit {
     }, 0);
   }
 }
-
-// TODO: get only active eg. not expired warnings. add expiration field to BE first.
