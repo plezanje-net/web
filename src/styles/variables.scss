@@ -1,0 +1,6 @@
+// These breakpoitns are used by flex-layout and should be used where we want to write our own CSS instead of using flex-layout.
+// https://github.com/angular/flex-layout/wiki/Responsive-API#mediaqueries-and-aliases
+$breakpoint-sm: 599px;
+$breakpoint-md: 959px;
+$breakpoint-lg: 1279px;
+$breakpoint-xl: 1919px;

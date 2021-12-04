@@ -1,27 +1,109 @@
 @import "~@angular/material/theming";
 @import "../../../../styles/colors.scss";
+@import "../../../../styles/variables.scss";
 
-.row {
-  // cursor: pointer;
+.route-row {
+  display: flex;
+  flex-direction: row;
   padding: 6px 2px 6px 10px;
-
-  .icons {
-    white-space: nowrap;
-    text-align: center;
-    margin: -4px 0;
-
-    .mat-icon-button {
-      color: #0000008a;
-      height: 37px;
-      width: 37px;
-    }
-  }
+  // TODO gap
 
   &.header {
     cursor: default;
     padding-top: 12px;
+
+    @media (max-width: 959px) {
+      display: none;
+    }
   }
 }
+
+.route-details-container {
+  flex: 1 1 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: left;
+}
+
+.route-details {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+
+  &.left {
+    flex: 1 1 100%;
+
+    @media (max-width: $breakpoint-sm) {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+  }
+
+  &.right {
+    flex: 0 0 110px;
+  }
+}
+
+.route-checkbox {
+  flex: 0 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.route-name {
+  flex: 1 1 100%;
+}
+
+.route-numbers {
+  display: flex;
+  flex: 0 0 160px;
+
+  @media (max-width: $breakpoint-sm) {
+    flex-direction: row;
+    flex: 1 1 auto;
+  }
+}
+
+.route-length {
+  flex: 0 0 80px;
+}
+
+.route-grade {
+  flex: 0 0 80px;
+  position: relative;
+}
+
+.route-pitches {
+  flex: 0 0 80px;
+}
+
+.route-icons {
+  flex: 0 0 110px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  white-space: nowrap;
+  text-align: right;
+  margin: -4px 0;
+
+  .mat-button {
+    color: #0000008a;
+  }
+
+  .mat-icon-button {
+    color: #0000008a;
+    height: 37px;
+    width: 37px;
+  }
+}
+
 
 h3 {
   padding-top: 28px;
@@ -34,8 +116,6 @@ h3 {
 
 .popover-container {
   position: relative;
-
-  // text-align: center;
 }
 .pitches {
   text-align: center;
