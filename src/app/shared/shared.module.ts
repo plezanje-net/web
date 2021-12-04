@@ -15,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatSelectModule } from '@angular/material/select';
 import { OrientationPipe } from './pipes/orientation.pipe';
+import { CustomBreakpointsProvider } from './custom-breakpoints';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { OrientationPipe } from './pipes/orientation.pipe';
     MatFormFieldModule,
     NgxMatSelectSearchModule,
   ],
+  providers: [CustomBreakpointsProvider],
   exports: [
     EditorComponent,
     SnackBarButtonsComponent,
