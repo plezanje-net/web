@@ -11,6 +11,11 @@ query Route($routeId: String!) {
       id
       name
     }
+    pitches {
+      difficulty
+      number
+      height
+    }
     grades {
       grade
       user {

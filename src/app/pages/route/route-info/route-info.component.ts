@@ -19,7 +19,6 @@ export class RouteInfoComponent implements OnInit {
   ngOnInit(): void {
     if (this.route) {
       this.grades = this.route.grades.slice();
-      console.log(this.grades);
       this.grades.sort((a, b) => a.grade - b.grade);
 
       // this.gradesDisribution.findIndex((distribution) => distribution.label === grade.grade) > -1

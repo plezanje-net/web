@@ -33,6 +33,7 @@ export class CragRoutesComponent implements OnInit {
   activeCommentsPopupId: string | null = null;
   routeCommentsLoading: boolean;
   routeComments: Record<string, string | any>[];
+  activePitchesPopupId: string | null = null;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -131,6 +132,7 @@ export class CragRoutesComponent implements OnInit {
   displayRouteGrades(route: Route): void {
     this.activeGradesPopupId = route.id;
     this.activeCommentsPopupId = null;
+    this.activePitchesPopupId = null;
     this.routeGradesLoading = true;
 
     this.routeGradesGQL
@@ -161,6 +163,7 @@ export class CragRoutesComponent implements OnInit {
   displayRouteComments(route: Route): void {
     this.activeCommentsPopupId = route.id;
     this.activeGradesPopupId = null;
+    this.activePitchesPopupId = null;
     this.routeCommentsLoading = true;
 
     this.routeCommentsGQL
@@ -178,6 +181,16 @@ export class CragRoutesComponent implements OnInit {
 
   hideRouteComments(route: Route): void {
     this.activeCommentsPopupId = null;
+  }
+
+  displayRoutePitches(route: Route): void {
+    this.activePitchesPopupId = route.id;
+    this.activeCommentsPopupId = null;
+    this.activeGradesPopupId = null;
+  }
+
+  hideRoutePitches(route: Route): void {
+    this.activePitchesPopupId = null;
   }
 
   routeCommentsQuerySuccess(queryData: RouteCommentsQuery): void {

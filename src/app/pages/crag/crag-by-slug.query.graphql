@@ -29,6 +29,11 @@ query CragBySlug($crag: String!) {
         comments {
           id
         }
+        pitches {
+          difficulty
+          number
+          height
+        }
       }
     }
     comments {

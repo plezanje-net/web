@@ -963,7 +963,7 @@ export type RouteQueryVariables = Exact<{
 }>;
 
 
-export type RouteQuery = { __typename?: 'Query', route: { __typename?: 'Route', id: string, difficulty: string, name: string, grade?: number | null | undefined, length: string, author?: string | null | undefined, status: string, sector: { __typename?: 'Sector', id: string, name: string, crag: { __typename?: 'Crag', name: string, slug: string, country: { __typename?: 'Country', slug: string, name: string } } }, grades: Array<{ __typename?: 'Grade', grade: number, created: any, updated: any, isBase: boolean, includedInCalculation: boolean, user?: { __typename?: 'User', firstname: string, lastname: string } | null | undefined }>, comments: Array<{ __typename?: 'Comment', type: string, content?: string | null | undefined, created: any, updated: any, user?: { __typename?: 'User', fullName: string } | null | undefined }>, images: Array<{ __typename?: 'Image', path: string }> } };
+export type RouteQuery = { __typename?: 'Query', route: { __typename?: 'Route', id: string, difficulty: string, name: string, grade?: number | null | undefined, length: string, author?: string | null | undefined, status: string, sector: { __typename?: 'Sector', id: string, name: string, crag: { __typename?: 'Crag', name: string, slug: string, country: { __typename?: 'Country', slug: string, name: string } } }, pitches: Array<{ __typename?: 'Pitch', difficulty: string, number: number, height: number }>, grades: Array<{ __typename?: 'Grade', grade: number, created: any, updated: any, isBase: boolean, includedInCalculation: boolean, user?: { __typename?: 'User', firstname: string, lastname: string } | null | undefined }>, comments: Array<{ __typename?: 'Comment', type: string, content?: string | null | undefined, created: any, updated: any, user?: { __typename?: 'User', fullName: string } | null | undefined }>, images: Array<{ __typename?: 'Image', path: string }> } };
 
 export type ManagementCragFormGetCountriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1044,7 +1044,7 @@ export type CragBySlugQueryVariables = Exact<{
 }>;
 
 
-export type CragBySlugQuery = { __typename?: 'Query', cragBySlug: { __typename?: 'Crag', id: string, slug: string, name: string, orientation?: string | null | undefined, lat?: number | null | undefined, lon?: number | null | undefined, access?: string | null | undefined, description?: string | null | undefined, area?: { __typename?: 'Area', id: string, name: string } | null | undefined, country: { __typename?: 'Country', id: string, name: string, slug: string }, sectors: Array<{ __typename?: 'Sector', id: string, name: string, label: string, routes: Array<{ __typename?: 'Route', id: string, name: string, grade?: number | null | undefined, length: string, comments: Array<{ __typename?: 'Comment', id: string }> }> }>, comments: Array<{ __typename?: 'Comment', id: string, content?: string | null | undefined, created: any, updated: any, type: string, user?: { __typename?: 'User', id: string, fullName: string } | null | undefined }>, images: Array<{ __typename?: 'Image', id: string, title?: string | null | undefined, path: string }> } };
+export type CragBySlugQuery = { __typename?: 'Query', cragBySlug: { __typename?: 'Crag', id: string, slug: string, name: string, orientation?: string | null | undefined, lat?: number | null | undefined, lon?: number | null | undefined, access?: string | null | undefined, description?: string | null | undefined, area?: { __typename?: 'Area', id: string, name: string } | null | undefined, country: { __typename?: 'Country', id: string, name: string, slug: string }, sectors: Array<{ __typename?: 'Sector', id: string, name: string, label: string, routes: Array<{ __typename?: 'Route', id: string, name: string, grade?: number | null | undefined, length: string, comments: Array<{ __typename?: 'Comment', id: string }>, pitches: Array<{ __typename?: 'Pitch', difficulty: string, number: number, height: number }> }> }>, comments: Array<{ __typename?: 'Comment', id: string, content?: string | null | undefined, created: any, updated: any, type: string, user?: { __typename?: 'User', id: string, fullName: string } | null | undefined }>, images: Array<{ __typename?: 'Image', id: string, title?: string | null | undefined, path: string }> } };
 
 export type LatestImagesQueryVariables = Exact<{
   latest: Scalars['Int'];
@@ -1601,6 +1601,11 @@ export const RouteDocument = gql`
       id
       name
     }
+    pitches {
+      difficulty
+      number
+      height
+    }
     grades {
       grade
       user {
@@ -1970,6 +1975,11 @@ export const CragBySlugDocument = gql`
         length
         comments {
           id
+        }
+        pitches {
+          difficulty
+          number
+          height
         }
       }
     }
