@@ -34,7 +34,7 @@
     <nav mat-tab-nav-bar>
       <a
         mat-tab-link
-        [routerLink]="['/moj-profil/moji-klubi', club.id, 'clani']"
+        [routerLink]="['/moj-profil/moji-klubi', club.slug, 'clani']"
         routerLinkActive
         #rlaM="routerLinkActive"
         [active]="rlaM.isActive"
@@ -42,7 +42,7 @@
       >
       <a
         mat-tab-link
-        [routerLink]="['/moj-profil/moji-klubi', club.id, 'vzponi']"
+        [routerLink]="['/moj-profil/moji-klubi', club.slug, 'vzponi']"
         routerLinkActive
         #rlaAr="routerLinkActive"
         [active]="rlaAr.isActive"

@@ -13,12 +13,11 @@ import {
   ActivityFiltersRouteGQL,
   ActivityRoute,
   UserFullNameGQL,
-  ActivityRoutesByClubGQL,
-  ActivityRoutesByClubQuery,
+  ActivityRoutesByClubSlugGQL,
+  ActivityRoutesByClubSlugQuery,
 } from 'src/generated/graphql';
 import { ClubService } from '../club.service';
 
-// TODO: should have nice url with no id, but slug? FE/BE
 // TODO: keep scroll position when paginating? what is the expected behaviour?
 
 @Component({
@@ -32,8 +31,10 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
 
   activityRoutesQuery: QueryRef<any>;
 
-  activityRoutes: ActivityRoutesByClubQuery['activityRoutesByClub']['items'];
-  pagination: ActivityRoutesByClubQuery['activityRoutesByClub']['meta'];
+  // activityRoutes: ActivityRoutesByClubQuery['activityRoutesByClub']['items'];
+  // pagination: ActivityRoutesByClubQuery['activityRoutesByClub']['meta'];
+  activityRoutes: ActivityRoutesByClubSlugQuery['activityRoutesByClubSlug']['items'];
+  pagination: ActivityRoutesByClubSlugQuery['activityRoutesByClubSlug']['meta'];
 
   filteredTable = new FilteredTable(
     [
@@ -86,13 +87,13 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
     private router: Router,
     private activityFiltersCragGQL: ActivityFiltersCragGQL,
     private activityFiltersRouteGQL: ActivityFiltersRouteGQL,
-    private activityRoutesByClubGQL: ActivityRoutesByClubGQL,
+    private activityRoutesByClubSlugGQL: ActivityRoutesByClubSlugGQL,
     private userFullNameGQL: UserFullNameGQL,
     private clubService: ClubService
   ) {}
 
   ngOnInit(): void {
-    const clubId = this.activatedRoute.snapshot.parent.params.club;
+    const clubSlug = this.activatedRoute.snapshot.parent.params.club;
 
     this.memberAddedSubscription = this.clubService.memberAdded$.subscribe(
       () => {
@@ -104,7 +105,7 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
       (ftParams) => {
         return this.router.navigate([
           '/moj-profil/moji-klubi',
-          clubId,
+          clubSlug,
           'vzponi',
           ftParams,
         ]);
@@ -125,8 +126,8 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
 
           const queryParams = this.filteredTable.queryParams;
 
-          this.activityRoutesQuery = this.activityRoutesByClubGQL.watch({
-            clubId: clubId,
+          this.activityRoutesQuery = this.activityRoutesByClubSlugGQL.watch({
+            clubSlug: clubSlug,
             input: { ...queryParams, publish: this.ALLOWED_PUBLISH_TYPES },
           });
 
@@ -204,8 +205,8 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
   }
 
   querySuccess(data: any) {
-    this.activityRoutes = data.activityRoutesByClub.items;
-    this.pagination = data.activityRoutesByClub.meta;
+    this.activityRoutes = data.activityRoutesByClubSlug.items;
+    this.pagination = data.activityRoutesByClubSlug.meta;
     this.applyRelationFilterDisplayValues();
   }
 

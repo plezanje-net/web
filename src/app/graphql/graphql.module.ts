@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { APOLLO_OPTIONS } from 'apollo-angular';
+import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
 import { ApolloClientOptions, InMemoryCache } from '@apollo/client/core';
 import { HttpLink } from 'apollo-angular/http';
 import { environment } from 'src/environments/environment';
@@ -14,16 +14,6 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
         Crag: {
           fields: {
             comments: {
-              merge(existing, incoming) {
-                return incoming;
-              },
-            },
-            warnings: {
-              merge(existing, incoming) {
-                return incoming;
-              },
-            },
-            conditions: {
               merge(existing, incoming) {
                 return incoming;
               },
@@ -62,6 +52,8 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
 }
 
 @NgModule({
+  imports: [ApolloModule],
+  exports: [ApolloModule],
   providers: [
     {
       provide: APOLLO_OPTIONS,
@@ -70,4 +62,4 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
     },
   ],
 })
-export class GraphQLModule { }
+export class GraphQLModule {}

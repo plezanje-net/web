@@ -164,17 +164,17 @@ export class CragComponent implements OnInit {
 
   addComment(type: string) {
     this.authService.guardedAction({}).then((success) => {
-      if(success) {
+      if (success) {
         this.dialog
-        .open(CommentFormComponent, {
-          data: {
-            crag: this.crag,
-            type: type,
-          },
-          autoFocus: false,
-        })
-        .afterClosed()
-        .subscribe(() => {});
+          .open(CommentFormComponent, {
+            data: {
+              crag: this.crag,
+              type: type,
+            },
+            autoFocus: false,
+          })
+          .afterClosed()
+          .subscribe(() => {});
       }
     });
   }

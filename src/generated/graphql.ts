@@ -2,6 +2,7 @@ import { gql } from 'apollo-angular';
 import { Injectable } from '@angular/core';
 import * as Apollo from 'apollo-angular';
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -16,88 +17,87 @@ export type Scalars = {
   DateTime: any;
 };
 
-
-
 export type Activity = {
   __typename?: 'Activity';
-  id: Scalars['String'];
   crag?: Maybe<Crag>;
-  iceFall?: Maybe<IceFall>;
-  peak?: Maybe<Peak>;
-  type: Scalars['String'];
-  name: Scalars['String'];
   date: Scalars['DateTime'];
   duration?: Maybe<Scalars['Int']>;
+  iceFall?: Maybe<IceFall>;
+  id: Scalars['String'];
+  name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   partners?: Maybe<Scalars['String']>;
+  peak?: Maybe<Peak>;
   routes: Array<ActivityRoute>;
+  type: Scalars['String'];
   user: User;
 };
 
 export type ActivityRoute = {
   __typename?: 'ActivityRoute';
-  id: Scalars['String'];
   activity?: Maybe<Activity>;
-  route: Route;
   ascentType: Scalars['String'];
-  name: Scalars['String'];
+  date?: Maybe<Scalars['DateTime']>;
   difficulty?: Maybe<Scalars['String']>;
   grade?: Maybe<Scalars['Float']>;
-  publish: Scalars['String'];
-  date?: Maybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   partner?: Maybe<Scalars['String']>;
-  user: User;
+  publish: Scalars['String'];
+  route: Route;
   stars?: Maybe<Scalars['Float']>;
+  user: User;
 };
 
 export type Area = {
   __typename?: 'Area';
-  id: Scalars['String'];
-  name: Scalars['String'];
-  crags: Array<Crag>;
-  peaks: Array<Peak>;
-  iceFalls: Array<IceFall>;
   country: Country;
+  crags: Array<Crag>;
+  iceFalls: Array<IceFall>;
+  id: Scalars['String'];
   images: Array<Image>;
+  name: Scalars['String'];
   nrCrags: Scalars['Int'];
+  peaks: Array<Peak>;
 };
 
 export type Club = {
   __typename?: 'Club';
-  id: Scalars['String'];
-  name: Scalars['String'];
   created: Scalars['DateTime'];
-  updated: Scalars['DateTime'];
+  id: Scalars['String'];
   legacy: Scalars['String'];
   members: Array<ClubMember>;
+  name: Scalars['String'];
   nrMembers: Scalars['Float'];
+  slug: Scalars['String'];
+  updated: Scalars['DateTime'];
 };
 
 export type ClubMember = {
   __typename?: 'ClubMember';
-  id: Scalars['String'];
   admin: Scalars['Boolean'];
-  created: Scalars['DateTime'];
-  updated: Scalars['DateTime'];
-  legacy: Scalars['String'];
-  user: User;
   club: Club;
+  created: Scalars['DateTime'];
+  id: Scalars['String'];
+  legacy: Scalars['String'];
+  updated: Scalars['DateTime'];
+  user: User;
 };
 
 export type Comment = {
   __typename?: 'Comment';
-  id: Scalars['String'];
-  type: Scalars['String'];
-  user?: Maybe<User>;
   content?: Maybe<Scalars['String']>;
-  created: Scalars['DateTime'];
-  updated: Scalars['DateTime'];
   crag?: Maybe<Crag>;
-  route?: Maybe<Route>;
+  created: Scalars['DateTime'];
   iceFall: IceFall;
-  peak: Peak;
+  id: Scalars['String'];
   images: Array<Image>;
+  peak: Peak;
+  route?: Maybe<Route>;
+  type: Scalars['String'];
+  updated: Scalars['DateTime'];
+  user?: Maybe<User>;
 };
 
 export type ConfirmInput = {
@@ -107,77 +107,75 @@ export type ConfirmInput = {
 
 export type Country = {
   __typename?: 'Country';
-  id: Scalars['String'];
-  code: Scalars['String'];
-  name: Scalars['String'];
-  slug: Scalars['String'];
-  crags: Array<Crag>;
   areas: Array<Area>;
-  peaks: Array<Peak>;
+  code: Scalars['String'];
+  crags: Array<Crag>;
   iceFalls: Array<IceFall>;
+  id: Scalars['String'];
+  name: Scalars['String'];
   nrCrags: Scalars['Int'];
+  peaks: Array<Peak>;
+  slug: Scalars['String'];
 };
 
 
 export type CountryCragsArgs = {
-  input?: Maybe<FindCragsInput>;
+  input?: InputMaybe<FindCragsInput>;
 };
 
 export type Crag = {
   __typename?: 'Crag';
+  access?: Maybe<Scalars['String']>;
+  activities: Array<Activity>;
+  area?: Maybe<Area>;
+  comments: Array<Comment>;
+  country: Country;
+  description?: Maybe<Scalars['String']>;
   id: Scalars['String'];
-  name: Scalars['String'];
-  slug: Scalars['String'];
-  status: Scalars['String'];
+  images: Array<Image>;
   lat?: Maybe<Scalars['Float']>;
   lon?: Maybe<Scalars['Float']>;
-  orientation?: Maybe<Scalars['String']>;
-  access?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  area?: Maybe<Area>;
-  peak?: Maybe<Peak>;
-  country: Country;
-  sectors: Array<Sector>;
-  routes: Array<Route>;
-  nrRoutes: Scalars['Int'];
-  minGrade?: Maybe<Scalars['String']>;
   maxGrade?: Maybe<Scalars['String']>;
-  comments: Array<Comment>;
-  images: Array<Image>;
-  activities: Array<Activity>;
-  warnings: Array<Comment>;
-  conditions: Array<Comment>;
+  minGrade?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  nrRoutes: Scalars['Int'];
+  orientation?: Maybe<Scalars['String']>;
+  peak?: Maybe<Peak>;
+  routes: Array<Route>;
+  sectors: Array<Sector>;
+  slug: Scalars['String'];
+  status: Scalars['String'];
 };
 
 export type CreateActivityInput = {
+  cragId?: InputMaybe<Scalars['String']>;
   date: Scalars['DateTime'];
+  duration?: InputMaybe<Scalars['Int']>;
+  iceFallId?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
+  notes?: InputMaybe<Scalars['String']>;
+  partners?: InputMaybe<Scalars['String']>;
+  peakId?: InputMaybe<Scalars['String']>;
   type: Scalars['String'];
-  duration?: Maybe<Scalars['Int']>;
-  notes?: Maybe<Scalars['String']>;
-  partners?: Maybe<Scalars['String']>;
-  iceFallId?: Maybe<Scalars['String']>;
-  cragId?: Maybe<Scalars['String']>;
-  peakId?: Maybe<Scalars['String']>;
 };
 
 export type CreateActivityRouteInput = {
-  name: Scalars['String'];
   ascentType: Scalars['String'];
-  publish: Scalars['String'];
   date: Scalars['DateTime'];
-  notes?: Maybe<Scalars['String']>;
-  partner?: Maybe<Scalars['String']>;
-  routeId?: Maybe<Scalars['String']>;
-  position?: Maybe<Scalars['Int']>;
-  grade?: Maybe<Scalars['Float']>;
-  difficulty?: Maybe<Scalars['String']>;
-  stars?: Maybe<Scalars['Float']>;
+  difficulty?: InputMaybe<Scalars['String']>;
+  grade?: InputMaybe<Scalars['Float']>;
+  name: Scalars['String'];
+  notes?: InputMaybe<Scalars['String']>;
+  partner?: InputMaybe<Scalars['String']>;
+  position?: InputMaybe<Scalars['Int']>;
+  publish: Scalars['String'];
+  routeId?: InputMaybe<Scalars['String']>;
+  stars?: InputMaybe<Scalars['Float']>;
 };
 
 export type CreateAreaInput = {
-  name: Scalars['String'];
   countryId: Scalars['String'];
+  name: Scalars['String'];
 };
 
 export type CreateClubInput = {
@@ -186,23 +184,23 @@ export type CreateClubInput = {
 
 export type CreateClubMemberByEmailInput = {
   admin: Scalars['Boolean'];
-  userEmail: Scalars['String'];
   clubId: Scalars['String'];
+  userEmail: Scalars['String'];
 };
 
 export type CreateClubMemberInput = {
   admin: Scalars['Boolean'];
-  userId: Scalars['String'];
   clubId: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 export type CreateCommentInput = {
-  type: Scalars['String'];
   content: Scalars['String'];
-  iceFallId?: Maybe<Scalars['String']>;
-  routeId?: Maybe<Scalars['String']>;
-  cragId?: Maybe<Scalars['String']>;
-  peakId?: Maybe<Scalars['String']>;
+  cragId?: InputMaybe<Scalars['String']>;
+  iceFallId?: InputMaybe<Scalars['String']>;
+  peakId?: InputMaybe<Scalars['String']>;
+  routeId?: InputMaybe<Scalars['String']>;
+  type: Scalars['String'];
 };
 
 export type CreateCountryInput = {
@@ -212,113 +210,112 @@ export type CreateCountryInput = {
 };
 
 export type CreateCragInput = {
+  access?: InputMaybe<Scalars['String']>;
+  areaId?: InputMaybe<Scalars['String']>;
+  countryId: Scalars['String'];
+  description?: InputMaybe<Scalars['String']>;
+  lat?: InputMaybe<Scalars['Float']>;
+  lon?: InputMaybe<Scalars['Float']>;
   name: Scalars['String'];
+  orientation?: InputMaybe<Scalars['String']>;
   slug: Scalars['String'];
   status: Scalars['String'];
-  lat?: Maybe<Scalars['Float']>;
-  lon?: Maybe<Scalars['Float']>;
-  countryId: Scalars['String'];
-  areaId?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  access?: Maybe<Scalars['String']>;
-  orientation?: Maybe<Scalars['String']>;
 };
 
 export type CreateRouteInput = {
-  name: Scalars['String'];
-  length: Scalars['String'];
   author: Scalars['String'];
+  length: Scalars['String'];
+  name: Scalars['String'];
   position: Scalars['Float'];
-  status: Scalars['String'];
   sectorId: Scalars['String'];
+  status: Scalars['String'];
 };
 
 export type CreateSectorInput = {
-  name: Scalars['String'];
+  cragId: Scalars['String'];
   label: Scalars['String'];
+  name: Scalars['String'];
   position: Scalars['Float'];
   status: Scalars['String'];
-  cragId: Scalars['String'];
 };
 
-
 export type FindActivitiesInput = {
-  userId?: Maybe<Scalars['String']>;
-  cragId?: Maybe<Scalars['String']>;
-  type?: Maybe<Array<Scalars['String']>>;
-  dateFrom?: Maybe<Scalars['DateTime']>;
-  dateTo?: Maybe<Scalars['DateTime']>;
-  orderBy?: Maybe<OrderByInput>;
-  pageNumber?: Maybe<Scalars['Int']>;
-  pageSize?: Maybe<Scalars['Int']>;
+  cragId?: InputMaybe<Scalars['String']>;
+  dateFrom?: InputMaybe<Scalars['DateTime']>;
+  dateTo?: InputMaybe<Scalars['DateTime']>;
+  orderBy?: InputMaybe<OrderByInput>;
+  pageNumber?: InputMaybe<Scalars['Int']>;
+  pageSize?: InputMaybe<Scalars['Int']>;
+  type?: InputMaybe<Array<Scalars['String']>>;
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 export type FindActivityRoutesInput = {
-  userId?: Maybe<Scalars['String']>;
-  cragId?: Maybe<Scalars['String']>;
-  routeId?: Maybe<Scalars['String']>;
-  dateFrom?: Maybe<Scalars['DateTime']>;
-  dateTo?: Maybe<Scalars['DateTime']>;
-  ascentType?: Maybe<Array<Scalars['String']>>;
-  publish?: Maybe<Array<Scalars['String']>>;
-  orderBy?: Maybe<OrderByInput>;
-  pageNumber?: Maybe<Scalars['Int']>;
-  pageSize?: Maybe<Scalars['Int']>;
-  clubId?: Maybe<Scalars['String']>;
+  ascentType?: InputMaybe<Array<Scalars['String']>>;
+  clubId?: InputMaybe<Scalars['String']>;
+  cragId?: InputMaybe<Scalars['String']>;
+  dateFrom?: InputMaybe<Scalars['DateTime']>;
+  dateTo?: InputMaybe<Scalars['DateTime']>;
+  orderBy?: InputMaybe<OrderByInput>;
+  pageNumber?: InputMaybe<Scalars['Int']>;
+  pageSize?: InputMaybe<Scalars['Int']>;
+  publish?: InputMaybe<Array<Scalars['String']>>;
+  routeId?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 export type FindCountriesInput = {
-  hasCrags?: Maybe<Scalars['Boolean']>;
+  hasCrags?: InputMaybe<Scalars['Boolean']>;
   orderBy: OrderByInput;
 };
 
 export type FindCragsInput = {
-  country?: Maybe<Scalars['String']>;
-  area?: Maybe<Scalars['String']>;
-  minStatus?: Maybe<Scalars['String']>;
-  routeType?: Maybe<Scalars['String']>;
+  area?: InputMaybe<Scalars['String']>;
+  country?: InputMaybe<Scalars['String']>;
+  minStatus?: InputMaybe<Scalars['String']>;
+  routeType?: InputMaybe<Scalars['String']>;
 };
 
 export type Grade = {
   __typename?: 'Grade';
-  id: Scalars['String'];
-  grade: Scalars['Float'];
-  user?: Maybe<User>;
   created: Scalars['DateTime'];
-  updated: Scalars['DateTime'];
-  route: Route;
+  grade: Scalars['Float'];
+  id: Scalars['String'];
   includedInCalculation: Scalars['Boolean'];
   isBase: Scalars['Boolean'];
+  route: Route;
+  updated: Scalars['DateTime'];
+  user?: Maybe<User>;
 };
 
 export type IceFall = {
   __typename?: 'IceFall';
-  id: Scalars['String'];
-  name: Scalars['String'];
-  difficulty: Scalars['String'];
-  height: Scalars['Float'];
   access?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  country: Country;
   area?: Maybe<Area>;
   comments: Array<Comment>;
+  country: Country;
+  description?: Maybe<Scalars['String']>;
+  difficulty: Scalars['String'];
+  height: Scalars['Float'];
+  id: Scalars['String'];
   images: Array<Image>;
+  name: Scalars['String'];
 };
 
 export type Image = {
   __typename?: 'Image';
-  id: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  path: Scalars['String'];
-  extension: Scalars['String'];
-  user?: Maybe<User>;
   area?: Maybe<Area>;
-  crag?: Maybe<Crag>;
-  route?: Maybe<Route>;
-  iceFall?: Maybe<IceFall>;
   comment?: Maybe<Comment>;
+  crag?: Maybe<Crag>;
+  description?: Maybe<Scalars['String']>;
+  extension: Scalars['String'];
+  iceFall?: Maybe<IceFall>;
+  id: Scalars['String'];
+  path: Scalars['String'];
   peak?: Maybe<Peak>;
+  route?: Maybe<Route>;
+  title?: Maybe<Scalars['String']>;
+  user?: Maybe<User>;
 };
 
 export type LoginInput = {
@@ -328,131 +325,36 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createCountry: Country;
-  updateCountry: Country;
-  deleteCountry: Scalars['Boolean'];
-  createCrag: Crag;
-  updateCrag: Crag;
-  deleteCrag: Scalars['Boolean'];
-  createSector: Sector;
-  updateSector: Sector;
-  deleteSector: Scalars['Boolean'];
-  createRoute: Route;
-  updateRoute: Route;
-  deleteRoute: Scalars['Boolean'];
-  createArea: Area;
-  updateArea: Area;
-  deleteArea: Scalars['Boolean'];
-  createComment: Comment;
-  updateComment: Comment;
-  deleteComment: Scalars['Boolean'];
-  register: Scalars['Boolean'];
   confirm: Scalars['Boolean'];
-  recover: Scalars['Boolean'];
-  setPassword: Scalars['Boolean'];
-  login: TokenResponse;
+  createActivity: Activity;
+  createArea: Area;
   createClub: Club;
-  updateClub: Club;
-  deleteClub: Scalars['Boolean'];
   createClubMember: ClubMember;
   createClubMemberByEmail: ClubMember;
+  createComment: Comment;
+  createCountry: Country;
+  createCrag: Crag;
+  createRoute: Route;
+  createSector: Sector;
+  deleteArea: Scalars['Boolean'];
+  deleteClub: Scalars['Boolean'];
   deleteClubMember: Scalars['Boolean'];
-  createActivity: Activity;
-};
-
-
-export type MutationCreateCountryArgs = {
-  input: CreateCountryInput;
-};
-
-
-export type MutationUpdateCountryArgs = {
-  input: UpdateCountryInput;
-};
-
-
-export type MutationDeleteCountryArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationCreateCragArgs = {
-  input: CreateCragInput;
-};
-
-
-export type MutationUpdateCragArgs = {
-  input: UpdateCragInput;
-};
-
-
-export type MutationDeleteCragArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationCreateSectorArgs = {
-  input: CreateSectorInput;
-};
-
-
-export type MutationUpdateSectorArgs = {
-  input: UpdateSectorInput;
-};
-
-
-export type MutationDeleteSectorArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationCreateRouteArgs = {
-  input: CreateRouteInput;
-};
-
-
-export type MutationUpdateRouteArgs = {
-  input: UpdateRouteInput;
-};
-
-
-export type MutationDeleteRouteArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationCreateAreaArgs = {
-  input: CreateAreaInput;
-};
-
-
-export type MutationUpdateAreaArgs = {
-  input: UpdateAreaInput;
-};
-
-
-export type MutationDeleteAreaArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationCreateCommentArgs = {
-  input: CreateCommentInput;
-};
-
-
-export type MutationUpdateCommentArgs = {
-  input: UpdateCommentInput;
-};
-
-
-export type MutationDeleteCommentArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationRegisterArgs = {
-  input: RegisterInput;
+  deleteComment: Scalars['Boolean'];
+  deleteCountry: Scalars['Boolean'];
+  deleteCrag: Scalars['Boolean'];
+  deleteRoute: Scalars['Boolean'];
+  deleteSector: Scalars['Boolean'];
+  login: TokenResponse;
+  recover: Scalars['Boolean'];
+  register: Scalars['Boolean'];
+  setPassword: Scalars['Boolean'];
+  updateArea: Area;
+  updateClub: Club;
+  updateComment: Comment;
+  updateCountry: Country;
+  updateCrag: Crag;
+  updateRoute: Route;
+  updateSector: Sector;
 };
 
 
@@ -461,33 +363,19 @@ export type MutationConfirmArgs = {
 };
 
 
-export type MutationRecoverArgs = {
-  email: Scalars['String'];
+export type MutationCreateActivityArgs = {
+  input: CreateActivityInput;
+  routes: Array<CreateActivityRouteInput>;
 };
 
 
-export type MutationSetPasswordArgs = {
-  input: PasswordInput;
-};
-
-
-export type MutationLoginArgs = {
-  input: LoginInput;
+export type MutationCreateAreaArgs = {
+  input: CreateAreaInput;
 };
 
 
 export type MutationCreateClubArgs = {
   createClubInput: CreateClubInput;
-};
-
-
-export type MutationUpdateClubArgs = {
-  updateClubInput: UpdateClubInput;
-};
-
-
-export type MutationDeleteClubArgs = {
-  id: Scalars['String'];
 };
 
 
@@ -501,19 +389,128 @@ export type MutationCreateClubMemberByEmailArgs = {
 };
 
 
+export type MutationCreateCommentArgs = {
+  input: CreateCommentInput;
+};
+
+
+export type MutationCreateCountryArgs = {
+  input: CreateCountryInput;
+};
+
+
+export type MutationCreateCragArgs = {
+  input: CreateCragInput;
+};
+
+
+export type MutationCreateRouteArgs = {
+  input: CreateRouteInput;
+};
+
+
+export type MutationCreateSectorArgs = {
+  input: CreateSectorInput;
+};
+
+
+export type MutationDeleteAreaArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteClubArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteClubMemberArgs = {
   id: Scalars['String'];
 };
 
 
-export type MutationCreateActivityArgs = {
-  routes: Array<CreateActivityRouteInput>;
-  input: CreateActivityInput;
+export type MutationDeleteCommentArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteCountryArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteCragArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteRouteArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteSectorArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationLoginArgs = {
+  input: LoginInput;
+};
+
+
+export type MutationRecoverArgs = {
+  email: Scalars['String'];
+};
+
+
+export type MutationRegisterArgs = {
+  input: RegisterInput;
+};
+
+
+export type MutationSetPasswordArgs = {
+  input: PasswordInput;
+};
+
+
+export type MutationUpdateAreaArgs = {
+  input: UpdateAreaInput;
+};
+
+
+export type MutationUpdateClubArgs = {
+  updateClubInput: UpdateClubInput;
+};
+
+
+export type MutationUpdateCommentArgs = {
+  input: UpdateCommentInput;
+};
+
+
+export type MutationUpdateCountryArgs = {
+  input: UpdateCountryInput;
+};
+
+
+export type MutationUpdateCragArgs = {
+  input: UpdateCragInput;
+};
+
+
+export type MutationUpdateRouteArgs = {
+  input: UpdateRouteInput;
+};
+
+
+export type MutationUpdateSectorArgs = {
+  input: UpdateSectorInput;
 };
 
 export type OrderByInput = {
-  field: Scalars['String'];
   direction: Scalars['String'];
+  field: Scalars['String'];
 };
 
 export type PaginatedActivities = {
@@ -532,79 +529,106 @@ export type PaginationMeta = {
   __typename?: 'PaginationMeta';
   itemCount: Scalars['Float'];
   pageCount: Scalars['Float'];
-  pageSize: Scalars['Float'];
   pageNumber: Scalars['Float'];
+  pageSize: Scalars['Float'];
 };
 
 export type PasswordInput = {
   id: Scalars['String'];
-  token: Scalars['String'];
   password: Scalars['String'];
+  token: Scalars['String'];
 };
 
 export type Peak = {
   __typename?: 'Peak';
-  id: Scalars['String'];
-  name: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  height?: Maybe<Scalars['Float']>;
-  lat?: Maybe<Scalars['Float']>;
-  lon?: Maybe<Scalars['Float']>;
   area?: Maybe<Area>;
+  comments: Array<Comment>;
   country: Country;
   crags: Array<Crag>;
-  comments: Array<Comment>;
+  description?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['Float']>;
+  id: Scalars['String'];
   images: Array<Image>;
+  lat?: Maybe<Scalars['Float']>;
+  lon?: Maybe<Scalars['Float']>;
+  name: Scalars['String'];
 };
 
 export type Pitch = {
   __typename?: 'Pitch';
-  id: Scalars['String'];
-  route: Route;
-  number: Scalars['Float'];
   difficulty: Scalars['String'];
   height: Scalars['Float'];
+  id: Scalars['String'];
+  number: Scalars['Float'];
+  route: Route;
 };
 
 export type PopularCrag = {
   __typename?: 'PopularCrag';
-  nrVisits: Scalars['Int'];
   crag: Crag;
+  nrVisits: Scalars['Int'];
 };
 
 export type Query = {
   __typename?: 'Query';
-  countryBySlug: Country;
+  activity: Activity;
+  activityRoutesByClubSlug: PaginatedActivityRoutes;
+  club: Club;
+  clubBySlug: Club;
+  clubs: Array<Club>;
   countries: Array<Country>;
+  countryBySlug: Country;
   crag: Crag;
   cragBySlug: Crag;
   crags: Array<Crag>;
+  latestImages: Array<Image>;
+  latestTicks: Array<ActivityRoute>;
+  myActivities: PaginatedActivities;
+  myActivityRoutes: PaginatedActivityRoutes;
+  myClubs: Array<Club>;
+  myCragSummary: Array<ActivityRoute>;
   popularCrags: Array<PopularCrag>;
+  profile: User;
   route: Route;
   search: SearchResults;
-  latestImages: Array<Image>;
-  profile: User;
-  users: Array<User>;
   user: User;
-  myClubs: Array<Club>;
-  clubs: Array<Club>;
-  club: Club;
-  myActivities: PaginatedActivities;
-  activity: Activity;
-  myActivityRoutes: PaginatedActivityRoutes;
-  myCragSummary: Array<ActivityRoute>;
-  activityRoutesByClub: PaginatedActivityRoutes;
-  latestTicks: Array<ActivityRoute>;
+  users: Array<User>;
+};
+
+
+export type QueryActivityArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryActivityRoutesByClubSlugArgs = {
+  clubSlug: Scalars['String'];
+  input?: InputMaybe<FindActivityRoutesInput>;
+};
+
+
+export type QueryClubArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryClubBySlugArgs = {
+  slug: Scalars['String'];
+};
+
+
+export type QueryClubsArgs = {
+  userId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryCountriesArgs = {
+  input?: InputMaybe<FindCountriesInput>;
 };
 
 
 export type QueryCountryBySlugArgs = {
   slug: Scalars['String'];
-};
-
-
-export type QueryCountriesArgs = {
-  input?: Maybe<FindCountriesInput>;
 };
 
 
@@ -619,13 +643,38 @@ export type QueryCragBySlugArgs = {
 
 
 export type QueryCragsArgs = {
-  country?: Maybe<Scalars['String']>;
+  country?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryLatestImagesArgs = {
+  latest: Scalars['Int'];
+};
+
+
+export type QueryLatestTicksArgs = {
+  latest: Scalars['Int'];
+};
+
+
+export type QueryMyActivitiesArgs = {
+  input?: InputMaybe<FindActivitiesInput>;
+};
+
+
+export type QueryMyActivityRoutesArgs = {
+  input?: InputMaybe<FindActivityRoutesInput>;
+};
+
+
+export type QueryMyCragSummaryArgs = {
+  input?: InputMaybe<FindActivityRoutesInput>;
 };
 
 
 export type QueryPopularCragsArgs = {
-  top?: Maybe<Scalars['Int']>;
-  dateFrom?: Maybe<Scalars['String']>;
+  dateFrom?: InputMaybe<Scalars['String']>;
+  top?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -635,76 +684,30 @@ export type QueryRouteArgs = {
 
 
 export type QuerySearchArgs = {
-  input?: Maybe<Scalars['String']>;
-};
-
-
-export type QueryLatestImagesArgs = {
-  latest: Scalars['Int'];
+  input?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryUserArgs = {
-  id?: Maybe<Scalars['String']>;
   email: Scalars['String'];
-};
-
-
-export type QueryClubsArgs = {
-  userId?: Maybe<Scalars['String']>;
-};
-
-
-export type QueryClubArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QueryMyActivitiesArgs = {
-  input?: Maybe<FindActivitiesInput>;
-};
-
-
-export type QueryActivityArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QueryMyActivityRoutesArgs = {
-  input?: Maybe<FindActivityRoutesInput>;
-};
-
-
-export type QueryMyCragSummaryArgs = {
-  input?: Maybe<FindActivityRoutesInput>;
-};
-
-
-export type QueryActivityRoutesByClubArgs = {
-  input?: Maybe<FindActivityRoutesInput>;
-  clubId: Scalars['String'];
-};
-
-
-export type QueryLatestTicksArgs = {
-  latest: Scalars['Int'];
+  id?: InputMaybe<Scalars['String']>;
 };
 
 export type Rating = {
   __typename?: 'Rating';
-  id: Scalars['String'];
-  stars: Scalars['Float'];
-  user?: Maybe<User>;
   created: Scalars['DateTime'];
-  updated: Scalars['DateTime'];
+  id: Scalars['String'];
   route: Route;
+  stars: Scalars['Float'];
+  updated: Scalars['DateTime'];
+  user?: Maybe<User>;
 };
 
 export type RegisterInput = {
   email: Scalars['String'];
-  password: Scalars['String'];
   firstname: Scalars['String'];
   lastname: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type Role = {
@@ -714,42 +717,40 @@ export type Role = {
 
 export type Route = {
   __typename?: 'Route';
-  id: Scalars['String'];
-  type: Scalars['String'];
-  name: Scalars['String'];
+  author?: Maybe<Scalars['String']>;
+  comments: Array<Comment>;
+  crag: Crag;
   difficulty: Scalars['String'];
   grade?: Maybe<Scalars['Float']>;
-  length: Scalars['String'];
-  author?: Maybe<Scalars['String']>;
-  status: Scalars['String'];
-  crag: Crag;
-  sector: Sector;
   grades: Array<Grade>;
-  ratings: Array<Rating>;
-  pitches: Array<Pitch>;
-  comments: Array<Comment>;
+  id: Scalars['String'];
   images: Array<Image>;
-  warnings: Array<Comment>;
-  conditions: Array<Comment>;
+  length: Scalars['String'];
+  name: Scalars['String'];
+  pitches: Array<Pitch>;
+  ratings: Array<Rating>;
+  sector: Sector;
+  status: Scalars['String'];
+  type: Scalars['String'];
 };
 
 export type SearchResults = {
   __typename?: 'SearchResults';
+  comments: Array<Comment>;
   crags: Array<Crag>;
   routes: Array<Route>;
   sectors: Array<Sector>;
-  comments: Array<Comment>;
   users: Array<User>;
 };
 
 export type Sector = {
   __typename?: 'Sector';
-  id: Scalars['String'];
-  name: Scalars['String'];
-  label: Scalars['String'];
-  status: Scalars['String'];
   crag: Crag;
+  id: Scalars['String'];
+  label: Scalars['String'];
+  name: Scalars['String'];
   routes: Array<Route>;
+  status: Scalars['String'];
 };
 
 export type TokenResponse = {
@@ -758,138 +759,115 @@ export type TokenResponse = {
 };
 
 export type UpdateAreaInput = {
-  id: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
   countryId: Scalars['String'];
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateClubInput = {
-  name?: Maybe<Scalars['String']>;
   id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateCommentInput = {
-  id: Scalars['String'];
   content: Scalars['String'];
+  id: Scalars['String'];
 };
 
 export type UpdateCountryInput = {
+  code?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
-  code?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  slug?: Maybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateCragInput = {
+  access?: InputMaybe<Scalars['String']>;
+  areaId?: InputMaybe<Scalars['String']>;
+  countryId?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
-  slug?: Maybe<Scalars['String']>;
-  status?: Maybe<Scalars['String']>;
-  lat?: Maybe<Scalars['Float']>;
-  lon?: Maybe<Scalars['Float']>;
-  countryId?: Maybe<Scalars['String']>;
-  areaId?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  access?: Maybe<Scalars['String']>;
-  orientation?: Maybe<Scalars['String']>;
+  lat?: InputMaybe<Scalars['Float']>;
+  lon?: InputMaybe<Scalars['Float']>;
+  name?: InputMaybe<Scalars['String']>;
+  orientation?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateRouteInput = {
+  author?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
-  author?: Maybe<Scalars['String']>;
-  label?: Maybe<Scalars['String']>;
-  position?: Maybe<Scalars['Float']>;
-  status?: Maybe<Scalars['String']>;
-  sectorId?: Maybe<Scalars['String']>;
+  label?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  position?: InputMaybe<Scalars['Float']>;
+  sectorId?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateSectorInput = {
   id: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
-  label?: Maybe<Scalars['String']>;
-  position?: Maybe<Scalars['Float']>;
-  status?: Maybe<Scalars['String']>;
+  label?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  position?: InputMaybe<Scalars['Float']>;
+  status?: InputMaybe<Scalars['String']>;
 };
 
 export type User = {
   __typename?: 'User';
-  id: Scalars['String'];
-  email: Scalars['String'];
-  firstname: Scalars['String'];
-  lastname: Scalars['String'];
-  www?: Maybe<Scalars['String']>;
-  gender?: Maybe<Scalars['String']>;
-  roles: Array<Scalars['String']>;
   clubs: Array<ClubMember>;
-  images: Array<Image>;
+  email?: Maybe<Scalars['String']>;
+  firstname: Scalars['String'];
   fullName: Scalars['String'];
+  gender?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  images: Array<Image>;
+  lastname: Scalars['String'];
+  roles: Array<Scalars['String']>;
+  www?: Maybe<Scalars['String']>;
 };
+
+export type CreateClubMutationVariables = Exact<{
+  input: CreateClubInput;
+}>;
+
+
+export type CreateClubMutation = { __typename?: 'Mutation', createClub: { __typename?: 'Club', id: string } };
+
+export type UpdateClubMutationVariables = Exact<{
+  input: UpdateClubInput;
+}>;
+
+
+export type UpdateClubMutation = { __typename?: 'Mutation', updateClub: { __typename?: 'Club', id: string } };
+
+export type CreateClubMemberByEmailMutationVariables = Exact<{
+  input: CreateClubMemberByEmailInput;
+}>;
+
+
+export type CreateClubMemberByEmailMutation = { __typename?: 'Mutation', createClubMemberByEmail: { __typename?: 'ClubMember', id: string } };
 
 export type ActivityEntryQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type ActivityEntryQuery = (
-  { __typename?: 'Query' }
-  & { activity: (
-    { __typename?: 'Activity' }
-    & Pick<Activity, 'id' | 'name' | 'date' | 'type' | 'notes' | 'partners' | 'duration'>
-    & { routes: Array<(
-      { __typename?: 'ActivityRoute' }
-      & Pick<ActivityRoute, 'difficulty' | 'date' | 'ascentType' | 'grade' | 'notes' | 'partner' | 'publish'>
-      & { activity?: Maybe<(
-        { __typename?: 'Activity' }
-        & Pick<Activity, 'id'>
-      )>, route: (
-        { __typename?: 'Route' }
-        & Pick<Route, 'name' | 'id'>
-        & { crag: (
-          { __typename?: 'Crag' }
-          & Pick<Crag, 'id' | 'name' | 'slug'>
-          & { country: (
-            { __typename?: 'Country' }
-            & Pick<Country, 'slug'>
-          ) }
-        ) }
-      ) }
-    )>, crag?: Maybe<(
-      { __typename?: 'Crag' }
-      & Pick<Crag, 'id' | 'name' | 'slug'>
-      & { country: (
-        { __typename?: 'Country' }
-        & Pick<Country, 'slug'>
-      ) }
-    )> }
-  ) }
-);
+export type ActivityEntryQuery = { __typename?: 'Query', activity: { __typename?: 'Activity', id: string, name: string, date: any, type: string, notes?: string | null | undefined, partners?: string | null | undefined, duration?: number | null | undefined, routes: Array<{ __typename?: 'ActivityRoute', difficulty?: string | null | undefined, date?: any | null | undefined, ascentType: string, grade?: number | null | undefined, notes?: string | null | undefined, partner?: string | null | undefined, publish: string, activity?: { __typename?: 'Activity', id: string } | null | undefined, route: { __typename?: 'Route', name: string, id: string, crag: { __typename?: 'Crag', id: string, name: string, slug: string, country: { __typename?: 'Country', slug: string } } } }>, crag?: { __typename?: 'Crag', id: string, name: string, slug: string, country: { __typename?: 'Country', slug: string } } | null | undefined } };
 
 export type ActivityFiltersCragQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type ActivityFiltersCragQuery = (
-  { __typename?: 'Query' }
-  & { crag: (
-    { __typename?: 'Crag' }
-    & Pick<Crag, 'id' | 'name'>
-  ) }
-);
+export type ActivityFiltersCragQuery = { __typename?: 'Query', crag: { __typename?: 'Crag', id: string, name: string } };
 
 export type ActivityFiltersRouteQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type ActivityFiltersRouteQuery = (
-  { __typename?: 'Query' }
-  & { route: (
-    { __typename?: 'Route' }
-    & Pick<Route, 'id' | 'name'>
-  ) }
-);
+export type ActivityFiltersRouteQuery = { __typename?: 'Query', route: { __typename?: 'Route', id: string, name: string } };
 
 export type CreateActivityMutationVariables = Exact<{
   input: CreateActivityInput;
@@ -897,714 +875,260 @@ export type CreateActivityMutationVariables = Exact<{
 }>;
 
 
-export type CreateActivityMutation = (
-  { __typename?: 'Mutation' }
-  & { createActivity: (
-    { __typename?: 'Activity' }
-    & Pick<Activity, 'id'>
-  ) }
-);
+export type CreateActivityMutation = { __typename?: 'Mutation', createActivity: { __typename?: 'Activity', id: string } };
 
 export type MyActivitiesQueryVariables = Exact<{
-  input?: Maybe<FindActivitiesInput>;
+  input?: InputMaybe<FindActivitiesInput>;
 }>;
 
 
-export type MyActivitiesQuery = (
-  { __typename?: 'Query' }
-  & { myActivities: (
-    { __typename?: 'PaginatedActivities' }
-    & { items: Array<(
-      { __typename?: 'Activity' }
-      & Pick<Activity, 'id' | 'name' | 'date' | 'type'>
-      & { routes: Array<(
-        { __typename?: 'ActivityRoute' }
-        & Pick<ActivityRoute, 'grade'>
-      )>, crag?: Maybe<(
-        { __typename?: 'Crag' }
-        & Pick<Crag, 'id' | 'name' | 'slug'>
-        & { country: (
-          { __typename?: 'Country' }
-          & Pick<Country, 'slug'>
-        ) }
-      )> }
-    )>, meta: (
-      { __typename?: 'PaginationMeta' }
-      & Pick<PaginationMeta, 'itemCount' | 'pageCount' | 'pageNumber' | 'pageSize'>
-    ) }
-  ) }
-);
+export type MyActivitiesQuery = { __typename?: 'Query', myActivities: { __typename?: 'PaginatedActivities', items: Array<{ __typename?: 'Activity', id: string, name: string, date: any, type: string, routes: Array<{ __typename?: 'ActivityRoute', grade?: number | null | undefined }>, crag?: { __typename?: 'Crag', id: string, name: string, slug: string, country: { __typename?: 'Country', slug: string } } | null | undefined }>, meta: { __typename?: 'PaginationMeta', itemCount: number, pageCount: number, pageNumber: number, pageSize: number } } };
 
 export type MyActivityRoutesQueryVariables = Exact<{
-  input?: Maybe<FindActivityRoutesInput>;
+  input?: InputMaybe<FindActivityRoutesInput>;
 }>;
 
 
-export type MyActivityRoutesQuery = (
-  { __typename?: 'Query' }
-  & { myActivityRoutes: (
-    { __typename?: 'PaginatedActivityRoutes' }
-    & { items: Array<(
-      { __typename?: 'ActivityRoute' }
-      & Pick<ActivityRoute, 'difficulty' | 'date' | 'ascentType' | 'grade' | 'notes' | 'partner' | 'publish'>
-      & { activity?: Maybe<(
-        { __typename?: 'Activity' }
-        & Pick<Activity, 'id'>
-      )>, route: (
-        { __typename?: 'Route' }
-        & Pick<Route, 'name' | 'id'>
-        & { crag: (
-          { __typename?: 'Crag' }
-          & Pick<Crag, 'id' | 'name' | 'slug'>
-          & { country: (
-            { __typename?: 'Country' }
-            & Pick<Country, 'slug'>
-          ) }
-        ) }
-      ) }
-    )>, meta: (
-      { __typename?: 'PaginationMeta' }
-      & Pick<PaginationMeta, 'itemCount' | 'pageCount' | 'pageNumber' | 'pageSize'>
-    ) }
-  ) }
-);
+export type MyActivityRoutesQuery = { __typename?: 'Query', myActivityRoutes: { __typename?: 'PaginatedActivityRoutes', items: Array<{ __typename?: 'ActivityRoute', difficulty?: string | null | undefined, date?: any | null | undefined, ascentType: string, grade?: number | null | undefined, notes?: string | null | undefined, partner?: string | null | undefined, publish: string, activity?: { __typename?: 'Activity', id: string } | null | undefined, route: { __typename?: 'Route', name: string, id: string, crag: { __typename?: 'Crag', id: string, name: string, slug: string, country: { __typename?: 'Country', slug: string } } } }>, meta: { __typename?: 'PaginationMeta', itemCount: number, pageCount: number, pageNumber: number, pageSize: number } } };
 
 export type MyCragSummaryQueryVariables = Exact<{
-  input?: Maybe<FindActivityRoutesInput>;
+  input?: InputMaybe<FindActivityRoutesInput>;
 }>;
 
 
-export type MyCragSummaryQuery = (
-  { __typename?: 'Query' }
-  & { myCragSummary: Array<(
-    { __typename?: 'ActivityRoute' }
-    & Pick<ActivityRoute, 'ascentType'>
-    & { route: (
-      { __typename?: 'Route' }
-      & Pick<Route, 'id'>
-    ) }
-  )> }
-);
+export type MyCragSummaryQuery = { __typename?: 'Query', myCragSummary: Array<{ __typename?: 'ActivityRoute', ascentType: string, route: { __typename?: 'Route', id: string } }> };
 
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = (
-  { __typename?: 'Query' }
-  & { profile: (
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'email' | 'roles'>
-  ) }
-);
-
-export type CreateClubMemberByEmailMutationVariables = Exact<{
-  input: CreateClubMemberByEmailInput;
-}>;
-
-
-export type CreateClubMemberByEmailMutation = (
-  { __typename?: 'Mutation' }
-  & { createClubMemberByEmail: (
-    { __typename?: 'ClubMember' }
-    & Pick<ClubMember, 'id'>
-  ) }
-);
-
-export type DeleteClubMemberMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteClubMemberMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteClubMember'>
-);
-
-export type ActivityRoutesByClubQueryVariables = Exact<{
-  clubId: Scalars['String'];
-  input?: Maybe<FindActivityRoutesInput>;
-}>;
-
-
-export type ActivityRoutesByClubQuery = (
-  { __typename?: 'Query' }
-  & { activityRoutesByClub: (
-    { __typename?: 'PaginatedActivityRoutes' }
-    & { items: Array<(
-      { __typename?: 'ActivityRoute' }
-      & Pick<ActivityRoute, 'date' | 'grade' | 'name' | 'ascentType' | 'difficulty' | 'id' | 'publish'>
-      & { user: (
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'fullName'>
-      ), route: (
-        { __typename?: 'Route' }
-        & Pick<Route, 'id'>
-        & { crag: (
-          { __typename?: 'Crag' }
-          & Pick<Crag, 'slug' | 'name' | 'id'>
-          & { country: (
-            { __typename?: 'Country' }
-            & Pick<Country, 'slug'>
-          ) }
-        ) }
-      ) }
-    )>, meta: (
-      { __typename?: 'PaginationMeta' }
-      & Pick<PaginationMeta, 'itemCount' | 'pageCount' | 'pageNumber' | 'pageSize'>
-    ) }
-  ) }
-);
-
-export type ClubByIdQueryVariables = Exact<{
-  clubId: Scalars['String'];
-}>;
-
-
-export type ClubByIdQuery = (
-  { __typename?: 'Query' }
-  & { club: (
-    { __typename?: 'Club' }
-    & Pick<Club, 'id' | 'name'>
-    & { members: Array<(
-      { __typename?: 'ClubMember' }
-      & Pick<ClubMember, 'id' | 'admin'>
-      & { user: (
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'fullName'>
-      ) }
-    )> }
-  ) }
-);
-
-export type CreateClubMutationVariables = Exact<{
-  input: CreateClubInput;
-}>;
-
-
-export type CreateClubMutation = (
-  { __typename?: 'Mutation' }
-  & { createClub: (
-    { __typename?: 'Club' }
-    & Pick<Club, 'id'>
-  ) }
-);
-
-export type DeleteClubMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteClubMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteClub'>
-);
-
-export type MyClubsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MyClubsQuery = (
-  { __typename?: 'Query' }
-  & { myClubs: Array<(
-    { __typename?: 'Club' }
-    & Pick<Club, 'id' | 'name' | 'nrMembers'>
-  )> }
-);
-
-export type UpdateClubMutationVariables = Exact<{
-  input: UpdateClubInput;
-}>;
-
-
-export type UpdateClubMutation = (
-  { __typename?: 'Mutation' }
-  & { updateClub: (
-    { __typename?: 'Club' }
-    & Pick<Club, 'id'>
-  ) }
-);
-
-export type UserFullNameQueryVariables = Exact<{
-  userId: Scalars['String'];
-}>;
-
-
-export type UserFullNameQuery = (
-  { __typename?: 'Query' }
-  & { user: (
-    { __typename?: 'User' }
-    & Pick<User, 'fullName'>
-  ) }
-);
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: string, email?: string | null | undefined, roles: Array<string> } };
 
 export type CreateCommentMutationVariables = Exact<{
   input: CreateCommentInput;
 }>;
 
 
-export type CreateCommentMutation = (
-  { __typename?: 'Mutation' }
-  & { createComment: (
-    { __typename?: 'Comment' }
-    & Pick<Comment, 'id'>
-  ) }
-);
+export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { __typename?: 'Comment', id: string } };
 
 export type DeleteCommentMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteCommentMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteComment'>
-);
+export type DeleteCommentMutation = { __typename?: 'Mutation', deleteComment: boolean };
 
 export type UpdateCommentMutationVariables = Exact<{
   input: UpdateCommentInput;
 }>;
 
 
-export type UpdateCommentMutation = (
-  { __typename?: 'Mutation' }
-  & { updateComment: (
-    { __typename?: 'Comment' }
-    & Pick<Comment, 'id' | 'content'>
-  ) }
-);
+export type UpdateCommentMutation = { __typename?: 'Mutation', updateComment: { __typename?: 'Comment', id: string, content?: string | null | undefined } };
 
 export type CountriesTocQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CountriesTocQuery = (
-  { __typename?: 'Query' }
-  & { countries: Array<(
-    { __typename?: 'Country' }
-    & Pick<Country, 'name' | 'slug' | 'nrCrags'>
-  )> }
-);
+export type CountriesTocQuery = { __typename?: 'Query', countries: Array<{ __typename?: 'Country', name: string, slug: string, nrCrags: number }> };
 
 export type CragManagementQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type CragManagementQuery = (
-  { __typename?: 'Query' }
-  & { crag: (
-    { __typename?: 'Crag' }
-    & Pick<Crag, 'slug' | 'status' | 'orientation' | 'name' | 'lon' | 'lat' | 'id' | 'description' | 'access'>
-    & { sectors: Array<(
-      { __typename?: 'Sector' }
-      & Pick<Sector, 'id' | 'label' | 'name' | 'status'>
-    )>, area?: Maybe<(
-      { __typename?: 'Area' }
-      & Pick<Area, 'id' | 'name'>
-    )>, country: (
-      { __typename?: 'Country' }
-      & Pick<Country, 'name' | 'id'>
-    ) }
-  ) }
-);
+export type CragManagementQuery = { __typename?: 'Query', crag: { __typename?: 'Crag', slug: string, status: string, orientation?: string | null | undefined, name: string, lon?: number | null | undefined, lat?: number | null | undefined, id: string, description?: string | null | undefined, access?: string | null | undefined, sectors: Array<{ __typename?: 'Sector', id: string, label: string, name: string, status: string }>, area?: { __typename?: 'Area', id: string, name: string } | null | undefined, country: { __typename?: 'Country', name: string, id: string } } };
 
 export type CragsQueryVariables = Exact<{
   country: Scalars['String'];
-  input?: Maybe<FindCragsInput>;
+  input?: InputMaybe<FindCragsInput>;
 }>;
 
 
-export type CragsQuery = (
-  { __typename?: 'Query' }
-  & { countryBySlug: (
-    { __typename?: 'Country' }
-    & Pick<Country, 'id' | 'name' | 'slug' | 'code'>
-    & { crags: Array<(
-      { __typename?: 'Crag' }
-      & Pick<Crag, 'id' | 'slug' | 'name' | 'nrRoutes' | 'orientation' | 'lon' | 'lat' | 'minGrade' | 'maxGrade'>
-      & { country: (
-        { __typename?: 'Country' }
-        & Pick<Country, 'id' | 'name' | 'slug'>
-      ) }
-    )>, areas: Array<(
-      { __typename?: 'Area' }
-      & Pick<Area, 'id' | 'name'>
-    )> }
-  ) }
-);
+export type CragsQuery = { __typename?: 'Query', countryBySlug: { __typename?: 'Country', id: string, name: string, slug: string, code: string, crags: Array<{ __typename?: 'Crag', id: string, slug: string, name: string, nrRoutes: number, orientation?: string | null | undefined, lon?: number | null | undefined, lat?: number | null | undefined, minGrade?: string | null | undefined, maxGrade?: string | null | undefined, country: { __typename?: 'Country', id: string, name: string, slug: string } }>, areas: Array<{ __typename?: 'Area', id: string, name: string }> } };
 
 export type RouteCommentsQueryVariables = Exact<{
   routeId: Scalars['String'];
 }>;
 
 
-export type RouteCommentsQuery = (
-  { __typename?: 'Query' }
-  & { route: (
-    { __typename?: 'Route' }
-    & { comments: Array<(
-      { __typename?: 'Comment' }
-      & Pick<Comment, 'id' | 'type' | 'content' | 'updated' | 'created'>
-      & { user?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'firstname' | 'lastname'>
-      )> }
-    )> }
-  ) }
-);
+export type RouteCommentsQuery = { __typename?: 'Query', route: { __typename?: 'Route', comments: Array<{ __typename?: 'Comment', id: string, type: string, content?: string | null | undefined, updated: any, created: any, user?: { __typename?: 'User', firstname: string, lastname: string } | null | undefined }> } };
 
 export type RouteGradesQueryVariables = Exact<{
   routeId: Scalars['String'];
 }>;
 
 
-export type RouteGradesQuery = (
-  { __typename?: 'Query' }
-  & { route: (
-    { __typename?: 'Route' }
-    & Pick<Route, 'id' | 'difficulty' | 'name' | 'grade' | 'length'>
-    & { grades: Array<(
-      { __typename?: 'Grade' }
-      & Pick<Grade, 'id' | 'grade' | 'created' | 'updated' | 'isBase' | 'includedInCalculation'>
-      & { user?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'firstname' | 'lastname'>
-      )> }
-    )> }
-  ) }
-);
+export type RouteGradesQuery = { __typename?: 'Query', route: { __typename?: 'Route', id: string, difficulty: string, name: string, grade?: number | null | undefined, length: string, grades: Array<{ __typename?: 'Grade', id: string, grade: number, created: any, updated: any, isBase: boolean, includedInCalculation: boolean, user?: { __typename?: 'User', firstname: string, lastname: string } | null | undefined }> } };
 
 export type RouteQueryVariables = Exact<{
   routeId: Scalars['String'];
 }>;
 
 
-export type RouteQuery = (
-  { __typename?: 'Query' }
-  & { route: (
-    { __typename?: 'Route' }
-    & Pick<Route, 'id' | 'difficulty' | 'name' | 'grade' | 'length' | 'author' | 'status'>
-    & { sector: (
-      { __typename?: 'Sector' }
-      & Pick<Sector, 'id' | 'name'>
-      & { crag: (
-        { __typename?: 'Crag' }
-        & Pick<Crag, 'name' | 'slug'>
-        & { country: (
-          { __typename?: 'Country' }
-          & Pick<Country, 'slug' | 'name'>
-        ) }
-      ) }
-    ), pitches: Array<(
-      { __typename?: 'Pitch' }
-      & Pick<Pitch, 'difficulty' | 'number' | 'height'>
-    )>, grades: Array<(
-      { __typename?: 'Grade' }
-      & Pick<Grade, 'grade' | 'created' | 'updated' | 'isBase' | 'includedInCalculation'>
-      & { user?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'firstname' | 'lastname'>
-      )> }
-    )>, comments: Array<(
-      { __typename?: 'Comment' }
-      & Pick<Comment, 'type' | 'content' | 'created' | 'updated'>
-      & { user?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'fullName'>
-      )> }
-    )>, images: Array<(
-      { __typename?: 'Image' }
-      & Pick<Image, 'path'>
-    )> }
-  ) }
-);
+export type RouteQuery = { __typename?: 'Query', route: { __typename?: 'Route', id: string, difficulty: string, name: string, grade?: number | null | undefined, length: string, author?: string | null | undefined, status: string, sector: { __typename?: 'Sector', id: string, name: string, crag: { __typename?: 'Crag', name: string, slug: string, country: { __typename?: 'Country', slug: string, name: string } } }, pitches: Array<{ __typename?: 'Pitch', difficulty: string, number: number, height: number }>, grades: Array<{ __typename?: 'Grade', grade: number, created: any, updated: any, isBase: boolean, includedInCalculation: boolean, user?: { __typename?: 'User', firstname: string, lastname: string } | null | undefined }>, comments: Array<{ __typename?: 'Comment', type: string, content?: string | null | undefined, created: any, updated: any, user?: { __typename?: 'User', fullName: string } | null | undefined }>, images: Array<{ __typename?: 'Image', path: string }> } };
 
 export type ManagementCragFormGetCountriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ManagementCragFormGetCountriesQuery = (
-  { __typename?: 'Query' }
-  & { countries: Array<(
-    { __typename?: 'Country' }
-    & Pick<Country, 'id' | 'name'>
-    & { areas: Array<(
-      { __typename?: 'Area' }
-      & Pick<Area, 'id' | 'name'>
-    )> }
-  )> }
-);
+export type ManagementCragFormGetCountriesQuery = { __typename?: 'Query', countries: Array<{ __typename?: 'Country', id: string, name: string, areas: Array<{ __typename?: 'Area', id: string, name: string }> }> };
 
 export type ManagementCreateCragMutationVariables = Exact<{
   input: CreateCragInput;
 }>;
 
 
-export type ManagementCreateCragMutation = (
-  { __typename?: 'Mutation' }
-  & { createCrag: (
-    { __typename?: 'Crag' }
-    & Pick<Crag, 'id'>
-  ) }
-);
+export type ManagementCreateCragMutation = { __typename?: 'Mutation', createCrag: { __typename?: 'Crag', id: string } };
 
 export type ManagementUpdateCragMutationVariables = Exact<{
   input: UpdateCragInput;
 }>;
 
 
-export type ManagementUpdateCragMutation = (
-  { __typename?: 'Mutation' }
-  & { updateCrag: (
-    { __typename?: 'Crag' }
-    & Pick<Crag, 'id'>
-  ) }
-);
+export type ManagementUpdateCragMutation = { __typename?: 'Mutation', updateCrag: { __typename?: 'Crag', id: string } };
 
 export type ManagementGetCragQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type ManagementGetCragQuery = (
-  { __typename?: 'Query' }
-  & { crag: (
-    { __typename?: 'Crag' }
-    & Pick<Crag, 'slug' | 'status' | 'orientation' | 'name' | 'lon' | 'lat' | 'id' | 'description' | 'access'>
-    & { sectors: Array<(
-      { __typename?: 'Sector' }
-      & Pick<Sector, 'id' | 'label' | 'name' | 'status'>
-      & { routes: Array<(
-        { __typename?: 'Route' }
-        & Pick<Route, 'type' | 'author' | 'difficulty' | 'grade' | 'id' | 'length' | 'name' | 'status'>
-        & { pitches: Array<(
-          { __typename?: 'Pitch' }
-          & Pick<Pitch, 'difficulty' | 'height' | 'id' | 'number'>
-        )> }
-      )> }
-    )>, area?: Maybe<(
-      { __typename?: 'Area' }
-      & Pick<Area, 'id' | 'name'>
-    )>, country: (
-      { __typename?: 'Country' }
-      & Pick<Country, 'name' | 'id' | 'slug'>
-    ) }
-  ) }
-);
+export type ManagementGetCragQuery = { __typename?: 'Query', crag: { __typename?: 'Crag', slug: string, status: string, orientation?: string | null | undefined, name: string, lon?: number | null | undefined, lat?: number | null | undefined, id: string, description?: string | null | undefined, access?: string | null | undefined, sectors: Array<{ __typename?: 'Sector', id: string, label: string, name: string, status: string, routes: Array<{ __typename?: 'Route', type: string, author?: string | null | undefined, difficulty: string, grade?: number | null | undefined, id: string, length: string, name: string, status: string, pitches: Array<{ __typename?: 'Pitch', difficulty: string, height: number, id: string, number: number }> }> }>, area?: { __typename?: 'Area', id: string, name: string } | null | undefined, country: { __typename?: 'Country', name: string, id: string, slug: string } } };
+
+export type ActivityRoutesByClubSlugQueryVariables = Exact<{
+  clubSlug: Scalars['String'];
+  input?: InputMaybe<FindActivityRoutesInput>;
+}>;
+
+
+export type ActivityRoutesByClubSlugQuery = { __typename?: 'Query', activityRoutesByClubSlug: { __typename?: 'PaginatedActivityRoutes', items: Array<{ __typename?: 'ActivityRoute', date?: any | null | undefined, grade?: number | null | undefined, name: string, ascentType: string, difficulty?: string | null | undefined, id: string, publish: string, user: { __typename?: 'User', id: string, fullName: string }, route: { __typename?: 'Route', id: string, crag: { __typename?: 'Crag', slug: string, name: string, id: string, country: { __typename?: 'Country', slug: string } } } }>, meta: { __typename?: 'PaginationMeta', itemCount: number, pageCount: number, pageNumber: number, pageSize: number } } };
+
+export type UserFullNameQueryVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+
+export type UserFullNameQuery = { __typename?: 'Query', user: { __typename?: 'User', fullName: string } };
+
+export type ClubByIdQueryVariables = Exact<{
+  clubId: Scalars['String'];
+}>;
+
+
+export type ClubByIdQuery = { __typename?: 'Query', club: { __typename?: 'Club', id: string, slug: string, name: string, members: Array<{ __typename?: 'ClubMember', id: string, admin: boolean, user: { __typename?: 'User', id: string, fullName: string } }> } };
+
+export type ClubBySlugQueryVariables = Exact<{
+  clubSlug: Scalars['String'];
+}>;
+
+
+export type ClubBySlugQuery = { __typename?: 'Query', clubBySlug: { __typename?: 'Club', id: string, slug: string, name: string, members: Array<{ __typename?: 'ClubMember', id: string, admin: boolean, user: { __typename?: 'User', id: string, fullName: string } }> } };
+
+export type DeleteClubMemberMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteClubMemberMutation = { __typename?: 'Mutation', deleteClubMember: boolean };
+
+export type DeleteClubMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteClubMutation = { __typename?: 'Mutation', deleteClub: boolean };
+
+export type MyClubsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyClubsQuery = { __typename?: 'Query', myClubs: Array<{ __typename?: 'Club', id: string, slug: string, name: string, nrMembers: number }> };
 
 export type CragBySlugQueryVariables = Exact<{
   crag: Scalars['String'];
 }>;
 
 
-export type CragBySlugQuery = (
-  { __typename?: 'Query' }
-  & { cragBySlug: (
-    { __typename?: 'Crag' }
-    & Pick<Crag, 'id' | 'slug' | 'name' | 'orientation' | 'lat' | 'lon' | 'access' | 'description'>
-    & { area?: Maybe<(
-      { __typename?: 'Area' }
-      & Pick<Area, 'id' | 'name'>
-    )>, country: (
-      { __typename?: 'Country' }
-      & Pick<Country, 'id' | 'name' | 'slug'>
-    ), sectors: Array<(
-      { __typename?: 'Sector' }
-      & Pick<Sector, 'id' | 'name' | 'label'>
-      & { routes: Array<(
-        { __typename?: 'Route' }
-        & Pick<Route, 'id' | 'name' | 'grade' | 'length'>
-        & { comments: Array<(
-          { __typename?: 'Comment' }
-          & Pick<Comment, 'id'>
-        )>, pitches: Array<(
-          { __typename?: 'Pitch' }
-          & Pick<Pitch, 'difficulty' | 'number' | 'height'>
-        )> }
-      )> }
-    )>, comments: Array<(
-      { __typename?: 'Comment' }
-      & Pick<Comment, 'id' | 'content' | 'created'>
-      & { user?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'fullName'>
-      )> }
-    )>, conditions: Array<(
-      { __typename?: 'Comment' }
-      & Pick<Comment, 'id' | 'content' | 'created'>
-      & { user?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'fullName'>
-      )> }
-    )>, warnings: Array<(
-      { __typename?: 'Comment' }
-      & Pick<Comment, 'id' | 'content' | 'created'>
-      & { user?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'fullName'>
-      )> }
-    )>, images: Array<(
-      { __typename?: 'Image' }
-      & Pick<Image, 'id' | 'title' | 'path'>
-    )> }
-  ) }
-);
+export type CragBySlugQuery = { __typename?: 'Query', cragBySlug: { __typename?: 'Crag', id: string, slug: string, name: string, orientation?: string | null | undefined, lat?: number | null | undefined, lon?: number | null | undefined, access?: string | null | undefined, description?: string | null | undefined, area?: { __typename?: 'Area', id: string, name: string } | null | undefined, country: { __typename?: 'Country', id: string, name: string, slug: string }, sectors: Array<{ __typename?: 'Sector', id: string, name: string, label: string, routes: Array<{ __typename?: 'Route', id: string, name: string, grade?: number | null | undefined, length: string, comments: Array<{ __typename?: 'Comment', id: string }>, pitches: Array<{ __typename?: 'Pitch', difficulty: string, number: number, height: number }> }> }>, comments: Array<{ __typename?: 'Comment', id: string, content?: string | null | undefined, created: any, updated: any, type: string, user?: { __typename?: 'User', id: string, fullName: string } | null | undefined }>, images: Array<{ __typename?: 'Image', id: string, title?: string | null | undefined, path: string }> } };
 
 export type LatestImagesQueryVariables = Exact<{
   latest: Scalars['Int'];
 }>;
 
 
-export type LatestImagesQuery = (
-  { __typename?: 'Query' }
-  & { latestImages: Array<(
-    { __typename?: 'Image' }
-    & Pick<Image, 'path' | 'title'>
-    & { user?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'fullName'>
-    )>, crag?: Maybe<(
-      { __typename?: 'Crag' }
-      & Pick<Crag, 'name' | 'slug'>
-      & { country: (
-        { __typename?: 'Country' }
-        & Pick<Country, 'slug'>
-      ) }
-    )>, route?: Maybe<(
-      { __typename?: 'Route' }
-      & Pick<Route, 'id' | 'name'>
-      & { crag: (
-        { __typename?: 'Crag' }
-        & Pick<Crag, 'name' | 'slug'>
-        & { country: (
-          { __typename?: 'Country' }
-          & Pick<Country, 'slug'>
-        ) }
-      ) }
-    )> }
-  )> }
-);
+export type LatestImagesQuery = { __typename?: 'Query', latestImages: Array<{ __typename?: 'Image', path: string, title?: string | null | undefined, user?: { __typename?: 'User', fullName: string } | null | undefined, crag?: { __typename?: 'Crag', name: string, slug: string, country: { __typename?: 'Country', slug: string } } | null | undefined, route?: { __typename?: 'Route', id: string, name: string, crag: { __typename?: 'Crag', name: string, slug: string, country: { __typename?: 'Country', slug: string } } } | null | undefined }> };
 
 export type LatestTicksQueryVariables = Exact<{
   latest: Scalars['Int'];
 }>;
 
 
-export type LatestTicksQuery = (
-  { __typename?: 'Query' }
-  & { latestTicks: Array<(
-    { __typename?: 'ActivityRoute' }
-    & Pick<ActivityRoute, 'ascentType'>
-    & { activity?: Maybe<(
-      { __typename?: 'Activity' }
-      & Pick<Activity, 'date' | 'type'>
-    )>, route: (
-      { __typename?: 'Route' }
-      & Pick<Route, 'grade' | 'name' | 'id'>
-      & { crag: (
-        { __typename?: 'Crag' }
-        & Pick<Crag, 'name' | 'slug'>
-        & { country: (
-          { __typename?: 'Country' }
-          & Pick<Country, 'slug' | 'name'>
-        ) }
-      ) }
-    ), user: (
-      { __typename?: 'User' }
-      & Pick<User, 'fullName' | 'gender'>
-    ) }
-  )> }
-);
+export type LatestTicksQuery = { __typename?: 'Query', latestTicks: Array<{ __typename?: 'ActivityRoute', ascentType: string, activity?: { __typename?: 'Activity', date: any, type: string } | null | undefined, route: { __typename?: 'Route', grade?: number | null | undefined, name: string, id: string, crag: { __typename?: 'Crag', name: string, slug: string, country: { __typename?: 'Country', slug: string, name: string } } }, user: { __typename?: 'User', fullName: string, gender?: string | null | undefined } }> };
 
 export type PopularCragsQueryVariables = Exact<{
-  dateFrom?: Maybe<Scalars['String']>;
-  top?: Maybe<Scalars['Int']>;
+  dateFrom?: InputMaybe<Scalars['String']>;
+  top?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type PopularCragsQuery = (
-  { __typename?: 'Query' }
-  & { popularCrags: Array<(
-    { __typename?: 'PopularCrag' }
-    & Pick<PopularCrag, 'nrVisits'>
-    & { crag: (
-      { __typename?: 'Crag' }
-      & Pick<Crag, 'name' | 'slug'>
-      & { country: (
-        { __typename?: 'Country' }
-        & Pick<Country, 'slug'>
-      ) }
-    ) }
-  )> }
-);
+export type PopularCragsQuery = { __typename?: 'Query', popularCrags: Array<{ __typename?: 'PopularCrag', nrVisits: number, crag: { __typename?: 'Crag', name: string, slug: string, country: { __typename?: 'Country', slug: string } } }> };
 
 export type SearchQueryVariables = Exact<{
-  query?: Maybe<Scalars['String']>;
+  query?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type SearchQuery = (
-  { __typename?: 'Query' }
-  & { search: (
-    { __typename?: 'SearchResults' }
-    & { crags: Array<(
-      { __typename: 'Crag' }
-      & Pick<Crag, 'name' | 'slug' | 'nrRoutes' | 'orientation' | 'minGrade' | 'maxGrade'>
-      & { country: (
-        { __typename?: 'Country' }
-        & Pick<Country, 'slug'>
-      ) }
-    )>, routes: Array<(
-      { __typename: 'Route' }
-      & Pick<Route, 'id' | 'name' | 'difficulty' | 'grade' | 'length'>
-      & { crag: (
-        { __typename?: 'Crag' }
-        & Pick<Crag, 'name' | 'slug'>
-        & { country: (
-          { __typename?: 'Country' }
-          & Pick<Country, 'slug'>
-        ) }
-      ) }
-    )>, sectors: Array<(
-      { __typename: 'Sector' }
-      & Pick<Sector, 'name'>
-      & { crag: (
-        { __typename?: 'Crag' }
-        & Pick<Crag, 'name' | 'slug'>
-        & { country: (
-          { __typename?: 'Country' }
-          & Pick<Country, 'slug'>
-        ) }
-      ) }
-    )>, comments: Array<(
-      { __typename: 'Comment' }
-      & Pick<Comment, 'content' | 'created'>
-      & { crag?: Maybe<(
-        { __typename?: 'Crag' }
-        & Pick<Crag, 'name' | 'slug'>
-        & { country: (
-          { __typename?: 'Country' }
-          & Pick<Country, 'slug'>
-        ) }
-      )>, route?: Maybe<(
-        { __typename: 'Route' }
-        & Pick<Route, 'id' | 'name'>
-        & { crag: (
-          { __typename?: 'Crag' }
-          & Pick<Crag, 'name' | 'slug'>
-          & { country: (
-            { __typename?: 'Country' }
-            & Pick<Country, 'slug'>
-          ) }
-        ) }
-      )>, user?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'fullName'>
-      )> }
-    )>, users: Array<(
-      { __typename: 'User' }
-      & Pick<User, 'fullName'>
-    )> }
-  ) }
-);
+export type SearchQuery = { __typename?: 'Query', search: { __typename?: 'SearchResults', crags: Array<{ __typename: 'Crag', name: string, slug: string, nrRoutes: number, orientation?: string | null | undefined, minGrade?: string | null | undefined, maxGrade?: string | null | undefined, country: { __typename?: 'Country', slug: string } }>, routes: Array<{ __typename: 'Route', id: string, name: string, difficulty: string, grade?: number | null | undefined, length: string, crag: { __typename?: 'Crag', name: string, slug: string, country: { __typename?: 'Country', slug: string } } }>, sectors: Array<{ __typename: 'Sector', name: string, crag: { __typename?: 'Crag', name: string, slug: string, country: { __typename?: 'Country', slug: string } } }>, comments: Array<{ __typename: 'Comment', content?: string | null | undefined, created: any, crag?: { __typename?: 'Crag', name: string, slug: string, country: { __typename?: 'Country', slug: string } } | null | undefined, route?: { __typename: 'Route', id: string, name: string, crag: { __typename?: 'Crag', name: string, slug: string, country: { __typename?: 'Country', slug: string } } } | null | undefined, user?: { __typename?: 'User', fullName: string } | null | undefined }>, users: Array<{ __typename: 'User', fullName: string }> } };
 
+export const CreateClubDocument = gql`
+    mutation CreateClub($input: CreateClubInput!) {
+  createClub(createClubInput: $input) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateClubGQL extends Apollo.Mutation<CreateClubMutation, CreateClubMutationVariables> {
+    document = CreateClubDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateClubDocument = gql`
+    mutation UpdateClub($input: UpdateClubInput!) {
+  updateClub(updateClubInput: $input) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateClubGQL extends Apollo.Mutation<UpdateClubMutation, UpdateClubMutationVariables> {
+    document = UpdateClubDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateClubMemberByEmailDocument = gql`
+    mutation CreateClubMemberByEmail($input: CreateClubMemberByEmailInput!) {
+  createClubMemberByEmail(input: $input) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateClubMemberByEmailGQL extends Apollo.Mutation<CreateClubMemberByEmailMutation, CreateClubMemberByEmailMutationVariables> {
+    document = CreateClubMemberByEmailDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const ActivityEntryDocument = gql`
     query ActivityEntry($id: String!) {
   activity(id: $id) {
@@ -1845,204 +1369,6 @@ export const ProfileDocument = gql`
       super(apollo);
     }
   }
-export const CreateClubMemberByEmailDocument = gql`
-    mutation CreateClubMemberByEmail($input: CreateClubMemberByEmailInput!) {
-  createClubMemberByEmail(input: $input) {
-    id
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class CreateClubMemberByEmailGQL extends Apollo.Mutation<CreateClubMemberByEmailMutation, CreateClubMemberByEmailMutationVariables> {
-    document = CreateClubMemberByEmailDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const DeleteClubMemberDocument = gql`
-    mutation DeleteClubMember($id: String!) {
-  deleteClubMember(id: $id)
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class DeleteClubMemberGQL extends Apollo.Mutation<DeleteClubMemberMutation, DeleteClubMemberMutationVariables> {
-    document = DeleteClubMemberDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const ActivityRoutesByClubDocument = gql`
-    query ActivityRoutesByClub($clubId: String!, $input: FindActivityRoutesInput) {
-  activityRoutesByClub(clubId: $clubId, input: $input) {
-    items {
-      date
-      user {
-        id
-        fullName
-      }
-      grade
-      name
-      ascentType
-      difficulty
-      id
-      publish
-      route {
-        crag {
-          country {
-            slug
-          }
-          slug
-          name
-          id
-        }
-        id
-      }
-    }
-    meta {
-      itemCount
-      pageCount
-      pageNumber
-      pageSize
-    }
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class ActivityRoutesByClubGQL extends Apollo.Query<ActivityRoutesByClubQuery, ActivityRoutesByClubQueryVariables> {
-    document = ActivityRoutesByClubDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const ClubByIdDocument = gql`
-    query ClubById($clubId: String!) {
-  club(id: $clubId) {
-    id
-    name
-    members {
-      id
-      admin
-      user {
-        id
-        fullName
-      }
-    }
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class ClubByIdGQL extends Apollo.Query<ClubByIdQuery, ClubByIdQueryVariables> {
-    document = ClubByIdDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const CreateClubDocument = gql`
-    mutation CreateClub($input: CreateClubInput!) {
-  createClub(createClubInput: $input) {
-    id
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class CreateClubGQL extends Apollo.Mutation<CreateClubMutation, CreateClubMutationVariables> {
-    document = CreateClubDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const DeleteClubDocument = gql`
-    mutation DeleteClub($id: String!) {
-  deleteClub(id: $id)
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class DeleteClubGQL extends Apollo.Mutation<DeleteClubMutation, DeleteClubMutationVariables> {
-    document = DeleteClubDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const MyClubsDocument = gql`
-    query MyClubs {
-  myClubs {
-    id
-    name
-    nrMembers
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class MyClubsGQL extends Apollo.Query<MyClubsQuery, MyClubsQueryVariables> {
-    document = MyClubsDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const UpdateClubDocument = gql`
-    mutation UpdateClub($input: UpdateClubInput!) {
-  updateClub(updateClubInput: $input) {
-    id
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class UpdateClubGQL extends Apollo.Mutation<UpdateClubMutation, UpdateClubMutationVariables> {
-    document = UpdateClubDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const UserFullNameDocument = gql`
-    query UserFullName($userId: String!) {
-  user(email: "", id: $userId) {
-    fullName
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class UserFullNameGQL extends Apollo.Query<UserFullNameQuery, UserFullNameQueryVariables> {
-    document = UserFullNameDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
 export const CreateCommentDocument = gql`
     mutation CreateComment($input: CreateCommentInput!) {
   createComment(input: $input) {
@@ -2098,7 +1424,9 @@ export const UpdateCommentDocument = gql`
   }
 export const CountriesTocDocument = gql`
     query CountriesToc {
-  countries(input: {hasCrags: true, orderBy: {field: "nrCrags", direction: "DESC"}}) {
+  countries(
+    input: {hasCrags: true, orderBy: {field: "nrCrags", direction: "DESC"}}
+  ) {
     name
     slug
     nrCrags
@@ -2272,14 +1600,6 @@ export const RouteDocument = gql`
     sector {
       id
       name
-      crag {
-        name
-        slug
-        country {
-          slug
-          name
-        }
-      }
     }
     pitches {
       difficulty
@@ -2450,6 +1770,180 @@ export const ManagementGetCragDocument = gql`
       super(apollo);
     }
   }
+export const ActivityRoutesByClubSlugDocument = gql`
+    query ActivityRoutesByClubSlug($clubSlug: String!, $input: FindActivityRoutesInput) {
+  activityRoutesByClubSlug(clubSlug: $clubSlug, input: $input) {
+    items {
+      date
+      user {
+        id
+        fullName
+      }
+      grade
+      name
+      ascentType
+      difficulty
+      id
+      publish
+      route {
+        crag {
+          country {
+            slug
+          }
+          slug
+          name
+          id
+        }
+        id
+      }
+    }
+    meta {
+      itemCount
+      pageCount
+      pageNumber
+      pageSize
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ActivityRoutesByClubSlugGQL extends Apollo.Query<ActivityRoutesByClubSlugQuery, ActivityRoutesByClubSlugQueryVariables> {
+    document = ActivityRoutesByClubSlugDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UserFullNameDocument = gql`
+    query UserFullName($userId: String!) {
+  user(email: "", id: $userId) {
+    fullName
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UserFullNameGQL extends Apollo.Query<UserFullNameQuery, UserFullNameQueryVariables> {
+    document = UserFullNameDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ClubByIdDocument = gql`
+    query ClubById($clubId: String!) {
+  club(id: $clubId) {
+    id
+    slug
+    name
+    members {
+      id
+      admin
+      user {
+        id
+        fullName
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ClubByIdGQL extends Apollo.Query<ClubByIdQuery, ClubByIdQueryVariables> {
+    document = ClubByIdDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ClubBySlugDocument = gql`
+    query ClubBySlug($clubSlug: String!) {
+  clubBySlug(slug: $clubSlug) {
+    id
+    slug
+    name
+    members {
+      id
+      admin
+      user {
+        id
+        fullName
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ClubBySlugGQL extends Apollo.Query<ClubBySlugQuery, ClubBySlugQueryVariables> {
+    document = ClubBySlugDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteClubMemberDocument = gql`
+    mutation DeleteClubMember($id: String!) {
+  deleteClubMember(id: $id)
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteClubMemberGQL extends Apollo.Mutation<DeleteClubMemberMutation, DeleteClubMemberMutationVariables> {
+    document = DeleteClubMemberDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteClubDocument = gql`
+    mutation DeleteClub($id: String!) {
+  deleteClub(id: $id)
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteClubGQL extends Apollo.Mutation<DeleteClubMutation, DeleteClubMutationVariables> {
+    document = DeleteClubDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const MyClubsDocument = gql`
+    query MyClubs {
+  myClubs {
+    id
+    slug
+    name
+    nrMembers
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class MyClubsGQL extends Apollo.Query<MyClubsQuery, MyClubsQueryVariables> {
+    document = MyClubsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const CragBySlugDocument = gql`
     query CragBySlug($crag: String!) {
   cragBySlug(slug: $crag) {
@@ -2493,24 +1987,8 @@ export const CragBySlugDocument = gql`
       id
       content
       created
-      user {
-        id
-        fullName
-      }
-    }
-    conditions {
-      id
-      content
-      created
-      user {
-        id
-        fullName
-      }
-    }
-    warnings {
-      id
-      content
-      created
+      updated
+      type
       user {
         id
         fullName
@@ -2734,10 +2212,6 @@ export const namedOperations = {
     MyActivityRoutes: 'MyActivityRoutes',
     MyCragSummary: 'MyCragSummary',
     Profile: 'Profile',
-    ActivityRoutesByClub: 'ActivityRoutesByClub',
-    ClubById: 'ClubById',
-    MyClubs: 'MyClubs',
-    UserFullName: 'UserFullName',
     CountriesToc: 'CountriesToc',
     CragManagement: 'CragManagement',
     Crags: 'Crags',
@@ -2746,6 +2220,11 @@ export const namedOperations = {
     Route: 'Route',
     ManagementCragFormGetCountries: 'ManagementCragFormGetCountries',
     ManagementGetCrag: 'ManagementGetCrag',
+    ActivityRoutesByClubSlug: 'ActivityRoutesByClubSlug',
+    UserFullName: 'UserFullName',
+    ClubById: 'ClubById',
+    ClubBySlug: 'ClubBySlug',
+    MyClubs: 'MyClubs',
     CragBySlug: 'CragBySlug',
     LatestImages: 'LatestImages',
     LatestTicks: 'LatestTicks',
@@ -2753,16 +2232,16 @@ export const namedOperations = {
     Search: 'Search'
   },
   Mutation: {
-    CreateActivity: 'CreateActivity',
-    CreateClubMemberByEmail: 'CreateClubMemberByEmail',
-    DeleteClubMember: 'DeleteClubMember',
     CreateClub: 'CreateClub',
-    DeleteClub: 'DeleteClub',
     UpdateClub: 'UpdateClub',
+    CreateClubMemberByEmail: 'CreateClubMemberByEmail',
+    CreateActivity: 'CreateActivity',
     CreateComment: 'CreateComment',
     DeleteComment: 'DeleteComment',
     UpdateComment: 'UpdateComment',
     ManagementCreateCrag: 'ManagementCreateCrag',
-    ManagementUpdateCrag: 'ManagementUpdateCrag'
+    ManagementUpdateCrag: 'ManagementUpdateCrag',
+    DeleteClubMember: 'DeleteClubMember',
+    DeleteClub: 'DeleteClub'
   }
 }
