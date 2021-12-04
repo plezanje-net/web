@@ -1,61 +1,45 @@
-<header fxLayout="column">
+<header>
   <div
-    class="container p15"
-    fxLayout="row"
-    fxLayout.lt-md="column"
-    fxLayoutAlign="center"
-    fxFlex="57px"
-    fxFlex.lt-md
-    fxLayoutGap.lt-md="22px"
+    class="container ptb-16"
+    fxLayout="column"
+    fxLayout.gt-md="row"
+    fxLayoutAlign="space-between"
   >
     <div
-      fxFlex
-      fxFlex.lt-md="25px"
-      fxLayout="column"
-      fxLayout.lt-md="row"
-      fxLayoutAlign="center"
-      fxLayoutAlign.lt-md="start center"
+      class="logo-and-burger"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
     >
-      <a
-        fxFlex="100"
-        [routerLink]="['/']"
-        class="logo"
-        fxLayout="row"
-        fxLayoutAlign="start center"
-        ><img src="/assets/logo.gif" width="212" height="30"
-      /></a>
-      <button mat-icon-button fxHide.gt-sm (click)="toggleNavi()">
+      <a class="logo-link" [routerLink]="['/']">
+        <img src="/assets/logo.gif" width="212" height="30" />
+      </a>
+
+      <button mat-icon-button fxHide.gt-md (click)="toggleNavi()">
         <mat-icon>menu</mat-icon>
       </button>
     </div>
 
-    <div
-      fxFlex="100"
-      fxFlex.lt-md
-      fxLayoutAlign="end center"
-      fxLayoutAlign.lt-md="start start"
-      [fxHide.lt-md]="!naviOpen"
+    <nav
+      fxLayout="column"
+      fxLayoutAlign="start end"
+      fxLayout.gt-md="row"
+      fxLayoutAlign.gt-md="center center"
+      [fxHide]="!naviOpen"
+      fxShow.gt-md
     >
-      <nav
-        fxLayout.lt-md="column"
-        fxFlex.lt-md="100"
-        fxLayoutAlign.lt-md="start end"
+      <a mat-button [routerLink]="['/']">Domov</a>
+      <a mat-button [routerLink]="['/plezalisca/slovenija']">Plezališča</a>
+      <a mat-button [routerLink]="['/plezalni-dnevnik']">Plezalni dnevnik</a>
+      <a
+        mat-icon-button
+        fxHide
+        fxShow.gt-md
+        matTooltip="Moj Plezanje.net"
+        [routerLink]="['/moj-profil']"
       >
-        <a [routerLink]="['/']" mat-button>Domov</a>
-        <a [routerLink]="['/plezalisca/slovenija']" mat-button>Plezališča</a>
-        <a [routerLink]="['/plezalni-dnevnik']" mat-button>Plezalni dnevnik</a>
-        <a
-          [routerLink]="['/moj-profil']"
-          mat-icon-button
-          fxHide.lt-md
-          matTooltip="Moj Plezanje.net"
-        >
-          <mat-icon>account_circle</mat-icon>
-        </a>
-        <a [routerLink]="['/moj-profil']" mat-button fxHide.gt-sm
-          >Moj Plezanje.net</a
-        >
-      </nav>
-    </div>
+        <mat-icon>account_circle</mat-icon>
+      </a>
+      <a mat-button fxHide.gt-md>Moj Plezanje.net</a>
+    </nav>
   </div>
 </header>
