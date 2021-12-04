@@ -96,6 +96,7 @@ export type Comment = {
   updated: Scalars['DateTime'];
   crag?: Maybe<Crag>;
   route?: Maybe<Route>;
+  exposedUntil: Scalars['DateTime'];
   iceFall: IceFall;
   peak: Peak;
   images: Array<Image>;
@@ -587,7 +588,7 @@ export type Query = {
   countryBySlug: Country;
   countries: Array<Country>;
   route: Route;
-  latestWarnings: Array<Comment>;
+  exposedWarnings: Array<Comment>;
   search: SearchResults;
   latestImages: Array<Image>;
   myActivities: PaginatedActivities;
@@ -653,11 +654,6 @@ export type QueryCountriesArgs = {
 
 export type QueryRouteArgs = {
   id: Scalars['String'];
-};
-
-
-export type QueryLatestWarningsArgs = {
-  latest: Scalars['Int'];
 };
 
 
@@ -1523,14 +1519,12 @@ export type LatestTicksQuery = (
   )> }
 );
 
-export type LatestWarningsQueryVariables = Exact<{
-  latest: Scalars['Int'];
-}>;
+export type ExposedWarningsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LatestWarningsQuery = (
+export type ExposedWarningsQuery = (
   { __typename?: 'Query' }
-  & { latestWarnings: Array<(
+  & { exposedWarnings: Array<(
     { __typename?: 'Comment' }
     & Pick<Comment, 'content' | 'updated'>
     & { user?: Maybe<(
@@ -2663,9 +2657,9 @@ export const LatestTicksDocument = gql`
       super(apollo);
     }
   }
-export const LatestWarningsDocument = gql`
-    query latestWarnings($latest: Int!) {
-  latestWarnings(latest: $latest) {
+export const ExposedWarningsDocument = gql`
+    query exposedWarnings {
+  exposedWarnings {
     content
     user {
       fullName
@@ -2696,8 +2690,8 @@ export const LatestWarningsDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class LatestWarningsGQL extends Apollo.Query<LatestWarningsQuery, LatestWarningsQueryVariables> {
-    document = LatestWarningsDocument;
+  export class ExposedWarningsGQL extends Apollo.Query<ExposedWarningsQuery, ExposedWarningsQueryVariables> {
+    document = ExposedWarningsDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -2839,7 +2833,7 @@ export const namedOperations = {
     CragBySlug: 'CragBySlug',
     LatestImages: 'LatestImages',
     LatestTicks: 'LatestTicks',
-    latestWarnings: 'latestWarnings',
+    exposedWarnings: 'exposedWarnings',
     PopularCrags: 'PopularCrags',
     Search: 'Search'
   },
