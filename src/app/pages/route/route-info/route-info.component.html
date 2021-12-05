@@ -5,6 +5,12 @@
       <app-grade [grade]="route.grade" [showModifier]="true"></app-grade>
     </span>
   </div>
+  <div class="row" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="route.pitches.length > 0">
+    <div class="label">Raztežaji</div>
+    <span>
+      <text *ngFor="let pitch of route.pitches; let isLast=last">{{pitch.difficulty}}{{isLast ? '' : ', '}}</text>
+    </span>
+  </div>
   <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
     <div class="label">Dolžina</div>
     <span class="text-right">

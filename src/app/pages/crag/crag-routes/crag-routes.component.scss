@@ -1,17 +1,19 @@
-@import '~@angular/material/theming';
+@import "~@angular/material/theming";
 @import "../../../../styles/colors.scss";
 
 .row {
   // cursor: pointer;
   padding: 6px 2px 6px 10px;
 
-  .routes {
+  .icons {
     white-space: nowrap;
-    text-align: right;
+    text-align: center;
     margin: -4px 0;
 
-    .mat-button {
+    .mat-icon-button {
       color: #0000008a;
+      height: 37px;
+      width: 37px;
     }
   }
 
@@ -33,6 +35,9 @@ h3 {
 .popover-container {
   position: relative;
 
+  // text-align: center;
+}
+.pitches {
   text-align: center;
 }
 
@@ -107,4 +112,3 @@ h3 {
   text-align: right;
   color: $text-gray;
 }
-
