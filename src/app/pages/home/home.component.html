@@ -1,11 +1,14 @@
 <app-data-error *ngIf="error" [error]="error"></app-data-error>
 <app-loader *ngIf="loading && !error"></app-loader>
 
-<div *ngIf="!error" [fxShow]="!loading">
+<div *ngIf="!error" [class.not-visible]="loading">
   <div class="container p15">
     <app-search></app-search>
   </div>
 
+  <app-exposed-warnings
+    (errorEvent)="handleError($event)"
+  ></app-exposed-warnings>
   <app-popular-crags (errorEvent)="handleError($event)"></app-popular-crags>
   <app-latest-images (errorEvent)="handleError($event)"></app-latest-images>
   <app-latest-ticks (errorEvent)="handleError($event)"></app-latest-ticks>

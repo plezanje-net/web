@@ -243,3 +243,12 @@ span.highlight {
 .d-block {
   display: block;
 }
+
+.slick-list {
+  transition: all 0.3s ease;
+}
+
+.slick-dots {
+  position: relative !important;
+  bottom: 0 !important;
+}
