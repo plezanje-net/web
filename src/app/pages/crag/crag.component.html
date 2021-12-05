@@ -40,10 +40,12 @@
   <div
     class="container mt-16"
     fxLayout="row"
-    fxLayoutGap="12px"
+    fxLayoutGap="16px"
     fxLayout.lt-md="column"
   >
-    <div fxFlex="320px" fxFlex.lt-md *ngIf="crag">
+    <!-- <div 
+    fxFlex="320px"  -->
+    <div fxFlex="33.33%" fxFlex.lt-md *ngIf="crag">
       <nav mat-tab-nav-bar fxHide.lt-md>
         <a mat-tab-link disabled> Lokacija & dostop </a>
       </nav>
@@ -62,11 +64,11 @@
     </div>
 
     <div
-      fxFlex="100"
-      fxFlex.lt-md
+      ngClass.gt-sm="other-tabs"
+      fxFlex
       fxLayout="column"
       fxLayoutGap="0px"
-      fxLayoutGap.lt-md="12px"
+      fxLayoutGap.lt-md="16px"
     >
       <nav mat-tab-nav-bar fxHide.lt-md>
         <ng-container *ngFor="let tab of tabs">
@@ -98,16 +100,20 @@
         [crag]="crag"
         *ngIf="activeTab == 'lokacija'"
       ></app-crag-location>
+
       <app-crag-routes
         [crag]="crag"
         *ngIf="activeTab == 'smeri'"
       ></app-crag-routes>
+
       <app-crag-comments
         [crag]="crag"
         *ngIf="activeTab == 'komentarji'"
         [action]="action$"
       ></app-crag-comments>
+
       <app-crag-info [crag]="crag" *ngIf="activeTab == 'info'"></app-crag-info>
+
       <app-crag-gallery
         [images]="crag.images"
         *ngIf="activeTab == 'galerija'"
