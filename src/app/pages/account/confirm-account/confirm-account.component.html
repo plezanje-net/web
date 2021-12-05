@@ -1,14 +1,14 @@
-<h1>
-  <div class="container p15">
-    <div fxFlex="100">Aktivacija računa</div>
+<div class="white-back mt-16">
+  <div class="container ptb-8">
+    <h1>Aktivacija računa</h1>
   </div>
-</h1>
+</div>
 
-<div class="container">
+<div class="container mt-16">
   <app-loader *ngIf="loading"></app-loader>
   <div *ngIf="!loading" class="card">
     <div *ngIf="success">
-      Vaš račun je bil uspešno aktiviran. Zdaj se lahko prijavite
+      Vaš račun je bil uspešno aktiviran. Zdaj se lahko prijavite.
     </div>
     <div *ngIf="!success">Vašega računa ni bilo mogoče aktivirati.</div>
   </div>
