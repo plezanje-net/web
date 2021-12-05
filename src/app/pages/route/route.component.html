@@ -3,21 +3,33 @@
 <app-loader *ngIf="loading"></app-loader>
 
 <div *ngIf="!error && !loading">
-  <h1>
-    <div class="container p15" fxLayout="row" fxLayoutAlign="space-between center">
-      <div fxLayout="row" fxLayoutAlign="start center">
-        <div>{{ route.name }}</div>
-      </div>
-      <!-- <div>{{ route.difficulty }} | {{ route.length }}m</div> -->
+  <div class="white-back mt-16">
+    <div class="container ptb-8">
+      <h1>{{ route.name }}</h1>
     </div>
-  </h1>
-  <div class="container" fxLayout="row" fxLayoutGap="12px" fxLayout.lt-md="column">
+  </div>
+
+  <div
+    class="container mt-16"
+    fxLayout="row"
+    fxLayoutGap="12px"
+    fxLayout.lt-md="column"
+  >
     <div fxFlex="320px" fxFlex.lt-md>
       <app-route-info [route]="route"></app-route-info>
     </div>
-    <div fxFlex="100" fxFlex.lt-md fxLayout="column" fxLayoutGap="0px" fxLayoutGap.lt-md="12px">
+    <div
+      fxFlex="100"
+      fxFlex.lt-md
+      fxLayout="column"
+      fxLayoutGap="0px"
+      fxLayoutGap.lt-md="12px"
+    >
       <app-crag-gallery [images]="route.images"></app-crag-gallery>
-      <app-route-comments *ngIf="route.comments.length" [comments]="route.comments"></app-route-comments>
+      <app-route-comments
+        *ngIf="route.comments.length"
+        [comments]="route.comments"
+      ></app-route-comments>
     </div>
   </div>
 </div>
