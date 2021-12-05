@@ -2,14 +2,16 @@
   <div class="content-above-footer-wrap">
     <app-header></app-header>
 
-    <div class="main">
-      <div class="container p15">
-        <app-breadcrumbs></app-breadcrumbs>
-      </div>
-
-      <router-outlet></router-outlet>
+    <div class="container mt-16">
+      <app-breadcrumbs></app-breadcrumbs>
     </div>
+
+    <router-outlet></router-outlet>
   </div>
 
-  <footer class="text-center">© www.plezanje.net, 2004-{{ nowYear }}</footer>
+  <footer>
+    <div class="container text-center ptb-16">
+      © www.plezanje.net, 2004-{{ nowYear }}
+    </div>
+  </footer>
 </div>

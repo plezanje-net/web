@@ -1,16 +1,30 @@
-<h1>
-  <div class="container p15" fxLayout="row" fxLayoutAlign="start center">
-    <div fxFlex="100">Moj Plezanje.net</div>
+<div class="white-back mt-16">
+  <div
+    class="container ptb-8"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+  >
+    <h1>Moj plezanje.net</h1>
     <button mat-icon-button matTooltip="Odjava" (click)="logout()">
-      <mat-icon>logout</mat-icon>
+      <mat-icon color="primary">logout</mat-icon>
     </button>
   </div>
-</h1>
+</div>
 
-<div class="container p15">
+<div class="container mt-16">
   <div fxLayout="row wrap" fxLayoutGap="8px grid">
-    <div fxFlex="100%" fxFlex.gt-xs="50%" fxFlex.gt-sm="33%" fxFlex.gt-md="25%" fxFlex.gt-lg="20%">
-      <mat-card class="link-card" appMaterialElevation [routerLink]="['/moj-profil/moji-klubi']">
+    <div
+      fxFlex="100%"
+      fxFlex.gt-xs="50%"
+      fxFlex.gt-sm="33%"
+      fxFlex.gt-md="25%"
+      fxFlex.gt-lg="20%"
+    >
+      <mat-card
+        class="link-card"
+        appMaterialElevation
+        [routerLink]="['/moj-profil/moji-klubi']"
+      >
         <mat-card-content fxLayout="row" fxLayoutAlign="start center">
           <mat-icon>groups</mat-icon>
           <div class="card-title">Moji klubi</div>

@@ -2,39 +2,13 @@
 <app-loader *ngIf="loading && !error"></app-loader>
 
 <div *ngIf="!error" [fxShow]="!loading">
-  <div class="container p15">
+  <div class="container mt-16">
     <app-search></app-search>
-  </div>
 
-  <app-popular-crags (errorEvent)="handleError($event)"></app-popular-crags>
-  <app-latest-images (errorEvent)="handleError($event)"></app-latest-images>
-  <app-latest-ticks (errorEvent)="handleError($event)"></app-latest-ticks>
+    <app-popular-crags (errorEvent)="handleError($event)"></app-popular-crags>
+
+    <app-latest-images (errorEvent)="handleError($event)"></app-latest-images>
+
+    <app-latest-ticks (errorEvent)="handleError($event)"></app-latest-ticks>
+  </div>
 </div>
-
-<!-- <div class="container p15" fxLayout="row" fxLayout.lt-sm="column">
-  <div fxFlex="70">aaa</div>
-  <div fxFlex="30">
-    <h3>Moj Plezanje.net</h3>
-    <div class="card padding">
-      <div fxLayout="column" fxLayoutAlign="space-between">
-        <button
-          mat-button
-          color="primary"
-          (click)="login()"
-          fxLayout="row"
-          fxLayospace-n="start"
-        >
-          Prijava
-        </button>
-        <a
-          [routerLink]="['/registracija']"
-          mat-button
-          color="primary"
-          fxLayout="row"
-          fxLayoutAlign="start"
-          >Ustvari račun</a
-        >
-      </div>
-    </div>
-  </div>
-</div> -->

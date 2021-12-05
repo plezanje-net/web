@@ -3,15 +3,13 @@
   min-height: 100vh;
 
   .content-above-footer-wrap {
-    padding-bottom: 50px;
+    padding-bottom: 56px; // = 24 (lineheight) + 2x16 (padding tb)
   }
 
   footer {
     position: absolute;
     bottom: 0;
-    height: 50px;
     width: 100%;
-    padding: 15px;
-    line-height: 20px;
+    line-height: 24px;
   }
 }

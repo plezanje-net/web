@@ -1,6 +1,10 @@
 <div fxLayout="row">
   <form [formGroup]="searchForm" (ngSubmit)="onSubmit()" fxFlex="100">
-    <mat-form-field fxFlex="100" floatLabel="never">
+    <mat-form-field
+      fxFlex="100"
+      floatLabel="never"
+      style="margin-bottom: -1.34375em"
+    >
       <mat-icon matPrefix class="my-icon">search</mat-icon>
       <mat-label>Iskanje</mat-label>
       <input

@@ -2,7 +2,7 @@
   <div
     class="container ptb-16"
     fxLayout="column"
-    fxLayout.gt-md="row"
+    fxLayout.gt-sm="row"
     fxLayoutAlign="space-between"
   >
     <div
@@ -14,7 +14,7 @@
         <img src="/assets/logo.gif" width="212" height="30" />
       </a>
 
-      <button mat-icon-button fxHide.gt-md (click)="toggleNavi()">
+      <button mat-icon-button fxHide.gt-sm (click)="toggleNavi()">
         <mat-icon>menu</mat-icon>
       </button>
     </div>
@@ -22,10 +22,10 @@
     <nav
       fxLayout="column"
       fxLayoutAlign="start end"
-      fxLayout.gt-md="row"
-      fxLayoutAlign.gt-md="center center"
+      fxLayout.gt-sm="row"
+      fxLayoutAlign.gt-sm="center center"
       [fxHide]="!naviOpen"
-      fxShow.gt-md
+      fxShow.gt-sm
     >
       <a mat-button [routerLink]="['/']">Domov</a>
       <a mat-button [routerLink]="['/plezalisca/slovenija']">Plezališča</a>
@@ -33,13 +33,15 @@
       <a
         mat-icon-button
         fxHide
-        fxShow.gt-md
+        fxShow.gt-sm
         matTooltip="Moj Plezanje.net"
         [routerLink]="['/moj-profil']"
       >
         <mat-icon>account_circle</mat-icon>
       </a>
-      <a mat-button fxHide.gt-md>Moj Plezanje.net</a>
+      <a mat-button fxHide.gt-sm [routerLink]="['/moj-profil']"
+        >Moj Plezanje.net</a
+      >
     </nav>
   </div>
 </header>

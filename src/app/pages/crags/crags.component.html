@@ -1,31 +1,47 @@
 <app-data-error *ngIf="error" [error]="error"></app-data-error>
 
 <div *ngIf="!error">
-  <h1>
-    <div class="container p15" fxLayout="row" fxLayoutAlign="start center">
-      <div fxFlex="100">Plezališča - {{ country?.name }}</div>
+  <div class="white-back mt-16">
+    <div
+      class="container ptb-8"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+    >
+      <h1>Plezališča - {{ country?.name }}</h1>
       <button mat-icon-button [matMenuTriggerFor]="menu">
-        <mat-icon>more_vert</mat-icon>
+        <mat-icon color="primary">more_vert</mat-icon>
       </button>
 
       <mat-menu #menu="matMenu">
-        <button mat-menu-item [routerLink]="['/dodaj-plezalisce', { country: country?.id }]">
+        <button
+          mat-menu-item
+          [routerLink]="['/dodaj-plezalisce', { country: country?.id }]"
+        >
           <mat-icon>add</mat-icon>
           <span>Dodaj plezališče</span>
         </button>
       </mat-menu>
     </div>
-  </h1>
+  </div>
 
   <app-loader *ngIf="loading"></app-loader>
 
-  <div class="crag-map-container" *ngIf="!loading && country.code == 'SI'">
+  <div
+    class="crag-map-container mt-16"
+    *ngIf="!loading && country.code == 'SI'"
+  >
     <div class="crag-map">
       <app-map [crags]="crags$"></app-map>
     </div>
   </div>
 
-  <div class="container" fxLayout="row" fxLayoutGap="12px" *ngIf="!loading" fxLayout.lt-md="column">
+  <div
+    class="container"
+    fxLayout="row"
+    fxLayoutGap="12px"
+    *ngIf="!loading"
+    fxLayout.lt-md="column"
+  >
     <div fxFlex="320px" fxFlex.lt-md>
       <app-crags-toc [country]="country"></app-crags-toc>
     </div>
@@ -36,23 +52,39 @@
       <div *ngIf="!cragsLoading" fxLayout="row">
         <mat-form-field fxFlex="100">
           <mat-label>Išči po seznamu</mat-label>
-          <input matInput autofocus [formControl]="search" autocomplete="off" (keydown)="searchKeyDown($event)" />
+          <input
+            matInput
+            autofocus
+            [formControl]="search"
+            autocomplete="off"
+            (keydown)="searchKeyDown($event)"
+          />
         </mat-form-field>
       </div>
 
       <div class="card" *ngIf="!cragsLoading">
-        <div fxLayout="row" fxLayoutAlign="start center" fxHide.lt-md class="row header">
+        <div
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          fxHide.lt-md
+          class="row header"
+        >
           <div fxFlex="50" fxFlex.lt-md="100">Plezališče</div>
           <div fxFlex="25" fxFlex.lt-md>Število smeri</div>
           <div fxFlex="20px" fxFlex.lt-md>U</div>
           <div fxFlex="25" class="routes" fxFlex.lt-md>Težavnost</div>
         </div>
-        <div *ngFor="let crag of filteredCrags" [routerLink]="['/plezalisca/', country.slug, crag.slug]" fxLayout="row"
-          fxLayoutAlign="start center" class="row">
+        <div
+          *ngFor="let crag of filteredCrags"
+          [routerLink]="['/plezalisca/', country.slug, crag.slug]"
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          class="row"
+        >
           <div fxFlex="50" fxFlex.lt-md="100">
             <a [routerLink]="['/plezalisca/', country.slug, crag.slug]">{{
               crag.name
-              }}</a>
+            }}</a>
           </div>
           <div fxFlex="25" fxFlex.lt-md fxHide.lt-md>{{ crag.nrRoutes }}</div>
           <div fxFlex="20px" fxFlex.lt-md fxHide.lt-md>
