@@ -1,7 +1,6 @@
-name: preproduction
+name: deploy
 on:
-  push:
-    branches: [preproduction]
+  workflow_dispatch:
 jobs:
   deploy:
     runs-on: preproduction
