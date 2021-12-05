@@ -1,17 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap");
 @import "~@angular/flex-layout/mq";
 @import "reset.scss";
 @import "colors.scss";
 @import "editor.scss";
 
-html,
 body {
-  height: 100%;
-}
-
-body {
-  margin: 0;
-  font-family: "Roboto", "Helvetica Neue", sans-serif; // ?? Poppins?
   background: #eef5f9;
 }
 

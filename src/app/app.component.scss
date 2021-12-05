@@ -1,15 +1,9 @@
 .whole-page-wrap {
-  position: relative;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
-
-  .content-above-footer-wrap {
-    padding-bottom: 56px; // = 24 (lineheight) + 2x16 (padding tb)
-  }
-
-  footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    line-height: 24px;
-  }
+}
+.whole-page-wrap main {
+  flex: 1 auto;
+  // margin-bottom: auto; // would also work instead of above
 }
