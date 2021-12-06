@@ -101,6 +101,8 @@ import { LatestTicksComponent } from './pages/home/latest-ticks/latest-ticks.com
 import { LatestImagesComponent } from './pages/home/latest-images/latest-images.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ImageFullComponent } from './common/image-full/image-full.component';
+import { ExposedWarningsComponent } from './pages/home/exposed-warnings/expsoed-warnings.component';
+import { SlickCarouselModule } from 'ngx-slick-carousel';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -168,6 +170,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     LatestTicksComponent,
     LatestImagesComponent,
     ImageFullComponent,
+    ExposedWarningsComponent,
   ],
   imports: [
     BrowserModule,
@@ -201,6 +204,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ManagementModule,
     AppRoutingModule,
     MatGridListModule,
+    SlickCarouselModule,
   ],
   providers: [
     AuthGuard,

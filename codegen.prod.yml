@@ -1,0 +1,10 @@
+overwrite: true
+schema: "https://plezanje.info/graphql"
+documents: "src/**/*.graphql"
+generates:
+  src/generated/graphql.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-apollo-angular"
+      - "named-operations-object"

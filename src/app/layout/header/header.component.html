@@ -28,7 +28,7 @@
       fxShow.gt-sm
     >
       <a mat-button [routerLink]="['/']">Domov</a>
-      <a mat-button [routerLink]="['/plezalisca/slovenija']">Plezališča</a>
+      <a mat-button [routerLink]="['/plezalisca/slovenija', { type: 'sport' }]">Plezališča</a>
       <a mat-button [routerLink]="['/plezalni-dnevnik']">Plezalni dnevnik</a>
       <a
         mat-icon-button
@@ -43,5 +43,6 @@
         >Moj Plezanje.net</a
       >
     </nav>
+
   </div>
 </header>

@@ -43,9 +43,8 @@
     fxLayoutGap="16px"
     fxLayout.lt-md="column"
   >
-    <!-- <div 
-    fxFlex="320px"  -->
     <div fxFlex="33.33%" fxFlex.lt-md *ngIf="crag">
+
       <nav mat-tab-nav-bar fxHide.lt-md>
         <a mat-tab-link disabled> Lokacija & dostop </a>
       </nav>
@@ -99,8 +98,8 @@
       <app-crag-location
         [crag]="crag"
         *ngIf="activeTab == 'lokacija'"
+        fxHide.gt-sm
       ></app-crag-location>
-
       <app-crag-routes
         [crag]="crag"
         *ngIf="activeTab == 'smeri'"

@@ -1,0 +1,48 @@
+@import "../../../../styles/colors.scss";
+.warning {
+  border-left: 2px solid $warn;
+}
+
+.mat-card {
+  border-radius: 0;
+  .mat-card-title {
+    font-weight: 400;
+    font-size: 20px;
+    padding-top: 4px;
+    line-height: 20px;
+    margin: 0;
+  }
+  .mat-card-content {
+    margin-top: 20px;
+    margin-bottom: 0;
+  }
+}
+
+.author {
+  color: #00000080;
+  font-size: 13px;
+  text-align: right;
+  margin-top: 8px;
+}
+
+h2 {
+  color: $primary;
+  background-color: transparent;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: normal;
+  margin-top: 32px;
+  margin-bottom: 24px;
+  padding: 0;
+  box-shadow: none;
+}
+
+.carousel-outer-wrap {
+  margin: -8px;
+  .slide {
+    cursor: pointer;
+  }
+  .slide-inner-wrap {
+    margin: 8px;
+  }
+}

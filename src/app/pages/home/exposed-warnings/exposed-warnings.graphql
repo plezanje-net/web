@@ -1,0 +1,27 @@
+query exposedWarnings {
+  exposedWarnings {
+    content
+    user {
+      fullName
+    }
+    updated
+    crag {
+      name
+      slug
+      country {
+        slug
+      }
+    }
+    route {
+      id
+      name
+      crag {
+        name
+        slug
+        country {
+          slug
+        }
+      }
+    }
+  }
+}
