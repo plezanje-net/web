@@ -13,6 +13,7 @@ import { CommentFormComponent } from 'src/app/forms/comment-form/comment-form.co
 import { CragBySlugGQL, CragBySlugQuery } from 'src/generated/graphql';
 import { ApolloError } from '@apollo/client/errors';
 import { GraphQLError } from 'graphql';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-crag',
@@ -64,7 +65,8 @@ export class CragComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private apollo: Apollo,
     private router: Router,
-    private cragBySlugGQL: CragBySlugGQL
+    private cragBySlugGQL: CragBySlugGQL,
+    private breakpointObserver: BreakpointObserver
   ) {}
 
   ngOnInit(): void {
@@ -146,6 +148,13 @@ export class CragComponent implements OnInit {
         name: this.crag.name,
       },
     ]);
+    this.breakpointObserver
+      .observe([Breakpoints.Small, Breakpoints.XSmall])
+      .subscribe((res) => {
+        if (!res.matches && this.activeTab == 'lokacija') {
+          this.setActiveTab(this.tabs[1]);
+        }
+      });
   }
 
   setActiveTab(tab: Tab) {
