@@ -123,7 +123,7 @@ export class CragRoutesComponent implements OnInit {
     this.myCragSummaryGQL
       .watch({ input: { cragId: this.crag.id } })
       .valueChanges.subscribe((result) => {
-        result.data.myCragSummary.forEach((ascent) => {
+        result.data?.myCragSummary.forEach((ascent) => {
           this.ascents[ascent.route.id] = ascent.ascentType;
         });
       });
