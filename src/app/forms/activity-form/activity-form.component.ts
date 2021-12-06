@@ -137,7 +137,6 @@ export class ActivityFormComponent implements OnInit {
         routeId: route.routeId,
         name: route.name,
         difficulty: route.difficulty,
-        grade: route.publish === PublishOptionsEnum.private ? undefined : route.gradeSuggestion ?? route.grade,
         stars: route.stars,
       };
     });
