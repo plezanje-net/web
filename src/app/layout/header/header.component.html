@@ -42,7 +42,11 @@
         fxLayoutAlign.lt-md="start end"
       >
         <a [routerLink]="['/']" mat-button>Domov</a>
-        <a [routerLink]="['/plezalisca/slovenija']" mat-button>Plezališča</a>
+        <a
+          [routerLink]="['/plezalisca/slovenija', { type: 'sport' }]"
+          mat-button
+          >Plezališča</a
+        >
         <a [routerLink]="['/plezalni-dnevnik']" mat-button>Plezalni dnevnik</a>
         <a
           [routerLink]="['/moj-profil']"
