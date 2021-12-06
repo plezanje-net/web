@@ -90,14 +90,21 @@ export class CragsComponent implements OnInit {
   }
 
   filterCrags(): void {
-    this.filteredCrags =
-      this.search.value == null
-        ? this.country.crags
-        : this.country.crags.filter(
-            (crag) =>
-              crag.name.toLowerCase().indexOf(this.search.value.toLowerCase()) >
-              -1
-          );
+    if (this.search.value == null) {
+      this.filteredCrags = this.country.crags;
+    } else {
+      let searchTerm = this.search.value;
+      searchTerm = searchTerm.toLowerCase();
+      searchTerm = searchTerm.replace(/[cčć]/gi, '[cčć]');
+      searchTerm = searchTerm.replace(/[sš]/gi, '[sš]');
+      searchTerm = searchTerm.replace(/[zž]/gi, '[zž]');
+      const regExp = new RegExp(searchTerm, 'gi');
+
+      this.filteredCrags = this.country.crags.filter(
+        (crag) => !!regExp.exec(crag.name.toLowerCase())
+      );
+    }
+
     this.crags$.next(this.filteredCrags);
   }
 
