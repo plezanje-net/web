@@ -126,6 +126,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.map.getView().fit(this.vectorLayer.getSource().getExtent(), {
           size: this.map.getSize(),
           maxZoom: 15,
+          padding: [30, 30, 30, 30]
         });
       }
     });
