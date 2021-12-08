@@ -1,26 +1,24 @@
-<div class="container p15">
-  <h2>Popularna plezališča</h2>
+<h2>Popularna plezališča</h2>
 
-  <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="16px">
-    <app-popular-crags-card
-      fxFlex
-      [dateFrom]="oneWeekAgo"
-      [title]="'Zadnji teden'"
-      (errorEvent)="handleError($event)"
-    ></app-popular-crags-card>
+<div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="16px">
+  <app-popular-crags-card
+    fxFlex
+    [dateFrom]="oneWeekAgo"
+    [title]="'Zadnji teden'"
+    (errorEvent)="handleError($event)"
+  ></app-popular-crags-card>
 
-    <app-popular-crags-card
-      fxFlex
-      [dateFrom]="oneMonthAgo"
-      [title]="'Zadnji mesec'"
-      (errorEvent)="handleError($event)"
-    ></app-popular-crags-card>
+  <app-popular-crags-card
+    fxFlex
+    [dateFrom]="oneMonthAgo"
+    [title]="'Zadnji mesec'"
+    (errorEvent)="handleError($event)"
+  ></app-popular-crags-card>
 
-    <app-popular-crags-card
-      fxFlex
-      [top]="10"
-      [title]="'Top 10'"
-      (errorEvent)="handleError($event)"
-    ></app-popular-crags-card>
-  </div>
+  <app-popular-crags-card
+    fxFlex
+    [top]="10"
+    [title]="'Top 10'"
+    (errorEvent)="handleError($event)"
+  ></app-popular-crags-card>
 </div>

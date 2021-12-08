@@ -3,13 +3,17 @@
 <app-loader *ngIf="loading"></app-loader>
 
 <div *ngIf="!error && !loading">
-  <h1>
-    <div class="container p15" fxLayout="row" fxLayoutAlign="start center">
-      <div fxFlex="100">{{ club.name }}</div>
+  <div class="white-back mt-16">
+    <div
+      class="container py-8"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+    >
+      <h1>{{ club.name }}</h1>
 
-      <div *ngIf="clubService.amClubAdmin$ | async">
+      <ng-container *ngIf="clubService.amClubAdmin$ | async">
         <button mat-icon-button [matMenuTriggerFor]="menu">
-          <mat-icon>more_vert</mat-icon>
+          <mat-icon color="primary">more_vert</mat-icon>
         </button>
 
         <mat-menu #menu="matMenu">
@@ -26,9 +30,9 @@
             <span>Izbriši klub</span>
           </button>
         </mat-menu>
-      </div>
+      </ng-container>
     </div>
-  </h1>
+  </div>
 
   <div class="container">
     <nav mat-tab-nav-bar>

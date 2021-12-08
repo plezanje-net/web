@@ -1,9 +1,9 @@
-<div class="container p15">
+<div class="container mt-16">
   <app-search></app-search>
 
   <app-loader *ngIf="loading"></app-loader>
 
-  <div *ngIf="!loading">
+  <div *ngIf="!loading" class="mt-16">
     <div *ngIf="searchStringTooShort">
       Iskalni niz "{{ searchString }}" je prekratek. Za uspešno iskanje moraš
       vnesti vsaj 3 znake.

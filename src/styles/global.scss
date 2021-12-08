@@ -1,32 +1,73 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap");
-
 @import "~@angular/flex-layout/mq";
 @import "reset.scss";
 @import "colors.scss";
 @import "editor.scss";
-html,
+
 body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: "Roboto", "Helvetica Neue", sans-serif;
   background: #eef5f9;
-  // overflow: hidden;
 }
 
-h1 {
+/* XS (extra small)*/
+.container {
+  margin: 0 16px;
+  width: auto;
+}
+
+/* SM (small) */
+@media (min-width: 600px) {
+  .container {
+    margin: 0 32px;
+    width: auto;
+  }
+}
+
+/* MD (medium) */
+@media (min-width: 905px) {
+  .container {
+    margin: 0 auto;
+    width: 840px;
+  }
+}
+
+/* LG (large) */
+@media (min-width: 1240px) {
+  .container {
+    margin: 0 200px;
+    width: auto;
+  }
+}
+
+/* XL (extra large) */
+@media (min-width: 1440px) {
+  .container {
+    margin: 0 auto;
+    width: 1040px;
+  }
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
+.py-8 {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.py-16 {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.white-back {
   background: #fff;
   box-shadow: 0 2px 6px 0 #6494ff26;
-  padding-left: 8px;
-  color: $primary;
+}
 
-  @include layout-bp(lt-md) {
-    font-size: 18px;
-  }
-  > div {
-    min-height: 70px;
-  }
+.mat-typography h1 {
+  color: $primary;
+  margin: 0;
+  line-height: 40px; // same as icon button height
 }
 
 .mat-typography h2 {
@@ -52,44 +93,6 @@ a {
 
 b {
   font-weight: 500;
-}
-
-.container {
-  margin: 0 auto;
-  padding: 0 8px;
-  width: 100%;
-  &.p15 {
-    padding: 15px 8px;
-  }
-}
-
-@media (min-width: 576px) {
-  .container {
-    max-width: 540px;
-    padding: 0 15px;
-    width: 100%;
-    &.p15 {
-      padding: 15px;
-    }
-  }
-}
-
-@media (min-width: 768px) {
-  .container {
-    max-width: 720px;
-  }
-}
-
-@media (min-width: 992px) {
-  .container {
-    max-width: 960px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .container {
-    max-width: 1140px;
-  }
 }
 
 .text-center {

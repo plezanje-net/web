@@ -1,18 +1,21 @@
 <app-data-error *ngIf="error" [error]="error"></app-data-error>
 <ng-container *ngIf="!error">
-  <h1>
-    <div class="container p15" fxLayout="row" fxLayoutAlign="start center">
-      <div fxFlex="100">Moji klubi</div>
+  <div class="white-back mt-16">
+    <div class="container py-8">
+      <h1>Moji klubi</h1>
     </div>
-  </h1>
+  </div>
+
   <app-loader *ngIf="loading"></app-loader>
-  <div class="container p15 clubs-actions">
+
+  <div class="container mt-16 clubs-actions">
     <button mat-flat-button color="primary" (click)="createClub()">
       <mat-icon>add</mat-icon>
       Ustvari nov klub
     </button>
   </div>
-  <div *ngIf="!loading" class="container p15">
+
+  <div *ngIf="!loading" class="container mt-16">
     <div *ngIf="myClubs.length" class="card clubs-list-container">
       <mat-nav-list>
         <ng-container *ngFor="let club of myClubs; last as isLast">

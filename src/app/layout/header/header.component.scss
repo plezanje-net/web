@@ -1,23 +1,21 @@
 @import "../../../styles/colors.scss";
 
 header {
-  // position: fixed;
-  // z-index: 200;
-  // top: 0;
-  // left: 0;
-  // width: 100%;
   border-bottom: 3px solid $primary;
   background: #fff;
   box-shadow: 1px 0 10px rgba(0, 0, 0, 0.5);
-  .logo {
-    img {
-      display: block;
+
+  div.logo-and-burger {
+    min-height: 40px; // same as the height of the hamburger icon
+    a.logo-link {
+      width: 212px;
+      height: 30px;
     }
   }
+
   nav {
     a:hover {
       color: $primary;
-      text-decoration: none;
     }
   }
 }
