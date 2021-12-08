@@ -1,6 +1,6 @@
 <header>
   <div
-    class="container ptb-16"
+    class="container py-16"
     fxLayout="column"
     fxLayout.gt-sm="row"
     fxLayoutAlign="space-between"
@@ -28,7 +28,9 @@
       fxShow.gt-sm
     >
       <a mat-button [routerLink]="['/']">Domov</a>
-      <a mat-button [routerLink]="['/plezalisca/slovenija', { type: 'sport' }]">Plezališča</a>
+      <a mat-button [routerLink]="['/plezalisca/slovenija', { type: 'sport' }]"
+        >Plezališča</a
+      >
       <a mat-button [routerLink]="['/plezalni-dnevnik']">Plezalni dnevnik</a>
       <a
         mat-icon-button
@@ -43,6 +45,5 @@
         >Moj Plezanje.net</a
       >
     </nav>
-
   </div>
 </header>
