@@ -11,7 +11,6 @@ import { Overlay } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 import { CommentFormComponent } from 'src/app/forms/comment-form/comment-form.component';
 import { CragBySlugGQL, CragBySlugQuery, Comment, Crag } from 'src/generated/graphql';
-import { ApolloError } from '@apollo/client/errors';
 import { GraphQLError } from 'graphql';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
@@ -28,7 +27,7 @@ export class CragComponent implements OnInit {
 
   crag: CragBySlugQuery['cragBySlug'];
 
-  warnings: Comment[];
+  warnings: CragBySlugQuery['cragBySlug']['comments'];
 
   map: any;
 
