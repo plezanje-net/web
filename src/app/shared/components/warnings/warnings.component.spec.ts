@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CragWarningsComponent } from './crag-warnings.component';
+import { WarningsComponent } from './warnings.component';
 
-describe('CragWarningsComponent', () => {
-  let component: CragWarningsComponent;
-  let fixture: ComponentFixture<CragWarningsComponent>;
+describe('WarningsComponent', () => {
+  let component: WarningsComponent;
+  let fixture: ComponentFixture<WarningsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CragWarningsComponent],
+      declarations: [WarningsComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CragWarningsComponent);
+    fixture = TestBed.createComponent(WarningsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

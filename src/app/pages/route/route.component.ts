@@ -14,6 +14,7 @@ export class RouteComponent implements OnInit {
   loading: boolean = true;
   error: DataError = null;
   route: any = {};
+  warnings: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -55,6 +56,7 @@ export class RouteComponent implements OnInit {
 
   querySuccess(data: any): void {
     this.route = data.route;
+    this.warnings = this.route?.comments.filter((comment) => comment.type === 'warning');
 
     this.layoutService.$breadcrumbs.next([
       {

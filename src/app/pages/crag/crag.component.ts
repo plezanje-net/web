@@ -10,7 +10,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { Overlay } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 import { CommentFormComponent } from 'src/app/forms/comment-form/comment-form.component';
-import { CragBySlugGQL, CragBySlugQuery } from 'src/generated/graphql';
+import { CragBySlugGQL, CragBySlugQuery, Comment, Crag } from 'src/generated/graphql';
 import { ApolloError } from '@apollo/client/errors';
 import { GraphQLError } from 'graphql';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -27,6 +27,8 @@ export class CragComponent implements OnInit {
   canEdit: boolean = false;
 
   crag: CragBySlugQuery['cragBySlug'];
+
+  warnings: Comment[];
 
   map: any;
 
@@ -134,6 +136,7 @@ export class CragComponent implements OnInit {
 
   querySuccess(cragBySlug: CragBySlugQuery['cragBySlug']) {
     this.crag = cragBySlug;
+    this.warnings = (this.crag as Crag).comments?.filter((comment: Comment) => comment.type === 'warning');
 
     this.layoutService.$breadcrumbs.next([
       {
