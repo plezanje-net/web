@@ -1,14 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-import {
-  Crag,
-  CreateActivityGQL,
-  Route,
-  namedOperations,
-} from 'src/generated/graphql';
-
+import { CreateActivityGQL, namedOperations } from 'src/generated/graphql';
 import moment from 'moment';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
@@ -23,6 +16,8 @@ export class ActivityFormComponent implements OnInit {
   loading: boolean = false;
 
   routes = new FormArray([]);
+
+  routeData = [];
 
   activityForm = new FormGroup({
     date: new FormControl(moment()),
@@ -44,7 +39,9 @@ export class ActivityFormComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.selectedRoutes.length) {
-      this.selectedRoutes.forEach((route) => this.addRoute(route));
+      this.selectedRoutes.forEach((route) => {
+        this.addRoute(route);
+      });
     }
 
     this.activityForm.controls.date.valueChanges.subscribe((value) => {
@@ -73,7 +70,7 @@ export class ActivityFormComponent implements OnInit {
         name: new FormControl(route.name),
         grade: new FormControl(route.grade),
         difficulty: new FormControl(route.difficulty),
-        ascentType: new FormControl('redpoint'),
+        ascentType: new FormControl(!route?.ticked ? 'redpoint' : 'repeat'),
         date: new FormControl(),
         partner: new FormControl(),
         publish: new FormControl('public'),
@@ -82,6 +79,10 @@ export class ActivityFormComponent implements OnInit {
         gradeSuggestion: new FormControl(),
       })
     );
+    // TODO: push only one array to child component?
+    this.routeData.push({
+      route,
+    });
   }
 
   moveRoute(routeIndex: number, direction: number): void {
@@ -126,6 +127,8 @@ export class ActivityFormComponent implements OnInit {
       cragId: this.crag.id,
     };
 
+    console.log(this.routes.value);
+
     const routes = this.routes.value.map((route: any, i: number) => {
       return {
         date: route.date || activity.date,
@@ -137,10 +140,15 @@ export class ActivityFormComponent implements OnInit {
         routeId: route.routeId,
         name: route.name,
         difficulty: route.difficulty,
-        grade: route.publish === PublishOptionsEnum.private ? undefined : route.gradeSuggestion,
+        grade:
+          route.publish === PublishOptionsEnum.private
+            ? undefined
+            : route.gradeSuggestion,
         stars: route.stars,
       };
     });
+
+    console.log(routes);
 
     this.createActivityGQL
       .mutate(

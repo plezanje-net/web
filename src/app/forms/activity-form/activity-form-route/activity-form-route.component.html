@@ -2,7 +2,16 @@
   <div fxLayout="row" fxLayoutAlign="start center">
     <div fxFlex="100" fxLayout="row" fxLayoutGap="12px">
       <ng-container *ngIf="route.value.routeId">
-        <a [routerLink]="['/plezalisca', crag.country.slug, crag.slug, route.value.routeId]" class="route-name">{{ route.value.name }} </a>
+        <a
+          [routerLink]="[
+            '/plezalisca',
+            crag.country.slug,
+            crag.slug,
+            route.value.routeId
+          ]"
+          class="route-name"
+          >{{ route.value.name }}
+        </a>
         <app-grade
           [grade]="route.value.grade"
           [text]="route.value.difficulty"
@@ -65,17 +74,34 @@
           <mat-form-field class="no-hint">
             <mat-label>Vrsta vzpona</mat-label>
             <mat-select formControlName="ascentType">
-              <mat-option *ngFor="let type of nonTopRopeAscentTypes" [value]="type.value"
+              <mat-option
+                *ngFor="let type of tickAscentTypes"
+                [value]="type.value"
+                [disabled]="
+                  routeData.route.ticked ||
+                  ((type.value == 'onsight' || type.value == 'flash') &&
+                    routeData.route.tried)
+                "
                 >{{ type.label }}
               </mat-option>
+
+              <mat-option
+                *ngFor="let type of nonTRNonTickAscentTypes"
+                [value]="type.value"
+                >{{ type.label }}
+              </mat-option>
+
               <mat-optgroup label="Top rope">
-                <mat-option *ngFor="let type of topRopeAscentTypes" [value]="type.value"
+                <mat-option
+                  *ngFor="let type of topRopeAscentTypes"
+                  [value]="type.value"
                   >{{ type.label }}
                 </mat-option>
               </mat-optgroup>
             </mat-select>
           </mat-form-field>
         </div>
+
         <mat-form-field class="no-hint" fxFlex="25">
           <mat-label>Lepota</mat-label>
           <mat-select formControlName="stars">
@@ -94,7 +120,12 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <app-grade-select class="no-hint" fxFlex="25" [control]="route.controls.gradeSuggestion" label="Predlog ocene"></app-grade-select>
+        <app-grade-select
+          class="no-hint"
+          fxFlex="25"
+          [control]="route.controls.gradeSuggestion"
+          label="Predlog ocene"
+        ></app-grade-select>
       </div>
       <div fxFlex="100" fxHide.lt-md></div>
       <div fxFlex fxLayout="row" fxLayoutGap="12px" *ngIf="!activity">

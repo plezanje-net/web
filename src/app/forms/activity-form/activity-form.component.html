@@ -44,6 +44,7 @@
         class="route"
       >
         <app-activity-form-route
+          [routeData]="routeData[index]"
           [route]="route"
           [crag]="crag"
           [activity]="!activityForm.value.onlyRoutes"

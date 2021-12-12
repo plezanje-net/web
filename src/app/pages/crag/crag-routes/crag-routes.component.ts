@@ -15,6 +15,7 @@ import {
   RouteCommentsGQL,
   RouteCommentsQuery,
 } from 'src/generated/graphql';
+import { ASCENT_TYPES } from 'src/app/common/activity.constants';
 
 @Component({
   selector: 'app-crag-routes',
@@ -77,11 +78,22 @@ export class CragRoutesComponent implements OnInit {
       this.selectedRoutesIds = this.selectedRoutes.map(
         (selectedRoute) => selectedRoute.id
       );
+
+      const routesWAscent = this.selectedRoutes.map((route) => ({
+        ...route,
+        tried: !!this.ascents[route.id],
+        ticked: ASCENT_TYPES.some(
+          (ascentType) =>
+            this.ascents[route.id] == ascentType.value && ascentType.tick
+        ),
+        // TODO: ascents is async, what if not ready?
+      }));
+
       this.localStorageService.setItem(
         'activity-selection',
         {
           crag: this.crag,
-          routes: this.selectedRoutes,
+          routes: routesWAscent,
         },
         moment(new Date()).add(1, 'day').toISOString()
       );
@@ -89,6 +101,7 @@ export class CragRoutesComponent implements OnInit {
       this.snackBar.dismiss();
       this.localStorageService.removeItem('activity-selection');
     }
+    console.log(this.selectedRoutes);
   }
 
   openSnackBar(): void {
