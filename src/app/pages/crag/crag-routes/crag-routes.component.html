@@ -1,92 +1,163 @@
-<div *ngFor="let sector of crag.sectors">
-  <h3>
-    {{ sector.label }}
-    <span>{{ sector.name != "" ? " - " + sector.name : "" }}</span>
-  </h3>
-  <div class="card">
-    <div fxLayout="row" fxLayoutAlign="start center" fxHide.lt-md class="row header" fxLayoutGap="14px">
-      <div fxFlex="12px"></div>
-      <div fxFlex="100">Ime</div>
-      <div fxFlex="80px" fxFlex.lt-md>Dolžina</div>
-      <div fxFlex="80px" fxFlex.lt-md>Težavnost</div>
-      <div fxFlex="160px"></div>
-    </div>
-    <div *ngFor="let route of sector.routes" fxLayout="row" fxLayoutAlign="start center" class="row" fxLayoutGap="14px">
-
-      <div fxFlex="12px">
-        <mat-checkbox (change)="changeSelection(route)" [checked]="selectedRoutesIds.indexOf(route.id) > -1">
-        </mat-checkbox>
+<ng-container *ngIf="!loading">
+  <div *ngFor="let sector of crag.sectors">
+    <h3>
+      {{ sector.label }}
+      <span>{{ sector.name != "" ? " - " + sector.name : "" }}</span>
+    </h3>
+    <div class="card">
+      <div
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxHide.lt-md
+        class="row header"
+        fxLayoutGap="14px"
+      >
+        <div fxFlex="12px"></div>
+        <div fxFlex="100">Ime</div>
+        <div fxFlex="80px" fxFlex.lt-md>Dolžina</div>
+        <div fxFlex="80px" fxFlex.lt-md>Težavnost</div>
+        <div fxFlex="160px"></div>
       </div>
-      <div fxFlex="100">
-        <a [routerLink]="[
-            '/plezalisca/',
-            crag.country.slug,
-            crag.slug,
-            route.id
-          ]">{{ route.name }}</a>
-      </div>
-      <div fxFlex="80px" fxFlex.lt-md fxHide.lt-md>{{ route.length }} m</div>
-      <div fxFlex="80px" fxFlex.lt-md (mouseenter)="displayRouteGrades(route)" (mouseleave)="hideRouteGrades(route)"
-        class="popover-container">
-        <app-grade [grade]="route.grade" [text]="route.difficulty" [showModifier]="true"></app-grade>
-        <div class="popover" *ngIf="activeGradesPopupId === route.id && !routeGradesLoading">
-          <div class="popover-title">Ocene smeri {{ route.name }}</div>
-          <table>
-            <tbody>
-              <tr *ngFor="let grade of routeGrades" [ngClass]="grade.includedInCalculation ? 'grade-included' : ''">
-                <td>
-                  <app-grade class="grade" [grade]="grade.grade"></app-grade>
-                </td>
-                <td class="grade-author">
-                  <ng-container *ngIf="grade.isBase">Bazna ocena</ng-container>
-                  <ng-container *ngIf="!grade.isBase && grade.user">{{ grade.user.firstname + ' ' + grade.user.lastname
+      <div
+        *ngFor="let route of sector.routes"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        class="row"
+        fxLayoutGap="14px"
+      >
+        <div fxFlex="12px">
+          <mat-checkbox
+            (change)="changeSelection(route)"
+            [checked]="selectedRoutesIds.indexOf(route.id) > -1"
+          >
+          </mat-checkbox>
+        </div>
+        <div fxFlex="100">
+          <a
+            [routerLink]="[
+              '/plezalisca/',
+              crag.country.slug,
+              crag.slug,
+              route.id
+            ]"
+            >{{ route.name }}</a
+          >
+        </div>
+        <div fxFlex="80px" fxFlex.lt-md fxHide.lt-md>{{ route.length }} m</div>
+        <div
+          fxFlex="80px"
+          fxFlex.lt-md
+          (mouseenter)="displayRouteGrades(route)"
+          (mouseleave)="hideRouteGrades(route)"
+          class="popover-container"
+        >
+          <app-grade
+            [grade]="route.grade"
+            [text]="route.difficulty"
+            [showModifier]="true"
+          ></app-grade>
+          <div
+            class="popover"
+            *ngIf="activeGradesPopupId === route.id && !routeGradesLoading"
+          >
+            <div class="popover-title">Ocene smeri {{ route.name }}</div>
+            <table>
+              <tbody>
+                <tr
+                  *ngFor="let grade of routeGrades"
+                  [ngClass]="
+                    grade.includedInCalculation ? 'grade-included' : ''
+                  "
+                >
+                  <td>
+                    <app-grade class="grade" [grade]="grade.grade"></app-grade>
+                  </td>
+                  <td class="grade-author">
+                    <ng-container *ngIf="grade.isBase"
+                      >Bazna ocena</ng-container
+                    >
+                    <ng-container *ngIf="!grade.isBase && grade.user">{{
+                      grade.user.firstname + " " + grade.user.lastname
                     }}</ng-container>
-                </td>
-                <td class="grade-date">{{ grade.created | amDateFormat:'D. M. Y' }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="popover-arrow"></div>
+                  </td>
+                  <td class="grade-date">
+                    {{ grade.created | amDateFormat: "D. M. Y" }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="popover-arrow"></div>
+          </div>
         </div>
-      </div>
 
-      <div fxLayout="row" fxFlex="160px" fxLayoutAlign="center" class="icons">
-        <div *ngIf="route.pitches.length > 0" class="popover-container">
-          <button mat-icon-button color="primary" (mouseenter)="displayRoutePitches(route)"
-            (mouseleave)="hideRoutePitches(route)">MP</button>
-          <div class="popover" *ngIf="activePitchesPopupId === route.id">
-            <div class="popover-title">Raztežaji</div>
-            <div>
-              <text *ngFor="let pitch of route.pitches; let isLast=last">{{ pitch.difficulty }} {{ isLast ? '' : ', '
-                }}</text>
+        <div fxLayout="row" fxFlex="160px" fxLayoutAlign="center" class="icons">
+          <div *ngIf="route.pitches.length > 0" class="popover-container">
+            <button
+              mat-icon-button
+              color="primary"
+              (mouseenter)="displayRoutePitches(route)"
+              (mouseleave)="hideRoutePitches(route)"
+            >
+              MP
+            </button>
+            <div class="popover" *ngIf="activePitchesPopupId === route.id">
+              <div class="popover-title">Raztežaji</div>
+              <div>
+                <text *ngFor="let pitch of route.pitches; let isLast = last"
+                  >{{ pitch.difficulty }} {{ isLast ? "" : ", " }}</text
+                >
+              </div>
             </div>
+            <div class="popover-arrow"></div>
           </div>
-          <div class="popover-arrow"></div>
-        </div>
-        <div *ngIf="route.comments.length > 0" class="popover-container">
-          <button mat-icon-button (mouseenter)="displayRouteComments(route)" (mouseleave)="hideRouteComments(route)">
-            <mat-icon>comment</mat-icon>
-          </button>
-          <div class="popover comments" *ngIf="activeCommentsPopupId === route.id && !routeCommentsLoading">
-            <div class="popover-title">Komentarji</div>
-            <div>
-              <ng-container *ngFor="let comment of routeComments; let i = index">
-                <div class="row route-comment" [ngClass]="{ first: i === 0 }">
-                  <div class="route-comment-content">{{ comment.content }}</div>
-                  <div class="route-comment-author">
-                    <span *ngIf="comment.user">{{ comment.user.firstname + ' ' + comment.user.lastname + ', '
+          <div *ngIf="route.comments.length > 0" class="popover-container">
+            <button
+              mat-icon-button
+              (mouseenter)="displayRouteComments(route)"
+              (mouseleave)="hideRouteComments(route)"
+            >
+              <mat-icon>comment</mat-icon>
+            </button>
+            <div
+              class="popover comments"
+              *ngIf="
+                activeCommentsPopupId === route.id && !routeCommentsLoading
+              "
+            >
+              <div class="popover-title">Komentarji</div>
+              <div>
+                <ng-container
+                  *ngFor="let comment of routeComments; let i = index"
+                >
+                  <div class="row route-comment" [ngClass]="{ first: i === 0 }">
+                    <div class="route-comment-content">
+                      {{ comment.content }}
+                    </div>
+                    <div class="route-comment-author">
+                      <span *ngIf="comment.user">{{
+                        comment.user.firstname +
+                          " " +
+                          comment.user.lastname +
+                          ", "
                       }}</span>
-                    <span>{{ comment.created | amDateFormat:'D. M. Y' }}</span>
+                      <span>{{
+                        comment.created | amDateFormat: "D. M. Y"
+                      }}</span>
+                    </div>
                   </div>
-                </div>
-              </ng-container>
+                </ng-container>
+              </div>
             </div>
+            <div class="popover-arrow"></div>
           </div>
-          <div class="popover-arrow"></div>
+          <app-ascent-type
+            *ngIf="ascents[route.id] != null"
+            [value]="ascents[route.id]"
+            displayType="icon"
+          >
+          </app-ascent-type>
         </div>
-        <app-ascent-type *ngIf="ascents[route.id] != null" [value]="ascents[route.id]" displayType="icon">
-        </app-ascent-type>
       </div>
     </div>
   </div>
-</div>
+</ng-container>

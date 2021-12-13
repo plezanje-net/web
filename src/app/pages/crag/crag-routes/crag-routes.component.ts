@@ -35,6 +35,7 @@ export class CragRoutesComponent implements OnInit {
   routeCommentsLoading: boolean;
   routeComments: Record<string, string | any>[];
   activePitchesPopupId: string | null = null;
+  loading = false;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -48,6 +49,7 @@ export class CragRoutesComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.authService.currentUser) {
+      this.loading = true; // needed because we cannot pass ascents to activity log (through local storage) until this loads
       this.loadActivity();
     }
 
@@ -86,7 +88,6 @@ export class CragRoutesComponent implements OnInit {
           (ascentType) =>
             this.ascents[route.id] == ascentType.value && ascentType.tick
         ),
-        // TODO: ascents is async, what if not ready?
       }));
 
       this.localStorageService.setItem(
@@ -136,6 +137,7 @@ export class CragRoutesComponent implements OnInit {
     this.myCragSummaryGQL
       .watch({ input: { cragId: this.crag.id } })
       .valueChanges.subscribe((result) => {
+        this.loading = false;
         result.data?.myCragSummary.forEach((ascent) => {
           this.ascents[ascent.route.id] = ascent.ascentType;
         });
