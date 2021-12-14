@@ -76,20 +76,14 @@
             <mat-label>Vrsta vzpona</mat-label>
             <mat-select formControlName="ascentType">
               <mat-option
-                *ngFor="let type of tickAscentTypes"
+                *ngFor="let type of nonTopRopeAscentTypes"
                 [value]="type.value"
                 [disabled]="
-                  route.value.ticked ||
-                  ((type.value == 'onsight' || type.value == 'flash') &&
-                    route.value.tried) ||
+                  (route.value.ticked && type.value == 'redpoint') ||
+                  (route.value.tried &&
+                    (type.value == 'onsight' || type.value == 'flash')) ||
                   (route.value.type == 'boulder' && type.value == 'onsight')
                 "
-                >{{ type.label }}
-              </mat-option>
-
-              <mat-option
-                *ngFor="let type of nonTRNonTickAscentTypes"
-                [value]="type.value"
                 >{{ type.label }}
               </mat-option>
 

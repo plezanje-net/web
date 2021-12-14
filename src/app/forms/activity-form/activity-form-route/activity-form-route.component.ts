@@ -21,11 +21,9 @@ export class ActivityFormRouteComponent implements OnInit {
   @Output() move = new EventEmitter<number>();
 
   topRopeAscentTypes = ASCENT_TYPES.filter((ascentType) => ascentType.topRope);
-  tickAscentTypes = ASCENT_TYPES.filter((ascentType) => ascentType.tick);
-  nonTRNonTickAscentTypes = ASCENT_TYPES.filter(
-    (ascentType) => !ascentType.topRope && !ascentType.tick
+  nonTopRopeAscentTypes = ASCENT_TYPES.filter(
+    (ascentType) => !ascentType.topRope
   );
-
   publishOptions = PUBLISH_OPTIONS;
 
   constructor() {}
