@@ -15,7 +15,6 @@ import { Crag } from 'src/generated/graphql';
 export class ActivityFormRouteComponent implements OnInit {
   @Input() activity = true;
   @Input() route: FormGroup;
-  @Input() routeData;
   @Input() first: boolean;
   @Input() last: boolean;
   @Input() crag: Crag;

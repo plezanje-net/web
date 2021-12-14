@@ -84,6 +84,7 @@ export class ActivityFormComponent implements OnInit {
         gradeSuggestion: new FormControl(),
         ticked: new FormControl(route.ticked),
         tried: new FormControl(route.tried),
+        type: new FormControl(route.type),
       })
     );
   }

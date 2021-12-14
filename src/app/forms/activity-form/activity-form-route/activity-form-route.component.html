@@ -67,6 +67,7 @@
       </button>
     </div>
   </div>
+
   <div fxLayout="row" fxLayoutGap="12px" fxLayout.lt-md="column">
     <div fxFlex="60" fxLayout="column">
       <div fxFlex fxLayout="row" fxLayoutGap="12px grid">
@@ -80,7 +81,8 @@
                 [disabled]="
                   route.value.ticked ||
                   ((type.value == 'onsight' || type.value == 'flash') &&
-                    route.value.tried)
+                    route.value.tried) ||
+                  (route.value.type == 'boulder' && type.value == 'onsight')
                 "
                 >{{ type.label }}
               </mat-option>
@@ -95,6 +97,12 @@
                 <mat-option
                   *ngFor="let type of topRopeAscentTypes"
                   [value]="type.value"
+                  [disabled]="
+                    (route.value.ticked && type.value == 't_redpoint') ||
+                    ((type.value == 't_onsight' || type.value == 't_flash') &&
+                      route.value.tried) ||
+                    (route.value.type == 'boulder' && type.value == 't_onsight')
+                  "
                   >{{ type.label }}
                 </mat-option>
               </mat-optgroup>
