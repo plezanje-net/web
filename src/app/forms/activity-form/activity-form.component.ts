@@ -47,6 +47,8 @@ export class ActivityFormComponent implements OnInit {
       });
     }
 
+    // first time emmits, when activity form date is patched bellow
+    // ui prevents it, but should probably check the state of the onlyroutes checkbox first?
     this.activityForm.controls.date.valueChanges.subscribe((value) => {
       this.patchRouteDates(value);
     });
@@ -87,7 +89,6 @@ export class ActivityFormComponent implements OnInit {
   }
 
   moveRoute(routeIndex: number, direction: number): void {
-    console.log(routeIndex, direction);
     if (direction === 0) {
       this.routes.controls.splice(routeIndex, 1);
       return;
@@ -157,15 +158,15 @@ export class ActivityFormComponent implements OnInit {
           ],
         }
       )
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.localStorageService.removeItem('activity-selection');
           this.snackBar.open('Vnos je bil shranjen v plezalni dnevnik', null, {
             duration: 3000,
           });
           this.router.navigate(['/plezalni-dnevnik']);
         },
-        (error) => {
+        error: () => {
           this.loading = false;
           this.activityForm.enable();
           this.snackBar.open(
@@ -173,7 +174,7 @@ export class ActivityFormComponent implements OnInit {
             null,
             { panelClass: 'error', duration: 3000 }
           );
-        }
-      );
+        },
+      });
   }
 }
