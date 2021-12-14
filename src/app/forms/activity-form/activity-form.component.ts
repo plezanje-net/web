@@ -118,7 +118,8 @@ export class ActivityFormComponent implements OnInit {
     const data = this.activityForm.value;
 
     this.loading = true;
-    this.activityForm.disable();
+
+    this.activityForm.disable({ emitEvent: false });
 
     const activity = {
       date: moment(data.date).format('YYYY-MM-DD'),
