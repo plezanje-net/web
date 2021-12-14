@@ -81,7 +81,8 @@ export class CragRoutesComponent implements OnInit {
         (selectedRoute) => selectedRoute.id
       );
 
-      const routesWAscent = this.selectedRoutes.map((route) => ({
+      // Append users previous activity (summary) to the routes that are being logged
+      const selectedRoutesWTouch = this.selectedRoutes.map((route) => ({
         ...route,
         tried: !!this.ascents[route.id],
         ticked: ASCENT_TYPES.some(
@@ -94,7 +95,7 @@ export class CragRoutesComponent implements OnInit {
         'activity-selection',
         {
           crag: this.crag,
-          routes: routesWAscent,
+          routes: selectedRoutesWTouch,
         },
         moment(new Date()).add(1, 'day').toISOString()
       );
@@ -102,7 +103,6 @@ export class CragRoutesComponent implements OnInit {
       this.snackBar.dismiss();
       this.localStorageService.removeItem('activity-selection');
     }
-    console.log(this.selectedRoutes);
   }
 
   openSnackBar(): void {

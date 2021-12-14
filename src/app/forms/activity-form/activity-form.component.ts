@@ -1,7 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CreateActivityGQL, namedOperations } from 'src/generated/graphql';
+import {
+  Crag,
+  CreateActivityGQL,
+  namedOperations,
+  Route,
+} from 'src/generated/graphql';
 import moment from 'moment';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
@@ -17,8 +22,6 @@ export class ActivityFormComponent implements OnInit {
 
   routes = new FormArray([]);
 
-  routeData = [];
-
   activityForm = new FormGroup({
     date: new FormControl(moment()),
     partners: new FormControl(),
@@ -27,8 +30,8 @@ export class ActivityFormComponent implements OnInit {
     routes: this.routes,
   });
 
-  @Input() crag;
-  @Input() selectedRoutes;
+  @Input() crag: Crag;
+  @Input() selectedRoutes: Route[];
 
   constructor(
     private snackBar: MatSnackBar,
@@ -77,15 +80,14 @@ export class ActivityFormComponent implements OnInit {
         notes: new FormControl(),
         stars: new FormControl(),
         gradeSuggestion: new FormControl(),
+        ticked: new FormControl(route.ticked),
+        tried: new FormControl(route.tried),
       })
     );
-    // TODO: push only one array to child component?
-    this.routeData.push({
-      route,
-    });
   }
 
   moveRoute(routeIndex: number, direction: number): void {
+    console.log(routeIndex, direction);
     if (direction === 0) {
       this.routes.controls.splice(routeIndex, 1);
       return;
@@ -127,28 +129,22 @@ export class ActivityFormComponent implements OnInit {
       cragId: this.crag.id,
     };
 
-    console.log(this.routes.value);
-
-    const routes = this.routes.value.map((route: any, i: number) => {
-      return {
-        date: route.date || activity.date,
-        partner: route.partner || activity.partners,
-        ascentType: route.ascentType,
-        notes: route.notes,
-        position: i,
-        publish: route.publish,
-        routeId: route.routeId,
-        name: route.name,
-        difficulty: route.difficulty,
-        grade:
-          route.publish === PublishOptionsEnum.private
-            ? undefined
-            : route.gradeSuggestion,
-        stars: route.stars,
-      };
-    });
-
-    console.log(routes);
+    const routes = this.routes.value.map((route: any, i: number) => ({
+      date: route.date || activity.date,
+      partner: route.partner || activity.partners,
+      ascentType: route.ascentType,
+      notes: route.notes,
+      position: i,
+      publish: route.publish,
+      routeId: route.routeId,
+      name: route.name,
+      difficulty: route.difficulty,
+      grade:
+        route.publish === PublishOptionsEnum.private
+          ? undefined
+          : route.gradeSuggestion,
+      stars: route.stars,
+    }));
 
     this.createActivityGQL
       .mutate(

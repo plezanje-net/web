@@ -78,9 +78,9 @@
                 *ngFor="let type of tickAscentTypes"
                 [value]="type.value"
                 [disabled]="
-                  routeData.route.ticked ||
+                  route.value.ticked ||
                   ((type.value == 'onsight' || type.value == 'flash') &&
-                    routeData.route.tried)
+                    route.value.tried)
                 "
                 >{{ type.label }}
               </mat-option>
