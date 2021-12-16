@@ -25,6 +25,7 @@ query CragBySlug($crag: String!) {
         id
         name
         grade
+        difficulty
         length
         type
         comments {
