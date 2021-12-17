@@ -3,7 +3,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Apollo, gql } from 'apollo-angular';
 import { DataError } from '../../types/data-error';
 import { LayoutService } from '../../services/layout.service';
-import { RouteGQL } from 'src/generated/graphql';
+import { RouteGQL, RouteQuery } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-route',
@@ -13,7 +13,8 @@ import { RouteGQL } from 'src/generated/graphql';
 export class RouteComponent implements OnInit {
   loading: boolean = true;
   error: DataError = null;
-  route: any = {};
+  route: RouteQuery['route'];
+  warnings: RouteQuery['route']['comments'];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -53,8 +54,9 @@ export class RouteComponent implements OnInit {
     };
   }
 
-  querySuccess(data: any): void {
+  querySuccess(data: RouteQuery): void {
     this.route = data.route;
+    this.warnings = this.route?.comments.filter((comment) => comment.type === 'warning');
 
     this.layoutService.$breadcrumbs.next([
       {

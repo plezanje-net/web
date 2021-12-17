@@ -35,7 +35,7 @@
     </div>
   </div>
 
-  <app-crag-warnings [crag]="crag"></app-crag-warnings>
+  <app-warnings *ngIf="warnings" [warnings]="warnings"></app-warnings>
 
   <div
     class="container mt-16"

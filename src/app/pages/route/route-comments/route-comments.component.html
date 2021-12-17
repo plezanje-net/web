@@ -15,23 +15,6 @@
   <app-comment [comment]="comment"></app-comment>
 </div>
 
-<h3 *ngIf="warnings.length"
-    fxLayout="row"
-    fxLayoutAlign="center center"
-    fxLayout.lt-md="column">
-  <span fxFlex="100">Opozorila</span>
-  <div fxFlex>
-    <button mat-button
-            color="primary">Dodaj opozorilo</button>
-  </div>
-</h3>
-<div *ngFor="let warning of warnings"
-     class="comment"
-     fxLayout="column"
-     fxLayoutGap="8px">
-  <app-comment [comment]="warning"></app-comment>
-</div>
-
 <h3 *ngIf="conditions.length"
     fxLayout="row"
     fxLayoutAlign="center center"

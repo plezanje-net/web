@@ -19,7 +19,6 @@ export class RouteCommentsComponent {
   allComments: IComment[];
   regularComments: IComment[];
   conditions: IComment[];
-  warnings: IComment[];
   descriptions: IComment[];
 
   @Input() set comments(comments: IComment[]) {
@@ -27,17 +26,14 @@ export class RouteCommentsComponent {
 
     this.regularComments = [];
     this.conditions = [];
-    this.warnings = [];
     this.descriptions = [];
 
     this.allComments.forEach((comment) => {
       if (comment.type === 'condition') {
         this.conditions.push(comment);
-      } else if (comment.type === 'warning') {
-        this.warnings.push(comment);
       } else if (comment.type === 'description') {
         this.descriptions.push(comment);
-      } else {
+      } else if (comment.type === 'comment') {
         this.regularComments.push(comment);
       }
     });
