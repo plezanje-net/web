@@ -19,6 +19,7 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
               },
             },
           },
+          keyFields: ['id', 'nrRoutes'],
         },
         Club: {
           fields: {
