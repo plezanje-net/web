@@ -8,6 +8,7 @@ query CragBySlug($crag: String!) {
     lon
     access
     description
+    nrRoutes
     area {
       id
       name
