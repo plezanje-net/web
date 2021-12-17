@@ -6,6 +6,8 @@ query exposedWarnings {
     }
     updated
     crag {
+      id
+      nrRoutes
       name
       slug
       country {
@@ -16,6 +18,8 @@ query exposedWarnings {
       id
       name
       crag {
+        id
+        nrRoutes
         name
         slug
         country {

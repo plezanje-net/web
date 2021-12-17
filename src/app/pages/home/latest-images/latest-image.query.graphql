@@ -6,6 +6,8 @@ query LatestImages($latest: Int!) {
       fullName
     }
     crag {
+      id
+      nrRoutes
       name
       slug
       country {
@@ -16,6 +18,8 @@ query LatestImages($latest: Int!) {
       id
       name
       crag {
+        id
+        nrRoutes
         name
         slug
         country {

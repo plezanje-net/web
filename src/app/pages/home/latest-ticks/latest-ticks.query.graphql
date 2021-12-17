@@ -9,6 +9,8 @@ query LatestTicks($latest: Int!) {
       grade
       name
       crag {
+        id
+        nrRoutes
         name
         country {
           slug
