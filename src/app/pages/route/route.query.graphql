@@ -3,7 +3,6 @@ query Route($routeId: String!) {
     id
     difficulty
     name
-    grade
     length
     author
     status
@@ -16,8 +15,7 @@ query Route($routeId: String!) {
       number
       height
     }
-    grades {
-      grade
+    difficultyVotes {
       user {
         firstname
         lastname

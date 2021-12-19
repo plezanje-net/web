@@ -6,10 +6,11 @@ query ManagementGetCrag($id: String!) {
       name
       status
       routes {
-        type
+        routeType {
+          name
+        }
         author
         difficulty
-        grade
         id
         length
         name
