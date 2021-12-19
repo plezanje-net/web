@@ -19,6 +19,7 @@ export class Grade {
   }
 
   public parseGrade(grade: number): void {
+    grade -= 600;
     const fullGradeNumber = (Math.round((grade / 100) * 2 - 0.1) / 2) * 100;
     const m = grade < -250 ? 12 : 14;
     const gradeNumber = Math.floor((fullGradeNumber / 100 + m) / 3);

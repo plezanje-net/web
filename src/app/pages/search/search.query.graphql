@@ -6,8 +6,8 @@ query Search($query: String) {
       slug
       nrRoutes
       orientation
-      minGrade
-      maxGrade
+      minDifficulty
+      maxDifficulty
       country {
         slug
       }

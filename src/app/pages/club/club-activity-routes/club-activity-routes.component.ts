@@ -169,7 +169,7 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
             cragId: null,
             routeId: action.item.route.id,
           });
-          this.filterRouteName = action.item.name;
+          this.filterRouteName = action.item.route.name;
           break;
         case 'filterByCrag':
           this.filters.patchValue({
@@ -214,7 +214,7 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
     // if the filter is applied, any row should have a matching routeName, so take first
     if (this.filters.controls.routeId.value && !this.filterRouteName) {
       if (this.activityRoutes.length) {
-        this.filterRouteName = this.activityRoutes[0].name;
+        this.filterRouteName = this.activityRoutes[0].route.name;
       } else {
         // but if result set is empty (can be on page load) we have to fetch
         this.activityFiltersRouteGQL
