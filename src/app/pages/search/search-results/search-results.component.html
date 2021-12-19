@@ -50,11 +50,11 @@
                 {{ crag.orientation }}
               </div>
               <div fxFlex class="lastColumn">
-                <app-grade [grade]="crag.minGrade"></app-grade>
+                <app-grade [difficulty]="crag.minGrade"></app-grade>
                 {{
                   crag.minGrade != null && crag.maxGrade != null ? " do " : ""
                 }}
-                <app-grade [grade]="crag.maxGrade"></app-grade>
+                <app-grade [difficulty]="crag.maxGrade"></app-grade>
               </div>
             </div>
           </div>
@@ -94,8 +94,8 @@
               </div>
               <div fxFlex>
                 <app-grade
-                  [grade]="route.grade"
-                  [text]="route.difficulty"
+                  [difficulty]="route.difficulty"
+                  [system]="route.defaultGradingSystem"
                   [showModifier]="false"
                 >
                 </app-grade>

@@ -2,29 +2,37 @@
   {{ route.date | amDateFormat: "DD.MM.YYYY" }}
 </td>
 <td *ngIf="displayType != 'activity'">
-  <a [routerLink]="[
+  <a
+    [routerLink]="[
       '/plezalisca',
       route.route.crag.country.slug,
       route.route.crag.slug
-    ]">{{ route.route.crag.name }}</a>
+    ]"
+    >{{ route.route.crag.name }}</a
+  >
 </td>
 <td>
-  <a [routerLink]="[
+  <a
+    [routerLink]="[
       '/plezalisca',
       route.route.crag.country.slug,
       route.route.crag.slug,
       route.route.id
-    ]">{{ route.route.name }}</a>
+    ]"
+    >{{ route.route.name }}</a
+  >
 </td>
 
 <td>
-  <app-grade [grade]="route.grade" [text]="route.difficulty" [showModifier]="true"></app-grade>
+  <app-grade [difficulty]="route.difficulty" [modifier]="true"></app-grade>
 </td>
 <td>
   <app-ascent-type [value]="route.ascentType"></app-ascent-type>
 </td>
 <td>
-  <app-ascent-publish-option [value]="route.publish"></app-ascent-publish-option>
+  <app-ascent-publish-option
+    [value]="route.publish"
+  ></app-ascent-publish-option>
 </td>
 <td class="tools">
   <button mat-icon-button [mat-menu-trigger-for]="menu">
@@ -32,13 +40,23 @@
   </button>
 
   <mat-menu #menu="matMenu">
-    <button *ngIf="route.activity != null" mat-menu-item [routerLink]="['/plezalni-dnevnik', route.activity.id]">
+    <button
+      *ngIf="route.activity != null"
+      mat-menu-item
+      [routerLink]="['/plezalni-dnevnik', route.activity.id]"
+    >
       <span>Odpri plezalni dan</span>
     </button>
-    <button mat-menu-item (click)="rowAction.next({ item: route, action: 'filterByRoute' })">
+    <button
+      mat-menu-item
+      (click)="rowAction.next({ item: route, action: 'filterByRoute' })"
+    >
       <span>Vsi vzponi za to smer</span>
     </button>
-    <button mat-menu-item (click)="rowAction.next({ item: route, action: 'filterByCrag' })">
+    <button
+      mat-menu-item
+      (click)="rowAction.next({ item: route, action: 'filterByCrag' })"
+    >
       <span>Vsi vzponi v tem plezališču</span>
     </button>
     <button mat-menu-item>
