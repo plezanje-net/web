@@ -3,11 +3,9 @@ query RouteGrades($routeId: String!) {
     id
     difficulty
     name
-    grade
     length
-    grades {
+    difficultyVotes {
       id
-      grade
       user {
         firstname
         lastname

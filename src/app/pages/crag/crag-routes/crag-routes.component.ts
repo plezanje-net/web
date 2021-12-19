@@ -157,7 +157,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   }
 
   routeGradesQuerySuccess(queryData: RouteGradesQuery): void {
-    this.routeGrades = queryData.route.grades;
+    // this.routeGrades = queryData.route.grades; // TODO: we need to get grades from difficultyVotes now
   }
 
   routeGradesQueryError(): void {

@@ -17,7 +17,6 @@ query Search($query: String) {
       id
       name
       difficulty
-      grade
       length
       crag {
         name
