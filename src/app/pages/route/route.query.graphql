@@ -20,6 +20,7 @@ query Route($routeId: String!) {
         firstname
         lastname
       }
+      difficulty
       created
       updated
       isBase
