@@ -24,7 +24,10 @@
 </td>
 
 <td>
-  <app-grade [difficulty]="route.difficulty" [modifier]="true"></app-grade>
+  <app-grade
+    [difficulty]="route.route.difficulty"
+    [modifier]="true"
+  ></app-grade>
 </td>
 <td>
   <app-ascent-type [value]="route.ascentType"></app-ascent-type>

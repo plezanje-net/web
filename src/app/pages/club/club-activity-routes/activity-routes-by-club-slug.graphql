@@ -9,10 +9,8 @@ query ActivityRoutesByClubSlug(
         id
         fullName
       }
-      grade
-      name
       ascentType
-      difficulty
+
       id
       publish
       route {
@@ -25,6 +23,8 @@ query ActivityRoutesByClubSlug(
           id
         }
         id
+        name
+        difficulty
       }
     }
     meta {

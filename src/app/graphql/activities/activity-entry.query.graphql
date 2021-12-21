@@ -8,10 +8,8 @@ query ActivityEntry($id: String!) {
     partners
     duration
     routes {
-      difficulty
       date
       ascentType
-      grade
       notes
       partner
       publish

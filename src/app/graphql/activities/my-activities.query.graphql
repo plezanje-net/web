@@ -6,7 +6,9 @@ query MyActivities($input: FindActivitiesInput) {
       date
       type
       routes {
-        grade
+        route {
+          difficulty
+        }
       }
       crag {
         id

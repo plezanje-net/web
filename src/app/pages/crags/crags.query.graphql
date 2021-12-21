@@ -17,8 +17,8 @@ query Crags($country: String!, $input: FindCragsInput) {
         name
         slug
       }
-      minGrade
-      maxGrade
+      minDifficulty
+      maxDifficulty
     }
     areas {
       id

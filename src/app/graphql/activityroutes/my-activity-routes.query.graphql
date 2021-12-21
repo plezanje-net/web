@@ -1,10 +1,8 @@
 query MyActivityRoutes($input: FindActivityRoutesInput) {
   myActivityRoutes(input: $input) {
     items {
-      difficulty
       date
       ascentType
-      grade
       notes
       partner
       publish
@@ -20,6 +18,7 @@ query MyActivityRoutes($input: FindActivityRoutesInput) {
             slug
           }
         }
+        difficulty
         name
         id
       }
