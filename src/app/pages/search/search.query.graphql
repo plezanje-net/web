@@ -17,6 +17,9 @@ query Search($query: String) {
       id
       name
       difficulty
+      defaultGradingSystem {
+        id
+      }
       length
       crag {
         name
