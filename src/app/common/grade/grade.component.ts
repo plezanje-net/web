@@ -7,9 +7,9 @@ import { Grade } from '../grade';
   styleUrls: ['./grade.component.scss'],
 })
 export class GradeComponent implements OnInit {
-  @Input('grade') numericGrade: number;
-  @Input('text') alternativeText: string = '';
-  @Input() showModifier: boolean = false;
+  @Input() difficulty: number;
+  @Input('system') gradingSystem: string;
+  @Input('modifier') showModifier: boolean = false;
   @Input() legacy: boolean = false;
 
   grade: Grade;
@@ -20,10 +20,6 @@ export class GradeComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.grade = new Grade(this.numericGrade);
-
-    if (this.numericGrade == null) {
-      this.grade.name = this.alternativeText;
-    }
+    this.grade = new Grade(this.difficulty);
   }
 }

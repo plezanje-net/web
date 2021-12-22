@@ -2,18 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from '../../types/data-error';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { CragFormComponent } from 'src/app/management/forms/crag-form/crag-form.component';
-import {
-  CragsQuery,
-  CragsGQL,
-  Country,
-  Area,
-  Crag,
-  CountriesTocQuery,
-} from '../../../generated/graphql';
+import { CragsQuery, CragsGQL } from '../../../generated/graphql';
 import { GraphQLError } from 'graphql';
 import { FormControl } from '@angular/forms';
 
@@ -65,7 +56,7 @@ export class CragsComponent implements OnInit {
           country: params.country,
           input: {
             area: params.area,
-            routeType: params.type,
+            routeTypeId: params.type,
           },
         })
         .subscribe(

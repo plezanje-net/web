@@ -2,28 +2,43 @@
   <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
     <div class="label">Težavnost</div>
     <span class="text-right">
-      <app-grade [grade]="route.grade" [showModifier]="true"></app-grade>
+      <app-grade [difficulty]="route.difficulty" [modifier]="true"></app-grade>
     </span>
   </div>
-  <div class="row" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="route.pitches.length > 0">
+  <div
+    class="row"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+    *ngIf="route.pitches.length > 0"
+  >
     <div class="label">Raztežaji</div>
     <span>
-      <text *ngFor="let pitch of route.pitches; let isLast=last">{{pitch.difficulty}}{{isLast ? '' : ', '}}</text>
+      <text *ngFor="let pitch of route.pitches; let isLast = last"
+        >{{ pitch.difficulty }}{{ isLast ? "" : ", " }}</text
+      >
     </span>
   </div>
   <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
     <div class="label">Dolžina</div>
-    <span class="text-right">
-      {{ route.length }}m
-    </span>
+    <span class="text-right"> {{ route.length }}m </span>
   </div>
-  <div class="row" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="author">
+  <div
+    class="row"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+    *ngIf="author"
+  >
     <div class="label">Avtor</div>
     <span class="text-right">
       {{ author }}
     </span>
   </div>
-  <div class="row" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="firstAscent">
+  <div
+    class="row"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+    *ngIf="firstAscent"
+  >
     <div class="label">Prvi vzpon</div>
     <span class="text-right">
       {{ firstAscent }}
@@ -33,6 +48,13 @@
 
 <div class="card padding">
   <h4>Ocene uporabnikov</h4>
-  <app-distribution-chart [distribution]="gradesDistribution" fxFlexAlign="stretch"></app-distribution-chart>
-  <app-route-grades fxFlexAlign="stretch" [grades]="grades" [difficulty]="route.difficulty"></app-route-grades>
+  <app-distribution-chart
+    [distribution]="gradesDistribution"
+    fxFlexAlign="stretch"
+  ></app-distribution-chart>
+  <app-route-grades
+    fxFlexAlign="stretch"
+    [grades]="grades"
+    [difficulty]="route.difficulty"
+  ></app-route-grades>
 </div>

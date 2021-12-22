@@ -18,7 +18,7 @@ export class RouteInfoComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.route) {
-      this.grades = this.route.grades.slice();
+      this.grades = this.route.difficultyVotes.slice();
       this.grades.sort((a, b) => a.grade - b.grade);
 
       // this.gradesDisribution.findIndex((distribution) => distribution.label === grade.grade) > -1
@@ -26,9 +26,9 @@ export class RouteInfoComponent implements OnInit {
 
       this.grades.forEach((grade) => {
         if (dist[grade.grade]) {
-          dist[grade.grade]++;
+          dist[grade.difficulty]++;
         } else {
-          dist[grade.grade] = 1;
+          dist[grade.difficulty] = 1;
         }
       });
 

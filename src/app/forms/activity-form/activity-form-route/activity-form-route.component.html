@@ -2,12 +2,17 @@
   <div fxLayout="row" fxLayoutAlign="start center">
     <div fxFlex="100" fxLayout="row" fxLayoutGap="12px">
       <ng-container *ngIf="route.value.routeId">
-        <a [routerLink]="['/plezalisca', crag.country.slug, crag.slug, route.value.routeId]" class="route-name">{{ route.value.name }} </a>
-        <app-grade
-          [grade]="route.value.grade"
-          [text]="route.value.difficulty"
-          [showModifier]="true"
-        >
+        <a
+          [routerLink]="[
+            '/plezalisca',
+            crag.country.slug,
+            crag.slug,
+            route.value.routeId
+          ]"
+          class="route-name"
+          >{{ route.value.name }}
+        </a>
+        <app-grade [difficulty]="route.value.difficulty" [modifier]="true">
         </app-grade>
       </ng-container>
       <ng-container *ngIf="!(route.value.routeId != null)">
@@ -65,11 +70,15 @@
           <mat-form-field class="no-hint">
             <mat-label>Vrsta vzpona</mat-label>
             <mat-select formControlName="ascentType">
-              <mat-option *ngFor="let type of nonTopRopeAscentTypes" [value]="type.value"
+              <mat-option
+                *ngFor="let type of nonTopRopeAscentTypes"
+                [value]="type.value"
                 >{{ type.label }}
               </mat-option>
               <mat-optgroup label="Top rope">
-                <mat-option *ngFor="let type of topRopeAscentTypes" [value]="type.value"
+                <mat-option
+                  *ngFor="let type of topRopeAscentTypes"
+                  [value]="type.value"
                   >{{ type.label }}
                 </mat-option>
               </mat-optgroup>
@@ -94,7 +103,12 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <app-grade-select class="no-hint" fxFlex="25" [control]="route.controls.gradeSuggestion" label="Predlog ocene"></app-grade-select>
+        <app-grade-select
+          class="no-hint"
+          fxFlex="25"
+          [control]="route.controls.gradeSuggestion"
+          label="Predlog ocene"
+        ></app-grade-select>
       </div>
       <div fxFlex="100" fxHide.lt-md></div>
       <div fxFlex fxLayout="row" fxLayoutGap="12px" *ngIf="!activity">

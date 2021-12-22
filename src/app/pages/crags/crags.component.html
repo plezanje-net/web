@@ -93,9 +93,9 @@
           </div>
           <div fxFlex="25" fxFlex.lt-md class="routes">
             <span fxHide.gt-sm>{{ crag.nrRoutes }} smeri<br /></span>
-            <app-grade [grade]="crag.minGrade"></app-grade>
+            <app-grade [difficulty]="crag.minGrade"></app-grade>
             {{ crag.minGrade != null && crag.maxGrade != null ? " do " : ""
-            }}<app-grade [grade]="crag.maxGrade"></app-grade>
+            }}<app-grade [difficulty]="crag.maxGrade"></app-grade>
           </div>
         </div>
       </div>
