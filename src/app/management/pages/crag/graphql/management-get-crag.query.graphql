@@ -12,6 +12,7 @@ query ManagementGetCrag($id: String!) {
         author
         difficulty
         id
+        slug
         length
         name
         status

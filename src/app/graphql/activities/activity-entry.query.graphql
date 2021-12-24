@@ -27,6 +27,7 @@ query ActivityEntry($id: String!) {
         }
         name
         id
+        slug
       }
     }
     crag {

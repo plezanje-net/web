@@ -15,6 +15,7 @@ query Search($query: String) {
     routes {
       __typename
       id
+      slug
       name
       difficulty
       defaultGradingSystem {
@@ -53,6 +54,7 @@ query Search($query: String) {
       route {
         __typename
         id
+        slug
         name
         crag {
           name

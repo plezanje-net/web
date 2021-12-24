@@ -15,6 +15,7 @@ query LatestImages($latest: Int!) {
     route {
       id
       name
+      slug
       crag {
         name
         slug
