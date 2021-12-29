@@ -23,6 +23,7 @@ query ActivityRoutesByClubSlug(
           id
         }
         id
+        slug
         name
         difficulty
       }

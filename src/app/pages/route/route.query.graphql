@@ -1,6 +1,7 @@
-query Route($routeId: String!) {
-  route(id: $routeId) {
+query RouteBySlug($cragSlug: String!, $routeSlug: String!) {
+  routeBySlug(cragSlug: $cragSlug, routeSlug: $routeSlug) {
     id
+    slug
     difficulty
     name
     length

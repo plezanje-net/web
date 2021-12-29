@@ -3,7 +3,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Apollo, gql } from 'apollo-angular';
 import { DataError } from '../../types/data-error';
 import { LayoutService } from '../../services/layout.service';
-import { RouteGQL, RouteQuery } from 'src/generated/graphql';
+import { RouteBySlugGQL, RouteBySlugQuery } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-route',
@@ -13,20 +13,21 @@ import { RouteGQL, RouteQuery } from 'src/generated/graphql';
 export class RouteComponent implements OnInit {
   loading: boolean = true;
   error: DataError = null;
-  route: RouteQuery['route'];
-  warnings: RouteQuery['route']['comments'];
+  route: RouteBySlugQuery['routeBySlug'];
+  warnings: RouteBySlugQuery['routeBySlug']['comments'];
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
-    private routeGQL: RouteGQL
-  ) { }
+    private routeBySlugGQL: RouteBySlugGQL
+  ) {}
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params: Params) => {
-      this.routeGQL
+      this.routeBySlugGQL
         .watch({
-          routeId: params.route,
+          cragSlug: params.crag,
+          routeSlug: params.route,
         })
         .valueChanges.subscribe((result) => {
           this.loading = false;
@@ -54,9 +55,11 @@ export class RouteComponent implements OnInit {
     };
   }
 
-  querySuccess(data: RouteQuery): void {
-    this.route = data.route;
-    this.warnings = this.route?.comments.filter((comment) => comment.type === 'warning');
+  querySuccess(data: RouteBySlugQuery): void {
+    this.route = data.routeBySlug;
+    this.warnings = this.route?.comments.filter(
+      (comment) => comment.type === 'warning'
+    );
 
     this.layoutService.$breadcrumbs.next([
       {
@@ -69,7 +72,7 @@ export class RouteComponent implements OnInit {
       },
       {
         name: this.route.sector.crag.name,
-        path: `/plezalisca/${this.route.sector.crag.country.slug}/${this.route.sector.crag.slug}`
+        path: `/plezalisca/${this.route.sector.crag.country.slug}/${this.route.sector.crag.slug}`,
       },
       {
         name: this.route.name,

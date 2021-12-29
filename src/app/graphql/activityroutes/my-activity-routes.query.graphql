@@ -20,6 +20,7 @@ query MyActivityRoutes($input: FindActivityRoutesInput) {
         }
         difficulty
         name
+        slug
         id
       }
     }

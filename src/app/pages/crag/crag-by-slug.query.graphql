@@ -25,6 +25,7 @@ query CragBySlug($crag: String!) {
       routes {
         id
         name
+        slug
         difficulty
         length
         routeType {

@@ -3,6 +3,7 @@ query MyCragSummary($input: FindActivityRoutesInput) {
     ascentType
     route {
       id
+      slug
     }
   }
 }

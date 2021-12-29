@@ -1,6 +1,7 @@
 query RouteGrades($routeId: String!) {
   route(id: $routeId) {
     id
+    slug
     difficulty
     name
     length

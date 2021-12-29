@@ -15,6 +15,7 @@ query exposedWarnings {
     route {
       id
       name
+      slug
       crag {
         name
         slug

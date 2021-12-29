@@ -17,6 +17,7 @@ query LatestTicks($latest: Int!) {
         slug
       }
       id
+      slug
     }
     user {
       fullName
