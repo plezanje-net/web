@@ -63,6 +63,7 @@
       </button>
     </div>
   </div>
+
   <div fxLayout="row" fxLayoutGap="12px" fxLayout.lt-md="column">
     <div fxFlex="60" fxLayout="column">
       <div fxFlex fxLayout="row" fxLayoutGap="12px grid">
@@ -70,21 +71,46 @@
           <mat-form-field class="no-hint">
             <mat-label>Vrsta vzpona</mat-label>
             <mat-select formControlName="ascentType">
-              <mat-option
-                *ngFor="let type of nonTopRopeAscentTypes"
-                [value]="type.value"
-                >{{ type.label }}
-              </mat-option>
-              <mat-optgroup label="Top rope">
+              <ng-container *ngFor="let type of nonTopRopeAscentTypes">
                 <mat-option
-                  *ngFor="let type of topRopeAscentTypes"
+                  *ngIf="
+                    !(route.value.type == 'boulder' && type.value == 'onsight')
+                  "
                   [value]="type.value"
+                  [disabled]="
+                    (route.value.ticked && type.value == 'redpoint') ||
+                    (route.value.tried &&
+                      (type.value == 'onsight' || type.value == 'flash')) ||
+                    (route.value.type == 'boulder' && type.value == 'onsight')
+                  "
                   >{{ type.label }}
                 </mat-option>
+              </ng-container>
+              <mat-optgroup label="Top rope">
+                <ng-container *ngFor="let type of topRopeAscentTypes">
+                  <mat-option
+                    *ngIf="
+                      !(
+                        route.value.type == 'boulder' &&
+                        type.value == 't_onsight'
+                      )
+                    "
+                    [value]="type.value"
+                    [disabled]="
+                      (route.value.ticked && type.value == 't_redpoint') ||
+                      ((type.value == 't_onsight' || type.value == 't_flash') &&
+                        route.value.tried) ||
+                      (route.value.type == 'boulder' &&
+                        type.value == 't_onsight')
+                    "
+                    >{{ type.label }}
+                  </mat-option>
+                </ng-container>
               </mat-optgroup>
             </mat-select>
           </mat-form-field>
         </div>
+
         <mat-form-field class="no-hint" fxFlex="25">
           <mat-label>Lepota</mat-label>
           <mat-select formControlName="stars">

@@ -61,7 +61,13 @@
       </button>
     </div>
     <div *ngIf="!loading">
-      <button type="button" mat-button mat-dialog-close>Prekliči</button>
+      <button
+        type="button"
+        mat-button
+        [routerLink]="['/plezalisca', crag.country.slug, crag.slug]"
+      >
+        Prekliči
+      </button>
       <button mat-flat-button color="primary" [disabled]="!activityForm.valid">
         SHRANI
       </button>

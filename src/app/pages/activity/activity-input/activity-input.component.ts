@@ -13,11 +13,15 @@ export class ActivityInputComponent implements OnInit {
   routes: Route[] = [];
   crag: Crag;
 
-  constructor(private layoutService: LayoutService, private localStorageService: LocalStorageService) {}
+  constructor(
+    private layoutService: LayoutService,
+    private localStorageService: LocalStorageService
+  ) {}
 
   ngOnInit(): void {
     if (this.localStorageService.getItem('activity-selection')) {
-      const { routes, crag }: ActivitySelection = this.localStorageService.getItem('activity-selection');
+      const { routes, crag }: ActivitySelection =
+        this.localStorageService.getItem('activity-selection');
 
       this.routes = routes;
       this.crag = crag;
