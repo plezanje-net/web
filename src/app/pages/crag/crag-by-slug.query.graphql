@@ -24,10 +24,11 @@ query CragBySlug($crag: String!) {
       routes {
         id
         name
-        grade
         difficulty
         length
-        type
+        routeType {
+          id
+        }
         comments {
           id
         }

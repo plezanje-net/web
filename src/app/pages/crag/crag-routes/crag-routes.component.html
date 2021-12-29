@@ -52,8 +52,7 @@
           class="popover-container"
         >
           <app-grade
-            [grade]="route.grade"
-            [text]="route.difficulty"
+            [difficulty]="route.difficulty"
             [showModifier]="true"
           ></app-grade>
           <div
@@ -70,7 +69,10 @@
                   "
                 >
                   <td>
-                    <app-grade class="grade" [grade]="grade.grade"></app-grade>
+                    <app-grade
+                      class="grade"
+                      [difficulty]="grade.difficulty"
+                    ></app-grade>
                   </td>
                   <td class="grade-author">
                     <ng-container *ngIf="grade.isBase"

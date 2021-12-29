@@ -18,6 +18,9 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
                 return incoming;
               },
             },
+            nrRoutes: {
+              keyArgs: ['$input'],
+            },
           },
         },
         Club: {

@@ -10,7 +10,7 @@ import { Comment, Crag, User } from 'src/generated/graphql';
 })
 export class CragCommentsComponent implements OnInit, OnChanges {
   @Input() crag: Crag;
-  @Input() action: Subject<string>;
+  @Input() action$: Subject<string>;
 
   comments: Comment[];
   conditions: Comment[];

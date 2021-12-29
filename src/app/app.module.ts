@@ -52,7 +52,7 @@ import { CragInfoComponent } from './pages/crag/crag-info/crag-info.component';
 import { CragCommentsComponent } from './pages/crag/crag-comments/crag-comments.component';
 import { MomentModule } from 'ngx-moment';
 import { CragLocationComponent } from './pages/crag/crag-location/crag-location.component';
-import { CragWarningsComponent } from './pages/crag/crag-warnings/crag-warnings.component';
+import { WarningsComponent } from './shared/components/warnings/warnings.component';
 import { ActivityFormComponent } from './forms/activity-form/activity-form.component';
 import { ActivityFormRouteComponent } from './forms/activity-form/activity-form-route/activity-form-route.component';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -132,7 +132,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     CragInfoComponent,
     CragCommentsComponent,
     CragLocationComponent,
-    CragWarningsComponent,
+    WarningsComponent,
     ActivityFormComponent,
     ActivityFormRouteComponent,
     CragGalleryComponent,

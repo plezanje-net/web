@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -22,7 +22,7 @@ import { ASCENT_TYPES } from 'src/app/common/activity.constants';
   templateUrl: './crag-routes.component.html',
   styleUrls: ['./crag-routes.component.scss'],
 })
-export class CragRoutesComponent implements OnInit {
+export class CragRoutesComponent implements OnInit, OnDestroy {
   @Input() crag: Crag;
 
   selectedRoutes: Route[] = [];
@@ -64,6 +64,10 @@ export class CragRoutesComponent implements OnInit {
       this.selectedRoutesIds = this.selectedRoutes.map((route) => route.id);
       this.openSnackBar();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.snackBar.dismiss();
   }
 
   changeSelection(route: Route): void {
@@ -168,7 +172,7 @@ export class CragRoutesComponent implements OnInit {
   }
 
   routeGradesQuerySuccess(queryData: RouteGradesQuery): void {
-    this.routeGrades = queryData.route.grades;
+    // this.routeGrades = queryData.route.grades; // TODO: we need to get grades from difficultyVotes now
   }
 
   routeGradesQueryError(): void {

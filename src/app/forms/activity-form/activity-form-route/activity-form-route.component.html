@@ -12,11 +12,7 @@
           class="route-name"
           >{{ route.value.name }}
         </a>
-        <app-grade
-          [grade]="route.value.grade"
-          [text]="route.value.difficulty"
-          [showModifier]="true"
-        >
+        <app-grade [difficulty]="route.value.difficulty" [modifier]="true">
         </app-grade>
       </ng-container>
       <ng-container *ngIf="!(route.value.routeId != null)">
