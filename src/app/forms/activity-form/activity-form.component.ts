@@ -81,7 +81,7 @@ export class ActivityFormComponent implements OnInit {
         publish: new FormControl('public'),
         notes: new FormControl(),
         stars: new FormControl(),
-        gradeSuggestion: new FormControl(),
+        difficultyVote: new FormControl(),
         ticked: new FormControl(route.ticked),
         tried: new FormControl(route.tried),
         type: new FormControl(route.type),
@@ -132,22 +132,19 @@ export class ActivityFormComponent implements OnInit {
       cragId: this.crag.id,
     };
 
-    const routes = this.routes.value.map((route: any, i: number) => ({
-      date: route.date || activity.date,
-      partner: route.partner || activity.partners,
-      ascentType: route.ascentType,
-      notes: route.notes,
-      position: i,
-      publish: route.publish,
-      routeId: route.routeId,
-      name: route.name,
-      difficulty: route.difficulty,
-      grade:
-        route.publish === PublishOptionsEnum.private
-          ? undefined
-          : route.gradeSuggestion,
-      stars: route.stars,
-    }));
+    const routes = this.routes.value.map((route: any, i: number) => {
+      return {
+        date: route.date || activity.date,
+        partner: route.partner || activity.partners,
+        ascentType: route.ascentType,
+        notes: route.notes,
+        position: i,
+        publish: route.publish,
+        routeId: route.routeId,
+        name: route.name,
+        stars: route.stars,
+      };
+    });
 
     this.createActivityGQL
       .mutate(

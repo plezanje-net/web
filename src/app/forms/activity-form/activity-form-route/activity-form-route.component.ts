@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
   ASCENT_TYPES,
@@ -24,6 +31,7 @@ export class ActivityFormRouteComponent implements OnInit {
   nonTopRopeAscentTypes = ASCENT_TYPES.filter(
     (ascentType) => !ascentType.topRope
   );
+
   publishOptions = PUBLISH_OPTIONS;
 
   constructor() {}
@@ -31,16 +39,16 @@ export class ActivityFormRouteComponent implements OnInit {
   ngOnInit(): void {
     this.route.controls.publish.valueChanges.subscribe(
       (publish: PublishOptionsEnum) => {
-        const gradeSuggestionControl = this.route.controls.gradeSuggestion;
+        const difficultyVoteControl = this.route.controls.difficultyVote;
 
         if (
           publish === PublishOptionsEnum.private &&
-          !gradeSuggestionControl.disabled
+          !difficultyVoteControl.disabled
         ) {
-          gradeSuggestionControl.disable();
+          difficultyVoteControl.disable();
         } else {
-          if (gradeSuggestionControl.disabled) {
-            gradeSuggestionControl.enable();
+          if (difficultyVoteControl.disabled) {
+            difficultyVoteControl.enable();
           }
         }
       }
