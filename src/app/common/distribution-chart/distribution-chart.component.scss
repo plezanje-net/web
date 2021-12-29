@@ -1,13 +1,9 @@
 .distribution-container {
-  margin-bottom: 24px;
+  // margin-bottom: 24px;
 }
 
 .distribution-bar-wrapper {
-  margin-bottom: 5px;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
+  margin-bottom: 10px;
 }
 
 .distribution-bar-label {
@@ -17,7 +13,7 @@
 
 .distribution-bar {
   height: 8px;
-  border: 1px solid #8080804a;
+  // border: 1px solid #8080804a;
   background-color: white;
 }
 

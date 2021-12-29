@@ -15,6 +15,7 @@ import {
   RouteCommentsGQL,
   RouteCommentsQuery,
 } from 'src/generated/graphql';
+import { ASCENT_TYPES } from 'src/app/common/activity.constants';
 
 @Component({
   selector: 'app-crag-routes',
@@ -34,6 +35,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   routeCommentsLoading: boolean;
   routeComments: Record<string, string | any>[];
   activePitchesPopupId: string | null = null;
+  loading = false;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -47,6 +49,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.authService.currentUser) {
+      this.loading = true; // needed because we cannot pass ascents to activity log (through local storage) until this loads
       this.loadActivity();
     }
 
@@ -81,11 +84,22 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       this.selectedRoutesIds = this.selectedRoutes.map(
         (selectedRoute) => selectedRoute.id
       );
+
+      // Append users previous activity (summary) to the routes that are being logged
+      const selectedRoutesWTouch = this.selectedRoutes.map((route) => ({
+        ...route,
+        tried: !!this.ascents[route.id],
+        ticked: ASCENT_TYPES.some(
+          (ascentType) =>
+            this.ascents[route.id] == ascentType.value && ascentType.tick
+        ),
+      }));
+
       this.localStorageService.setItem(
         'activity-selection',
         {
           crag: this.crag,
-          routes: this.selectedRoutes,
+          routes: selectedRoutesWTouch,
         },
         moment(new Date()).add(1, 'day').toISOString()
       );
@@ -127,6 +141,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     this.myCragSummaryGQL
       .watch({ input: { cragId: this.crag.id } })
       .valueChanges.subscribe((result) => {
+        this.loading = false;
         result.data?.myCragSummary.forEach((ascent) => {
           this.ascents[ascent.route.id] = ascent.ascentType;
         });

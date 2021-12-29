@@ -1,0 +1,11 @@
+query GradingSystems {
+  gradingSystems {
+    name
+    id
+    grades {
+      difficulty
+      name
+      id
+    }
+  }
+}

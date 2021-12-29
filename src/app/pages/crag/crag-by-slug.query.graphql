@@ -8,6 +8,7 @@ query CragBySlug($crag: String!) {
     lon
     access
     description
+    activityByMonth
     area {
       id
       name
@@ -27,6 +28,9 @@ query CragBySlug($crag: String!) {
         slug
         difficulty
         length
+        routeType {
+          id
+        }
         comments {
           id
         }
