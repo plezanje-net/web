@@ -8,6 +8,7 @@ query CragBySlug($crag: String!) {
     lon
     access
     description
+    activityByMonth
     area {
       id
       name
