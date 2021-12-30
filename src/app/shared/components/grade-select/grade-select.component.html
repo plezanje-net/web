@@ -2,9 +2,16 @@
   <mat-label>{{ label }}</mat-label>
   <mat-select [formControl]="control">
     <mat-option>
-      <ngx-mat-select-search placeholderLabel="Vnesi oceno" [formControl]="gradeFilterControl"></ngx-mat-select-search>
+      <ngx-mat-select-search
+        [formControl]="gradeFilterControl"
+        placeholderLabel="Vnesi oceno"
+        noEntriesFoundLabel="Ocena ne obstaja"
+      ></ngx-mat-select-search>
     </mat-option>
-    <mat-option *ngFor="let option of filteredGradesOptions | async" [value]="option.number">{{ option.name }}
-    </mat-option>
+    <mat-option
+      *ngFor="let grade of filteredGrades"
+      [value]="grade.difficulty"
+      >{{ grade.name }}</mat-option
+    >
   </mat-select>
 </mat-form-field>

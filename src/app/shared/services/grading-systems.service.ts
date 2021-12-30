@@ -1,14 +1,5 @@
 import { Injectable } from '@angular/core';
-import { GradingSystemsGQL } from 'src/generated/graphql';
-
-interface IGradingSystems {
-  id: string;
-  name: string;
-  grades: {
-    name: string;
-    difficulty: number;
-  }[];
-}
+import { GradingSystemsGQL, GradingSystemsQuery } from 'src/generated/graphql';
 
 export interface IGrade {
   name: string;
@@ -19,11 +10,11 @@ export interface IGrade {
   providedIn: 'root',
 })
 export class GradingSystemsService {
-  gradingSystems: { id: string; name: string; grades: { difficulty: number; name: string }[] }[];
+  gradingSystems: GradingSystemsQuery['gradingSystems'];
 
   constructor(private GradingSystemsGQL: GradingSystemsGQL) {}
 
-  private getGradingSystems(): Promise<IGradingSystems[]> {
+  getGradingSystems(): Promise<GradingSystemsQuery['gradingSystems']> {
     // TODO save the promise to prevent multiple requests
     return new Promise(async (resolve) => {
       if (!this.gradingSystems) {
@@ -36,11 +27,19 @@ export class GradingSystemsService {
     });
   }
 
-  diffToGrade(difficulty: number, gradingSystemId: string, legacy: boolean = false): Promise<IGrade> {
+  // TODO: should maybe implement> getGradingSystem('french') or getGradingSystemGrades('french')
+
+  diffToGrade(
+    difficulty: number,
+    gradingSystemId: string,
+    legacy: boolean = false
+  ): Promise<IGrade> {
     return new Promise((resolve, reject) => {
       this.getGradingSystems()
         .then((gradingSystems) => {
-          const grades = gradingSystems.find((gradingSystem) => gradingSystem.id === gradingSystemId).grades;
+          const grades = gradingSystems.find(
+            (gradingSystem) => gradingSystem.id === gradingSystemId
+          ).grades;
           // legacy grades should always be accurate and can only be found as grade suggestions
           // for example in the case of french grades, legacy grades should always have remainder 0 when dividing by 25
           if (legacy) {
@@ -53,7 +52,6 @@ export class GradingSystemsService {
               }
             });
           } else {
-
             // if lowest possible or highest possible grade, simply resolve without modifiers
             if (difficulty <= grades[0].difficulty) {
               return resolve({
@@ -74,25 +72,36 @@ export class GradingSystemsService {
               const next = grades[i + 1];
 
               // loop until curr is the closest grade to the searched grade
-              if (Math.abs(curr.difficulty - difficulty) <= Math.abs(next.difficulty - difficulty)) {
+              if (
+                Math.abs(curr.difficulty - difficulty) <=
+                Math.abs(next.difficulty - difficulty)
+              ) {
                 if (difficulty < curr.difficulty) {
-                  const gradesMiddlemark = (curr.difficulty + prev.difficulty) / 2;
+                  const gradesMiddlemark =
+                    (curr.difficulty + prev.difficulty) / 2;
 
-                  if (Math.abs(curr.difficulty - difficulty) < Math.abs(gradesMiddlemark - difficulty)) {
+                  if (
+                    Math.abs(curr.difficulty - difficulty) <
+                    Math.abs(gradesMiddlemark - difficulty)
+                  ) {
                     return resolve({
                       name: curr.name,
-                      modifier: 0
+                      modifier: 0,
                     });
                   } else {
                     return resolve({
                       name: curr.name,
-                      modifier: -1
+                      modifier: -1,
                     });
                   }
                 } else if (difficulty > curr.difficulty) {
-                  const gradesMiddlemark = (curr.difficulty + next.difficulty) / 2;
+                  const gradesMiddlemark =
+                    (curr.difficulty + next.difficulty) / 2;
 
-                  if (Math.abs(curr.difficulty - difficulty) <= Math.abs(gradesMiddlemark - difficulty)) {
+                  if (
+                    Math.abs(curr.difficulty - difficulty) <=
+                    Math.abs(gradesMiddlemark - difficulty)
+                  ) {
                     return resolve({
                       name: curr.name,
                       modifier: 0,
@@ -110,7 +119,6 @@ export class GradingSystemsService {
                   });
                 }
               }
-
             }
           }
         })

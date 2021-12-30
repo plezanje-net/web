@@ -10,7 +10,6 @@ import {
 import moment from 'moment';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
-import { PublishOptionsEnum } from 'src/app/common/activity.constants';
 
 @Component({
   selector: 'app-activity-form',
@@ -75,13 +74,14 @@ export class ActivityFormComponent implements OnInit {
         name: new FormControl(route.name),
         grade: new FormControl(route.grade),
         difficulty: new FormControl(route.difficulty),
+        defaultGradingSystemId: new FormControl(route.defaultGradingSystem.id),
         ascentType: new FormControl(!route?.ticked ? 'redpoint' : 'repeat'),
         date: new FormControl(),
         partner: new FormControl(),
         publish: new FormControl('public'),
         notes: new FormControl(),
         stars: new FormControl(),
-        difficultyVote: new FormControl(),
+        votedDifficulty: new FormControl(),
         ticked: new FormControl(route.ticked),
         tried: new FormControl(route.tried),
         type: new FormControl(route.type),
@@ -136,13 +136,14 @@ export class ActivityFormComponent implements OnInit {
       return {
         date: route.date || activity.date,
         partner: route.partner || activity.partners,
-        ascentType: route.ascentType,
         notes: route.notes,
-        position: i,
-        publish: route.publish,
         routeId: route.routeId,
-        name: route.name,
+        ascentType: route.ascentType,
         stars: route.stars,
+        publish: route.publish,
+        votedDifficulty: route.votedDifficulty,
+        name: route.name, // TODO: do we need this?
+        position: i, // TODO: why do we need this?
       };
     });
 

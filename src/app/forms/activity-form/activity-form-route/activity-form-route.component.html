@@ -132,8 +132,9 @@
         <app-grade-select
           class="no-hint"
           fxFlex="25"
-          [control]="route.controls.difficultyVote"
+          [control]="route.controls.votedDifficulty"
           label="Predlog ocene"
+          [gradingSystemId]="route.value.defaultGradingSystemId"
         ></app-grade-select>
       </div>
       <div fxFlex="100" fxHide.lt-md></div>

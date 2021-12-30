@@ -1,62 +1,61 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ReplaySubject, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { Grade, maxGrade, minGrade } from 'src/app/common/grade';
+import { Subject, takeUntil } from 'rxjs';
+import { GradingSystemsQuery } from 'src/generated/graphql';
+import { GradingSystemsService } from '../../services/grading-systems.service';
 
 @Component({
   selector: 'app-grade-select',
   templateUrl: './grade-select.component.html',
   styleUrls: ['./grade-select.component.scss'],
 })
-export class GradeSelectComponent implements OnInit, OnDestroy {
+export class GradeSelectComponent implements OnInit {
   @Input() label: string;
   @Input() control: FormControl;
+  @Input() gradingSystemId: string;
 
-  allGrades: Grade[] = [];
-
-  filteredGradesOptions: ReplaySubject<Grade[]> = new ReplaySubject<Grade[]>(1);
+  allGrades: GradingSystemsQuery['gradingSystems'][0]['grades'];
+  filteredGrades: GradingSystemsQuery['gradingSystems'][0]['grades'];
   gradeFilterControl: FormControl = new FormControl();
 
   onDestroySubject = new Subject<void>();
 
-  constructor() {}
+  constructor(private gradingSystemService: GradingSystemsService) {}
 
   ngOnInit(): void {
-    let current = minGrade;
+    const gradingSystems = this.gradingSystemService.getGradingSystems();
 
-    while (current <= maxGrade) {
-      this.allGrades.push(new Grade(current));
-      current += current >= -200 ? 50 : 300;
+    gradingSystems.then((gradingSystems) => {
+      console.log(gradingSystems);
+      const grades = gradingSystems.find(
+        (gradingSystem) => gradingSystem.id === this.gradingSystemId
+      ).grades;
+      this.allGrades = grades;
+
+      this.populateGradesDropdown();
+
+      this.gradeFilterControl.valueChanges
+        .pipe(takeUntil(this.onDestroySubject))
+        .subscribe(() => {
+          this.populateGradesDropdown();
+        });
+    });
+  }
+
+  populateGradesDropdown() {
+    let search: string = this.gradeFilterControl.value;
+    if (search) {
+      search = search.toLowerCase();
+      this.filteredGrades = this.allGrades.filter(
+        (grade) => grade.name.indexOf(search) > -1
+      );
+    } else {
+      this.filteredGrades = this.allGrades;
     }
-
-    this.populateGradesDropdown();
-
-    this.gradeFilterControl.valueChanges
-      .pipe(takeUntil(this.onDestroySubject))
-      .subscribe(() => {
-        this.populateGradesDropdown();
-      });
   }
 
   ngOnDestroy(): void {
     this.onDestroySubject.next();
     this.onDestroySubject.complete();
-  }
-
-  populateGradesDropdown(): void {
-    let search: string = this.gradeFilterControl.value;
-
-    const grades = this.allGrades;
-
-    if (search) {
-      search = search.toLowerCase();
-
-      this.filteredGradesOptions.next(
-        grades.filter((grade) => grade.name.indexOf(search) > -1)
-      );
-    } else {
-      this.filteredGradesOptions.next(grades.slice());
-    }
   }
 }
