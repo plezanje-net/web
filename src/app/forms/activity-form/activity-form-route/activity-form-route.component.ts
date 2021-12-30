@@ -38,6 +38,7 @@ export class ActivityFormRouteComponent implements OnInit {
           publish === PublishOptionsEnum.private &&
           !votedDifficultyControl.disabled
         ) {
+          votedDifficultyControl.reset();
           votedDifficultyControl.disable();
         } else {
           if (votedDifficultyControl.disabled) {
