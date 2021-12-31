@@ -1,5 +1,10 @@
 @import "../../../styles/colors.scss";
 
+span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .grade-modifier {
   &.hard {
     color: $colors-red;
@@ -7,12 +12,8 @@
   &.soft {
     color: $colors-green;
   }
-  position: relative;
-  width: 10px;
-  padding-right: 10px;
   .mat-icon {
-    position: absolute;
-    left: -3px;
-    top: -1px;
+    vertical-align: middle;
+    margin-left: -3px;
   }
 }
