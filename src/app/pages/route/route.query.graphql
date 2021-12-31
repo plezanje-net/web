@@ -3,6 +3,7 @@ query RouteBySlug($cragSlug: String!, $routeSlug: String!) {
     id
     slug
     difficulty
+    isProject
     name
     length
     author
