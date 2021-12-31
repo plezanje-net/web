@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   Crag,
@@ -82,9 +82,7 @@ export class ActivityFormComponent implements OnInit {
         publish: new FormControl('public'),
         notes: new FormControl(),
         stars: new FormControl(),
-        gradeSuggestion: route.isProject
-          ? new FormControl(null, Validators.required)
-          : new FormControl(),
+        gradeSuggestion: new FormControl(),
         ticked: new FormControl(route.ticked),
         tried: new FormControl(route.tried),
         type: new FormControl(route.type),
