@@ -1,0 +1,80 @@
+<app-data-error *ngIf="error" [error]="error"></app-data-error>
+
+<div *ngIf="!error">
+  <div class="white-back mt-16">
+    <div
+      class="container py-8"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+    >
+      <h1>
+        Zaledeneli slapovi<ng-container *ngIf="area">
+          - {{ area.name }}</ng-container
+        >
+      </h1>
+    </div>
+  </div>
+
+  <app-loader *ngIf="loading"></app-loader>
+
+  <div
+    class="container"
+    fxLayout="row"
+    fxLayoutGap="12px"
+    *ngIf="!loading"
+    fxLayout.lt-md="column"
+  >
+    <div fxFlex="320px" fxFlex.lt-md>
+      <div class="card mt-16" *ngIf="!loading && area.areas.length > 0">
+        <h3>Stranske doline in sektorji</h3>
+        <app-areas-level
+          [areas]="area.areas"
+          [country]="country"
+        ></app-areas-level>
+      </div>
+      <div class="mt-16">
+        <app-areas-toc [country]="country"></app-areas-toc>
+      </div>
+    </div>
+    <div fxFlex="100" fxFlex.lt-md>
+      <div class="card mt-16">
+        <div
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          fxHide.lt-md
+          class="row header"
+          fxLayoutGap="14px"
+        >
+          <div fxFlex="100">Ime</div>
+          <div fxFlex="80px" fxFlex.lt-md>Dolžina</div>
+          <div fxFlex="80px" fxFlex.lt-md>Težavnost</div>
+        </div>
+        <div
+          *ngFor="let iceFall of area.iceFalls"
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          class="row"
+          fxLayoutGap="14px"
+        >
+          <div fxFlex="100">
+            <a
+              [routerLink]="[
+                '/slapovi/',
+                area.country.slug,
+                area.slug,
+                iceFall.slug
+              ]"
+              >{{ iceFall.name }}</a
+            >
+          </div>
+          <div fxFlex="80px" fxFlex.lt-md>
+            {{ iceFall.grade }}
+          </div>
+          <div fxFlex="80px" fxFlex.lt-md fxHide.lt-md>
+            {{ iceFall.height }} m
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

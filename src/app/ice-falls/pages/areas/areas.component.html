@@ -1,0 +1,39 @@
+<app-data-error *ngIf="error" [error]="error"></app-data-error>
+
+<div *ngIf="!error">
+  <div class="white-back mt-16">
+    <div
+      class="container py-8"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+    >
+      <h1>
+        Zaledeneli slapovi<ng-container *ngIf="country">
+          - {{ country.name }}</ng-container
+        >
+      </h1>
+    </div>
+  </div>
+
+  <app-loader *ngIf="loading"></app-loader>
+
+  <div
+    class="container mt-16"
+    fxLayout="row"
+    fxLayoutGap="12px"
+    *ngIf="!loading"
+    fxLayout.lt-md="column"
+  >
+    <div fxFlex="320px" fxFlex.lt-md>
+      <app-areas-toc [country]="country"></app-areas-toc>
+    </div>
+    <div fxFlex="100" fxFlex.lt-md>
+      <div class="card" *ngIf="!loading">
+        <app-areas-level
+          [areas]="country.areas"
+          [country]="country"
+        ></app-areas-level>
+      </div>
+    </div>
+  </div>
+</div>

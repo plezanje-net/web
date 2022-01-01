@@ -1,0 +1,9 @@
+query IceFallCountriesToc {
+  countries(input: { orderBy: { field: "name", direction: "ASC" } }) {
+    name
+    slug
+    iceFalls {
+      id
+    }
+  }
+}

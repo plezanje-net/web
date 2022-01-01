@@ -1,0 +1,33 @@
+fragment AreaData on Area {
+  id
+  slug
+  name
+  type
+  iceFalls {
+    id
+  }
+}
+
+query IceFallAreas($country: String!) {
+  countryBySlug(slug: $country) {
+    id
+    name
+    slug
+    code
+    areas {
+      ...AreaData
+      areas {
+        ...AreaData
+        areas {
+          ...AreaData
+          areas {
+            ...AreaData
+          }
+        }
+      }
+    }
+    iceFalls {
+      id
+    }
+  }
+}

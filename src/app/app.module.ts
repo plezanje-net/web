@@ -30,7 +30,6 @@ import { CragsComponent } from './pages/crags/crags.component';
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { BreadcrumbsComponent } from './layout/breadcrumbs/breadcrumbs.component';
-import { LoaderComponent } from './layout/loader/loader.component';
 import { DataErrorComponent } from './layout/data-error/data-error.component';
 import { GraphQLModule } from './graphql/graphql.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -103,6 +102,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { ImageFullComponent } from './common/image-full/image-full.component';
 import { ExposedWarningsComponent } from './pages/home/exposed-warnings/expsoed-warnings.component';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
+import { IceFallsModule } from './ice-falls/ice-falls.module';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -116,7 +116,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     HomeComponent,
     NotFoundComponent,
     BreadcrumbsComponent,
-    LoaderComponent,
     DataErrorComponent,
     CragsTocComponent,
     GradeComponent,
@@ -202,6 +201,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     NgxMatSelectSearchModule,
     SharedModule,
     ManagementModule,
+    IceFallsModule,
     AppRoutingModule,
     MatGridListModule,
     SlickCarouselModule,

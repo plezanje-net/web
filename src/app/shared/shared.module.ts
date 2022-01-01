@@ -16,12 +16,15 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatSelectModule } from '@angular/material/select';
 import { OrientationPipe } from './pipes/orientation.pipe';
 import { CustomBreakpointsProvider } from './custom-breakpoints';
+import { LoaderComponent } from './components/loader/loader.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
     EditorComponent,
     SnackBarButtonsComponent,
     GradeSelectComponent,
+    LoaderComponent,
     AscentTypePipe,
     GenderizeVerbPipe,
     OrientationPipe,
@@ -36,6 +39,7 @@ import { CustomBreakpointsProvider } from './custom-breakpoints';
     MatSnackBarModule,
     MatSelectModule,
     MatFormFieldModule,
+    MatProgressSpinnerModule,
     NgxMatSelectSearchModule,
   ],
   providers: [CustomBreakpointsProvider],
@@ -43,6 +47,7 @@ import { CustomBreakpointsProvider } from './custom-breakpoints';
     EditorComponent,
     SnackBarButtonsComponent,
     GradeSelectComponent,
+    LoaderComponent,
     AscentTypePipe,
     GenderizeVerbPipe,
     OrientationPipe,
