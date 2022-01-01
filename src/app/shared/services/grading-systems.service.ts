@@ -19,7 +19,11 @@ export interface IGrade {
   providedIn: 'root',
 })
 export class GradingSystemsService {
-  gradingSystems: { id: string; name: string; grades: { difficulty: number; name: string }[] }[];
+  gradingSystems: {
+    id: string;
+    name: string;
+    grades: { difficulty: number; name: string }[];
+  }[];
 
   constructor(private GradingSystemsGQL: GradingSystemsGQL) {}
 
@@ -36,11 +40,17 @@ export class GradingSystemsService {
     });
   }
 
-  diffToGrade(difficulty: number, gradingSystemId: string, legacy: boolean = false): Promise<IGrade> {
+  diffToGrade(
+    difficulty: number,
+    gradingSystemId: string,
+    legacy: boolean = false
+  ): Promise<IGrade> {
     return new Promise((resolve, reject) => {
       this.getGradingSystems()
         .then((gradingSystems) => {
-          const grades = gradingSystems.find((gradingSystem) => gradingSystem.id === gradingSystemId).grades;
+          const grades = gradingSystems.find(
+            (gradingSystem) => gradingSystem.id === gradingSystemId
+          ).grades;
           // legacy grades should always be accurate and can only be found as grade suggestions
           // for example in the case of french grades, legacy grades should always have remainder 0 when dividing by 25
           if (legacy) {
@@ -53,7 +63,6 @@ export class GradingSystemsService {
               }
             });
           } else {
-
             // if lowest possible or highest possible grade, simply resolve without modifiers
             if (difficulty <= grades[0].difficulty) {
               return resolve({
@@ -74,25 +83,36 @@ export class GradingSystemsService {
               const next = grades[i + 1];
 
               // loop until curr is the closest grade to the searched grade
-              if (Math.abs(curr.difficulty - difficulty) <= Math.abs(next.difficulty - difficulty)) {
+              if (
+                Math.abs(curr.difficulty - difficulty) <=
+                Math.abs(next.difficulty - difficulty)
+              ) {
                 if (difficulty < curr.difficulty) {
-                  const gradesMiddlemark = (curr.difficulty + prev.difficulty) / 2;
+                  const gradesMiddlemark =
+                    (curr.difficulty + prev.difficulty) / 2;
 
-                  if (Math.abs(curr.difficulty - difficulty) < Math.abs(gradesMiddlemark - difficulty)) {
+                  if (
+                    Math.abs(curr.difficulty - difficulty) <
+                    Math.abs(gradesMiddlemark - difficulty)
+                  ) {
                     return resolve({
                       name: curr.name,
-                      modifier: 0
+                      modifier: 0,
                     });
                   } else {
                     return resolve({
                       name: curr.name,
-                      modifier: -1
+                      modifier: -1,
                     });
                   }
                 } else if (difficulty > curr.difficulty) {
-                  const gradesMiddlemark = (curr.difficulty + next.difficulty) / 2;
+                  const gradesMiddlemark =
+                    (curr.difficulty + next.difficulty) / 2;
 
-                  if (Math.abs(curr.difficulty - difficulty) <= Math.abs(gradesMiddlemark - difficulty)) {
+                  if (
+                    Math.abs(curr.difficulty - difficulty) <=
+                    Math.abs(gradesMiddlemark - difficulty)
+                  ) {
                     return resolve({
                       name: curr.name,
                       modifier: 0,
@@ -110,7 +130,6 @@ export class GradingSystemsService {
                   });
                 }
               }
-
             }
           }
         })
