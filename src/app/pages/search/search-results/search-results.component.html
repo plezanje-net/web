@@ -93,7 +93,9 @@
                 <a [innerHtml]="highlight(route.name, searchString)"></a>
               </div>
               <div fxFlex>
+                <span *ngIf="route.isProject">P</span>
                 <app-grade
+                  *ngIf="!route.isProject"
                   [difficulty]="route.difficulty"
                   [system]="route.defaultGradingSystem.id"
                   [showModifier]="false"

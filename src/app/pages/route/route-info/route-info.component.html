@@ -2,7 +2,12 @@
   <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
     <div class="label">Težavnost</div>
     <span class="text-right">
-      <app-grade [difficulty]="route.difficulty" [modifier]="true"></app-grade>
+      <span *ngIf="route.isProject">P</span>
+      <app-grade
+        *ngIf="!route.isProject"
+        [difficulty]="route.difficulty"
+        [modifier]="true"
+      ></app-grade>
     </span>
   </div>
   <div

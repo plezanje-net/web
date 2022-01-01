@@ -6,7 +6,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 import {
   ASCENT_TYPES,
   PublishOptionsEnum,
@@ -40,8 +40,9 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
   constructor() {}
 
   ngOnInit(): void {
-    this.route.controls.publish.valueChanges.subscribe(
-      (publish: PublishOptionsEnum) => {
+    this.route.controls.publish.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((publish: PublishOptionsEnum) => {
         const votedDifficultyControl = this.route.controls.votedDifficulty;
 
         if (
@@ -55,16 +56,35 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
             votedDifficultyControl.enable();
           }
         }
-      }
+      });
+
+    if (this.route.get('isProject').value) {
+      const ascentTypeSelected = this.route.get('ascentType').value;
+      this.conditionallyRequireVotedDifficulty(ascentTypeSelected);
+
+      this.route
+        .get('ascentType')
+        .valueChanges.pipe(takeUntil(this.destroy$))
+        .subscribe((at) => this.conditionallyRequireVotedDifficulty(at));
+    }
+  }
+
+  /**
+   *
+   * @param ascentTypeSelected
+   *
+   * If a route is a project and selected ascent type means that the route has been ticked, then a vote on grade is mandatory.
+   */
+  conditionallyRequireVotedDifficulty(ascentTypeSelected: string) {
+    const isTick = ASCENT_TYPES.some(
+      (at) => at.value === ascentTypeSelected && at.tick
     );
-
-    const ascentTypeSelected = this.route.get('ascentType').value;
-    this.conditionallyDisableVotedDifficulty(ascentTypeSelected);
-
-    this.route
-      .get('ascentType')
-      .valueChanges.pipe(takeUntil(this.destroy$))
-      .subscribe((at) => this.conditionallyDisableVotedDifficulty(at));
+    if (isTick) {
+      this.route.get('gradeSuggestion').addValidators(Validators.required);
+    } else {
+      this.route.get('gradeSuggestion').clearValidators();
+    }
+    this.route.get('gradeSuggestion').updateValueAndValidity();
   }
 
   /**

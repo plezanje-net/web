@@ -1,6 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 // import { Grade } from '../grade';
-import { GradingSystemsService, IGrade } from '../../shared/services/grading-systems.service'
+import {
+  GradingSystemsService,
+  IGrade,
+} from '../../shared/services/grading-systems.service';
 
 @Component({
   selector: 'app-grade',
@@ -23,8 +26,13 @@ export class GradeComponent implements OnInit {
 
   ngOnInit(): void {
     // this.grade = new Grade(this.difficulty);
-    this.GradingSystemsService.diffToGrade(this.difficulty, 'french', this.legacy).then((name) => {
-      this.grade = name;
+
+    this.GradingSystemsService.diffToGrade(
+      this.difficulty,
+      'french',
+      this.legacy
+    ).then((grade) => {
+      this.grade = grade;
       // console.log({ ...name, diff: this.difficulty});
     });
   }

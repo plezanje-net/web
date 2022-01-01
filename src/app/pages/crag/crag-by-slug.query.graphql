@@ -30,6 +30,7 @@ query CragBySlug($crag: String!) {
         defaultGradingSystem {
           id
         }
+        isProject
         length
         routeType {
           id
