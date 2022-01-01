@@ -107,7 +107,7 @@ export class SearchComponent implements OnInit, OnDestroy {
           '/plezalisca',
           route.crag.country.slug,
           route.crag.slug,
-          route.id,
+          route.slug,
         ]);
         break;
 
