@@ -51,7 +51,9 @@
           (mouseleave)="hideRouteGrades(route)"
           class="popover-container"
         >
+          <span *ngIf="route.isProject">P</span>
           <app-grade
+            *ngIf="!route.isProject"
             [difficulty]="route.difficulty"
             [showModifier]="true"
           ></app-grade>

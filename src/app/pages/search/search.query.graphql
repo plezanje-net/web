@@ -21,6 +21,7 @@ query Search($query: String) {
       defaultGradingSystem {
         id
       }
+      isProject
       length
       crag {
         name
