@@ -26,7 +26,6 @@ export class GradeSelectComponent implements OnInit {
     const gradingSystems = this.gradingSystemService.getGradingSystems();
 
     gradingSystems.then((gradingSystems) => {
-      console.log(gradingSystems);
       const grades = gradingSystems.find(
         (gradingSystem) => gradingSystem.id === this.gradingSystemId
       ).grades;

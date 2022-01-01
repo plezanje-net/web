@@ -58,8 +58,17 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
         }
       });
 
+    // should disable possibility to vote on route if ascent type not a tick
+    const ascentTypeSelected = this.route.get('ascentType').value;
+    this.conditionallyDisableVotedDifficulty(ascentTypeSelected);
+
+    this.route
+      .get('ascentType')
+      .valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe((at) => this.conditionallyDisableVotedDifficulty(at));
+
+    // if a route is a project than a vote on diff should always be cast
     if (this.route.get('isProject').value) {
-      const ascentTypeSelected = this.route.get('ascentType').value;
       this.conditionallyRequireVotedDifficulty(ascentTypeSelected);
 
       this.route
@@ -80,11 +89,11 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
       (at) => at.value === ascentTypeSelected && at.tick
     );
     if (isTick) {
-      this.route.get('gradeSuggestion').addValidators(Validators.required);
+      this.route.get('votedDifficulty').addValidators(Validators.required);
     } else {
-      this.route.get('gradeSuggestion').clearValidators();
+      this.route.get('votedDifficulty').clearValidators();
     }
-    this.route.get('gradeSuggestion').updateValueAndValidity();
+    this.route.get('votedDifficulty').updateValueAndValidity();
   }
 
   /**
@@ -97,7 +106,6 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
     const isTick = ASCENT_TYPES.some(
       (at) => at.value === ascentTypeSelected && at.tick
     );
-
     // Only if route is being newly ticked or repeated (which also is a tick) can one cast a vote on difficulty (i.e. new vote or modifying existing one)
     if (isTick) {
       this.route.get('votedDifficulty').enable();
