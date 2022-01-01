@@ -20,7 +20,7 @@ query Crags($country: String!, $input: FindCragsInput) {
       minDifficulty
       maxDifficulty
     }
-    areas {
+    areas(hasCrags: true) {
       id
       name
     }
