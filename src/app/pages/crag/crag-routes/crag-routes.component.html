@@ -13,9 +13,9 @@
         fxLayoutGap="14px"
       >
         <div fxFlex="12px"></div>
-        <div fxFlex="100">Ime</div>
+        <div fxFlex>Ime</div>
         <div fxFlex="80px" fxFlex.lt-md>Dolžina</div>
-        <div fxFlex="80px" fxFlex.lt-md>Težavnost</div>
+        <div fxFlex="0 1 80px">Težavnost</div>
         <div fxFlex="160px"></div>
       </div>
       <div
@@ -32,7 +32,7 @@
           >
           </mat-checkbox>
         </div>
-        <div fxFlex="100">
+        <div fxFlex>
           <a
             [routerLink]="[
               '/plezalisca/',
@@ -45,8 +45,7 @@
         </div>
         <div fxFlex="80px" fxFlex.lt-md fxHide.lt-md>{{ route.length }} m</div>
         <div
-          fxFlex="80px"
-          fxFlex.lt-md
+          fxFlex="0 1 80px"
           (mouseenter)="displayRouteGrades(route)"
           (mouseleave)="hideRouteGrades(route)"
           class="popover-container"
@@ -55,7 +54,7 @@
           <app-grade
             *ngIf="!route.isProject"
             [difficulty]="route.difficulty"
-            [showModifier]="true"
+            [modifier]="true"
           ></app-grade>
           <div
             class="popover"
