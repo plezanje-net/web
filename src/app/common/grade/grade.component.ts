@@ -13,7 +13,7 @@ import {
 export class GradeComponent implements OnInit {
   @Input() difficulty: number;
   @Input() gradingSystemId: string;
-  @Input('modifier') showModifier: boolean = false;
+  @Input() showModifier: boolean = false;
   @Input() legacy: boolean = false;
 
   // grade: Grade;

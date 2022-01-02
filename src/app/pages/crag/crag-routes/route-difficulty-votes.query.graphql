@@ -1,4 +1,4 @@
-query RouteGrades($routeId: String!) {
+query RouteDifficultyVotes($routeId: String!) {
   route(id: $routeId) {
     id
     slug
@@ -10,6 +10,7 @@ query RouteGrades($routeId: String!) {
     length
     difficultyVotes {
       id
+      difficulty
       user {
         firstname
         lastname
