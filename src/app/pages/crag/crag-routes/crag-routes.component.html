@@ -55,6 +55,7 @@
           <app-grade
             *ngIf="!route.isProject"
             [difficulty]="route.difficulty"
+            [gradingSystemId]="route.defaultGradingSystem.id"
             [showModifier]="true"
           ></app-grade>
           <div
@@ -74,6 +75,7 @@
                     <app-grade
                       class="grade"
                       [difficulty]="grade.difficulty"
+                      [gradingSystemId]="route.defaultGradingSystem.id"
                     ></app-grade>
                   </td>
                   <td class="grade-author">

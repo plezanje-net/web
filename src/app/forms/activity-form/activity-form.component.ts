@@ -75,6 +75,7 @@ export class ActivityFormComponent implements OnInit {
         name: new FormControl(route.name),
         grade: new FormControl(route.grade),
         difficulty: new FormControl(route.difficulty),
+        gradingSystemId: new FormControl(route.defaultGradingSystem.id),
         isProject: new FormControl(route.isProject),
         ascentType: new FormControl(!route?.ticked ? 'redpoint' : 'repeat'),
         date: new FormControl(),

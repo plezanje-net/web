@@ -93,7 +93,6 @@
           </div>
           <div fxFlex="25" fxFlex.lt-md class="routes">
             <span fxHide.gt-sm>{{ crag.nrRoutes }} smeri<br /></span>
-            {{ crag.minDifficulty }}
             <app-grade
               [difficulty]="crag.minDifficulty"
               [gradingSystemId]="crag.defaultGradingSystem.id"

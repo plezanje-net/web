@@ -16,6 +16,7 @@
         <app-grade
           *ngIf="!route.value.isProject"
           [difficulty]="route.value.difficulty"
+          [gradingSystemId]="route.value.gradingSystemId"
           [modifier]="true"
         >
         </app-grade>
