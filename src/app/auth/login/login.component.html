@@ -1,7 +1,6 @@
 <mat-dialog-content>
   <p>
-    Možnost, ki ste jo izbrali, je dostopna samo registriranim uporabnikom. Za
-    nadaljevanje se morate prijaviti.
+    {{ data.message }}
   </p>
   <form [formGroup]="loginForm" (submit)="login()">
     <p>

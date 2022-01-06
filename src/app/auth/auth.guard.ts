@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
   CanActivate,
-  Router,
   RouterStateSnapshot,
   ActivatedRouteSnapshot,
 } from '@angular/router';
@@ -15,11 +14,12 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Promise<boolean> {
-    // console.log(route, state);
     return this.authService.getCurrentUser().then((user) => {
       if (!user) {
         this.authService.openLogin$.next({
           returnUrl: state.url,
+          message:
+            'Možnost, ki ste jo izbrali, je dostopna samo registriranim uporabnikom. Zanadaljevanje se morate prijaviti.',
         });
       }
       return user != null;
