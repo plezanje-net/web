@@ -1,1 +1,29 @@
-<p>ice-fall works!</p>
+<app-data-error *ngIf="error" [error]="error"></app-data-error>
+
+<app-loader *ngIf="loading"></app-loader>
+
+<div *ngIf="!error && !loading">
+  <div class="white-back mt-16">
+    <div class="container py-8">
+      <h1>{{ iceFall.name }}</h1>
+    </div>
+  </div>
+
+  <div
+    class="container mt-16"
+    fxLayout="row"
+    fxLayoutGap="12px"
+    fxLayout.lt-md="column"
+  >
+    <div fxFlex="320px" fxFlex.lt-md>
+      <app-ice-fall-info [iceFall]="iceFall"></app-ice-fall-info>
+    </div>
+    <div
+      fxFlex="100"
+      fxFlex.lt-md
+      fxLayout="column"
+      fxLayoutGap="0px"
+      fxLayoutGap.lt-md="12px"
+    ></div>
+  </div>
+</div>

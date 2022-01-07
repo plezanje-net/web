@@ -14,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { AreasLevelComponent } from './pages/areas/areas-level/areas-level.component';
 import { NrIceFallsPipe } from './pages/areas/areas-level/nr-ice-falls.pipe';
 import { AreaComponent } from './pages/area/area.component';
+import { IceFallInfoComponent } from './pages/ice-fall/ice-fall-info/ice-fall-info.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { AreaComponent } from './pages/area/area.component';
     AreasLevelComponent,
     NrIceFallsPipe,
     AreaComponent,
+    IceFallInfoComponent,
   ],
   imports: [
     MatSelectModule,

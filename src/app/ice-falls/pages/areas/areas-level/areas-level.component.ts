@@ -10,6 +10,7 @@ export class AreasLevelComponent implements OnInit, OnChanges {
   @Input() level: number = 0;
   @Input() areas: Area[];
   @Input() country: Country;
+  @Input() extended: boolean = true;
 
   filteredAreas: Area[];
 

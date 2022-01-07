@@ -28,9 +28,22 @@ query IceFallArea($area: String!) {
         }
       }
     }
+    area {
+      slug
+      name
+      area {
+        slug
+        name
+        area {
+          slug
+          name
+        }
+      }
+    }
     iceFalls {
       id
       name
+      slug
       grade
       height
     }

@@ -2,12 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { GraphQLError } from 'graphql';
 import {
+  Area,
   Country,
   IceFallAreaGQL,
   IceFallAreaQuery,
 } from '../../../../generated/graphql';
 import { LayoutService } from '../../../services/layout.service';
+import { Breadcrumb } from '../../../types/breadcrumb';
 import { DataError } from '../../../types/data-error';
+import { IceFallsBreadcrumbs } from '../../utils/ice-falls-breadcrumbs';
 
 @Component({
   selector: 'app-area',
@@ -81,14 +84,8 @@ export class AreaComponent implements OnInit {
     this.area = area;
     this.country = <Country>area.country;
 
-    this.layoutService.$breadcrumbs.next([
-      {
-        name: 'Slapovi',
-        path: '/slapovi',
-      },
-      {
-        name: this.area.name,
-      },
-    ]);
+    this.layoutService.$breadcrumbs.next(
+      new IceFallsBreadcrumbs(<Area>area).build()
+    );
   }
 }

@@ -1,0 +1,41 @@
+query IceFallBySlug($slug: String!) {
+  iceFallBySlug(slug: $slug) {
+    name
+    slug
+    grade
+    height
+    id
+    country {
+      name
+      slug
+    }
+    area {
+      slug
+      name
+      area {
+        slug
+        name
+        area {
+          slug
+          name
+          area {
+            name
+            slug
+          }
+        }
+      }
+    }
+    comments {
+      type
+      user {
+        fullName
+      }
+      content
+      created
+      updated
+    }
+    images {
+      path
+    }
+  }
+}

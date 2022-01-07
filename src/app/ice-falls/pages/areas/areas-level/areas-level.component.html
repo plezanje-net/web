@@ -11,7 +11,7 @@
         area.name
       }}</a>
     </div>
-    <div fxFlex class="nr">
+    <div fxFlex class="nr" *ngIf="extended">
       {{ area.iceFalls.length | nrIceFalls }}
     </div>
   </div>
@@ -19,5 +19,6 @@
     [areas]="area.areas"
     [level]="level + 1"
     [country]="country"
+    [extended]="extended"
   ></app-areas-level>
 </ng-container>
