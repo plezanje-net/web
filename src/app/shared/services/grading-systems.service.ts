@@ -1,14 +1,5 @@
 import { Injectable } from '@angular/core';
-import { GradingSystemsGQL } from 'src/generated/graphql';
-
-interface IGradingSystems {
-  id: string;
-  name: string;
-  grades: {
-    name: string;
-    difficulty: number;
-  }[];
-}
+import { GradingSystemsGQL, GradingSystemsQuery } from 'src/generated/graphql';
 
 export interface IGrade {
   name: string;
@@ -19,15 +10,11 @@ export interface IGrade {
   providedIn: 'root',
 })
 export class GradingSystemsService {
-  gradingSystems: {
-    id: string;
-    name: string;
-    grades: { difficulty: number; name: string }[];
-  }[];
+  gradingSystems: GradingSystemsQuery['gradingSystems'];
 
   constructor(private GradingSystemsGQL: GradingSystemsGQL) {}
 
-  private getGradingSystems(): Promise<IGradingSystems[]> {
+  getGradingSystems(): Promise<GradingSystemsQuery['gradingSystems']> {
     // TODO save the promise to prevent multiple requests
     return new Promise(async (resolve) => {
       if (!this.gradingSystems) {
@@ -39,6 +26,8 @@ export class GradingSystemsService {
       }
     });
   }
+
+  // TODO: should maybe implement> getGradingSystem('french') or getGradingSystemGrades('french')
 
   diffToGrade(
     difficulty: number,
