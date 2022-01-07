@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { DataError } from 'src/app/types/data-error';
-import { Apollo, gql } from 'apollo-angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LayoutService } from 'src/app/services/layout.service';
 import { Subject } from 'rxjs';
-
 import { Tab } from '../../types/tab';
 import { AuthService } from 'src/app/auth/auth.service';
-import { Overlay } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 import { CommentFormComponent } from 'src/app/forms/comment-form/comment-form.component';
-import { CragBySlugGQL, CragBySlugQuery, Comment, Crag } from 'src/generated/graphql';
+import {
+  CragBySlugGQL,
+  CragBySlugQuery,
+  Comment,
+  Crag,
+} from 'src/generated/graphql';
 import { GraphQLError } from 'graphql';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
@@ -61,10 +63,8 @@ export class CragComponent implements OnInit {
   constructor(
     private layoutService: LayoutService,
     private authService: AuthService,
-    private overlay: Overlay,
     private dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
-    private apollo: Apollo,
     private router: Router,
     private cragBySlugGQL: CragBySlugGQL,
     private breakpointObserver: BreakpointObserver
@@ -117,7 +117,7 @@ export class CragComponent implements OnInit {
 
     this.canEdit =
       this.authService.currentUser &&
-      this.authService.currentUser.roles.includes('admin');
+      this.authService.currentUser.roles.includes('admin'); // BUG: currentUser of auth service is null on page load.
   }
 
   queryError(errors: readonly GraphQLError[]) {
@@ -135,7 +135,9 @@ export class CragComponent implements OnInit {
 
   querySuccess(cragBySlug: CragBySlugQuery['cragBySlug']) {
     this.crag = cragBySlug;
-    this.warnings = (this.crag as Crag).comments?.filter((comment: Comment) => comment.type === 'warning');
+    this.warnings = (this.crag as Crag).comments?.filter(
+      (comment: Comment) => comment.type === 'warning'
+    );
 
     this.layoutService.$breadcrumbs.next([
       {

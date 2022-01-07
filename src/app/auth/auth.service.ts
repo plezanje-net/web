@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { LoginRequest } from '../types/login-request';
-import { Apollo, gql } from 'apollo-angular';
+import { Apollo } from 'apollo-angular';
 import { GuardedActionOptions } from '../types/guarded-action-options';
-import { RecursiveTemplateAstVisitor } from '@angular/compiler';
-import { filter } from 'rxjs/operators';
 import { ProfileGQL, ProfileQuery } from 'src/generated/graphql';
 
 @Injectable({
@@ -16,17 +13,28 @@ export class AuthService {
 
   public openLogin$ = new Subject<LoginRequest>();
 
+  private isAuthenticated = new BehaviorSubject(false);
+  isAuthenticated$ = this.isAuthenticated.asObservable();
+
   constructor(private apollo: Apollo, private profileGQL: ProfileGQL) {}
 
   logout(): Promise<any> {
     this.currentUser = null;
     localStorage.removeItem(this.getCookieName('auth'));
+    this.isAuthenticated.next(false);
     return this.apollo.client.resetStore();
   }
 
   login(token: string): Promise<any> {
     localStorage.setItem(this.getCookieName('auth'), token);
+    this.isAuthenticated.next(true);
     return this.apollo.client.resetStore();
+  }
+
+  autologin() {
+    if (this.getToken()) {
+      this.isAuthenticated.next(true);
+    }
   }
 
   async getCurrentUser(): Promise<any> {

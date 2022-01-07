@@ -10,7 +10,6 @@ import {
 import moment from 'moment';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
-import { PublishOptionsEnum } from 'src/app/common/activity.constants';
 
 @Component({
   selector: 'app-activity-form',
@@ -75,7 +74,7 @@ export class ActivityFormComponent implements OnInit {
         name: new FormControl(route.name),
         grade: new FormControl(route.grade),
         difficulty: new FormControl(route.difficulty),
-        gradingSystemId: new FormControl(route.defaultGradingSystem.id),
+        defaultGradingSystemId: new FormControl(route.defaultGradingSystem.id),
         isProject: new FormControl(route.isProject),
         ascentType: new FormControl(!route?.ticked ? 'redpoint' : 'repeat'),
         date: new FormControl(),
@@ -83,7 +82,7 @@ export class ActivityFormComponent implements OnInit {
         publish: new FormControl('public'),
         notes: new FormControl(),
         stars: new FormControl(),
-        gradeSuggestion: new FormControl(),
+        votedDifficulty: new FormControl(),
         ticked: new FormControl(route.ticked),
         tried: new FormControl(route.tried),
         type: new FormControl(route.type),
@@ -134,22 +133,20 @@ export class ActivityFormComponent implements OnInit {
       cragId: this.crag.id,
     };
 
-    const routes = this.routes.value.map((route: any, i: number) => ({
-      date: route.date || activity.date,
-      partner: route.partner || activity.partners,
-      ascentType: route.ascentType,
-      notes: route.notes,
-      position: i,
-      publish: route.publish,
-      routeId: route.routeId,
-      name: route.name,
-      difficulty: route.difficulty,
-      grade:
-        route.publish === PublishOptionsEnum.private
-          ? undefined
-          : route.gradeSuggestion,
-      stars: route.stars,
-    }));
+    const routes = this.routes.value.map((route: any, i: number) => {
+      return {
+        date: route.date || activity.date,
+        partner: route.partner || activity.partners,
+        notes: route.notes,
+        routeId: route.routeId,
+        ascentType: route.ascentType,
+        stars: route.stars,
+        publish: route.publish,
+        votedDifficulty: route.votedDifficulty,
+        name: route.name, // TODO: do we need this?
+        position: i, // TODO: why do we need this?
+      };
+    });
 
     this.createActivityGQL
       .mutate(
