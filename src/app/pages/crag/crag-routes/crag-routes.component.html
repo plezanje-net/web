@@ -14,7 +14,9 @@
       >
         <div fxFlex="12px"></div>
         <div fxFlex>Ime</div>
-        <div fxFlex="80px" fxFlex.lt-md>Dolžina</div>
+        <div *ngIf="!sector.bouldersOnly" fxFlex="80px" fxFlex.lt-md>
+          Dolžina
+        </div>
         <div fxFlex="0 1 80px">Težavnost</div>
         <div fxFlex="160px"></div>
       </div>
@@ -43,7 +45,16 @@
             >{{ route.name }}</a
           >
         </div>
-        <div fxFlex="80px" fxFlex.lt-md fxHide.lt-md>{{ route.length }} m</div>
+        <div
+          *ngIf="!sector.bouldersOnly"
+          fxFlex="80px"
+          fxFlex.lt-md
+          fxHide.lt-md
+        >
+          <ng-container *ngIf="route.routeType.id !== 'boulder'"
+            >{{ route.length }} m</ng-container
+          >
+        </div>
         <div
           fxFlex="0 1 80px"
           (mouseenter)="displayRouteGrades(route)"

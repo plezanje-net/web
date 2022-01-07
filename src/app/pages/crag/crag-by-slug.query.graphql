@@ -41,6 +41,7 @@ query CragBySlug($crag: String!) {
           height
         }
       }
+      bouldersOnly
     }
     comments {
       id
