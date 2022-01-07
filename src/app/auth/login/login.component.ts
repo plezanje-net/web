@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Apollo, gql } from 'apollo-angular';
 import { AuthService } from '../auth.service';
 import { PasswordRecoveryComponent } from '../password-recovery/password-recovery.component';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,11 @@ export class LoginComponent implements OnInit {
     private dialogRef: MatDialogRef<LoginComponent>,
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
-    private apollo: Apollo
+    private apollo: Apollo,
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      message: string;
+    }
   ) {}
 
   loginForm = new FormGroup({

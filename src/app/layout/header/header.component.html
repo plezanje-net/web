@@ -32,18 +32,26 @@
         >Plezališča</a
       >
       <a mat-button [routerLink]="['/plezalni-dnevnik']">Plezalni dnevnik</a>
+      <a *ngIf="!loggedIn" mat-button (click)="login()">Prijava</a>
       <a
+        *ngIf="loggedIn"
         mat-icon-button
         fxHide
         fxShow.gt-sm
-        matTooltip="Moj Plezanje.net"
-        [routerLink]="['/moj-profil']"
+        [matMenuTriggerFor]="menu"
       >
         <mat-icon>account_circle</mat-icon>
       </a>
-      <a mat-button fxHide.gt-sm [routerLink]="['/moj-profil']"
-        >Moj Plezanje.net</a
+      <a *ngIf="loggedIn" mat-button fxHide.gt-sm [routerLink]="['/moj-profil']"
+        >Moj profil</a
       >
+      <a *ngIf="loggedIn" mat-button fxHide.gt-sm (click)="logout()">Odjava</a>
+      <mat-menu #menu="matMenu">
+        <a mat-menu-item [routerLink]="['/moj-profil']">Moj profil</a>
+        <button mat-menu-item (click)="logout()">
+          <span>Odjava</span>
+        </button>
+      </mat-menu>
     </nav>
   </div>
 </header>
