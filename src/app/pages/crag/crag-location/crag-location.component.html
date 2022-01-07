@@ -1,7 +1,12 @@
 <div class="card no-border">
   <h3>{{ crag.country.name }}{{ crag.area ? ", " + crag.area.name : "" }}</h3>
 
-  <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
+  <div
+    *ngIf="crag.orientation"
+    class="row"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+  >
     <div class="label">Usmerjenost</div>
     <span class="text-right">
       {{ crag.orientation | orientation }}
@@ -21,7 +26,7 @@
     </span>
   </div>
 
-  <div class="map">
+  <div *ngIf="crag.lat && crag.lon" class="map">
     <app-map [height]="260" [crag]="crag" [crags]="crags$" [id]="id"></app-map>
   </div>
 
