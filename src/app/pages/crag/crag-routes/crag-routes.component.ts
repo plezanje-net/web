@@ -28,9 +28,9 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   selectedRoutes: Route[] = [];
   selectedRoutesIds: string[] = [];
   ascents: any = {};
-  routeGradesLoading: boolean;
-  routeGrades: Record<string, string | any>[];
-  activeGradesPopupId: string | null = null;
+  difficultyVotesLoading: boolean;
+  difficultyVotes: Record<string, string | any>[];
+  activeDifficultyVotesPopupId: string | null = null;
   activeCommentsPopupId: string | null = null;
   routeCommentsLoading: boolean;
   routeComments: Record<string, string | any>[];
@@ -148,40 +148,40 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       });
   }
 
-  displayRouteGrades(route: Route): void {
-    this.activeGradesPopupId = route.id;
+  displayDifficultyVotes(route: Route): void {
+    this.activeDifficultyVotesPopupId = route.id;
     this.activeCommentsPopupId = null;
     this.activePitchesPopupId = null;
-    this.routeGradesLoading = true;
+    this.difficultyVotesLoading = true;
 
     this.routeGradesGQL
       .watch({ routeId: route.id })
       .valueChanges.subscribe((result) => {
-        this.routeGradesLoading = false;
+        this.difficultyVotesLoading = false;
 
         if (!result.errors) {
-          this.routeGradesQuerySuccess(result.data);
+          this.difficultyVotesQuerySuccess(result.data);
         } else {
-          this.routeGradesQueryError();
+          this.difficultyVotesQueryError();
         }
       });
   }
 
-  hideRouteGrades(route: Route): void {
-    this.activeGradesPopupId = null;
+  hideDifficultyVotes(route: Route): void {
+    this.activeDifficultyVotesPopupId = null;
   }
 
-  routeGradesQuerySuccess(queryData: RouteGradesQuery): void {
-    // this.routeGrades = queryData.route.grades; // TODO: we need to get grades from difficultyVotes now
+  difficultyVotesQuerySuccess(queryData: RouteGradesQuery): void {
+    this.difficultyVotes = queryData.route.difficultyVotes; // TODO: we need to get grades from difficultyVotes now
   }
 
-  routeGradesQueryError(): void {
+  difficultyVotesQueryError(): void {
     console.error('TODO');
   }
 
   displayRouteComments(route: Route): void {
     this.activeCommentsPopupId = route.id;
-    this.activeGradesPopupId = null;
+    this.activeDifficultyVotesPopupId = null;
     this.activePitchesPopupId = null;
     this.routeCommentsLoading = true;
 
@@ -205,7 +205,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   displayRoutePitches(route: Route): void {
     this.activePitchesPopupId = route.id;
     this.activeCommentsPopupId = null;
-    this.activeGradesPopupId = null;
+    this.activeDifficultyVotesPopupId = null;
   }
 
   hideRoutePitches(route: Route): void {

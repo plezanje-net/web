@@ -6,11 +6,11 @@ query RouteGrades($routeId: String!) {
     name
     length
     difficultyVotes {
-      id
       user {
         firstname
         lastname
       }
+      difficulty
       created
       updated
       isBase

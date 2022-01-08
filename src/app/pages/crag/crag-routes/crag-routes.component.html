@@ -50,8 +50,8 @@
               </div>
               <div
                 class="route-grade"
-                (mouseenter)="displayRouteGrades(route)"
-                (mouseleave)="hideRouteGrades(route)"
+                (mouseenter)="displayDifficultyVotes(route)"
+                (mouseleave)="hideDifficultyVotes(route)"
               >
                 <span *ngIf="route.isProject">P</span>
                 <app-grade
@@ -61,33 +61,33 @@
                 ></app-grade>
                 <div
                   class="popover"
-                  *ngIf="activeGradesPopupId === route.id && !routeGradesLoading"
+                  *ngIf="activeDifficultyVotesPopupId === route.id && !difficultyVotesLoading"
                 >
                   <div class="popover-title">Ocene smeri {{ route.name }}</div>
                   <table>
                     <tbody>
                       <tr
-                        *ngFor="let grade of routeGrades"
+                        *ngFor="let vote of difficultyVotes"
                         [ngClass]="
-                          grade.includedInCalculation ? 'grade-included' : ''
+                          vote.includedInCalculation ? 'difficulty-vote-included' : ''
                         "
                       >
                         <td>
                           <app-grade
                             class="grade"
-                            [difficulty]="grade.difficulty"
+                            [difficulty]="vote.difficulty"
                           ></app-grade>
                         </td>
-                        <td class="grade-author">
-                          <ng-container *ngIf="grade.isBase"
+                        <td class="difficulty-vote-author">
+                          <ng-container *ngIf="vote.isBase"
                             >Bazna ocena</ng-container
                           >
-                          <ng-container *ngIf="!grade.isBase && grade.user">{{
-                            grade.user.firstname + " " + grade.user.lastname
+                          <ng-container *ngIf="!vote.isBase && vote.user">{{
+                            vote.user.firstname + " " + vote.user.lastname
                           }}</ng-container>
                         </td>
-                        <td class="grade-date">
-                          {{ grade.created | amDateFormat: "D. M. Y" }}
+                        <td class="difficulty-vote-date">
+                          {{ vote.created | amDateFormat: "D. M. Y" }}
                         </td>
                       </tr>
                     </tbody>
