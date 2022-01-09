@@ -3,6 +3,9 @@ query RouteBySlug($cragSlug: String!, $routeSlug: String!) {
     id
     slug
     difficulty
+    defaultGradingSystem {
+      id
+    }
     isProject
     name
     length

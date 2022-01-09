@@ -1,0 +1,24 @@
+<ng-container *ngFor="let area of filteredAreas">
+  <div
+    [routerLink]="['/slapovi/', country.slug, area.slug]"
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    class="row"
+  >
+    <div [fxFlex]="level * 16 + 'px'"></div>
+    <div fxFlex="100" fxFlex.lt-md="100">
+      <a [routerLink]="['/slapovi/', country.slug, area.slug]">{{
+        area.name
+      }}</a>
+    </div>
+    <div fxFlex class="nr" *ngIf="extended">
+      {{ area.iceFalls.length | nrIceFalls }}
+    </div>
+  </div>
+  <app-areas-level
+    [areas]="area.areas"
+    [level]="level + 1"
+    [country]="country"
+    [extended]="extended"
+  ></app-areas-level>
+</ng-container>

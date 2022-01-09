@@ -6,6 +6,7 @@ import {
 } from 'src/generated/graphql';
 import $ from 'jquery';
 import { LoadingSpinnerService } from '../loading-spinner.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-exposed-warnings',
@@ -55,19 +56,21 @@ export class ExposedWarningsComponent implements OnInit {
     this.loadingSpinnerService.pushLoader();
     this.exposedWarnings
       .fetch()
-      .toPromise()
-      .then((result) => {
-        if (!result.errors) {
-          this.warnings = result.data.exposedWarnings;
-        } else {
+      .pipe(take(1))
+      .subscribe({
+        next: (result) => {
+          if (!result.errors) {
+            this.warnings = result.data.exposedWarnings;
+          } else {
+            this.queryError();
+          }
+        },
+        error: () => {
           this.queryError();
-        }
-      })
-      .catch(() => {
-        this.queryError();
-      })
-      .finally(() => {
-        this.loadingSpinnerService.popLoader();
+        },
+        complete: () => {
+          this.loadingSpinnerService.popLoader();
+        },
       });
   }
 

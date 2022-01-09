@@ -1,13 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { take } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
-import { CommentFormComponent } from 'src/app/forms/comment-form/comment-form.component';
+
 import {
   Comment,
   DeleteCommentGQL,
   namedOperations,
 } from 'src/generated/graphql';
+import { CommentFormComponent } from '../../comment-form/comment-form.component';
 import { ConfirmationDialogComponent } from '../../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
@@ -29,16 +31,16 @@ export class CommentOptionsComponent implements OnInit {
 
   edit() {
     this.authService.guardedAction({}).then((success) => {
-      if(success) {
+      if (success) {
         this.dialog
-        .open(CommentFormComponent, {
-          data: {
-            comment: this.comment,
-          },
-          autoFocus: false,
-        })
-        .afterClosed()
-        .subscribe(() => {});
+          .open(CommentFormComponent, {
+            data: {
+              comment: this.comment,
+            },
+            autoFocus: false,
+          })
+          .afterClosed()
+          .subscribe(() => {});
       }
     });
   }
@@ -56,14 +58,25 @@ export class CommentOptionsComponent implements OnInit {
           this.deleteCommentGQL
             .mutate(
               { id: this.comment.id },
-              { refetchQueries: [namedOperations.Query.CragBySlug] }
+              {
+                refetchQueries: [
+                  namedOperations.Query.CragBySlug,
+                  namedOperations.Query.IceFallBySlug,
+                ],
+              }
             )
-            .toPromise()
-            .catch(() => {
-              this.snackbar.open('Komentarja ni bilo mogoče odstraniti', null, {
-                panelClass: 'error',
-                duration: 3000,
-              });
+            .pipe(take(1))
+            .subscribe({
+              error: () => {
+                this.snackbar.open(
+                  'Komentarja ni bilo mogoče odstraniti',
+                  null,
+                  {
+                    panelClass: 'error',
+                    duration: 3000,
+                  }
+                );
+              },
             });
         }
       });

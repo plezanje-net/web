@@ -9,7 +9,7 @@ import {
 } from 'src/generated/graphql';
 import { Observable } from 'rxjs';
 import { filter, mergeMap } from 'rxjs/operators';
-import { ConfirmationDialogComponent } from 'src/app/common/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ClubService } from '../club.service';
 import { AuthService } from 'src/app/auth/auth.service';
 
@@ -49,12 +49,18 @@ export class ClubMembersComponent implements OnInit {
           return this.deleteClubMemberGQL.mutate(
             { id },
             {
-              errorPolicy: 'all',
-              refetchQueries: [namedOperations.Query.ClubBySlug],
+              refetchQueries: [namedOperations.Query.ClubBySlug], // list of members on club members view will change
               update: (cache) => {
+                // on myClubs view number of members will change
                 cache.evict({
                   id: 'ROOT_QUERY',
                   fieldName: 'myClubs',
+                });
+
+                // remove from cache all queries on activityRoutes for club members - will need to fetch again because we lost a member
+                cache.evict({
+                  id: 'ROOT_QUERY',
+                  fieldName: 'activityRoutesByClubSlug',
                 });
               },
             }

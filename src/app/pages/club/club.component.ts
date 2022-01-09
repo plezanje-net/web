@@ -9,7 +9,7 @@ import { DataError } from 'src/app/types/data-error';
 import { Club } from 'src/generated/graphql';
 import { ClubService } from './club.service';
 import { Subscription } from 'rxjs';
-import { ConfirmationDialogComponent } from 'src/app/common/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { filter, mergeMap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DeleteClubGQL } from '../../../generated/graphql';

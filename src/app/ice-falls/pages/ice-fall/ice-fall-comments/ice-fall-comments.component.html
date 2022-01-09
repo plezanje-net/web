@@ -1,0 +1,33 @@
+<h3 fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column">
+  <span fxFlex="100">Komentarji</span>
+  <div fxFlex>
+    <button mat-button color="primary" (click)="action.next('add-comment')">
+      Dodaj komentar
+    </button>
+  </div>
+</h3>
+<div
+  *ngFor="let comment of regularComments"
+  class="comment"
+  fxLayout="column"
+  fxLayoutGap="8px"
+>
+  <app-comment [comment]="comment"></app-comment>
+</div>
+
+<h3 fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column">
+  <span fxFlex="100">Komentarji o razmerah</span>
+  <div fxFlex>
+    <button mat-button color="primary" (click)="action.next('add-condition')">
+      Dodaj opis razmer
+    </button>
+  </div>
+</h3>
+<div
+  *ngFor="let conditionComment of conditions"
+  class="comment"
+  fxLayout="column"
+  fxLayoutGap="8px"
+>
+  <app-comment [comment]="conditionComment"></app-comment>
+</div>

@@ -89,22 +89,27 @@ export class CommentFormComponent implements OnInit {
     this.createCommentGQL
       .mutate(
         { input: value },
-        { refetchQueries: [namedOperations.Query.CragBySlug] }
+        {
+          refetchQueries: [
+            namedOperations.Query.CragBySlug,
+            namedOperations.Query.IceFallBySlug,
+          ],
+        }
       )
-      .subscribe(
-        (result: any) => {
+      .subscribe({
+        next: (result: any) => {
           this.loading = false;
           this.dialogRef.close(result);
         },
-        (error) => {
+        error: () => {
           this.loading = false;
           this.commentForm.enable();
           this.snackbar.open('Komentarja ni bilo mogoče objaviti', null, {
             panelClass: 'error',
             duration: 3000,
           });
-        }
-      );
+        },
+      });
   }
 
   updateComment() {
@@ -116,21 +121,26 @@ export class CommentFormComponent implements OnInit {
     this.updateCommentGQL
       .mutate(
         { input: value },
-        { refetchQueries: [namedOperations.Query.CragBySlug] }
+        {
+          refetchQueries: [
+            namedOperations.Query.CragBySlug,
+            namedOperations.Query.IceFallBySlug,
+          ],
+        }
       )
-      .subscribe(
-        (result: any) => {
+      .subscribe({
+        next: (result: any) => {
           this.loading = false;
           this.dialogRef.close(result);
         },
-        (error) => {
+        error: () => {
           this.loading = false;
           this.commentForm.enable();
           this.snackbar.open('Komentarja ni bilo mogoče shraniti', null, {
             panelClass: 'error',
             duration: 3000,
           });
-        }
-      );
+        },
+      });
   }
 }

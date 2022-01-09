@@ -32,7 +32,6 @@ import { CragsComponent } from './pages/crags/crags.component';
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { BreadcrumbsComponent } from './layout/breadcrumbs/breadcrumbs.component';
-import { LoaderComponent } from './layout/loader/loader.component';
 import { DataErrorComponent } from './layout/data-error/data-error.component';
 import { GraphQLModule } from './graphql/graphql.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -63,11 +62,7 @@ import {
   MomentDateAdapter,
 } from '@angular/material-moment-adapter';
 import { CragGalleryComponent } from './pages/crag/crag-gallery/crag-gallery.component';
-import { CommentFormComponent } from './forms/comment-form/comment-form.component';
 
-import { CommentComponent } from './common/comment/comment.component';
-import { CommentOptionsComponent } from './common/comment/comment-options/comment-options.component';
-import { ConfirmationDialogComponent } from './common/confirmation-dialog/confirmation-dialog.component';
 import { RouteComponent } from './pages/route/route.component';
 import { RouteInfoComponent } from './pages/route/route-info/route-info.component';
 import { DistributionChartComponent } from './common/distribution-chart/distribution-chart.component';
@@ -105,6 +100,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { ImageFullComponent } from './common/image-full/image-full.component';
 import { ExposedWarningsComponent } from './pages/home/exposed-warnings/expsoed-warnings.component';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
+import { IceFallsModule } from './ice-falls/ice-falls.module';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -118,7 +114,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     HomeComponent,
     NotFoundComponent,
     BreadcrumbsComponent,
-    LoaderComponent,
     DataErrorComponent,
     CragsTocComponent,
     GradeComponent,
@@ -138,10 +133,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ActivityFormComponent,
     ActivityFormRouteComponent,
     CragGalleryComponent,
-    CommentFormComponent,
-    CommentComponent,
-    CommentOptionsComponent,
-    ConfirmationDialogComponent,
     RouteComponent,
     RouteInfoComponent,
     DistributionChartComponent,
@@ -204,6 +195,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     NgxMatSelectSearchModule,
     SharedModule,
     ManagementModule,
+    IceFallsModule,
     AppRoutingModule,
     MatGridListModule,
     SlickCarouselModule,

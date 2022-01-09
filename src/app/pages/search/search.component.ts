@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { debounceTime, filter } from 'rxjs/operators';
+import { debounceTime, filter, take } from 'rxjs/operators';
 import {
   Comment,
   Crag,
@@ -53,8 +53,8 @@ export class SearchComponent implements OnInit, OnDestroy {
           .fetch({
             query: searchString,
           })
-          .toPromise()
-          .then((result) => {
+          .pipe(take(1))
+          .subscribe((result) => {
             this.searchResults = result.data.search;
           });
       });

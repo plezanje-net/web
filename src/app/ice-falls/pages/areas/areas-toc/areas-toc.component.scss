@@ -1,0 +1,26 @@
+@import "../../../../../styles/colors.scss";
+
+a.row {
+  text-decoration: none;
+  color: #000;
+  &:hover {
+    color: $primary;
+  }
+  &.active {
+    color: $primary;
+    cursor: default;
+    background: #f6f9ff;
+  }
+}
+.show-all {
+  color: #0000008a;
+  padding: 12px;
+  cursor: pointer;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+.mat-form-field {
+  width: 100%;
+}
+.mat-form-field-infix {
+  width: auto;
+}

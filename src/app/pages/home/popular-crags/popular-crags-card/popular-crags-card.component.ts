@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { take } from 'rxjs/operators';
 import { DataError } from 'src/app/types/data-error';
 import { PopularCragsGQL, PopularCragsQuery } from 'src/generated/graphql';
 import { LoadingSpinnerService } from '../../loading-spinner.service';
@@ -32,9 +33,9 @@ export class PopularCragsCardComponent implements OnInit {
         dateFrom: this.dateFrom,
         top: this.top,
       })
-      .toPromise()
-      .then(
-        (result) => {
+      .pipe(take(1))
+      .subscribe({
+        next: (result) => {
           this.loading = false;
           this.loadingSpinnerService.popLoader();
           if (result.errors != null) {
@@ -43,11 +44,11 @@ export class PopularCragsCardComponent implements OnInit {
             this.popularCrags = result.data.popularCrags;
           }
         },
-        (_error) => {
+        error: () => {
           this.loadingSpinnerService.popLoader();
           this.queryError();
-        }
-      );
+        },
+      });
   }
 
   queryError() {

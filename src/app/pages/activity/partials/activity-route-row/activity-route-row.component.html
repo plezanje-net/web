@@ -26,7 +26,8 @@
 <td>
   <app-grade
     [difficulty]="route.route.difficulty"
-    [modifier]="true"
+    [gradingSystemId]="route.route.defaultGradingSystem.id"
+    [showModifier]="true"
   ></app-grade>
 </td>
 <td>

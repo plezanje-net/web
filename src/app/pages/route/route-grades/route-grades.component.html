@@ -7,7 +7,11 @@
     fxLayoutGap="12px"
     class="row"
   >
-    <app-grade [difficulty]="grade.difficulty" [legacy]="true"></app-grade>
+    <app-grade
+      [difficulty]="grade.difficulty"
+      [gradingSystemId]="gradingSystemId"
+      [legacy]="true"
+    ></app-grade>
     <div>
       <ng-container *ngIf="grade.isBase">Bazna ocena</ng-container>
       <ng-container *ngIf="!grade.isBase && grade.user"

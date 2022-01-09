@@ -10,8 +10,8 @@ import {
   Crag,
   MyCragSummaryGQL,
   Route,
-  RouteGradesGQL,
-  RouteGradesQuery,
+  RouteDifficultyVotesGQL,
+  RouteDifficultyVotesQuery,
   RouteCommentsGQL,
   RouteCommentsQuery,
 } from 'src/generated/graphql';
@@ -44,7 +44,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     private router: Router,
     private myCragSummaryGQL: MyCragSummaryGQL,
     private localStorageService: LocalStorageService,
-    private routeGradesGQL: RouteGradesGQL,
+    private routeDifficultyVotesGQL: RouteDifficultyVotesGQL,
     private routeCommentsGQL: RouteCommentsGQL
   ) {}
 
@@ -149,34 +149,34 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       });
   }
 
-  displayDifficultyVotes(route: Route): void {
+  displayRouteDiffVotes(route: Route): void {
     this.activeDifficultyVotesPopupId = route.id;
     this.activeCommentsPopupId = null;
     this.activePitchesPopupId = null;
     this.difficultyVotesLoading = true;
 
-    this.routeGradesGQL
+    this.routeDifficultyVotesGQL
       .watch({ routeId: route.id })
       .valueChanges.subscribe((result) => {
         this.difficultyVotesLoading = false;
 
         if (!result.errors) {
-          this.difficultyVotesQuerySuccess(result.data);
+          this.routeDiffVotesQuerySuccess(result.data);
         } else {
-          this.difficultyVotesQueryError();
+          this.routeDiffVotesQueryError();
         }
       });
   }
 
-  hideDifficultyVotes(route: Route): void {
+  hideRouteDiffVotes(route: Route): void {
     this.activeDifficultyVotesPopupId = null;
   }
 
-  difficultyVotesQuerySuccess(queryData: RouteGradesQuery): void {
+  routeDiffVotesQuerySuccess(queryData: RouteDifficultyVotesQuery): void {
     this.difficultyVotes = queryData.route.difficultyVotes;
   }
 
-  difficultyVotesQueryError(): void {
+  routeDiffVotesQueryError(): void {
     console.error('TODO');
   }
 
@@ -198,8 +198,6 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
 
   displayRoutePitches(route: Route): void {
     this.activePitchesPopupId = route.id;
-    this.activeCommentsPopupId = null;
-    this.activeDifficultyVotesPopupId = null;
   }
 
   hideRoutePitches(route: Route): void {

@@ -4,7 +4,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { QueryRef } from 'apollo-angular';
 import { GraphQLError } from 'graphql';
 import { Subject, Subscription } from 'rxjs';
-import { debounceTime, filter, switchMap } from 'rxjs/operators';
+import { debounceTime, filter, switchMap, take } from 'rxjs/operators';
 import { ASCENT_TYPES } from 'src/app/common/activity.constants';
 import { FilteredTable } from 'src/app/common/filtered-table';
 import { DataError } from 'src/app/types/data-error';
@@ -31,8 +31,6 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
 
   activityRoutesQuery: QueryRef<any>;
 
-  // activityRoutes: ActivityRoutesByClubQuery['activityRoutesByClub']['items'];
-  // pagination: ActivityRoutesByClubQuery['activityRoutesByClub']['meta'];
   activityRoutes: ActivityRoutesByClubSlugQuery['activityRoutesByClubSlug']['items'];
   pagination: ActivityRoutesByClubSlugQuery['activityRoutesByClubSlug']['meta'];
 
@@ -95,6 +93,7 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const clubSlug = this.activatedRoute.snapshot.parent.params.club;
 
+    // A new member can also be added on club-activity-routes page
     this.memberAddedSubscription = this.clubService.memberAdded$.subscribe(
       () => {
         this.activityRoutesQuery.refetch();
@@ -219,8 +218,8 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
         // but if result set is empty (can be on page load) we have to fetch
         this.activityFiltersRouteGQL
           .fetch({ id: this.filters.value.routeId })
-          .toPromise()
-          .then((route) => (this.filterRouteName = route.data.route.name));
+          .pipe(take(1))
+          .subscribe((route) => (this.filterRouteName = route.data.route.name));
       }
     }
     if (this.filters.controls.cragId.value && !this.filterCragName) {
@@ -229,8 +228,8 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
       } else {
         this.activityFiltersCragGQL
           .fetch({ id: this.filters.value.cragId })
-          .toPromise()
-          .then((crag) => (this.filterCragName = crag.data.crag.name));
+          .pipe(take(1))
+          .subscribe((crag) => (this.filterCragName = crag.data.crag.name));
       }
     }
     if (this.filters.controls.userId.value && !this.filterMemberFullName) {
@@ -239,8 +238,8 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
       } else {
         this.userFullNameGQL
           .fetch({ userId: this.filters.controls.userId.value })
-          .toPromise()
-          .then(
+          .pipe(take(1))
+          .subscribe(
             (member: any) =>
               (this.filterMemberFullName = member.data.user.fullName)
           );

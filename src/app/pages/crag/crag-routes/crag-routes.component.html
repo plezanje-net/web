@@ -50,8 +50,8 @@
                 </div>
                 <div
                   class="route-grade"
-                  (mouseenter)="displayDifficultyVotes(route)"
-                  (mouseleave)="hideDifficultyVotes(route)"
+                  (mouseenter)="displayRouteDiffVotes(route)"
+                  (mouseleave)="hideRouteDiffVotes(route)"
                 >
                   <span *ngIf="route.isProject">P</span>
                   <app-grade
@@ -118,12 +118,7 @@
                   </div>
                   <div class="popover-arrow"></div>
                 </div>
-                <button
-                  *ngIf="route.comments.length > 0"
-                  mat-icon-button
-                  (mouseenter)="displayRouteComments(route.id)"
-                  (mouseleave)="hideRouteComments(route.id)"
-                >
+                <button *ngIf="route.comments.length > 0" mat-icon-button>
                   <mat-icon>comment</mat-icon>
                 </button>
                 <app-ascent-type *ngIf="ascents[route.id] != null" [value]="ascents[route.id]" displayType="icon">
