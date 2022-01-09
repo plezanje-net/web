@@ -18,16 +18,20 @@ export class IceFallsBreadcrumbs {
       this.iceFall != null ? this.iceFall.country : this.area.country;
 
     if (this.iceFall != null) {
+      breadcrumbs.push(
+        {
+          name: this.iceFall.name,
+        },
+        {
+          name: area.name,
+          path: `/slapovi/${country.slug}/${area.slug}`,
+        }
+      );
+    } else {
       breadcrumbs.push({
-        name: this.iceFall.name,
-        path: `/slapovi/${country.slug}/${area.slug}/${this.iceFall.slug}`,
+        name: area.name,
       });
     }
-
-    breadcrumbs.push({
-      name: area.name,
-      path: `/slapovi/${country.slug}/${area.slug}`,
-    });
 
     while (area.area != null) {
       area = <Area>area.area;
