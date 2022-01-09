@@ -11,11 +11,7 @@ export class IceFallsBreadcrumbs {
   }
 
   public build(): Breadcrumb[] {
-    const breadcrumbs: Breadcrumb[] = [
-      {
-        name: this.area.name,
-      },
-    ];
+    const breadcrumbs: Breadcrumb[] = [];
 
     let area = this.area;
     let country =
@@ -27,6 +23,11 @@ export class IceFallsBreadcrumbs {
         path: `/slapovi/${country.slug}/${area.slug}/${this.iceFall.slug}`,
       });
     }
+
+    breadcrumbs.push({
+      name: area.name,
+      path: `/slapovi/${country.slug}/${area.slug}`,
+    });
 
     while (area.area != null) {
       area = <Area>area.area;
