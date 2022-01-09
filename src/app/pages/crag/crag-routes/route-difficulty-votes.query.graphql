@@ -1,12 +1,16 @@
-query RouteGrades($routeId: String!) {
+query RouteDifficultyVotes($routeId: String!) {
   route(id: $routeId) {
     id
     slug
     difficulty
+    defaultGradingSystem {
+      id
+    }
     name
     length
     difficultyVotes {
       id
+      difficulty
       user {
         firstname
         lastname

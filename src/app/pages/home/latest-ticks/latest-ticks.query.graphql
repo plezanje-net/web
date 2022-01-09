@@ -7,6 +7,9 @@ query LatestTicks($latest: Int!) {
     ascentType
     route {
       difficulty
+      defaultGradingSystem {
+        id
+      }
       name
       crag {
         name

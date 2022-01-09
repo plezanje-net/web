@@ -50,11 +50,19 @@
                 {{ crag.orientation }}
               </div>
               <div fxFlex class="lastColumn">
-                <app-grade [difficulty]="crag.minGrade"></app-grade>
+                <app-grade
+                  [difficulty]="crag.minDifficulty"
+                  [gradingSystemId]="crag.defaultGradingSystem.id"
+                ></app-grade>
                 {{
-                  crag.minGrade != null && crag.maxGrade != null ? " do " : ""
+                  crag.minDifficulty != null && crag.maxDifficulty != null
+                    ? " do "
+                    : ""
                 }}
-                <app-grade [difficulty]="crag.maxGrade"></app-grade>
+                <app-grade
+                  [difficulty]="crag.maxDifficulty"
+                  [gradingSystemId]="crag.defaultGradingSystem.id"
+                ></app-grade>
               </div>
             </div>
           </div>
@@ -97,7 +105,7 @@
                 <app-grade
                   *ngIf="!route.isProject"
                   [difficulty]="route.difficulty"
-                  [system]="route.defaultGradingSystem.id"
+                  [gradingSystemId]="route.defaultGradingSystem.id"
                   [showModifier]="false"
                 >
                 </app-grade>

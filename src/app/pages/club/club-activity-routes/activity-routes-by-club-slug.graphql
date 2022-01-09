@@ -26,6 +26,9 @@ query ActivityRoutesByClubSlug(
         slug
         name
         difficulty
+        defaultGradingSystem {
+          id
+        }
       }
     }
     meta {

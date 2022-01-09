@@ -8,6 +8,9 @@ query Search($query: String) {
       orientation
       minDifficulty
       maxDifficulty
+      defaultGradingSystem {
+        id
+      }
       country {
         slug
       }
