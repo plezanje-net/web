@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Grade } from '../../../common/grade';
 import { IDistribution } from '../../../common/distribution-chart/distribution-chart.component';
+import { getGradeDistribution } from 'src/app/common/grade-distribution';
 
 @Component({
   selector: 'app-route-info',
@@ -21,23 +22,7 @@ export class RouteInfoComponent implements OnInit {
       this.grades = this.route.difficultyVotes.slice();
       this.grades.sort((a, b) => a.grade - b.grade);
 
-      // this.gradesDisribution.findIndex((distribution) => distribution.label === grade.grade) > -1
-      const dist = {};
-
-      this.grades.forEach((grade) => {
-        if (dist[grade.grade]) {
-          dist[grade.difficulty]++;
-        } else {
-          dist[grade.difficulty] = 1;
-        }
-      });
-
-      Object.entries(dist).forEach(([grade, count]: [string, number]) => {
-        this.gradesDistribution.push({
-          label: new Grade(Number(grade)).legacyName,
-          value: count,
-        });
-      });
+      this.gradesDistribution = getGradeDistribution(this.grades);
 
       if (this.route.author) {
         if (this.route.author.indexOf('/') > -1) {
