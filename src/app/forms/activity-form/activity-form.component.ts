@@ -138,7 +138,7 @@ export class ActivityFormComponent implements OnInit {
         stars: route.stars,
         publish: route.publish,
         votedDifficulty: route.votedDifficulty,
-        position: i, // position of the route within the same day of ones log
+        position: i, // position of the route within the same activity of ones log
       };
     });
 
