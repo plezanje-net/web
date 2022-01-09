@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo, gql } from 'apollo-angular';
+import { take } from 'rxjs';
 import { Registry } from 'src/app/types/registry';
 import {
   Country,
@@ -132,8 +133,8 @@ export class CragFormComponent implements OnInit {
 
     this.countriesGQL
       .fetch()
-      .toPromise()
-      .then((result) => {
+      .pipe(take(1))
+      .subscribe((result) => {
         this.countries = result.data.countries;
         this.countryChanged(this.cragForm.value.countryId);
       });

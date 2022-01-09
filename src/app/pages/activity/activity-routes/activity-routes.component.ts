@@ -5,7 +5,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import moment, { Moment } from 'moment';
 import { Subject } from 'rxjs';
-import { debounce, debounceTime } from 'rxjs/operators';
+import { debounce, debounceTime, take } from 'rxjs/operators';
 import {
   ASCENT_TYPES,
   PUBLISH_OPTIONS,
@@ -158,8 +158,8 @@ export class ActivityRoutesComponent implements OnInit {
     if (this.filters.value.cragId != null && !(this.forCrag != null)) {
       this.activityFiltersCragGQL
         .fetch({ id: this.filters.value.cragId })
-        .toPromise()
-        .then((crag) => (this.forCrag = crag.data.crag));
+        .pipe(take(1))
+        .subscribe((crag) => (this.forCrag = crag.data.crag));
     }
 
     if (!(this.filters.value.cragId != null)) {
@@ -169,8 +169,8 @@ export class ActivityRoutesComponent implements OnInit {
     if (this.filters.value.routeId != null && !(this.forRoute != null)) {
       this.activityFiltersRouteGQL
         .fetch({ id: this.filters.value.routeId })
-        .toPromise()
-        .then((route) => (this.forRoute = route.data.route));
+        .pipe(take(1))
+        .subscribe((route) => (this.forRoute = route.data.route));
     }
 
     if (this.filters.value.routeId == null) {

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { take } from 'rxjs';
 import { LayoutService } from 'src/app/services/layout.service';
 import {
   ManagementGetCragGQL,
@@ -30,8 +31,8 @@ export class CragComponent implements OnInit {
           .fetch({
             id: params.id,
           })
-          .toPromise()
-          .then((result) => {
+          .pipe(take(1))
+          .subscribe((result) => {
             this.crag = result.data.crag;
 
             this.layoutService.$breadcrumbs.next([

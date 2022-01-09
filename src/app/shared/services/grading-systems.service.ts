@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { lastValueFrom } from 'rxjs';
 import { GradingSystemsGQL, GradingSystemsQuery } from 'src/generated/graphql';
 
 export interface IGrade {
@@ -18,7 +19,7 @@ export class GradingSystemsService {
     // TODO save the promise to prevent multiple requests
     return new Promise(async (resolve) => {
       if (!this.gradingSystems) {
-        const result = await this.GradingSystemsGQL.fetch().toPromise();
+        const result = await lastValueFrom(this.GradingSystemsGQL.fetch());
         this.gradingSystems = result.data.gradingSystems;
         resolve(this.gradingSystems);
       } else {
