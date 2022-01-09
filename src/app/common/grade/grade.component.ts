@@ -12,8 +12,8 @@ import {
 })
 export class GradeComponent implements OnInit {
   @Input() difficulty: number;
-  @Input('system') gradingSystem: string;
-  @Input('modifier') showModifier: boolean = false;
+  @Input() gradingSystemId: string;
+  @Input() showModifier: boolean = false;
   @Input() legacy: boolean = false;
 
   // grade: Grade;
@@ -25,15 +25,12 @@ export class GradeComponent implements OnInit {
   constructor(private GradingSystemsService: GradingSystemsService) {}
 
   ngOnInit(): void {
-    // this.grade = new Grade(this.difficulty);
-
     this.GradingSystemsService.diffToGrade(
       this.difficulty,
-      'french',
+      this.gradingSystemId,
       this.legacy
     ).then((grade) => {
       this.grade = grade;
-      // console.log({ ...name, diff: this.difficulty});
     });
   }
 }

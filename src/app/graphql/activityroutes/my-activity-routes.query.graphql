@@ -19,6 +19,9 @@ query MyActivityRoutes($input: FindActivityRoutesInput) {
           }
         }
         difficulty
+        defaultGradingSystem {
+          id
+        }
         name
         slug
         id

@@ -6,7 +6,8 @@
       <app-grade
         *ngIf="!route.isProject"
         [difficulty]="route.difficulty"
-        [modifier]="true"
+        [gradingSystemId]="route.defaultGradingSystem.id"
+        [showModifier]="true"
       ></app-grade>
     </span>
   </div>
@@ -61,5 +62,6 @@
     fxFlexAlign="stretch"
     [grades]="grades"
     [difficulty]="route.difficulty"
+    [gradingSystemId]="route.defaultGradingSystem.id"
   ></app-route-grades>
 </div>

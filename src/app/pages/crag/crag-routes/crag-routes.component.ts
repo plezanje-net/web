@@ -10,8 +10,8 @@ import {
   Crag,
   MyCragSummaryGQL,
   Route,
-  RouteGradesGQL,
-  RouteGradesQuery,
+  RouteDifficultyVotesGQL,
+  RouteDifficultyVotesQuery,
   RouteCommentsGQL,
   RouteCommentsQuery,
 } from 'src/generated/graphql';
@@ -28,9 +28,9 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   selectedRoutes: Route[] = [];
   selectedRoutesIds: string[] = [];
   ascents: any = {};
-  routeGradesLoading: boolean;
-  routeGrades: Record<string, string | any>[];
-  activeGradesPopupId: string | null = null;
+  routeDiffVotesLoading: boolean;
+  difficultyVotes: Record<string, string | any>[];
+  activeDiffVotesPopupId: string | null = null;
   activeCommentsPopupId: string | null = null;
   routeCommentsLoading: boolean;
   routeComments: Record<string, string | any>[];
@@ -43,7 +43,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     private router: Router,
     private myCragSummaryGQL: MyCragSummaryGQL,
     private localStorageService: LocalStorageService,
-    private routeGradesGQL: RouteGradesGQL,
+    private routeDifficultyVotesGQL: RouteDifficultyVotesGQL,
     private routeCommentsGQL: RouteCommentsGQL
   ) {}
 
@@ -148,40 +148,40 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       });
   }
 
-  displayRouteGrades(route: Route): void {
-    this.activeGradesPopupId = route.id;
+  displayRouteDifficultyVotes(route: Route): void {
+    this.activeDiffVotesPopupId = route.id;
     this.activeCommentsPopupId = null;
     this.activePitchesPopupId = null;
-    this.routeGradesLoading = true;
+    this.routeDiffVotesLoading = true;
 
-    this.routeGradesGQL
+    this.routeDifficultyVotesGQL
       .watch({ routeId: route.id })
       .valueChanges.subscribe((result) => {
-        this.routeGradesLoading = false;
+        this.routeDiffVotesLoading = false;
 
         if (!result.errors) {
-          this.routeGradesQuerySuccess(result.data);
+          this.routeDiffVotesQuerySuccess(result.data);
         } else {
-          this.routeGradesQueryError();
+          this.routeDiffVotesQueryError();
         }
       });
   }
 
-  hideRouteGrades(route: Route): void {
-    this.activeGradesPopupId = null;
+  hideRouteDifficultyVotes(route: Route): void {
+    this.activeDiffVotesPopupId = null;
   }
 
-  routeGradesQuerySuccess(queryData: RouteGradesQuery): void {
-    // this.routeGrades = queryData.route.grades; // TODO: we need to get grades from difficultyVotes now
+  routeDiffVotesQuerySuccess(queryData: RouteDifficultyVotesQuery): void {
+    this.difficultyVotes = queryData.route.difficultyVotes;
   }
 
-  routeGradesQueryError(): void {
+  routeDiffVotesQueryError(): void {
     console.error('TODO');
   }
 
   displayRouteComments(route: Route): void {
     this.activeCommentsPopupId = route.id;
-    this.activeGradesPopupId = null;
+    this.activeDiffVotesPopupId = null;
     this.activePitchesPopupId = null;
     this.routeCommentsLoading = true;
 
@@ -205,7 +205,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   displayRoutePitches(route: Route): void {
     this.activePitchesPopupId = route.id;
     this.activeCommentsPopupId = null;
-    this.activeGradesPopupId = null;
+    this.activeDiffVotesPopupId = null;
   }
 
   hideRoutePitches(route: Route): void {

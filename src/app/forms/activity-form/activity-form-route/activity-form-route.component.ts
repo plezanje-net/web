@@ -6,7 +6,6 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { takeUntil } from 'rxjs';
 import { FormGroup, Validators } from '@angular/forms';
 import {
   ASCENT_TYPES,
@@ -14,7 +13,7 @@ import {
   PUBLISH_OPTIONS,
 } from '../../../common/activity.constants';
 import { Crag } from 'src/generated/graphql';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-activity-form-route',
@@ -35,6 +34,7 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
   nonTopRopeAscentTypes = ASCENT_TYPES.filter(
     (ascentType) => !ascentType.topRope
   );
+
   publishOptions = PUBLISH_OPTIONS;
 
   constructor() {}
@@ -43,22 +43,32 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
     this.route.controls.publish.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((publish: PublishOptionsEnum) => {
-        const gradeSuggestionControl = this.route.controls.gradeSuggestion;
+        const votedDifficultyControl = this.route.controls.votedDifficulty;
 
         if (
           publish === PublishOptionsEnum.private &&
-          !gradeSuggestionControl.disabled
+          !votedDifficultyControl.disabled
         ) {
-          gradeSuggestionControl.disable();
+          votedDifficultyControl.reset();
+          votedDifficultyControl.disable();
         } else {
-          if (gradeSuggestionControl.disabled) {
-            gradeSuggestionControl.enable();
+          if (votedDifficultyControl.disabled) {
+            votedDifficultyControl.enable();
           }
         }
       });
 
+    // should disable possibility to vote on route if ascent type not a tick
+    const ascentTypeSelected = this.route.get('ascentType').value;
+    this.conditionallyDisableVotedDifficulty(ascentTypeSelected);
+
+    this.route
+      .get('ascentType')
+      .valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe((at) => this.conditionallyDisableVotedDifficulty(at));
+
+    // if a route is a project than a vote on diff should always be cast
     if (this.route.get('isProject').value) {
-      const ascentTypeSelected = this.route.get('ascentType').value;
       this.conditionallyRequireVotedDifficulty(ascentTypeSelected);
 
       this.route
@@ -79,11 +89,30 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
       (at) => at.value === ascentTypeSelected && at.tick
     );
     if (isTick) {
-      this.route.get('gradeSuggestion').addValidators(Validators.required);
+      this.route.get('votedDifficulty').addValidators(Validators.required);
     } else {
-      this.route.get('gradeSuggestion').clearValidators();
+      this.route.get('votedDifficulty').clearValidators();
     }
-    this.route.get('gradeSuggestion').updateValueAndValidity();
+    this.route.get('votedDifficulty').updateValueAndValidity();
+  }
+
+  /**
+   *
+   * @param ascentTypeSelected
+   *
+   * Make voting on difficulty possible only if a user is ticking a route
+   */
+  conditionallyDisableVotedDifficulty(ascentTypeSelected: string) {
+    const isTick = ASCENT_TYPES.some(
+      (at) => at.value === ascentTypeSelected && at.tick
+    );
+    // Only if route is being newly ticked or repeated (which also is a tick) can one cast a vote on difficulty (i.e. new vote or modifying existing one)
+    if (isTick) {
+      this.route.get('votedDifficulty').enable();
+    } else {
+      this.route.get('votedDifficulty').setValue(null);
+      this.route.get('votedDifficulty').disable();
+    }
   }
 
   ngOnDestroy(): void {

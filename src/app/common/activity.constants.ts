@@ -35,7 +35,7 @@ export const ASCENT_TYPES: AscentType[] = [
     label: 'Ponovitev',
     color: 'green',
     topRope: false,
-    tick: false,
+    tick: true,
   },
   {
     value: 'allfree',

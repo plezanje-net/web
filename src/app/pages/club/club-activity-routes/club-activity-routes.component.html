@@ -147,13 +147,14 @@
                   route.route.crag.slug,
                   route.route.slug
                 ]"
-                >{{ route.name }}</a
+                >{{ route.route.name }}</a
               >
             </td>
             <td>
               <app-grade
-                [difficulty]="route.difficulty"
-                [modifier]="true"
+                [difficulty]="route.route.difficulty"
+                [gradingSystemId]="route.route.defaultGradingSystem.id"
+                [showModifier]="true"
               ></app-grade>
             </td>
             <td>
