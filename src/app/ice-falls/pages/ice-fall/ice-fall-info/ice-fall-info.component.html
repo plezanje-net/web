@@ -9,4 +9,9 @@
     <div class="label">Dolžina</div>
     <span class="text-right"> {{ iceFall.height }}m </span>
   </div>
+
+  <div class="row" *ngIf="iceFall.access">
+    <div class="label">Dostop</div>
+    <div class="content access" [innerHTML]="iceFall.access"></div>
+  </div>
 </div>

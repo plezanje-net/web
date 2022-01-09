@@ -5,6 +5,8 @@ query IceFallBySlug($slug: String!) {
     grade
     height
     id
+    description
+    access
     country {
       name
       slug

@@ -9,7 +9,7 @@ import {
 } from 'src/generated/graphql';
 import { Observable } from 'rxjs';
 import { filter, mergeMap } from 'rxjs/operators';
-import { ConfirmationDialogComponent } from 'src/app/common/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ClubService } from '../club.service';
 import { AuthService } from 'src/app/auth/auth.service';
 

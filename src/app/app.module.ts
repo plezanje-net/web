@@ -60,11 +60,7 @@ import {
   MomentDateAdapter,
 } from '@angular/material-moment-adapter';
 import { CragGalleryComponent } from './pages/crag/crag-gallery/crag-gallery.component';
-import { CommentFormComponent } from './forms/comment-form/comment-form.component';
 
-import { CommentComponent } from './common/comment/comment.component';
-import { CommentOptionsComponent } from './common/comment/comment-options/comment-options.component';
-import { ConfirmationDialogComponent } from './common/confirmation-dialog/confirmation-dialog.component';
 import { RouteComponent } from './pages/route/route.component';
 import { RouteInfoComponent } from './pages/route/route-info/route-info.component';
 import { DistributionChartComponent } from './common/distribution-chart/distribution-chart.component';
@@ -135,10 +131,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ActivityFormComponent,
     ActivityFormRouteComponent,
     CragGalleryComponent,
-    CommentFormComponent,
-    CommentComponent,
-    CommentOptionsComponent,
-    ConfirmationDialogComponent,
     RouteComponent,
     RouteInfoComponent,
     DistributionChartComponent,

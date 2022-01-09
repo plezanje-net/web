@@ -15,6 +15,7 @@ import { AreasLevelComponent } from './pages/areas/areas-level/areas-level.compo
 import { NrIceFallsPipe } from './pages/areas/areas-level/nr-ice-falls.pipe';
 import { AreaComponent } from './pages/area/area.component';
 import { IceFallInfoComponent } from './pages/ice-fall/ice-fall-info/ice-fall-info.component';
+import { IceFallCommentsComponent } from './pages/ice-fall/ice-fall-comments/ice-fall-comments.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { IceFallInfoComponent } from './pages/ice-fall/ice-fall-info/ice-fall-in
     NrIceFallsPipe,
     AreaComponent,
     IceFallInfoComponent,
+    IceFallCommentsComponent,
   ],
   imports: [
     MatSelectModule,

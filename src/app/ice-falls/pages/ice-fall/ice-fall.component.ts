@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params } from '@angular/router';
+import { Subject } from 'rxjs';
 import {
   Area,
   Comment,
@@ -7,7 +9,9 @@ import {
   IceFallBySlugGQL,
   IceFallBySlugQuery,
 } from '../../../../generated/graphql';
+import { AuthService } from '../../../auth/auth.service';
 import { LayoutService } from '../../../services/layout.service';
+import { CommentFormComponent } from '../../../shared/components/comment-form/comment-form.component';
 import { DataError } from '../../../types/data-error';
 import { IceFallsBreadcrumbs } from '../../utils/ice-falls-breadcrumbs';
 
@@ -23,10 +27,14 @@ export class IceFallComponent implements OnInit {
   comments: Comment[];
   conditions: Comment[];
 
+  action = new Subject<string>();
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
-    private iceFallBySlugGQL: IceFallBySlugGQL
+    private iceFallBySlugGQL: IceFallBySlugGQL,
+    private authService: AuthService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +52,17 @@ export class IceFallComponent implements OnInit {
             this.querySuccess(result.data);
           }
         });
+    });
+
+    this.action.subscribe((action) => {
+      switch (action) {
+        case 'add-comment':
+          this.addComment('comment');
+          break;
+        case 'add-condition':
+          this.addComment('condition');
+          break;
+      }
     });
   }
 
@@ -77,5 +96,22 @@ export class IceFallComponent implements OnInit {
         <IceFall>this.iceFall
       ).build()
     );
+  }
+
+  addComment(type: string) {
+    this.authService.guardedAction({}).then((success) => {
+      if (success) {
+        this.dialog
+          .open(CommentFormComponent, {
+            data: {
+              iceFall: this.iceFall,
+              type: type,
+            },
+            autoFocus: false,
+          })
+          .afterClosed()
+          .subscribe(() => {});
+      }
+    });
   }
 }

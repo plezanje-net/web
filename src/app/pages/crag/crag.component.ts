@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { Tab } from '../../types/tab';
 import { AuthService } from 'src/app/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
-import { CommentFormComponent } from 'src/app/forms/comment-form/comment-form.component';
+import { CommentFormComponent } from 'src/app/shared/components/comment-form/comment-form.component';
 import {
   CragBySlugGQL,
   CragBySlugQuery,
