@@ -72,6 +72,7 @@
 
 .route-length {
   flex: 0 0 80px;
+  height: 20px;
 }
 
 .route-grade {
@@ -192,4 +193,8 @@ h3 {
   margin-top: 5px;
   text-align: right;
   color: $text-gray;
+}
+
+.route-expanded-container {
+  padding: 20px;
 }

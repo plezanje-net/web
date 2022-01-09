@@ -21,6 +21,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { MatExpansionModule } from '@angular/material/expansion';
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -205,6 +207,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     AppRoutingModule,
     MatGridListModule,
     SlickCarouselModule,
+    MatExpansionModule,
   ],
   providers: [
     AuthGuard,

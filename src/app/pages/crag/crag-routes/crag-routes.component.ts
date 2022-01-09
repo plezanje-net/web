@@ -36,6 +36,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   routeComments: Record<string, string | any>[];
   activePitchesPopupId: string | null = null;
   loading = false;
+  expandedRowId: string;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -172,21 +173,18 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   }
 
   difficultyVotesQuerySuccess(queryData: RouteGradesQuery): void {
-    this.difficultyVotes = queryData.route.difficultyVotes; // TODO: we need to get grades from difficultyVotes now
+    this.difficultyVotes = queryData.route.difficultyVotes;
   }
 
   difficultyVotesQueryError(): void {
     console.error('TODO');
   }
 
-  displayRouteComments(route: Route): void {
-    this.activeCommentsPopupId = route.id;
-    this.activeDifficultyVotesPopupId = null;
-    this.activePitchesPopupId = null;
+  displayRouteComments(routeId: string): void {
     this.routeCommentsLoading = true;
 
     this.routeCommentsGQL
-      .watch({ routeId: route.id })
+      .watch({ routeId: routeId })
       .valueChanges.subscribe((result) => {
         this.routeCommentsLoading = false;
 
@@ -196,10 +194,6 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
           this.routeCommentsQueryError();
         }
       });
-  }
-
-  hideRouteComments(route: Route): void {
-    this.activeCommentsPopupId = null;
   }
 
   displayRoutePitches(route: Route): void {
@@ -219,5 +213,10 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
 
   routeCommentsQueryError(): void {
     console.error('TODO');
+  }
+
+  expandRow(id: string): void {
+    this.expandedRowId = id;
+    this.displayRouteComments(id);
   }
 }
