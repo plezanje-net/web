@@ -112,11 +112,6 @@ export class ActivityFormComponent implements OnInit {
     this.routes.controls[routeIndex] = temp;
   }
 
-  add(): boolean {
-    this.addRoute({});
-    return false;
-  }
-
   save(): void {
     const data = this.activityForm.value;
 
