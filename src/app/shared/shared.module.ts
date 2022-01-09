@@ -25,6 +25,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MomentModule } from 'ngx-moment';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { CommentFormComponent } from './components/comment-form/comment-form.component';
+import { CommentOptionsComponent } from './components/comment/comment-options/comment-options.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { CommentFormComponent } from './components/comment-form/comment-form.com
     SnackBarButtonsComponent,
     GradeSelectComponent,
     CommentComponent,
+    CommentOptionsComponent,
     CommentFormComponent,
     LoaderComponent,
     ConfirmationDialogComponent,
