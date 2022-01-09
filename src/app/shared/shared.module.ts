@@ -16,12 +16,27 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatSelectModule } from '@angular/material/select';
 import { OrientationPipe } from './pipes/orientation.pipe';
 import { CustomBreakpointsProvider } from './custom-breakpoints';
+import { LoaderComponent } from './components/loader/loader.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CommentComponent } from './components/comment/comment.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MomentModule } from 'ngx-moment';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+import { CommentFormComponent } from './components/comment-form/comment-form.component';
+import { CommentOptionsComponent } from './components/comment/comment-options/comment-options.component';
 
 @NgModule({
   declarations: [
     EditorComponent,
     SnackBarButtonsComponent,
     GradeSelectComponent,
+    CommentComponent,
+    CommentOptionsComponent,
+    CommentFormComponent,
+    LoaderComponent,
+    ConfirmationDialogComponent,
     AscentTypePipe,
     GenderizeVerbPipe,
     OrientationPipe,
@@ -33,16 +48,25 @@ import { CustomBreakpointsProvider } from './custom-breakpoints';
     FlexLayoutModule,
     MatButtonModule,
     MatIconModule,
+    MatMenuModule,
+    MatDialogModule,
     MatSnackBarModule,
     MatSelectModule,
     MatFormFieldModule,
+    MatProgressSpinnerModule,
     NgxMatSelectSearchModule,
+    MatMomentDateModule,
+    MomentModule,
   ],
   providers: [CustomBreakpointsProvider],
   exports: [
     EditorComponent,
     SnackBarButtonsComponent,
     GradeSelectComponent,
+    CommentComponent,
+    CommentFormComponent,
+    ConfirmationDialogComponent,
+    LoaderComponent,
     AscentTypePipe,
     GenderizeVerbPipe,
     OrientationPipe,

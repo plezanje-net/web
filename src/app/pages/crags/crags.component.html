@@ -7,7 +7,11 @@
       fxLayout="row"
       fxLayoutAlign="space-between center"
     >
-      <h1>Plezališča - {{ country?.name }}</h1>
+      <h1>
+        Plezališča<ng-container *ngIf="country">
+          - {{ country.name }}</ng-container
+        >
+      </h1>
 
       <button mat-icon-button [matMenuTriggerFor]="menu">
         <mat-icon color="primary">more_vert</mat-icon>
