@@ -28,13 +28,15 @@ query IceFallBySlug($slug: String!) {
       }
     }
     comments {
-      type
-      user {
-        fullName
-      }
+      id
       content
       created
       updated
+      type
+      user {
+        id
+        fullName
+      }
     }
     images {
       path

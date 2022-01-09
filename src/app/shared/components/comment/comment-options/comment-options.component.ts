@@ -58,7 +58,12 @@ export class CommentOptionsComponent implements OnInit {
           this.deleteCommentGQL
             .mutate(
               { id: this.comment.id },
-              { refetchQueries: [namedOperations.Query.CragBySlug] }
+              {
+                refetchQueries: [
+                  namedOperations.Query.CragBySlug,
+                  namedOperations.Query.IceFallBySlug,
+                ],
+              }
             )
             .pipe(take(1))
             .subscribe({

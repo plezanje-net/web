@@ -25,10 +25,12 @@
       fxLayoutGap="0px"
       fxLayoutGap.lt-md="12px"
     >
-      <h3>Opis</h3>
-      <div class="card no-border padding" *ngIf="iceFall.description != ''">
-        {{ iceFall.description }}
-      </div>
+      <ng-container *ngIf="iceFall.description">
+        <h3>Opis</h3>
+        <div class="card no-border padding">
+          {{ iceFall.description }}
+        </div>
+      </ng-container>
       <app-ice-fall-comments
         [comments]="iceFall.comments"
         [action]="action"
