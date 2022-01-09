@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { take } from 'rxjs';
 import { DataError } from 'src/app/types/data-error';
 import { LatestTicksGQL, LatestTicksQuery } from 'src/generated/graphql';
 import { LoadingSpinnerService } from '../loading-spinner.service';
@@ -28,9 +29,9 @@ export class LatestTicksComponent implements OnInit {
     this.loadingSpinnerService.pushLoader();
     this.latestTicksGQL
       .fetch({ latest: 10 })
-      .toPromise()
-      .then(
-        (result) => {
+      .pipe(take(1))
+      .subscribe({
+        next: (result) => {
           this.loading = false;
           this.loadingSpinnerService.popLoader();
           if (result.errors == null) {
@@ -50,11 +51,11 @@ export class LatestTicksComponent implements OnInit {
             this.queryError();
           }
         },
-        (_error) => {
+        error: () => {
           this.loadingSpinnerService.popLoader();
           this.queryError();
-        }
-      );
+        },
+      });
   }
 
   queryError() {

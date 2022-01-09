@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, take } from 'rxjs';
 import { LoginRequest } from '../types/login-request';
 import { Apollo } from 'apollo-angular';
 import { GuardedActionOptions } from '../types/guarded-action-options';
@@ -48,13 +48,15 @@ export class AuthService {
 
     return this.profileGQL
       .fetch()
-      .toPromise()
-      .then((result) => {
-        this.currentUser = result.data.profile;
-        return this.currentUser;
-      })
-      .catch(() => {
-        return Promise.resolve(null);
+      .pipe(take(1))
+      .subscribe({
+        next: (result) => {
+          this.currentUser = result.data.profile;
+          return this.currentUser;
+        },
+        error: () => {
+          return Promise.resolve(null);
+        },
       });
   }
 

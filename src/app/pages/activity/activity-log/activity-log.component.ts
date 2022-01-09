@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, take } from 'rxjs/operators';
 import { ACTIVITY_TYPES } from 'src/app/common/activity.constants';
 import { FilteredTable } from 'src/app/common/filtered-table';
 import { LayoutService } from 'src/app/services/layout.service';
@@ -134,8 +134,8 @@ export class ActivityLogComponent implements OnInit {
     if (this.filters.value.cragId != null && !(this.forCrag != null)) {
       this.activityFiltersCragGQL
         .fetch({ id: this.filters.value.cragId })
-        .toPromise()
-        .then((crag) => (this.forCrag = crag.data.crag));
+        .pipe(take(1))
+        .subscribe((crag) => (this.forCrag = crag.data.crag));
     }
 
     if (!(this.filters.value.cragId != null)) {

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MediaObserver } from '@angular/flex-layout';
 import { MatDialog } from '@angular/material/dialog';
+import { take } from 'rxjs';
 import { ImageFullComponent } from 'src/app/common/image-full/image-full.component';
 import { DataError } from 'src/app/types/data-error';
 import { environment } from 'src/environments/environment';
@@ -20,7 +21,6 @@ export class LatestImagesComponent implements OnInit {
 
   ncols = 4;
   storageUrl = environment.storageUrl;
-  // storageUrl = '/assets/sampleimages'; // TODO: this is a test
 
   constructor(
     private mediaObserver: MediaObserver,
@@ -50,9 +50,9 @@ export class LatestImagesComponent implements OnInit {
     this.loadingSpinnerService.pushLoader();
     this.latestImagesGQL
       .fetch({ latest: 12 })
-      .toPromise()
-      .then(
-        (result) => {
+      .pipe(take(1))
+      .subscribe({
+        next: (result) => {
           this.loading = false;
           this.loadingSpinnerService.popLoader();
           if (result.errors == null) {
@@ -61,11 +61,11 @@ export class LatestImagesComponent implements OnInit {
             this.queryError();
           }
         },
-        (_error) => {
+        error: () => {
           this.loadingSpinnerService.popLoader();
           this.queryError();
-        }
-      );
+        },
+      });
   }
 
   onImageClick(image: LatestImagesQuery['latestImages'][0]) {
