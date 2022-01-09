@@ -31,8 +31,6 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
 
   activityRoutesQuery: QueryRef<any>;
 
-  // activityRoutes: ActivityRoutesByClubQuery['activityRoutesByClub']['items'];
-  // pagination: ActivityRoutesByClubQuery['activityRoutesByClub']['meta'];
   activityRoutes: ActivityRoutesByClubSlugQuery['activityRoutesByClubSlug']['items'];
   pagination: ActivityRoutesByClubSlugQuery['activityRoutesByClubSlug']['meta'];
 
@@ -95,6 +93,7 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const clubSlug = this.activatedRoute.snapshot.parent.params.club;
 
+    // A new member can also be added on club-activity-routes page
     this.memberAddedSubscription = this.clubService.memberAdded$.subscribe(
       () => {
         this.activityRoutesQuery.refetch();
