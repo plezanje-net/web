@@ -40,10 +40,15 @@ export class ClubMemberFormComponent implements OnInit {
           },
         },
         {
-          errorPolicy: 'all',
           update: (cache) => {
             cache.evict({
               id: cache.identify(this.data.club),
+            });
+
+            // remove from cache all queries on activityRoutes for club members - will need to fetch again because we have a new member
+            cache.evict({
+              id: 'ROOT_QUERY',
+              fieldName: 'activityRoutesByClubSlug',
             });
           },
         }
