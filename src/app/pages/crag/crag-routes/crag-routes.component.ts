@@ -16,6 +16,8 @@ import {
   RouteCommentsQuery,
 } from 'src/generated/graphql';
 import { ASCENT_TYPES } from 'src/app/common/activity.constants';
+import { getGradeDistribution } from 'src/app/common/grade-distribution';
+import { IDistribution } from 'src/app/common/distribution-chart/distribution-chart.component';
 
 @Component({
   selector: 'app-crag-routes',
@@ -37,6 +39,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   activePitchesPopupId: string | null = null;
   loading = false;
   expandedRowId: string;
+  gradeDistribution: IDistribution[];
 
   constructor(
     private snackBar: MatSnackBar,
@@ -149,14 +152,11 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       });
   }
 
-  displayRouteDiffVotes(route: Route): void {
-    this.activeDifficultyVotesPopupId = route.id;
-    this.activeCommentsPopupId = null;
-    this.activePitchesPopupId = null;
+  fetchDifficultyVotesDistribution(routeId: string): void {
     this.difficultyVotesLoading = true;
 
     this.routeDifficultyVotesGQL
-      .watch({ routeId: route.id })
+      .watch({ routeId })
       .valueChanges.subscribe((result) => {
         this.difficultyVotesLoading = false;
 
@@ -168,19 +168,15 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       });
   }
 
-  hideRouteDiffVotes(route: Route): void {
-    this.activeDifficultyVotesPopupId = null;
-  }
-
   routeDiffVotesQuerySuccess(queryData: RouteDifficultyVotesQuery): void {
-    this.difficultyVotes = queryData.route.difficultyVotes;
+    this.gradeDistribution = getGradeDistribution(queryData.route.difficultyVotes);
   }
 
   routeDiffVotesQueryError(): void {
     console.error('TODO');
   }
 
-  displayRouteComments(routeId: string): void {
+  fetchRouteComments(routeId: string): void {
     this.routeCommentsLoading = true;
 
     this.routeCommentsGQL
@@ -213,8 +209,10 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     console.error('TODO');
   }
 
-  expandRow(id: string): void {
-    this.expandedRowId = id;
-    this.displayRouteComments(id);
+  expandRow(routeId: string): void {
+    // TODO clear saved comments, votes, pitches when expanded row gets closed
+    this.expandedRowId = routeId;
+    this.fetchRouteComments(routeId);
+    this.fetchDifficultyVotesDistribution(routeId);
   }
 }

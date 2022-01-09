@@ -48,16 +48,13 @@
                     >{{ route.length }} m</ng-container
                   >
                 </div>
-                <div
-                  class="route-grade"
-                  (mouseenter)="displayRouteDiffVotes(route)"
-                  (mouseleave)="hideRouteDiffVotes(route)"
-                >
+                <div class="route-grade">
                   <span *ngIf="route.isProject">P</span>
                   <app-grade
                     *ngIf="!route.isProject"
                     [difficulty]="route.difficulty"
                     [modifier]="true"
+                    [gradingSystemId]="route.defaultGradingSystem.id"
                   ></app-grade>
                   <div
                     class="popover"
@@ -129,6 +126,7 @@
         </div>
         <div *ngIf="expandedRowId === route.id" class="route-expanded-container">
           <p *ngIf="routeCommentsLoading">loading</p>
+          <app-distribution-chart [distribution]="gradeDistribution"></app-distribution-chart>
           <app-route-comments *ngIf="!routeCommentsLoading" [comments]="routeComments"></app-route-comments>
         </div>
       </div>
