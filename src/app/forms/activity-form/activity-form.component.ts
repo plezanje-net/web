@@ -112,11 +112,6 @@ export class ActivityFormComponent implements OnInit {
     this.routes.controls[routeIndex] = temp;
   }
 
-  add(): boolean {
-    this.addRoute({});
-    return false;
-  }
-
   save(): void {
     const data = this.activityForm.value;
 
@@ -143,8 +138,7 @@ export class ActivityFormComponent implements OnInit {
         stars: route.stars,
         publish: route.publish,
         votedDifficulty: route.votedDifficulty,
-        name: route.name, // TODO: do we need this?
-        position: i, // TODO: why do we need this?
+        position: i, // position of the route within the same activity of ones log
       };
     });
 

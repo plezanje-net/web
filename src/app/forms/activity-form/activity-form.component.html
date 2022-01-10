@@ -54,12 +54,7 @@
       </div>
     </div>
   </div>
-  <div fxFlex>
-    <div fxFlex>
-      <button type="button" mat-button (click)="add()" [disabled]="loading">
-        Dodaj smer
-      </button>
-    </div>
+  <div fxLayout="row" fxFlexAlign="end">
     <div *ngIf="!loading">
       <button
         type="button"
