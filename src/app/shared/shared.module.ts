@@ -26,6 +26,7 @@ import { MomentModule } from 'ngx-moment';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { CommentFormComponent } from './components/comment-form/comment-form.component';
 import { CommentOptionsComponent } from './components/comment/comment-options/comment-options.component';
+import { WarningsComponent } from './components/warnings/warnings.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { CommentOptionsComponent } from './components/comment/comment-options/co
     CommentComponent,
     CommentOptionsComponent,
     CommentFormComponent,
+    WarningsComponent,
     LoaderComponent,
     ConfirmationDialogComponent,
     AscentTypePipe,
@@ -65,6 +67,7 @@ import { CommentOptionsComponent } from './components/comment/comment-options/co
     GradeSelectComponent,
     CommentComponent,
     CommentFormComponent,
+    WarningsComponent,
     ConfirmationDialogComponent,
     LoaderComponent,
     AscentTypePipe,
