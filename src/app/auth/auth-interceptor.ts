@@ -17,16 +17,15 @@ export class AuthInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    let headers = {};
+    const token = this.authService.getToken();
 
-    let token = this.authService.getToken();
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     }
-
-    request = request.clone({
-      setHeaders: headers,
-    });
 
     return next.handle(request);
   }

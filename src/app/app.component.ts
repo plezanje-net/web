@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { AuthService } from '../app/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,15 +9,18 @@ import { Title } from '@angular/platform-browser';
 
 import { filter } from 'rxjs/operators';
 import * as _ from 'lodash';
+import { Subscription, take } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'plezanje-net';
   nowYear = new Date().getFullYear();
+
+  subscriptions: Subscription[] = [];
 
   constructor(
     private authService: AuthService,
@@ -28,10 +31,9 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.authService.autologin();
-    this.authService.getCurrentUser();
+    this.authService.initialize();
 
-    this.authService.openLogin$.subscribe((req) => {
+    const loginSub = this.authService.openLogin$.subscribe((req) => {
       if (!this.router.navigated) {
         this.router.navigate(['/']);
       }
@@ -44,6 +46,7 @@ export class AppComponent implements OnInit {
         })
         .afterClosed()
         .pipe(
+          take(1),
           filter((data) => {
             if (req.success != null && _.isNil(data)) {
               req.success.next(false);
@@ -61,13 +64,21 @@ export class AppComponent implements OnInit {
           }
         });
     });
+    this.subscriptions.push(loginSub);
 
-    this.layoutService.$breadcrumbs.subscribe((value) => {
-      let title = 'Plezanje.net';
-      if (value.length > 0) {
-        title = value[value.length - 1].name + ' · ' + title;
+    const breadcrumbsSub = this.layoutService.$breadcrumbs.subscribe(
+      (value) => {
+        let title = 'Plezanje.net';
+        if (value.length > 0) {
+          title = value[value.length - 1].name + ' · ' + title;
+        }
+        this.titleService.setTitle(title);
       }
-      this.titleService.setTitle(title);
-    });
+    );
+    this.subscriptions.push(breadcrumbsSub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }

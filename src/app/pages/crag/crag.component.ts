@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DataError } from 'src/app/types/data-error';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LayoutService } from 'src/app/services/layout.service';
-import { Subject } from 'rxjs';
+import { Subject, Subscription, take } from 'rxjs';
 import { Tab } from '../../types/tab';
 import { AuthService } from 'src/app/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,7 +21,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
   templateUrl: './crag.component.html',
   styleUrls: ['./crag.component.scss'],
 })
-export class CragComponent implements OnInit {
+export class CragComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   error: DataError = null;
 
@@ -60,6 +60,9 @@ export class CragComponent implements OnInit {
 
   activeTab: string = 'smeri';
 
+  cragSub: Subscription;
+  subscriptions: Subscription[] = [];
+
   constructor(
     private layoutService: LayoutService,
     private authService: AuthService,
@@ -77,10 +80,14 @@ export class CragComponent implements OnInit {
       },
     ]);
 
-    this.activatedRoute.params.subscribe((params) => {
+    const routeSub = this.activatedRoute.params.subscribe((params) => {
       this.loading = true;
 
-      this.cragBySlugGQL
+      if (this.cragSub != null) {
+        this.cragSub.unsubscribe();
+      }
+
+      this.cragSub = this.cragBySlugGQL
         .watch({
           crag: params.crag,
         })
@@ -100,8 +107,9 @@ export class CragComponent implements OnInit {
         this.activeTab = 'smeri';
       }
     });
+    this.subscriptions.push(routeSub);
 
-    this.action$.subscribe((action) => {
+    const actionsSub = this.action$.subscribe((action) => {
       switch (action) {
         case 'add-comment':
           this.addComment('comment');
@@ -114,10 +122,26 @@ export class CragComponent implements OnInit {
           break;
       }
     });
+    this.subscriptions.push(actionsSub);
 
-    this.canEdit =
-      this.authService.currentUser &&
-      this.authService.currentUser.roles.includes('admin'); // BUG: currentUser of auth service is null on page load.
+    const authSub = this.authService.currentUser.subscribe(
+      (user) => (this.canEdit = user != null && user.roles.includes('admin'))
+    );
+    this.subscriptions.push(authSub);
+
+    const breakpointSub = this.breakpointObserver
+      .observe([Breakpoints.Small, Breakpoints.XSmall])
+      .subscribe((res) => {
+        if (!res.matches && this.activeTab == 'lokacija') {
+          this.setActiveTab(this.tabs[1]);
+        }
+      });
+    this.subscriptions.push(breakpointSub);
+  }
+
+  ngOnDestroy() {
+    this.cragSub.unsubscribe();
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   queryError(errors: readonly GraphQLError[]) {
@@ -152,13 +176,6 @@ export class CragComponent implements OnInit {
         name: this.crag.name,
       },
     ]);
-    this.breakpointObserver
-      .observe([Breakpoints.Small, Breakpoints.XSmall])
-      .subscribe((res) => {
-        if (!res.matches && this.activeTab == 'lokacija') {
-          this.setActiveTab(this.tabs[1]);
-        }
-      });
   }
 
   setActiveTab(tab: Tab) {
@@ -178,16 +195,13 @@ export class CragComponent implements OnInit {
   addComment(type: string) {
     this.authService.guardedAction({}).then((success) => {
       if (success) {
-        this.dialog
-          .open(CommentFormComponent, {
-            data: {
-              crag: this.crag,
-              type: type,
-            },
-            autoFocus: false,
-          })
-          .afterClosed()
-          .subscribe(() => {});
+        this.dialog.open(CommentFormComponent, {
+          data: {
+            crag: this.crag,
+            type: type,
+          },
+          autoFocus: false,
+        });
       }
     });
   }

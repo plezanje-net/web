@@ -3,95 +3,78 @@ import { BehaviorSubject, Subject, take } from 'rxjs';
 import { LoginRequest } from '../types/login-request';
 import { Apollo } from 'apollo-angular';
 import { GuardedActionOptions } from '../types/guarded-action-options';
-import { ProfileGQL, ProfileQuery } from 'src/generated/graphql';
+import {
+  LoginResponse,
+  ProfileGQL,
+  ProfileQuery,
+  User,
+} from 'src/generated/graphql';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  public currentUser: ProfileQuery['profile'] = null;
+  public currentUser: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
   public openLogin$ = new Subject<LoginRequest>();
 
-  private isAuthenticated = new BehaviorSubject(false);
-  isAuthenticated$ = this.isAuthenticated.asObservable();
-
   constructor(private apollo: Apollo, private profileGQL: ProfileGQL) {}
 
+  public initialize(): void {
+    const authString = localStorage.getItem(this.getCookieName('auth'));
+    if (authString) {
+      const { user } = JSON.parse(authString);
+      this.currentUser.next(user);
+    }
+  }
+
   logout(): Promise<any> {
-    this.currentUser = null;
+    this.currentUser.next(null);
     localStorage.removeItem(this.getCookieName('auth'));
-    this.isAuthenticated.next(false);
     return this.apollo.client.resetStore();
   }
 
-  login(token: string): Promise<any> {
-    localStorage.setItem(this.getCookieName('auth'), token);
-    this.isAuthenticated.next(true);
+  login(loginResponse: LoginResponse): Promise<any> {
+    localStorage.setItem(
+      this.getCookieName('auth'),
+      JSON.stringify(loginResponse)
+    );
+
+    this.currentUser.next(loginResponse.user);
+
     return this.apollo.client.resetStore();
-  }
-
-  autologin() {
-    if (this.getToken()) {
-      this.isAuthenticated.next(true);
-    }
-  }
-
-  async getCurrentUser(): Promise<any> {
-    if (this.getToken() == null) {
-      return Promise.resolve(null);
-    }
-
-    if (this.currentUser != null) {
-      return Promise.resolve(this.currentUser);
-    }
-
-    return this.profileGQL
-      .fetch()
-      .pipe(take(1))
-      .subscribe({
-        next: (result) => {
-          this.currentUser = result.data.profile;
-          return this.currentUser;
-        },
-        error: () => {
-          return Promise.resolve(null);
-        },
-      });
   }
 
   getToken(): string {
-    return localStorage.getItem(this.getCookieName('auth'));
+    const authString = localStorage.getItem(this.getCookieName('auth'));
+    if (authString) {
+      const { token } = JSON.parse(authString);
+      return token;
+    }
+
+    return null;
   }
 
   getCookieName(type: string): string {
-    return 'plezanjenet-' + type;
-  }
-
-  checkRole(role: string) {
-    if (this.currentUser) {
-      return this.currentUser.roles.indexOf(role) != -1;
-    }
-    return false;
+    return `plezanjenet-${type}`;
   }
 
   async guardedAction(options: GuardedActionOptions): Promise<any> {
-    return this.getCurrentUser().then((user: any) => {
-      return new Promise((resolve, reject) => {
-        if (user != null) {
-          resolve(true);
-          return;
-        }
+    return new Promise((resolve, reject) => {
+      if (this.currentUser.value != null) {
+        resolve(true);
+        return;
+      }
 
-        const success = new Subject<any>();
+      const success = new Subject<any>();
 
-        this.openLogin$.next({
-          success: success,
-        });
+      this.openLogin$.next({
+        success: success,
+        ...options,
+      });
 
-        success.subscribe((data) => {
-          resolve(data);
-        });
+      success.subscribe((data) => {
+        resolve(data);
       });
     });
   }

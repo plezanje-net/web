@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
+import { User } from '../../../generated/graphql';
+import { AuthGuard } from '../../auth/auth.guard';
 
 @Component({
   selector: 'app-header',
@@ -12,8 +14,8 @@ import { AuthService } from 'src/app/auth/auth.service';
 export class HeaderComponent implements OnInit, OnDestroy {
   public naviOpen: boolean = false;
 
-  authSub: Subscription;
-  loggedIn = false;
+  subscriptions: Subscription[] = [];
+  user: User;
 
   constructor(
     private router: Router,
@@ -22,17 +24,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.authSub = this.authService.isAuthenticated$.subscribe(
-      (isAuthenticated) => {
-        this.loggedIn = isAuthenticated;
-      }
-    );
-
-    this.router.events.subscribe((val) => {
+    const naviSub = this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
         this.naviOpen = false;
       }
     });
+    this.subscriptions.push(naviSub);
+
+    const authSub = this.authService.currentUser.subscribe(
+      (user) => (this.user = user)
+    );
+    this.subscriptions.push(authSub);
   }
 
   toggleNavi(): void {
@@ -41,19 +43,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout() {
     this.authService.logout().then(() => {
-      this.router.navigate(['/']); // TODO: should only navigate to home if route currently on is protected
-      this.snackbar.open('Uspešno ste se odjavili', null, { duration: 3000 }); // TODO: discuss about tiking or viking in messages :)
+      this.snackbar.open('Uspešno si se odjavil', null, { duration: 3000 });
+      this.router.navigate(['/']);
     });
   }
 
   login() {
     this.authService.openLogin$.next({
       message:
-        'Prijavite se za pregled svojega dnevnika ali oddajanje komentarjev.', // TODO: pimp message
+        'Prijavi se za pregled svojega dnevnika ali oddajanje komentarjev.',
     });
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }
