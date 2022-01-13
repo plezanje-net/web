@@ -15,6 +15,7 @@ export function getGradeDistribution(difficultyVotes): IDistribution[] {
   const gradesDistribution: IDistribution[] = [];
 
   Object.entries(difficultyCounts).forEach(([grade, count]: [string, number]) => {
+    // TODO use gradingSystemService instead of Grade class
     gradesDistribution.push({
       label: new Grade(Number(grade)).legacyName,
       value: count,

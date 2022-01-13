@@ -23,18 +23,18 @@ export class CragLocationComponent implements OnInit {
     this.crags$.next([this.crag]);
 
     const months = [
-      'Januar',
-      'Februar',
-      'Marec',
-      'April',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
       'Maj',
-      'Junij',
-      'Julij',
-      'Avgust',
-      'September',
-      'Oktober',
-      'November',
-      'December',
+      'Jun',
+      'Jul',
+      'Avg',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Dec',
     ];
 
     this.attendanceDistribution = this.crag.activityByMonth.map((value, m) => ({

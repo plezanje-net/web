@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 
 export interface IDistribution {
   label: string;
@@ -10,13 +10,13 @@ export interface IDistribution {
   templateUrl: './distribution-chart.component.html',
   styleUrls: ['./distribution-chart.component.scss'],
 })
-export class DistributionChartComponent implements OnInit {
+export class DistributionChartComponent implements OnChanges {
   @Input() distribution: IDistribution[] = [];
   maxValue: number;
 
   constructor() {}
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     if (!this.distribution) {
       return;
     }

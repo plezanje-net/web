@@ -126,7 +126,7 @@
         </div>
         <div *ngIf="expandedRowId === route.id" class="route-expanded-container">
           <p *ngIf="routeCommentsLoading">loading</p>
-          <app-distribution-chart [distribution]="gradeDistribution"></app-distribution-chart>
+          <app-distribution-chart *ngIf="gradeDistribution" [distribution]="gradeDistribution"></app-distribution-chart>
           <app-route-comments *ngIf="!routeCommentsLoading" [comments]="routeComments"></app-route-comments>
         </div>
       </div>

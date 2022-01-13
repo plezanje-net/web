@@ -1,19 +1,24 @@
 .distribution-container {
-  // margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
 }
 
 .distribution-bar-wrapper {
-  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .distribution-bar-label {
-  width: 20px;
+  flex: 0 0 44px;
   margin-right: 10px;
+  text-align: right;
 }
 
 .distribution-bar {
   height: 8px;
-  // border: 1px solid #8080804a;
+  flex: 1 1 100%;
   background-color: white;
 }
 
