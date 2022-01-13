@@ -7,9 +7,8 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 
-import { map, Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { AuthService } from './auth.service';
-import { ErrorResponse } from 'apollo-link-error';
 import { GraphQLError } from 'graphql';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -34,27 +33,29 @@ export class AuthInterceptor implements HttpInterceptor {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      return next.handle(request).pipe(
+        tap((event) => {
+          if (event instanceof HttpResponse && event.body.errors != null) {
+            this.checkForTokenExpiredError(event.body.errors);
+          }
+        })
+      );
     }
 
-    return next.handle(request).pipe(
-      map((event) => {
-        if (event instanceof HttpResponse && event.body.errors != null) {
-          this.checkForTokenExpiredError(event.body.errors);
-        }
-        return event;
-      })
-    );
+    return next.handle(request);
   }
 
   checkForTokenExpiredError(errors: GraphQLError[]) {
     if (errors.find((e) => e.message == 'token_expired')) {
-      this.authService.logout();
-      this.snackbar.open(
-        'Zaradi spremmebe v uporabniškem računu se moraš ponovno prijavit',
-        null,
-        { duration: 3000 }
-      );
-      this.router.navigate(['/']);
+      this.authService.logout().then(() => {
+        this.snackbar.open(
+          'Zaradi spremmebe v uporabniškem računu se moraš ponovno prijavit',
+          null,
+          { duration: 3000 }
+        );
+        this.router.navigate(['/']);
+      });
     }
   }
 }
