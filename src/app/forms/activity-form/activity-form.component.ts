@@ -155,10 +155,19 @@ export class ActivityFormComponent implements OnInit {
       .subscribe({
         next: () => {
           this.localStorageService.removeItem('activity-selection');
-          this.snackBar.open('Vnos je bil shranjen v plezalni dnevnik', null, {
-            duration: 3000,
-          });
-          this.router.navigate(['/plezalni-dnevnik']);
+          this.snackBar
+            .open('Vnos je bil shranjen v plezalni dnevnik', 'Na dnevnik', {
+              duration: 3000,
+            })
+            .onAction()
+            .subscribe(() => {
+              this.router.navigate(['/plezalni-dnevnik']);
+            });
+          this.router.navigate([
+            '/plezalisca/',
+            this.crag.country.slug,
+            this.crag.slug,
+          ]);
         },
         error: () => {
           this.loading = false;

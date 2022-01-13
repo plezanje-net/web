@@ -1,6 +1,11 @@
-<div class="container mt-16">
-  <mat-card>
-    <mat-card-title>Vpis v plezalni dnevnik</mat-card-title>
+<div class="white-back mt-16">
+  <div class="container py-8">
+    <h1>Vpis v plezalni dnevnik</h1>
+  </div>
+</div>
+
+<ng-container *ngIf="routes.length">
+  <mat-card class="container mt-16">
     <mat-card-content>
       <app-activity-form
         [crag]="crag"
@@ -8,4 +13,16 @@
       ></app-activity-form>
     </mat-card-content>
   </mat-card>
-</div>
+</ng-container>
+
+<ng-container *ngIf="!routes.length">
+  <div class="container mt-16">
+    Izgleda, da nimaš izbranih smeri za vpis v dnevnik.
+    <br />
+    <br />
+    Vrni se <a [routerLink]="['/']">domov</a>, na
+    <a [routerLink]="['/plezalni-dnevnik']">plezalni dnevnik</a> ali na
+    <a [routerLink]="['/plezalisca/slovenija', { type: 'sport' }]">plezališča</a
+    >.
+  </div>
+</ng-container>

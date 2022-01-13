@@ -34,7 +34,6 @@ export class ActivityInputComponent implements OnInit {
       },
       {
         name: 'Vpis',
-        path: '/plezalni-dnevnik/vpis',
       },
     ]);
   }
