@@ -2,10 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Apollo, gql } from 'apollo-angular';
 import { AuthService } from '../auth.service';
 import { PasswordRecoveryComponent } from '../password-recovery/password-recovery.component';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { LoginGQL, LoginResponse } from '../../../generated/graphql';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
     private dialogRef: MatDialogRef<LoginComponent>,
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
-    private apollo: Apollo,
+    private loginGQL: LoginGQL,
     @Inject(MAT_DIALOG_DATA)
     public data: {
       message: string;
@@ -30,7 +30,6 @@ export class LoginComponent implements OnInit {
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required]),
-    remember: new FormControl(false),
   });
 
   ngOnInit(): void {}
@@ -47,32 +46,19 @@ export class LoginComponent implements OnInit {
 
     const value = this.loginForm.value;
 
-    this.apollo
-      .mutate({
-        mutation: gql`
-        mutation {
-          login(input: {
-            email: "${value.email}", 
-            password: "${value.password}"
-          }) {
-            token
-          }
-        }
-      `,
-      })
-      .subscribe(
-        (result: any) => {
-          this.authService
-            .login(result.data.login.token)
-            .then(() => this.dialogRef.close(true));
-        },
-        (error) => {
-          this.loading = false;
-          this.snackbar.open('Prijava ni uspela.', null, {
-            panelClass: 'error',
-            duration: 3000,
-          });
-        }
-      );
+    this.loginGQL.mutate(value).subscribe({
+      next: (result) => {
+        this.authService
+          .login(<LoginResponse>result.data.login)
+          .then(() => this.dialogRef.close(true));
+      },
+      error: () => {
+        this.loading = false;
+        this.snackbar.open('Prijava ni uspela.', null, {
+          panelClass: 'error',
+          duration: 3000,
+        });
+      },
+    });
   }
 }
