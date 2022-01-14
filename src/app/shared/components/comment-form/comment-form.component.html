@@ -6,6 +6,7 @@
     </button>
   </div>
 </div>
+
 <form [formGroup]="commentForm" (submit)="save()">
   <div fxLayout="row">
     <app-editor
@@ -15,16 +16,41 @@
     ></app-editor>
   </div>
 
-  <mat-dialog-actions fxLayout="row">
-    <div fxFlex></div>
-    <div *ngIf="!loading">
-      <button type="button" mat-button mat-dialog-close>Prekliči</button>
-      <button mat-flat-button color="primary" [disabled]="!commentForm.valid">
-        SHRANI
-      </button>
+  <div
+    *ngIf="data?.type === 'warning' || data.comment?.type === 'warning'"
+    class="mt-16"
+    fxLayout="column"
+    fxLayout.gt-xs="row"
+    fxLayoutGap="16px"
+  >
+    <div>
+      <mat-form-field class="inputFull" [ngClass.gt-xs]="{ inputFull: false }">
+        <mat-label>Izpostavljeno do</mat-label>
+        <input
+          formControlName="exposedUntil"
+          matInput
+          [max]="maxDate"
+          [matDatepicker]="picker"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
     </div>
-    <span *ngIf="loading" class="loading">
-      <mat-spinner diameter="30"></mat-spinner>
-    </span>
-  </mat-dialog-actions>
+    <div>Opozorilo bo do izbranega datuma izpostavljeno na prvi strani.</div>
+  </div>
+
+  <div class="mt-16">
+    <mat-dialog-actions fxLayout="row">
+      <div fxFlex></div>
+      <div *ngIf="!loading">
+        <button type="button" mat-button mat-dialog-close>Prekliči</button>
+        <button mat-flat-button color="primary" [disabled]="!commentForm.valid">
+          SHRANI
+        </button>
+      </div>
+      <span *ngIf="loading" class="loading">
+        <mat-spinner diameter="30"></mat-spinner>
+      </span>
+    </mat-dialog-actions>
+  </div>
 </form>

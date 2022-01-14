@@ -12,16 +12,13 @@ import {
   MatFormFieldDefaultOptions,
   MAT_FORM_FIELD_DEFAULT_OPTIONS,
 } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -54,12 +51,8 @@ import { CragLocationComponent } from './pages/crag/crag-location/crag-location.
 import { ActivityFormComponent } from './forms/activity-form/activity-form.component';
 import { ActivityFormRouteComponent } from './forms/activity-form/activity-form-route/activity-form-route.component';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import {
-  MatMomentDateModule,
-  MomentDateAdapter,
-} from '@angular/material-moment-adapter';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { CragGalleryComponent } from './pages/crag/crag-gallery/crag-gallery.component';
-
 import { RouteComponent } from './pages/route/route.component';
 import { RouteInfoComponent } from './pages/route/route-info/route-info.component';
 import { DistributionChartComponent } from './common/distribution-chart/distribution-chart.component';
@@ -174,13 +167,11 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MatIconModule,
     MatCheckboxModule,
     MatFormFieldModule,
-    MatInputModule,
     MatSnackBarModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatSelectModule,
-    MatDatepickerModule,
     GraphQLModule,
     HttpClientModule,
     MatMomentDateModule,
