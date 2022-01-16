@@ -11,6 +11,13 @@
 form {
   padding-top: 16px;
 }
-button {
+
+.button-w-loading {
   margin-top: 16px;
+}
+
+.loading {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 3px;
 }

@@ -2,9 +2,13 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ApolloError } from '@apollo/client/errors';
+import { MutationResult } from 'apollo-angular';
 import { GraphQLError } from 'graphql';
-import { Club, CreateClubMemberByEmailGQL } from '../../../generated/graphql';
+import {
+  Club,
+  CreateClubMemberByEmailGQL,
+  CreateClubMemberByEmailMutation,
+} from '../../../generated/graphql';
 
 @Component({
   selector: 'app-club-member-form',
@@ -16,6 +20,9 @@ export class ClubMemberFormComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email]),
     admin: new FormControl(false),
   });
+
+  loading = false;
+
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { clubId: string; clubName: string; club: Club },
@@ -29,6 +36,8 @@ export class ClubMemberFormComponent implements OnInit {
   onSubmit() {
     const email = this.addMemberForm.value.email;
     const admin = this.addMemberForm.value.admin;
+
+    this.loading = true;
 
     this.createClubMemberByEmailGQL
       .mutate(
@@ -53,21 +62,21 @@ export class ClubMemberFormComponent implements OnInit {
           },
         }
       )
-      .subscribe(
-        (result: any) => {
+      .subscribe({
+        next: (result: MutationResult<CreateClubMemberByEmailMutation>) => {
           if (result.errors != null) {
             this.queryError(result.errors);
           } else {
-            this.querySuccess(result.data);
+            this.querySuccess();
           }
         },
-        (error: ApolloError) => {
+        error: () => {
           this.displayError();
-        }
-      );
+        },
+      });
   }
 
-  queryError(errors: GraphQLError[]) {
+  queryError(errors: readonly GraphQLError[]) {
     if (
       errors.length > 0 &&
       errors[0].message.startsWith('Could not find any entity of type')
@@ -89,7 +98,7 @@ export class ClubMemberFormComponent implements OnInit {
     this.dialogRef.close(false);
   }
 
-  querySuccess(data) {
+  querySuccess() {
     this.displaySuccess();
     this.dialogRef.close(true);
   }
