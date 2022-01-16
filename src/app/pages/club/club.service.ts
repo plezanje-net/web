@@ -2,14 +2,11 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { QueryRef } from 'apollo-angular';
 import {
   BehaviorSubject,
-  concatMap,
   map,
-  mergeMap,
   ReplaySubject,
   Subject,
   Subscription,
   switchMap,
-  toArray,
 } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import {
@@ -19,11 +16,6 @@ import {
   ClubMember,
   User,
 } from 'src/generated/graphql';
-
-interface MapOutput {
-  user: User;
-  data: ClubBySlugQuery;
-}
 
 @Injectable()
 export class ClubService implements OnDestroy {
@@ -71,8 +63,12 @@ export class ClubService implements OnDestroy {
       });
   }
 
-  refetchClub() {
-    this.clubQuery.refetch();
+  refetchClub(slug = null) {
+    if (slug) {
+      this.clubQuery.refetch({ clubSlug: slug });
+    } else {
+      this.clubQuery.refetch();
+    }
   }
 
   ngOnDestroy() {
