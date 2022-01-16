@@ -131,13 +131,15 @@ export class ClubComponent implements OnInit, OnDestroy {
       .afterClosed()
       .pipe(
         filter((result) => !!result),
-        mergeMap((_) => {
+        mergeMap(() => {
           return this.deleteClubGQL.mutate(
             { id: this.club.id },
             {
               update: (cache) => {
+                console.log(cache);
                 cache.evict({
-                  id: cache.identify(this.club),
+                  id: 'ROOT_QUERY',
+                  fieldName: 'myClubs',
                 });
               },
             }
