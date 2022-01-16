@@ -91,6 +91,7 @@ import { ImageFullComponent } from './common/image-full/image-full.component';
 import { ExposedWarningsComponent } from './pages/home/exposed-warnings/expsoed-warnings.component';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { IceFallsModule } from './ice-falls/ice-falls.module';
+import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -153,6 +154,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     LatestImagesComponent,
     ImageFullComponent,
     ExposedWarningsComponent,
+    ConfirmClubMembershipComponent,
   ],
   imports: [
     BrowserModule,
