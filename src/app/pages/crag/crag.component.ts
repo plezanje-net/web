@@ -37,8 +37,8 @@ export class CragComponent implements OnInit, OnDestroy {
 
   tabs: Array<Tab> = [
     {
-      slug: 'lokacija',
-      label: 'Lokacija & dostop',
+      slug: 'info',
+      label: 'Info',
     },
     {
       slug: 'smeri',
@@ -47,10 +47,6 @@ export class CragComponent implements OnInit, OnDestroy {
     {
       slug: 'komentarji',
       label: 'Komentarji',
-    },
-    {
-      slug: 'info',
-      label: 'Info',
     },
     {
       slug: 'galerija',
@@ -132,7 +128,7 @@ export class CragComponent implements OnInit, OnDestroy {
     const breakpointSub = this.breakpointObserver
       .observe([Breakpoints.Small, Breakpoints.XSmall])
       .subscribe((res) => {
-        if (!res.matches && this.activeTab == 'lokacija') {
+        if (!res.matches && this.activeTab == 'info') {
           this.setActiveTab(this.tabs[1]);
         }
       });
