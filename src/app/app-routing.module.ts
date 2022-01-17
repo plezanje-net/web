@@ -20,6 +20,7 @@ import { ClubComponent } from './pages/club/club.component';
 import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
 import { ActivityInputComponent } from './pages/activity/activity-input/activity-input.component';
 import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
+import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
 
 const routes: Routes = [
   {
@@ -49,6 +50,10 @@ const routes: Routes = [
       { path: 'clani', component: ClubMembersComponent },
       { path: 'vzponi', component: ClubActivityRoutesComponent },
     ],
+  },
+  {
+    path: 'potrditev-clanstva/:clubMemberId/:token',
+    component: ConfirmClubMembershipComponent,
   },
   {
     path: 'plezalni-dnevnik',
@@ -114,4 +119,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'top' })],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

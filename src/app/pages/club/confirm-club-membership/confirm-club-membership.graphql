@@ -1,0 +1,6 @@
+mutation ConfirmClubMembership($input: ConfirmInput!) {
+  confirmClubMembership(input: $input) {
+    name
+    slug
+  }
+}

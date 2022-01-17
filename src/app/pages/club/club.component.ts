@@ -41,17 +41,18 @@ export class ClubComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const clubSlug = this.activatedRoute.snapshot.params.club;
     this.clubService.fetchClub(clubSlug);
-    this.clubSubscription = this.clubService.club$.subscribe(
-      (club: Club) => {
+
+    this.clubSubscription = this.clubService.club$.subscribe({
+      next: (club: Club) => {
         this.loading = false;
         this.club = club;
         this.setBreadcrumbs();
       },
-      (errors) => {
+      error: (errors) => {
         this.loading = false;
         this.queryError(errors);
-      }
-    );
+      },
+    });
   }
 
   queryError(errors: readonly GraphQLError[] = []) {
@@ -109,9 +110,14 @@ export class ClubComponent implements OnInit, OnDestroy {
   }
 
   updateName() {
-    this.dialog.open(ClubFormComponent, {
-      data: { id: this.club.id, currentName: this.club.name },
-    });
+    this.dialog
+      .open(ClubFormComponent, {
+        data: { id: this.club.id, currentName: this.club.name },
+      })
+      .afterClosed()
+      .subscribe((newSlug) => {
+        this.clubService.refetchClub(newSlug);
+      });
   }
 
   delete() {
@@ -125,22 +131,23 @@ export class ClubComponent implements OnInit, OnDestroy {
       .afterClosed()
       .pipe(
         filter((result) => !!result),
-        mergeMap((_) => {
+        mergeMap(() => {
           return this.deleteClubGQL.mutate(
             { id: this.club.id },
             {
-              errorPolicy: 'all',
               update: (cache) => {
+                console.log(cache);
                 cache.evict({
-                  id: cache.identify(this.club),
+                  id: 'ROOT_QUERY',
+                  fieldName: 'myClubs',
                 });
               },
             }
           );
         })
       )
-      .subscribe(
-        (data) => {
+      .subscribe({
+        next: (data) => {
           if (data.errors != null) {
             this.queryError(data.errors);
           } else {
@@ -148,10 +155,10 @@ export class ClubComponent implements OnInit, OnDestroy {
             this.router.navigate(['/moj-profil/moji-klubi']);
           }
         },
-        (_) => {
+        error: () => {
           this.queryError();
-        }
-      );
+        },
+      });
   }
 
   displayError(errorMessage: string) {

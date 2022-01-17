@@ -1,5 +1,6 @@
 mutation UpdateClub($input: UpdateClubInput!) {
   updateClub(updateClubInput: $input) {
-    id
+    name
+    slug
   }
 }
