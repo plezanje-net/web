@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { GraphQLError } from 'graphql';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
 import { DataError } from 'src/app/types/data-error';
 import { Registry } from 'src/app/types/registry';
 import { ActivityEntryGQL, ActivityEntryQuery } from 'src/generated/graphql';
@@ -19,9 +19,12 @@ export class ActivityEntryComponent implements OnInit {
   activity: ActivityEntryQuery['activity'];
   activityType: Registry;
 
+  rowAction$ = new Subject(); // source
+
   constructor(
     private activatedRoute: ActivatedRoute,
-    private activityEntryGQL: ActivityEntryGQL
+    private activityEntryGQL: ActivityEntryGQL,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -41,6 +44,23 @@ export class ActivityEntryComponent implements OnInit {
             this.querySuccess(result.data.activity);
           }
         });
+    });
+
+    this.rowAction$.subscribe((action: any) => {
+      switch (action.action) {
+        case 'filterByCrag':
+          this.router.navigate([
+            '/plezalni-dnevnik/vzponi',
+            { cragId: action.item.route.crag.id },
+          ]);
+          break;
+        case 'filterByRoute':
+          this.router.navigate([
+            '/plezalni-dnevnik/vzponi',
+            { routeId: action.item.route.id },
+          ]);
+          break;
+      }
     });
   }
 
