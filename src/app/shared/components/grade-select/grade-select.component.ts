@@ -1,4 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { GradingSystemsQuery } from 'src/generated/graphql';
@@ -9,7 +15,7 @@ import { GradingSystemsService } from '../../services/grading-systems.service';
   templateUrl: './grade-select.component.html',
   styleUrls: ['./grade-select.component.scss'],
 })
-export class GradeSelectComponent implements OnInit {
+export class GradeSelectComponent implements OnInit, OnChanges {
   @Input() label: string;
   @Input() control: FormControl;
   @Input() gradingSystemId: string;
@@ -23,6 +29,19 @@ export class GradeSelectComponent implements OnInit {
   constructor(private gradingSystemService: GradingSystemsService) {}
 
   ngOnInit(): void {
+    this.init();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.gradingSystemId != null) {
+      this.onDestroySubject.next();
+      this.onDestroySubject.complete();
+
+      this.init();
+    }
+  }
+
+  init() {
     const gradingSystems = this.gradingSystemService.getGradingSystems();
 
     gradingSystems.then((gradingSystems) => {
