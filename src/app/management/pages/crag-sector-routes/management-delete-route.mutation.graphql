@@ -1,0 +1,3 @@
+mutation ManagementDeleteRoute($id: String!) {
+  deleteRoute(id: $id)
+}

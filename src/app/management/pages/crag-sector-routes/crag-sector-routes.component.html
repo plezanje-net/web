@@ -1,0 +1,74 @@
+<div *ngIf="!loading">
+  <div class="white-back mt-16">
+    <div
+      class="container py-8"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+      fxLayout.lt-sm="column"
+    >
+      <div>
+        <div class="subheading" *ngIf="crag">Urejanje smeri v sektorju</div>
+        <h1>{{ heading }}</h1>
+      </div>
+      <a
+        mat-button
+        color="primary"
+        [routerLink]="['/uredi-plezalisce/' + crag.id + '/sektorji']"
+        *ngIf="crag"
+        >Vsi sektorji</a
+      >
+    </div>
+  </div>
+
+  <div class="container p15 mt-16">
+    <div
+      cdkDropList
+      (cdkDropListDropped)="drop($event)"
+      [class.saving]="savingPositions"
+    >
+      <div *ngFor="let route of routes; let i = index" cdkDrag>
+        <div
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          class="route mt-8"
+          fxLayout.lt-sm="column"
+        >
+          <div fxFlex class="name" fxFlex="100">
+            {{ route.name }}
+          </div>
+
+          <div fxFlex>
+            <button mat-button *ngIf="route.difficulty != null">
+              <app-grade
+                [difficulty]="route.difficulty"
+                [gradingSystemId]="route.defaultGradingSystem.id"
+                [showModifier]="true"
+              ></app-grade>
+            </button>
+            <button mat-button *ngIf="route.isProject">Projekt</button>
+          </div>
+
+          <div fxFlex class="tools" fxLayout="row" fxLayoutAlign="start center">
+            <button mat-icon-button (click)="edit(route)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              matTooltip="Spremeni vrstni red"
+              cdkDragHandle
+            >
+              <mat-icon>sort</mat-icon>
+            </button>
+
+            <button mat-icon-button (click)="remove(route)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="buttons mt-16">
+      <button mat-button color="primary" (click)="add()">Dodaj smeri</button>
+    </div>
+  </div>
+</div>

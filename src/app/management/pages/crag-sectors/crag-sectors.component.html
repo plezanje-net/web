@@ -1,0 +1,70 @@
+<div *ngIf="!loading">
+  <div class="white-back mt-16">
+    <div
+      class="container py-8"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+      fxLayout.lt-sm="column"
+    >
+      <div>
+        <div class="subheading" *ngIf="crag">Urejanje sektorjev</div>
+        <h1>{{ heading }}</h1>
+      </div>
+      <a
+        mat-button
+        color="primary"
+        [routerLink]="['/uredi-plezalisce/' + crag.id]"
+        *ngIf="crag"
+        >Uredi plezališče</a
+      >
+    </div>
+  </div>
+
+  <div class="container p15 mt-16">
+    <div
+      cdkDropList
+      (cdkDropListDropped)="drop($event)"
+      [class.saving]="savingPositions"
+    >
+      <div *ngFor="let sector of sectors; let i = index" cdkDrag>
+        <div
+          fxLayout="row"
+          class="sector mt-8"
+          fxLayoutAlign="start center"
+          fxLayout.lt-sm="column"
+        >
+          <div class="name" fxFlex="100" fxFlex.lt-sm>
+            <span>{{ sector.label }}</span> {{ sector.name }}
+          </div>
+          <div fxFlex>
+            <a
+              mat-button
+              color="primary"
+              [routerLink]="['/uredi-sektor/', sector.id]"
+              >Uredi smeri</a
+            >
+          </div>
+          <div class="tools" fxLayout="row" fxLayoutAlign="start center">
+            <button mat-icon-button (click)="edit(sector)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              matTooltip="Spremeni vrstni red"
+              cdkDragHandle
+            >
+              <mat-icon>sort</mat-icon>
+            </button>
+
+            <button mat-icon-button (click)="remove(sector)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="buttons mt-16">
+        <button mat-button color="primary" (click)="add()">Dodaj sektor</button>
+      </div>
+    </div>
+  </div>
+</div>

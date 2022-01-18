@@ -1,0 +1,47 @@
+query ManagementGetSector($id: String!) {
+  sector(id: $id) {
+    id
+    label
+    name
+    crag {
+      id
+      slug
+      name
+      country {
+        name
+        id
+        slug
+      }
+    }
+    routes {
+      author
+      difficulty
+      id
+      slug
+      length
+      name
+      status
+      isProject
+      position
+      routeType {
+        id
+        name
+      }
+      defaultGradingSystem {
+        id
+        name
+      }
+      difficulty
+      difficultyVotes {
+        difficulty
+        isBase
+      }
+      pitches {
+        difficulty
+        height
+        id
+        number
+      }
+    }
+  }
+}
