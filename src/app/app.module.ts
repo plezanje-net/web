@@ -31,7 +31,6 @@ import { DataErrorComponent } from './layout/data-error/data-error.component';
 import { GraphQLModule } from './graphql/graphql.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CragsTocComponent } from './pages/crags/crags-toc/crags-toc.component';
-import { GradeComponent } from './common/grade/grade.component';
 import { CragComponent } from './pages/crag/crag.component';
 import { LoginComponent } from './auth/login/login.component';
 import { ProfileComponent } from './pages/account/profile/profile.component';
@@ -107,7 +106,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     BreadcrumbsComponent,
     DataErrorComponent,
     CragsTocComponent,
-    GradeComponent,
     CragComponent,
     LoginComponent,
     ProfileComponent,
