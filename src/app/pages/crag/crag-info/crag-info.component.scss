@@ -1,0 +1,22 @@
+@import "../../../../styles/colors.scss";
+
+.map {
+  padding: 12px 6px;
+}
+
+.card {
+  margin-bottom: 16px;
+}
+
+.label {
+  color: $text-gray;
+  padding: 8px 0;
+}
+
+.row {
+  font-weight: 500;
+}
+.content {
+  font-weight: normal;
+  padding: 10px 0;
+}
