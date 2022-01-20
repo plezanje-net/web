@@ -95,13 +95,21 @@ export class CragComponent implements OnInit, OnDestroy {
           } else {
             this.querySuccess(result.data.cragBySlug);
           }
-        });
 
-      if (params.tab != null) {
-        this.activeTab = params.tab;
-      } else {
-        this.activeTab = 'smeri';
-      }
+          if (
+            params.tab == 'info' &&
+            !this.breakpointObserver.isMatched([
+              Breakpoints.Small,
+              Breakpoints.XSmall,
+            ])
+          ) {
+            this.setActiveTab(this.tabs[1]);
+          } else if (params.tab != null) {
+            this.activeTab = params.tab;
+          } else {
+            this.activeTab = 'smeri';
+          }
+        });
     });
     this.subscriptions.push(routeSub);
 
