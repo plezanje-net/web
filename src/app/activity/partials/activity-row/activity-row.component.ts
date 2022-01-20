@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Activity } from 'src/generated/graphql';
-import { RowAction } from '../../activity-log/activity-log.component';
+import { RowAction } from '../../../../activity/activity-log/activity-log.component';
 
 import { ACTIVITY_TYPES } from '../../../../common/activity.constants';
 

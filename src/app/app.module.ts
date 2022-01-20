@@ -55,26 +55,18 @@ import { RouteInfoComponent } from './pages/route/route-info/route-info.componen
 import { DistributionChartComponent } from './common/distribution-chart/distribution-chart.component';
 import { RouteCommentsComponent } from './pages/route/route-comments/route-comments.component';
 import { RouteGradesComponent } from './pages/route/route-grades/route-grades.component';
-import { ActivityLogComponent } from './pages/activity/activity-log/activity-log.component';
-import { ActivityRoutesComponent } from './pages/activity/activity-routes/activity-routes.component';
-import { ActivityStatisticsComponent } from './pages/activity/activity-statistics/activity-statistics.component';
-import { ActivityHeaderComponent } from './pages/activity/partials/activity-header/activity-header.component';
 import { CragImageComponent } from './pages/crag/crag-image/crag-image.component';
 import { ClubsComponent } from './pages/clubs/clubs.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ClubMemberFormComponent } from './forms/club-member-form/club-member-form.component';
 import { AscentTypeComponent } from './common/ascent-type/ascent-type.component';
 import { AscentPublishOptionComponent } from './common/ascent-publish-option/ascent-publish-option.component';
-import { ActivityRouteRowComponent } from './pages/activity/partials/activity-route-row/activity-route-row.component';
-import { ActivityRowComponent } from './pages/activity/partials/activity-row/activity-row.component';
 import { MaterialElevationDirective } from './shared/directives/material-elevation.directive';
 import { MatListModule } from '@angular/material/list';
 import { ClubComponent } from './pages/club/club.component';
 import { ClubMembersComponent } from './pages/club/club-members/club-members.component';
 import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/club-activity-routes.component';
 import { ClubFormComponent } from './forms/club-form/club-form.component';
-import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
-import { ActivityInputComponent } from './pages/activity/activity-input/activity-input.component';
 import { SharedModule } from './shared/shared.module';
 import { SearchComponent } from './pages/search/search.component';
 import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
@@ -122,24 +114,16 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     DistributionChartComponent,
     RouteCommentsComponent,
     RouteGradesComponent,
-    ActivityLogComponent,
-    ActivityRoutesComponent,
-    ActivityStatisticsComponent,
-    ActivityHeaderComponent,
     CragImageComponent,
     ClubsComponent,
     ClubMemberFormComponent,
     AscentTypeComponent,
     AscentPublishOptionComponent,
-    ActivityRouteRowComponent,
-    ActivityRowComponent,
     MaterialElevationDirective,
     ClubComponent,
     ClubMembersComponent,
     ClubActivityRoutesComponent,
     ClubFormComponent,
-    ActivityEntryComponent,
-    ActivityInputComponent,
     SearchComponent,
     SearchResultsComponent,
     PopularCragsComponent,
