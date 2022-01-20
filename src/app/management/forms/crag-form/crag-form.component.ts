@@ -178,7 +178,7 @@ export class CragFormComponent implements OnInit {
         if (operation == 'createCragGQL') {
           console.log(result);
           this.router.navigate([
-            '/uredi-plezalisce',
+            '/admin/uredi-plezalisce',
             result.data.createCrag.id,
           ]);
         }

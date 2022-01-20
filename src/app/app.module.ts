@@ -77,7 +77,6 @@ import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/c
 import { ClubFormComponent } from './forms/club-form/club-form.component';
 import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
 import { ActivityInputComponent } from './pages/activity/activity-input/activity-input.component';
-import { ManagementModule } from './management/management.module';
 import { SharedModule } from './shared/shared.module';
 import { SearchComponent } from './pages/search/search.component';
 import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
@@ -181,7 +180,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MatListModule,
     NgxMatSelectSearchModule,
     SharedModule,
-    ManagementModule,
     IceFallsModule,
     AppRoutingModule,
     MatGridListModule,
