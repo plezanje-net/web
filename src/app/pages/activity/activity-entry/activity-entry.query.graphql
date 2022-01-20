@@ -17,6 +17,10 @@ query ActivityEntry($id: String!) {
         id
       }
       route {
+        defaultGradingSystem {
+          id
+        }
+        difficulty
         crag {
           id
           name
