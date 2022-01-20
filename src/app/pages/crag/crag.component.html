@@ -45,14 +45,10 @@
   >
     <div fxFlex="33.33%" fxFlex.lt-md *ngIf="crag">
       <nav mat-tab-nav-bar fxHide.lt-md>
-        <a mat-tab-link disabled> Lokacija & dostop </a>
+        <a mat-tab-link disabled>Info</a>
       </nav>
 
-      <app-crag-location
-        [crag]="crag"
-        id="primary"
-        fxHide.lt-md
-      ></app-crag-location>
+      <app-crag-info [crag]="crag" id="primary" fxHide.lt-md></app-crag-info>
 
       <app-crag-image
         [crag]="crag"
@@ -61,18 +57,12 @@
       ></app-crag-image>
     </div>
 
-    <div
-      ngClass.gt-sm="other-tabs"
-      fxFlex
-      fxLayout="column"
-      fxLayoutGap="0px"
-      fxLayoutGap.lt-md="16px"
-    >
+    <div fxFlex fxLayout="column" fxLayoutGap="0px" fxLayoutGap.lt-md="16px">
       <nav mat-tab-nav-bar fxHide.lt-md>
         <ng-container *ngFor="let tab of tabs">
           <a
             mat-tab-link
-            *ngIf="tab.slug != 'lokacija'"
+            *ngIf="tab.slug != 'info'"
             [active]="tab.slug == activeTab"
             (click)="setActiveTab(tab)"
           >
@@ -94,11 +84,11 @@
         </button>
       </nav>
 
-      <app-crag-location
+      <app-crag-info
         [crag]="crag"
-        *ngIf="activeTab == 'lokacija'"
+        *ngIf="activeTab == 'info'"
         fxHide.gt-sm
-      ></app-crag-location>
+      ></app-crag-info>
       <app-crag-routes
         [crag]="crag"
         *ngIf="activeTab == 'smeri'"
@@ -109,8 +99,6 @@
         *ngIf="activeTab == 'komentarji'"
         [action]="action$"
       ></app-crag-comments>
-
-      <app-crag-info [crag]="crag" *ngIf="activeTab == 'info'"></app-crag-info>
 
       <app-crag-gallery
         [images]="crag.images"

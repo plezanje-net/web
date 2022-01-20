@@ -1,4 +1,50 @@
-<div *ngIf="crag.description">
-  <h3>Opis plezališča</h3>
-  <div [innerHTML]="crag.description" class="card padding"></div>
+<div class="card no-border">
+  <h3>{{ crag.country.name }}{{ crag.area ? ", " + crag.area.name : "" }}</h3>
+
+  <div
+    *ngIf="crag.orientation"
+    class="row"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+  >
+    <div class="label">Usmerjenost</div>
+    <span class="text-right">
+      {{ crag.orientation | orientation }}
+    </span>
+  </div>
+
+  <div
+    class="row"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+    *ngIf="crag.lat && crag.lon"
+  >
+    <div class="label">Koordinate</div>
+    <span class="text-right">
+      {{ crag.lat | number: "1.5-5" }}<br />
+      {{ crag.lon | number: "1.5-5" }}
+    </span>
+  </div>
+
+  <div *ngIf="crag.lat && crag.lon" class="map">
+    <app-map [height]="260" [crag]="crag" [crags]="crags$" [id]="id"></app-map>
+  </div>
+
+  <div class="row" *ngIf="crag.access">
+    <div class="label">Dostop</div>
+    <div class="content" [innerHTML]="crag.access"></div>
+  </div>
+
+  <div *ngIf="crag.description" class="row">
+    <div class="label">Opis plezališča</div>
+    <div class="content" [innerHTML]="crag.description"></div>
+  </div>
+</div>
+
+<div class="card no-border padding">
+  <h4>Obiskanost po mesecih</h4>
+  <app-distribution-chart
+    [distribution]="attendanceDistribution"
+    fxFlexAlign="stretch"
+  ></app-distribution-chart>
 </div>
