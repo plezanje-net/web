@@ -80,8 +80,6 @@ export class CragSectorsComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    this.savingPositions = true;
-
     moveItemInArray(this.sectors, event.previousIndex, event.currentIndex);
 
     const data = this.sectors
@@ -97,6 +95,12 @@ export class CragSectorsComponent implements OnInit {
         id: s.id,
         position: s.newPos,
       }));
+
+    if (data.length == 0) {
+      return;
+    }
+
+    this.savingPositions = true;
 
     this.savePositionsGQL
       .mutate({ input: data }, { fetchPolicy: 'no-cache' })

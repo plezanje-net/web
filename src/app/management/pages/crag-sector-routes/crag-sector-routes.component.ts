@@ -73,7 +73,7 @@ export class CragSectorRoutesComponent implements OnInit {
 
         this.routes = [...(<Route[]>result.data.sector.routes)];
 
-        this.heading += `${this.crag.name}${
+        this.heading = `${this.crag.name}${
           this.sector.label || this.sector.name ? ', ' : ''
         }${this.sector.label}${
           this.sector.label && this.sector.name ? ' -' : ''
@@ -86,8 +86,6 @@ export class CragSectorRoutesComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    this.savingPositions = true;
-
     moveItemInArray(this.routes, event.previousIndex, event.currentIndex);
 
     const data = this.routes
@@ -103,6 +101,12 @@ export class CragSectorRoutesComponent implements OnInit {
         id: r.id,
         position: r.newPos,
       }));
+
+    if (data.length == 0) {
+      return;
+    }
+
+    this.savingPositions = true;
 
     this.savePositionsGQL
       .mutate({ input: data }, { fetchPolicy: 'no-cache' })
