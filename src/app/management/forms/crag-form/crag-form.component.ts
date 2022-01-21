@@ -27,7 +27,7 @@ export class CragFormComponent implements OnInit {
 
   cragForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    slug: new FormControl('', [Validators.required]),
+    type: new FormControl('sport', [Validators.required]),
     lat: new FormControl(),
     lon: new FormControl(),
     orientation: new FormControl(),
@@ -42,6 +42,17 @@ export class CragFormComponent implements OnInit {
 
   countries: ManagementCragFormGetCountriesQuery['countries'] = [];
   areas: ManagementCragFormGetCountriesQuery['countries'][0]['areas'] = [];
+
+  types: Registry[] = [
+    {
+      value: 'sport',
+      label: 'Športno / balvani / dolge športne',
+    },
+    {
+      value: 'alpine',
+      label: 'Alpinizem',
+    },
+  ];
 
   statuses: Registry[] = [
     {

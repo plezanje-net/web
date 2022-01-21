@@ -11,12 +11,13 @@
       </mat-form-field>
     </p>
     <p fxFlex="50">
-      <mat-form-field>
-        <mat-label>Slug</mat-label>
-        <input matInput type="text" formControlName="slug" />
-        <mat-hint
-          >Računalniku prijazno ime, uporabljeno v URL povezavi</mat-hint
-        >
+      <mat-form-field class="no-hint">
+        <mat-label>Vrsta plezanja</mat-label>
+        <mat-select formControlName="type">
+          <mat-option *ngFor="let type of types" [value]="type.value"
+            >{{ type.label }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
     </p>
   </div>

@@ -1,6 +1,7 @@
 query ManagementGetCrag($id: String!) {
   crag(id: $id) {
     slug
+    type
     status
     orientation
     name
