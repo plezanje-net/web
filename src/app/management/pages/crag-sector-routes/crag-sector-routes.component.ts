@@ -73,7 +73,12 @@ export class CragSectorRoutesComponent implements OnInit {
 
         this.routes = [...(<Route[]>result.data.sector.routes)];
 
-        this.heading = `${this.crag.name}, ${this.sector.name} (${this.sector.label})`;
+        this.heading += `${this.crag.name}${
+          this.sector.label || this.sector.name ? ', ' : ''
+        }${this.sector.label}${
+          this.sector.label && this.sector.name ? ' -' : ''
+        } ${this.sector.name}`;
+
         this.layoutService.$breadcrumbs.next(
           new CragAdminBreadcrumbs(this.crag).build()
         );
