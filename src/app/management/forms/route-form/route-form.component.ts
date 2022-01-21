@@ -36,6 +36,7 @@ export interface RouteFormValues {
   position?: number;
   sectorId?: string;
   defaultGradingSystemId?: string;
+  routeTypeId?: string;
   addAnother?: boolean;
 }
 
@@ -78,6 +79,8 @@ export class RouteFormComponent implements OnInit, OnDestroy {
 
   gradingSystems: GradingSystem[];
 
+  gradingSystemOptions: GradingSystem[];
+
   typeOptions: Registry[] = [
     { value: 'sport', label: 'Športna' },
     { value: 'multipitch', label: 'Večraztežajna' },
@@ -104,14 +107,18 @@ export class RouteFormComponent implements OnInit, OnDestroy {
     this.gradingSystemsService.getGradingSystems().then((gradingSystems) => {
       this.gradingSystems = <GradingSystem[]>gradingSystems;
 
-      this.loadDifficultyOptions(this.form.value.defaultGradingSystemId);
-
-      const gradeSub =
-        this.form.controls.defaultGradingSystemId.valueChanges.subscribe(
-          (gradingSystemId) => this.loadDifficultyOptions(gradingSystemId)
-        );
-      this.subscriptions.push(gradeSub);
+      this.gradingSystemsLoaded();
     });
+  }
+
+  gradingSystemsLoaded() {
+    this.loadDifficultyOptions(this.form.value.defaultGradingSystemId);
+
+    const gradeSub =
+      this.form.controls.defaultGradingSystemId.valueChanges.subscribe(
+        (gradingSystemId) => this.loadDifficultyOptions(gradingSystemId)
+      );
+    this.subscriptions.push(gradeSub);
 
     const projectSub = this.form.controls.isProject.valueChanges
       .pipe(filter((value) => value == true))
@@ -122,16 +129,37 @@ export class RouteFormComponent implements OnInit, OnDestroy {
       });
     this.subscriptions.push(projectSub);
 
-    const typeSub = this.form.controls.routeTypeId.valueChanges
-      .pipe(filter((value) => value == 'boulder'))
-      .subscribe(() => {
-        this.form.patchValue({
-          length: null,
-        });
-      });
+    const typeSub = this.form.controls.routeTypeId.valueChanges.subscribe(
+      (value) => {
+        if (value == 'boulder') {
+          this.form.patchValue({
+            length: null,
+          });
+        }
+
+        this.gradingSystemOptions = this.gradingSystems.filter(
+          (system) =>
+            system.routeTypes.filter((type) => type.id == value).length > 0
+        );
+      }
+    );
     this.subscriptions.push(typeSub);
 
+    this.initializeFormData();
+  }
+
+  initializeFormData() {
     if (this.data.values) {
+      if (
+        this.data.values.defaultGradingSystemId != null &&
+        this.data.values.routeTypeId == null
+      ) {
+        const gradingSystem = this.gradingSystems.find(
+          (system) => system.id == this.data.values.defaultGradingSystemId
+        );
+        this.data.values.routeTypeId = gradingSystem?.routeTypes[0]?.id;
+      }
+
       this.form.patchValue(this.data.values);
     }
 

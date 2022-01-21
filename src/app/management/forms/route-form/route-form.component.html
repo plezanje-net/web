@@ -16,6 +16,19 @@
       <mat-label>Ime smeri</mat-label>
       <input matInput formControlName="name" />
     </mat-form-field>
+
+    <mat-form-field fxFlex *ngIf="form.controls.routeTypeId.value != 'boulder'">
+      <mat-label>Dolžina smeri</mat-label>
+      <input matInput formControlName="length" />
+    </mat-form-field>
+  </div>
+  <div
+    fxLayout="row"
+    fxLayoutGap="16px"
+    fxLayoutAlign="stretch center"
+    fxLayout.lt-md="column"
+    fxLayoutAlign.lt-md="stretch"
+  >
     <mat-form-field fxFlex>
       <mat-label>Tip smeri</mat-label>
       <mat-select formControlName="routeTypeId">
@@ -24,35 +37,31 @@
         }}</mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field fxFlex *ngIf="form.controls.routeTypeId.value != 'boulder'">
-      <mat-label>Dolžina smeri</mat-label>
-      <input matInput formControlName="length" />
+    <mat-form-field fxFlex>
+      <mat-label>Sistem ocenjevanja</mat-label>
+      <mat-select [formControl]="form.controls.defaultGradingSystemId">
+        <mat-option
+          *ngFor="let option of gradingSystemOptions"
+          [value]="option.id"
+          >{{ option.name }}</mat-option
+        >
+      </mat-select>
     </mat-form-field>
   </div>
+
   <div
     fxLayout="row"
-    fxLayoutGap="12px"
+    fxLayoutGap="16px"
     fxLayoutAlign="stretch center"
     fxLayout.lt-md="column"
     fxLayoutAlign.lt-md="stretch"
   >
-    <mat-form-field fxFlex>
-      <mat-label>Sistem ocenjevanja</mat-label>
-      <mat-select [formControl]="form.controls.defaultGradingSystemId">
-        <mat-option *ngFor="let option of gradingSystems" [value]="option.id">{{
-          option.name
-        }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <div fxLayout="column" fxFlex>
-      <mat-checkbox formControlName="isProject" *ngIf="!editing"
-        >Smer je projekt</mat-checkbox
-      >
+    <div fxLayout="column" fxFlex *ngIf="!editing">
+      <mat-checkbox formControlName="isProject">Smer je projekt</mat-checkbox>
     </div>
-    <div fxFlex>
+    <div fxFlex *ngIf="!editing && !form.value.isProject">
       <app-grade-select
         fxFlex
-        *ngIf="!editing && !form.value.isProject"
         label="Bazna ocena"
         [control]="form.controls.baseDifficulty"
         [gradingSystemId]="form.value.defaultGradingSystemId"

@@ -12,6 +12,9 @@ query ManagementGetSector($id: String!) {
         id
         slug
       }
+      defaultGradingSystem {
+        id
+      }
     }
     routes {
       author

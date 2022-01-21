@@ -120,7 +120,10 @@ export class CragSectorRoutesComponent implements OnInit {
       });
   }
 
-  add(values): void {
+  add(values: RouteFormValues = null): void {
+    if (values == null) {
+      values = { defaultGradingSystemId: this.crag.defaultGradingSystem.id };
+    }
     this.dialog
       .open(RouteFormComponent, {
         data: {
