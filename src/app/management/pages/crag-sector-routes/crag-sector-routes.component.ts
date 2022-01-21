@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Apollo } from 'apollo-angular';
-import { filter, map, Subscription, switchMap, take } from 'rxjs';
+import { filter, map, Subscription, switchMap, take, tap } from 'rxjs';
 import {
   Crag,
   ManagementDeleteRouteGQL,
@@ -160,12 +160,20 @@ export class CragSectorRoutesComponent implements OnInit {
         filter((value) => value != null),
         switchMap(() => this.deleteRouteGQL.mutate({ id: sector.id }))
       )
-      .subscribe(() => {
-        this.apollo.client.resetStore().then(() => {
-          this.snackBar.open('Smer je bila izbrisana', null, {
-            duration: 2000,
+      .subscribe({
+        next: () => {
+          this.apollo.client.resetStore().then(() => {
+            this.snackBar.open('Smer je bila izbrisana', null, {
+              duration: 2000,
+            });
           });
-        });
+        },
+        error: (error) => {
+          this.snackBar.open(error.message, null, {
+            panelClass: 'error',
+            duration: 3000,
+          });
+        },
       });
   }
 }
