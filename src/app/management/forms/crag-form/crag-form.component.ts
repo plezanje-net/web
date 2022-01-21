@@ -1,28 +1,30 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo, gql, MutationResult } from 'apollo-angular';
-import { Observable, switchMap, take } from 'rxjs';
+import { Observable, Subscription, switchMap, take } from 'rxjs';
 import { Registry } from 'src/app/types/registry';
 import {
   Country,
   Crag,
   CreateActivityMutation,
+  GradingSystem,
   ManagementCragFormGetCountriesGQL,
   ManagementCragFormGetCountriesQuery,
   ManagementCreateCragGQL,
   ManagementCreateCragMutation,
   ManagementUpdateCragGQL,
 } from 'src/generated/graphql';
+import { GradingSystemsService } from '../../../shared/services/grading-systems.service';
 
 @Component({
   selector: 'app-crag-form',
   templateUrl: './crag-form.component.html',
   styleUrls: ['./crag-form.component.scss'],
 })
-export class CragFormComponent implements OnInit {
+export class CragFormComponent implements OnInit, OnDestroy {
   @Input() crag: Crag;
 
   cragForm = new FormGroup({
@@ -36,12 +38,17 @@ export class CragFormComponent implements OnInit {
     areaId: new FormControl(),
     countryId: new FormControl(null, Validators.required),
     status: new FormControl(null, Validators.required),
+    defaultGradingSystemId: new FormControl(null, Validators.required),
   });
 
   loading: boolean = false;
 
   countries: ManagementCragFormGetCountriesQuery['countries'] = [];
   areas: ManagementCragFormGetCountriesQuery['countries'][0]['areas'] = [];
+
+  gradingSystems: GradingSystem[];
+
+  subsriptions: Subscription[] = [];
 
   types: Registry[] = [
     {
@@ -120,6 +127,7 @@ export class CragFormComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar,
+    private gradingSystemsService: GradingSystemsService,
     private countriesGQL: ManagementCragFormGetCountriesGQL,
     private updateCragGQL: ManagementUpdateCragGQL,
     private createCragGQL: ManagementCreateCragGQL,
@@ -132,16 +140,22 @@ export class CragFormComponent implements OnInit {
         ...this.crag,
         countryId: this.crag.country?.id,
         areaId: this.crag.area?.id,
+        defaultGradingSystemId: this.crag.defaultGradingSystem.id,
       });
     }
 
-    this.activatedRoute.params.subscribe((params) => {
+    this.gradingSystemsService.getGradingSystems().then((gradingSystems) => {
+      this.gradingSystems = <GradingSystem[]>gradingSystems;
+    });
+
+    const routeSub = this.activatedRoute.params.subscribe((params) => {
       if (params.country != null) {
         this.cragForm.patchValue({
           countryId: params.country,
         });
       }
     });
+    this.subsriptions.push(routeSub);
 
     this.countriesGQL
       .fetch()
@@ -151,9 +165,16 @@ export class CragFormComponent implements OnInit {
         this.countryChanged(this.cragForm.value.countryId);
       });
 
-    this.cragForm.controls.countryId.valueChanges.subscribe((v) => {
-      this.countryChanged(v);
-    });
+    const countrySub = this.cragForm.controls.countryId.valueChanges.subscribe(
+      (v) => {
+        this.countryChanged(v);
+      }
+    );
+    this.subsriptions.push(countrySub);
+  }
+
+  ngOnDestroy(): void {
+    this.subsriptions.forEach((sub) => sub.unsubscribe());
   }
 
   countryChanged(value: string) {

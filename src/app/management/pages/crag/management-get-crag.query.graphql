@@ -4,6 +4,9 @@ query ManagementGetCrag($id: String!) {
     type
     status
     orientation
+    defaultGradingSystem {
+      id
+    }
     name
     lon
     lat

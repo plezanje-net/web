@@ -103,6 +103,18 @@
         </mat-select>
       </mat-form-field>
     </p>
+    <p fxFlex="50">
+      <mat-form-field fxFlex>
+        <mat-label>Privzeti sistem ocenjevanja</mat-label>
+        <mat-select formControlName="defaultGradingSystemId">
+          <mat-option
+            *ngFor="let option of gradingSystems"
+            [value]="option.id"
+            >{{ option.name }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </p>
   </div>
 
   <div fxLayout="row" fxLayoutAlign="end center">
