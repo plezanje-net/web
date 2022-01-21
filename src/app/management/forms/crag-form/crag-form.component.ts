@@ -3,8 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Apollo, gql } from 'apollo-angular';
-import { take } from 'rxjs';
+import { Apollo, gql, MutationResult } from 'apollo-angular';
+import { Observable, switchMap, take } from 'rxjs';
 import { Registry } from 'src/app/types/registry';
 import {
   Country,
@@ -122,7 +122,8 @@ export class CragFormComponent implements OnInit {
     private snackBar: MatSnackBar,
     private countriesGQL: ManagementCragFormGetCountriesGQL,
     private updateCragGQL: ManagementUpdateCragGQL,
-    private createCragGQL: ManagementCreateCragGQL
+    private createCragGQL: ManagementCreateCragGQL,
+    private apollo: Apollo
   ) {}
 
   ngOnInit(): void {
@@ -170,35 +171,41 @@ export class CragFormComponent implements OnInit {
   save(): void {
     this.loading = true;
 
-    let operation = 'createCragGQL';
-    let value = { ...this.cragForm.value };
-
-    if (this.crag != null) {
-      operation = 'updateCragGQL';
-      value = { ...value, id: this.crag.id };
-    }
+    const value =
+      this.crag != null
+        ? { ...this.cragForm.value, id: this.crag.id }
+        : { ...this.cragForm.value };
 
     this.cragForm.disable();
 
-    this[operation].mutate({ input: value }).subscribe(
-      (result) => {
+    let mutation: Observable<MutationResult>;
+
+    if (this.crag != null) {
+      mutation = this.updateCragGQL.mutate({ input: value });
+    } else {
+      mutation = this.createCragGQL.mutate({ input: value });
+    }
+
+    mutation.pipe(take(1)).subscribe({
+      next: (result) => {
         this.snackBar.open('Podatki o plezališču so shranjeni', null, {
           duration: 3000,
         });
 
-        if (operation == 'createCragGQL') {
-          console.log(result);
-          this.router.navigate([
-            '/admin/uredi-plezalisce',
-            result.data.createCrag.id,
-          ]);
-        }
+        this.apollo.client.resetStore().then(() => {
+          if (this.crag == null) {
+            this.router.navigate([
+              '/admin/uredi-plezalisce',
+              result.data.createCrag.id,
+            ]);
+          }
 
-        this.cragForm.enable();
-        this.cragForm.markAsPristine();
-        this.loading = false;
+          this.cragForm.enable();
+          this.cragForm.markAsPristine();
+          this.loading = false;
+        });
       },
-      (error) => {
+      error: () => {
         this.loading = false;
         this.cragForm.enable();
         this.snackBar.open(
@@ -206,7 +213,7 @@ export class CragFormComponent implements OnInit {
           null,
           { panelClass: 'error', duration: 3000 }
         );
-      }
-    );
+      },
+    });
   }
 }

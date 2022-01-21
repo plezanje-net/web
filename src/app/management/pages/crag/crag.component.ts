@@ -32,12 +32,11 @@ export class CragComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params
       .pipe(
-        filter((params) => params.crag != null),
         switchMap((params) => {
           if (params.crag != null) {
-            return this.managementGetCragGQL.fetch({
+            return this.managementGetCragGQL.watch({
               id: params.crag,
-            });
+            }).valueChanges;
           } else {
             return of(null);
           }

@@ -117,7 +117,10 @@ export class CragSectorsComponent implements OnInit {
   add(): void {
     this.dialog.open(SectorFormComponent, {
       data: {
-        position: this.sectors[this.sectors.length - 1].position + 1,
+        position:
+          this.sectors.length == 0
+            ? 1
+            : this.sectors[this.sectors.length - 1].position + 1,
         cragId: this.crag.id,
       },
     });

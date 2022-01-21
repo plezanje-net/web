@@ -126,7 +126,10 @@ export class CragSectorRoutesComponent implements OnInit {
         data: {
           values: {
             ...values,
-            position: this.routes[this.routes.length - 1].position + 1,
+            position:
+              this.routes.length == 0
+                ? 1
+                : this.routes[this.routes.length - 1].position + 1,
             sectorId: this.sector.id,
           },
         },
