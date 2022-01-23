@@ -110,6 +110,10 @@ const routes: Routes = [
     component: SearchResultsComponent,
   },
   {
+    path: 'alpinizem/stena/:crag',
+    component: CragComponent,
+  },
+  {
     path: '**',
     component: NotFoundComponent,
   },

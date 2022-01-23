@@ -1,0 +1,111 @@
+<app-data-error *ngIf="error"></app-data-error>
+
+<div *ngIf="!error">
+  <div class="white-back mt-16">
+    <div class="container py-8">
+      <h1>
+        Vrhovi v državi
+        <span *ngIf="!loading">
+          {{ peaks[0].country.name }}
+        </span>
+      </h1>
+    </div>
+  </div>
+
+  <app-loader *ngIf="loading"></app-loader>
+
+  <div *ngIf="!loading" class="container mt-16">
+    <div fxLayout="row" fxLayoutGap="16px">
+      <div fxFlex="33.33">
+        <mat-card>
+          <mat-card-content>
+            <table>
+              <thead>
+                <tr>
+                  <th>Območje</th>
+                  <th>Št. vrhov</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let area of areas">
+                  <tr
+                    *ngIf="area.branchNrPeaks || showEmptyAreas"
+                    [ngClass]="{
+                      active: area.slug == areaSlug,
+                      'is-link': area.peaks.length
+                    }"
+                    [routerLink]="
+                      area.peaks.length
+                        ? [
+                            '/alpinizem/vrhovi/drzava',
+                            countrySlug,
+                            { area: area.slug }
+                          ]
+                        : []
+                    "
+                  >
+                    <td>
+                      <div [style.padding-left]="area.depth * 16 + 'px'">
+                        {{ area.name }}
+                      </div>
+                    </td>
+                    <td>{{ area.peaks.length }} / {{ area.branchNrPeaks }}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="mt-16">
+          <mat-card-content>
+            <table>
+              <thead>
+                <tr>
+                  <th>Država</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let country of countries"
+                  [routerLink]="['/alpinizem/vrhovi/drzava', country.slug]"
+                  [ngClass]="{ active: country.slug == countrySlug }"
+                  class="is-link"
+                >
+                  <td>{{ country.name }}</td>
+                  <td>{{ country.nrPeaks }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div fxFlex="66.67">
+        <mat-card>
+          <mat-card-content>
+            <table>
+              <thead>
+                <tr>
+                  <th>Vrh</th>
+                  <th>Št. sten</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let peak of peaks"
+                  [routerLink]="['/alpinizem/vrh', peak.slug]"
+                  class="is-link"
+                >
+                  <td>{{ peak.name }}</td>
+                  <td>{{ peak.nrCrags }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

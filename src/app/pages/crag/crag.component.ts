@@ -163,19 +163,24 @@ export class CragComponent implements OnInit, OnDestroy {
       (comment: Comment) => comment.type === 'warning'
     );
 
-    this.layoutService.$breadcrumbs.next([
-      {
-        name: 'Plezališča',
-        path: '/plezalisca',
-      },
-      {
-        name: this.crag.country.name,
-        path: '/plezalisca/' + this.crag.country.slug,
-      },
-      {
-        name: this.crag.name,
-      },
-    ]);
+    if (this.router.url.includes('/alpinizem/stena')) {
+      // TODO: define breadcrumbs
+      // this.layoutService.$breadcrumbs.next([]);
+    } else {
+      this.layoutService.$breadcrumbs.next([
+        {
+          name: 'Plezališča',
+          path: '/plezalisca',
+        },
+        {
+          name: this.crag.country.name,
+          path: '/plezalisca/' + this.crag.country.slug,
+        },
+        {
+          name: this.crag.name,
+        },
+      ]);
+    }
   }
 
   setActiveTab(tab: Tab) {

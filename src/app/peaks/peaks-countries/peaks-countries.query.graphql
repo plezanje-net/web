@@ -1,0 +1,10 @@
+query PeaksCountries {
+  countries(
+    input: { orderBy: { field: "name", direction: "ASC" }, hasPeaks: true }
+  ) {
+    id
+    name
+    slug
+    nrPeaks
+  }
+}

@@ -27,7 +27,6 @@ import { CragsComponent } from './pages/crags/crags.component';
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { BreadcrumbsComponent } from './layout/breadcrumbs/breadcrumbs.component';
-import { DataErrorComponent } from './layout/data-error/data-error.component';
 import { GraphQLModule } from './graphql/graphql.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CragsTocComponent } from './pages/crags/crags-toc/crags-toc.component';
@@ -92,6 +91,7 @@ import { ExposedWarningsComponent } from './pages/home/exposed-warnings/expsoed-
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { IceFallsModule } from './ice-falls/ice-falls.module';
 import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
+import { PeaksModule } from './peaks/peaks.module';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -105,9 +105,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     HomeComponent,
     NotFoundComponent,
     BreadcrumbsComponent,
-    DataErrorComponent,
     CragsTocComponent,
-    GradeComponent,
     CragComponent,
     LoginComponent,
     ProfileComponent,
@@ -185,9 +183,10 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     SharedModule,
     ManagementModule,
     IceFallsModule,
-    AppRoutingModule,
     MatGridListModule,
     SlickCarouselModule,
+    PeaksModule,
+    AppRoutingModule,
   ],
   providers: [
     AuthGuard,
