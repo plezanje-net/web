@@ -32,6 +32,8 @@ import { MatInputModule } from '@angular/material/input';
 import { GradeComponent } from './components/grade/grade.component';
 import { PluralizeNoun } from './pipes/pluralize-noun.pipe';
 import { DataErrorComponent } from './components/data-error/data-error.component';
+import { AscentTypeComponent } from './components/ascent-type/ascent-type.component';
+import { AscentPublishOptionComponent } from './components/ascent-publish-option/ascent-publish-option.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +53,8 @@ import { DataErrorComponent } from './components/data-error/data-error.component
     OrientationPipe,
     GradeComponent,
     PluralizeNoun,
+    AscentTypeComponent,
+    AscentPublishOptionComponent,
   ],
   imports: [
     CommonModule,
@@ -86,6 +90,8 @@ import { DataErrorComponent } from './components/data-error/data-error.component
     AscentTypePipe,
     GenderizeVerbPipe,
     OrientationPipe,
+    AscentTypeComponent,
+    AscentPublishOptionComponent,
     MatDatepickerModule,
     MatInputModule,
     GradeComponent,

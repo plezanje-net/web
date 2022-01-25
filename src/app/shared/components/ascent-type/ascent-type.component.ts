@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Registry } from 'src/app/types/registry';
-import { ASCENT_TYPES } from '../activity.constants';
+import { ASCENT_TYPES } from '../../../common/activity.constants';
 
 @Component({
   selector: 'app-ascent-type',

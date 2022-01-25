@@ -24,6 +24,10 @@ import { ActivityInputComponent } from './pages/activity-input/activity-input.co
 import { ActivityHeaderComponent } from './partials/activity-header/activity-header.component';
 import { ActivityRouteRowComponent } from './partials/activity-route-row/activity-route-row.component';
 import { ActivityRowComponent } from './partials/activity-row/activity-row.component';
+import { MomentModule } from 'ngx-moment';
+import { ActivityFormRouteComponent } from './forms/activity-form/activity-form-route/activity-form-route.component';
+import { ActivityFormComponent } from './forms/activity-form/activity-form.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -35,6 +39,8 @@ import { ActivityRowComponent } from './partials/activity-row/activity-row.compo
     ActivityHeaderComponent,
     ActivityRouteRowComponent,
     ActivityRowComponent,
+    ActivityFormComponent,
+    ActivityFormRouteComponent,
   ],
   imports: [
     CommonModule,
@@ -48,9 +54,12 @@ import { ActivityRowComponent } from './partials/activity-row/activity-row.compo
     MatTabsModule,
     MatTooltipModule,
     MatSnackBarModule,
+    MatCheckboxModule,
     MatProgressSpinnerModule,
     ReactiveFormsModule,
+    MomentModule,
     SharedModule,
+    ReactiveFormsModule,
     ActivityRoutingModule,
   ],
 })

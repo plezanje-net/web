@@ -5,14 +5,12 @@
 </div>
 
 <ng-container *ngIf="routes.length">
-  <mat-card class="container mt-16">
-    <mat-card-content>
-      <app-activity-form
-        [crag]="crag"
-        [selectedRoutes]="routes"
-      ></app-activity-form>
-    </mat-card-content>
-  </mat-card>
+  <div class="container mt-16">
+    <app-activity-form
+      [crag]="crag"
+      [selectedRoutes]="routes"
+    ></app-activity-form>
+  </div>
 </ng-container>
 
 <ng-container *ngIf="!routes.length">

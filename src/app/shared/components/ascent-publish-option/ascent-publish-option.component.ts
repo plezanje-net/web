@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Registry } from 'src/app/types/registry';
-import { PUBLISH_OPTIONS } from '../activity.constants';
+import { PUBLISH_OPTIONS } from '../../../common/activity.constants';
 
 @Component({
   selector: 'app-ascent-publish-option',

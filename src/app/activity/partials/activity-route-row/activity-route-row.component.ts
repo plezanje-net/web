@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ActivityRoute } from 'src/generated/graphql';
-import { RowAction } from '../../../../activity/activity-log/activity-log.component';
+import { RowAction } from '../../pages/activity-log/activity-log.component';
 
 @Component({
   selector: '[app-activity-route-row]',

@@ -89,6 +89,11 @@ const routes: Routes = [
     component: SearchResultsComponent,
   },
   {
+    path: 'plezalni-dnevnik',
+    loadChildren: () =>
+      import('./activity/activity.module').then((m) => m.ActivityModule),
+  },
+  {
     path: 'admin',
     loadChildren: () =>
       import('./management/management.module').then((m) => m.ManagementModule),

@@ -1,8 +1,13 @@
 <app-activity-header active="dnevnik"></app-activity-header>
 
 <div class="container mt-16">
-  <div fxLayout="row" [formGroup]="filters" fxLayoutGap="8px">
-    <mat-form-field appearance="fill">
+  <div
+    fxLayout="row"
+    fxLayout.lt-md="column"
+    [formGroup]="filters"
+    fxLayoutGap="16px"
+  >
+    <mat-form-field class="no-hint infix-width-auto" fxFlex>
       <mat-label>Časovno obdobje</mat-label>
       <mat-date-range-input [rangePicker]="picker">
         <input
@@ -35,7 +40,7 @@
       >
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field class="no-hint infix-width-auto" fxFlex>
       <mat-label>Vrsta aktivnosti</mat-label>
       <mat-select formControlName="type" multiple>
         <mat-option *ngFor="let type of activityTypes" [value]="type.value"
@@ -57,7 +62,7 @@
     </mat-form-field>
   </div>
 
-  <div class="card has-loader">
+  <div class="card has-loader scrollable-table mt-16">
     <div class="card-loader" *ngIf="loading">
       <app-loader></app-loader>
     </div>

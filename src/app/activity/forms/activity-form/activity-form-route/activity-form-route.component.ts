@@ -11,7 +11,7 @@ import {
   ASCENT_TYPES,
   PublishOptionsEnum,
   PUBLISH_OPTIONS,
-} from '../../../common/activity.constants';
+} from '../../../../common/activity.constants';
 import { Crag } from 'src/generated/graphql';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -34,6 +34,8 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
   nonTopRopeAscentTypes = ASCENT_TYPES.filter(
     (ascentType) => !ascentType.topRope
   );
+
+  ascentTypeTrigger: string;
 
   publishOptions = PUBLISH_OPTIONS;
 
@@ -61,11 +63,15 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
     // should disable possibility to vote on route if ascent type not a tick
     const ascentTypeSelected = this.route.get('ascentType').value;
     this.conditionallyDisableVotedDifficulty(ascentTypeSelected);
+    this.setAscentTypeTriggerValue(ascentTypeSelected);
 
     this.route
       .get('ascentType')
       .valueChanges.pipe(takeUntil(this.destroy$))
-      .subscribe((at) => this.conditionallyDisableVotedDifficulty(at));
+      .subscribe((at) => {
+        this.conditionallyDisableVotedDifficulty(at);
+        this.setAscentTypeTriggerValue(at);
+      });
 
     // if a route is a project than a vote on diff should always be cast
     if (this.route.get('isProject').value) {
@@ -112,6 +118,22 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
     } else {
       this.route.get('votedDifficulty').setValue(null);
       this.route.get('votedDifficulty').disable();
+    }
+  }
+
+  /**
+   * @param ascentTypeSelected
+   *
+   * Set trigger value for ascent type select (so it includes toprope so there can be no confusion)
+   */
+  setAscentTypeTriggerValue(ascentTypeSelected: string) {
+    const ascentType = ASCENT_TYPES.find(
+      (at) => at.value == ascentTypeSelected
+    );
+
+    if (ascentType != null) {
+      this.ascentTypeTrigger =
+        ascentType.label + (ascentType.topRope ? ' (top rope)' : '');
     }
   }
 
