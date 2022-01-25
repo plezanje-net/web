@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -6,17 +6,8 @@ import { SnackBarButtonsComponent } from 'src/app/shared/snack-bar-buttons/snack
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import moment from 'moment';
 import ActivitySelection from 'src/app/types/activity-selection.interface';
-import {
-  Crag,
-  MyCragSummaryGQL,
-  Route,
-  RouteDifficultyVotesGQL,
-  RouteDifficultyVotesQuery,
-  RouteCommentsGQL,
-  RouteCommentsQuery,
-} from 'src/generated/graphql';
+import { Crag, MyCragSummaryGQL, Route } from 'src/generated/graphql';
 import { ASCENT_TYPES } from 'src/app/common/activity.constants';
-import { getGradeDistribution } from 'src/app/common/grade-distribution';
 import { IDistribution } from 'src/app/common/distribution-chart/distribution-chart.component';
 
 @Component({
@@ -34,12 +25,12 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   difficultyVotes: Record<string, string | any>[];
   activeDifficultyVotesPopupId: string | null = null;
   activeCommentsPopupId: string | null = null;
-  routeCommentsLoading: boolean;
-  routeComments: Record<string, string | any>[];
   activePitchesPopupId: string | null = null;
   loading = false;
   expandedRowId: string;
+  previousExpandedRowId: string;
   gradeDistribution: IDistribution[];
+  expandedRowHeight: number;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -47,8 +38,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     private router: Router,
     private myCragSummaryGQL: MyCragSummaryGQL,
     private localStorageService: LocalStorageService,
-    private routeDifficultyVotesGQL: RouteDifficultyVotesGQL,
-    private routeCommentsGQL: RouteCommentsGQL
+    private changeDetection: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -57,13 +47,8 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       this.loadActivity();
     }
 
-    const activitySelection: ActivitySelection =
-      this.localStorageService.getItem('activity-selection');
-    if (
-      activitySelection &&
-      activitySelection.routes.length &&
-      activitySelection.crag.id === this.crag.id
-    ) {
+    const activitySelection: ActivitySelection = this.localStorageService.getItem('activity-selection');
+    if (activitySelection && activitySelection.routes.length && activitySelection.crag.id === this.crag.id) {
       this.selectedRoutes = activitySelection.routes;
       this.selectedRoutesIds = this.selectedRoutes.map((route) => route.id);
       this.openSnackBar();
@@ -85,18 +70,13 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     if (this.selectedRoutes.length > 0) {
       this.openSnackBar();
 
-      this.selectedRoutesIds = this.selectedRoutes.map(
-        (selectedRoute) => selectedRoute.id
-      );
+      this.selectedRoutesIds = this.selectedRoutes.map((selectedRoute) => selectedRoute.id);
 
       // Append users previous activity (summary) to the routes that are being logged
       const selectedRoutesWTouch = this.selectedRoutes.map((route) => ({
         ...route,
         tried: !!this.ascents[route.id],
-        ticked: ASCENT_TYPES.some(
-          (ascentType) =>
-            this.ascents[route.id] == ascentType.value && ascentType.tick
-        ),
+        ticked: ASCENT_TYPES.some((ascentType) => this.ascents[route.id] == ascentType.value && ascentType.tick),
       }));
 
       this.localStorageService.setItem(
@@ -142,56 +122,13 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   }
 
   loadActivity(): void {
-    this.myCragSummaryGQL
-      .watch({ input: { cragId: this.crag.id } })
-      .valueChanges.subscribe((result) => {
-        this.loading = false;
-        result.data?.myCragSummary.forEach((ascent) => {
-          this.ascents[ascent.route.id] = ascent.ascentType;
-        });
+    this.myCragSummaryGQL.watch({ input: { cragId: this.crag.id } }).valueChanges.subscribe((result) => {
+      this.loading = false;
+      result.data?.myCragSummary.forEach((ascent) => {
+        this.ascents[ascent.route.id] = ascent.ascentType;
       });
+    });
   }
-
-  fetchDifficultyVotesDistribution(routeId: string): void {
-    this.difficultyVotesLoading = true;
-
-    this.routeDifficultyVotesGQL
-      .watch({ routeId })
-      .valueChanges.subscribe((result) => {
-        this.difficultyVotesLoading = false;
-
-        if (!result.errors) {
-          this.routeDiffVotesQuerySuccess(result.data);
-        } else {
-          this.routeDiffVotesQueryError();
-        }
-      });
-  }
-
-  routeDiffVotesQuerySuccess(queryData: RouteDifficultyVotesQuery): void {
-    this.gradeDistribution = getGradeDistribution(queryData.route.difficultyVotes);
-  }
-
-  routeDiffVotesQueryError(): void {
-    console.error('TODO');
-  }
-
-  fetchRouteComments(routeId: string): void {
-    this.routeCommentsLoading = true;
-
-    this.routeCommentsGQL
-      .watch({ routeId: routeId })
-      .valueChanges.subscribe((result) => {
-        this.routeCommentsLoading = false;
-
-        if (!result.errors) {
-          this.routeCommentsQuerySuccess(result.data);
-        } else {
-          this.routeCommentsQueryError();
-        }
-      });
-  }
-
   displayRoutePitches(route: Route): void {
     this.activePitchesPopupId = route.id;
   }
@@ -200,19 +137,20 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     this.activePitchesPopupId = null;
   }
 
-  routeCommentsQuerySuccess(queryData: RouteCommentsQuery): void {
-    this.routeComments = queryData.route.comments;
-    // TODO filter out conditions and warnings? ask in slack
-  }
-
-  routeCommentsQueryError(): void {
-    console.error('TODO');
-  }
-
   expandRow(routeId: string): void {
-    // TODO clear saved comments, votes, pitches when expanded row gets closed
-    this.expandedRowId = routeId;
-    this.fetchRouteComments(routeId);
-    this.fetchDifficultyVotesDistribution(routeId);
+    if (this.expandedRowId === routeId) {
+      this.expandedRowId = null;
+      this.previousExpandedRowId = this.expandedRowId;
+    } else {
+      // TODO move saved comments and votes to previous comments and votes
+      this.previousExpandedRowId = this.expandedRowId;
+      this.expandedRowId = routeId;
+    }
+  }
+
+  onPreviewHeightEvent(height: number): void {
+    height += 40; // for the 20px padding above and below the content
+    this.expandedRowHeight = height;
+    this.changeDetection.detectChanges();
   }
 }

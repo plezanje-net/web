@@ -124,10 +124,10 @@
             </div>
           </div>
         </div>
-        <div *ngIf="expandedRowId === route.id" class="route-expanded-container">
-          <p *ngIf="routeCommentsLoading">loading</p>
-          <app-distribution-chart *ngIf="gradeDistribution" [distribution]="gradeDistribution"></app-distribution-chart>
-          <app-route-comments *ngIf="!routeCommentsLoading" [comments]="routeComments"></app-route-comments>
+        <div class="route-expanding-container" [ngStyle]="{ 'max-height.px': route.id === expandedRowId ? expandedRowHeight : 0 }">
+          <div *ngIf="expandedRowId === route.id || previousExpandedRowId === route.id" class="route-expanding-details">
+            <app-crag-route-preview [routeId]="route.id" (heightChangeEvent)="onPreviewHeightEvent($event)"></app-crag-route-preview>
+          </div>
         </div>
       </div>
     </div>

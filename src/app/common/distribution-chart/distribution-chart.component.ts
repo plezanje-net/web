@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 
 export interface IDistribution {
   label: string;
@@ -10,8 +10,10 @@ export interface IDistribution {
   templateUrl: './distribution-chart.component.html',
   styleUrls: ['./distribution-chart.component.scss'],
 })
-export class DistributionChartComponent implements OnChanges {
+export class DistributionChartComponent implements OnChanges, AfterViewInit {
   @Input() distribution: IDistribution[] = [];
+  @Output() onViewInit = new EventEmitter<void>();
+
   maxValue: number;
 
   constructor() {}
@@ -30,5 +32,10 @@ export class DistributionChartComponent implements OnChanges {
     });
 
     this.maxValue = maxValue;
+  }
+
+  ngAfterViewInit(): void {
+    // TODO check if this component has this Output
+    this.onViewInit.emit();
   }
 }

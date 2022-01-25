@@ -195,6 +195,12 @@ h3 {
   color: $text-gray;
 }
 
-.route-expanded-container {
+.route-expanding-container {
+  max-height: 0;
+  transition: max-height 300ms ease-in-out;
+  overflow: hidden;
+}
+
+.route-expanding-details {
   padding: 20px;
 }

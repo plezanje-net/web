@@ -101,6 +101,7 @@ import { ImageFullComponent } from './common/image-full/image-full.component';
 import { ExposedWarningsComponent } from './pages/home/exposed-warnings/expsoed-warnings.component';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { IceFallsModule } from './ice-falls/ice-falls.module';
+import { CragRoutePreviewComponent } from './pages/crag/crag-route-preview/crag-route-preview.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -164,6 +165,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     LatestImagesComponent,
     ImageFullComponent,
     ExposedWarningsComponent,
+    CragRoutePreviewComponent,
   ],
   imports: [
     BrowserModule,

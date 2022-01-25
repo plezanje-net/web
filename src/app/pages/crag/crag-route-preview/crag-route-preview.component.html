@@ -1,0 +1,8 @@
+<div #container>
+  <app-distribution-chart *ngIf="!gradeDistributionLoading && gradeDistribution"
+                          [distribution]="gradeDistribution"
+                          (onViewInit)="onChildViewInit('grades')"></app-distribution-chart>
+  <app-route-comments *ngIf="!routeCommentsLoading && routeComments"
+                      [comments]="routeComments"
+                      (onViewInit)="onChildViewInit('comments')"></app-route-comments>
+</div>
