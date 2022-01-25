@@ -35,7 +35,7 @@ export class DistributionChartComponent implements OnChanges, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // TODO check if this component has this Output
+    // this is used when this component is a child of CragRoutePreviewComponent which measures the height after view init
     this.onViewInit.emit();
   }
 }
