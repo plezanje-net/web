@@ -35,13 +35,10 @@ export class PeaksCountriesComponent implements OnInit {
     this.layoutService.$breadcrumbs.next([
       {
         name: 'Alpinizem',
+        path: '/alpinizem',
       },
       {
         name: 'Vrhovi',
-        path: '/alpinizem/vrhovi/drzave',
-      },
-      {
-        name: 'Države',
       },
     ]);
   }

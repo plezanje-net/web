@@ -9,6 +9,10 @@ query CragBySlug($crag: String!) {
     access
     description
     activityByMonth
+    peak {
+      name
+      slug
+    }
     area {
       id
       name

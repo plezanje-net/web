@@ -59,6 +59,7 @@ export class CragComponent implements OnInit, OnDestroy {
   ];
 
   activeTab: string = 'smeri';
+  section: string;
 
   cragSub: Subscription;
   subscriptions: Subscription[] = [];
@@ -74,6 +75,10 @@ export class CragComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.section = this.router.url.includes('/alpinizem/stena')
+      ? 'alpinism'
+      : 'sport';
+
     this.layoutService.$breadcrumbs.next([
       {
         name: 'Plezališča',
@@ -163,9 +168,28 @@ export class CragComponent implements OnInit, OnDestroy {
       (comment: Comment) => comment.type === 'warning'
     );
 
-    if (this.router.url.includes('/alpinizem/stena')) {
-      // TODO: define breadcrumbs
-      // this.layoutService.$breadcrumbs.next([]);
+    if (this.section === 'alpinism') {
+      this.layoutService.$breadcrumbs.next([
+        {
+          name: 'Alpinizem',
+          path: '/alpinizem',
+        },
+        {
+          name: 'Vrhovi',
+          path: '/alpinizem/vrhovi/drzave',
+        },
+        {
+          name: this.crag.country.name,
+          path: '/alpinizem/vrhovi/drzava/' + this.crag.country.slug,
+        },
+        {
+          name: this.crag.peak.name,
+          path: '/alpinizem/vrh/' + this.crag.peak.slug,
+        },
+        {
+          name: this.crag.name,
+        },
+      ]);
     } else {
       this.layoutService.$breadcrumbs.next([
         {
@@ -184,17 +208,9 @@ export class CragComponent implements OnInit, OnDestroy {
   }
 
   setActiveTab(tab: Tab) {
-    let routeParams: any[] = [
-      '/plezalisca/',
-      this.crag.country.slug,
-      this.crag.slug,
-    ];
-
-    if (tab.slug != 'smeri') {
-      routeParams.push({ tab: tab.slug });
-    }
-
-    this.router.navigate(routeParams);
+    this.router.navigate([tab.slug === 'smeri' ? {} : { tab: tab.slug }], {
+      relativeTo: this.activatedRoute,
+    });
   }
 
   addComment(type: string) {

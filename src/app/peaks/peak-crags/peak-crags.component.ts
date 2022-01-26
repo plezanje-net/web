@@ -45,15 +45,13 @@ export class PeakCragsComponent implements OnInit {
     this.layoutService.$breadcrumbs.next([
       {
         name: 'Alpinizem',
+        path: '/alpinizem',
       },
       {
         name: 'Vrhovi',
         path: '/alpinizem/vrhovi/drzave',
       },
-      {
-        name: 'Države',
-        path: '/alpinizem/vrhovi/drzave',
-      },
+
       {
         name: this.peak.country.name,
         path: '/alpinizem/vrhovi/drzava/' + this.peak.country.slug,
