@@ -28,6 +28,7 @@ import { MomentModule } from 'ngx-moment';
 import { ActivityFormRouteComponent } from './forms/activity-form/activity-form-route/activity-form-route.component';
 import { ActivityFormComponent } from './forms/activity-form/activity-form.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,23 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     SharedModule,
     ReactiveFormsModule,
     ActivityRoutingModule,
+  ],
+  providers: [
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: {
+        parse: {
+          dateInput: 'DD.MM.YYYY',
+        },
+        display: {
+          dateInput: 'DD.MM.YYYY',
+          monthYearLabel: 'MMM YYYY',
+          dateA11yLabel: 'LL',
+          monthYearA11yLabel: 'MMMM YYYY',
+        },
+      },
+    },
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
   ],
 })
 export class ActivityModule {}
