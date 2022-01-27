@@ -1,4 +1,5 @@
 <div #container>
+  <h3>Ocene uporabnikov</h3>
   <app-distribution-chart *ngIf="!gradeDistributionLoading && gradeDistribution"
                           [distribution]="gradeDistribution"
                           (onViewInit)="onChildViewInit('grades')"></app-distribution-chart>
