@@ -139,8 +139,8 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
 
   expandRow(routeId: string): void {
     if (this.expandedRowId === routeId) {
-      this.expandedRowId = null;
       this.previousExpandedRowId = this.expandedRowId;
+      this.expandedRowId = null;
     } else {
       // TODO move saved comments and votes to previous comments and votes
       this.previousExpandedRowId = this.expandedRowId;
