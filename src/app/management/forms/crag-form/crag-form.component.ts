@@ -189,6 +189,12 @@ export class CragFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  formatCoordinate(event: { target: { value: string } }) {
+    event.target.value = event.target.value
+      ? parseFloat(event.target.value).toFixed(5)
+      : null;
+  }
+
   save(): void {
     this.loading = true;
 

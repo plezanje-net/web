@@ -50,14 +50,24 @@
     <p fxFlex="50">
       <mat-form-field>
         <mat-label>Zemljepisna širina</mat-label>
-        <input matInput type="number" formControlName="lat" />
+        <input
+          matInput
+          type="number"
+          formControlName="lat"
+          (blur)="formatCoordinate($event)"
+        />
         <mat-hint>Google koordinata, npr.: 45.96882330502303</mat-hint>
       </mat-form-field>
     </p>
     <p fxFlex="50">
       <mat-form-field>
         <mat-label>Zemljepisna dolžina</mat-label>
-        <input matInput type="number" formControlName="lon" />
+        <input
+          matInput
+          type="number"
+          formControlName="lon"
+          (blur)="formatCoordinate($event)"
+        />
         <mat-hint>Google koordinata, npr.: 14.009368654412414</mat-hint>
       </mat-form-field>
     </p>
