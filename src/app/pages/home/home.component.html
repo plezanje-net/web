@@ -6,13 +6,8 @@
     <app-search></app-search>
 
     <app-exposed-warnings
-      *ngIf="false"
       (errorEvent)="handleError($event)"
     ></app-exposed-warnings>
-
-    <app-exposed-warnings-swiper
-      (errorEvent)="handleError($event)"
-    ></app-exposed-warnings-swiper>
 
     <app-popular-crags (errorEvent)="handleError($event)"></app-popular-crags>
 

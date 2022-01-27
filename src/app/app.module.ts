@@ -88,10 +88,8 @@ import { LatestImagesComponent } from './pages/home/latest-images/latest-images.
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ImageFullComponent } from './common/image-full/image-full.component';
 import { ExposedWarningsComponent } from './pages/home/exposed-warnings/expsoed-warnings.component';
-import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { IceFallsModule } from './ice-falls/ice-falls.module';
 import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
-import { ExposedWarningsSwiperComponent } from './pages/home/exposed-warnings-swiper/exposed-warnings-swiper.component';
 import { SwiperModule } from 'swiper/angular';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
@@ -155,7 +153,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ImageFullComponent,
     ExposedWarningsComponent,
     ConfirmClubMembershipComponent,
-    ExposedWarningsSwiperComponent,
   ],
   imports: [
     BrowserModule,
@@ -188,7 +185,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     IceFallsModule,
     AppRoutingModule,
     MatGridListModule,
-    SlickCarouselModule,
     SwiperModule,
   ],
   providers: [

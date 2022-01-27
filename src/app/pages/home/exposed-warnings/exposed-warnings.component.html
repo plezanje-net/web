@@ -2,54 +2,68 @@
   <h2>Opozorila</h2>
 
   <div class="carousel-outer-wrap">
-    <ngx-slick-carousel
-      class="carousel"
-      #slickModal="slick-carousel"
-      [config]="slideConfig"
-      (beforeChange)="onSlickBeforeChange()"
-      (init)="onSlickInit()"
+    <swiper
+      #swiper
+      [slidesPerView]="1"
+      [spaceBetween]="0"
+      [breakpoints]="{ '905': { slidesPerView: 2, slidesPerGroup: 1 } }"
+      [loop]="true"
+      [pagination]="{}"
+      [slidesPerGroup]="1"
+      [centerInsufficientSlides]="true"
+      [autoHeight]="true"
+      [autoplay]="{
+        delay: 2500,
+        disableOnInteraction: false
+      }"
+      [pagination]="{
+        clickable: true
+      }"
     >
-      <div ngxSlickItem class="slide" *ngFor="let warning of warnings">
-        <div class="slide-inner-wrap">
-          <mat-card class="warning">
-            <mat-card-title>
-              <ng-container *ngIf="warning.route">
-                <a
-                  [routerLink]="[
-                    '/plezalisca',
-                    warning.route.crag.country.slug,
-                    warning.route.crag.slug,
-                    warning.route.slug
-                  ]"
-                  >{{ warning.route.name }}</a
-                >,
-                {{ warning.route.crag.name }}
-              </ng-container>
-              <ng-container *ngIf="warning.crag">
-                <a
-                  [routerLink]="[
-                    '/plezalisca',
-                    warning.crag.country.slug,
-                    warning.crag.slug,
-                    { tab: 'komentarji' }
-                  ]"
-                >
-                  {{ warning.crag.name }}
-                </a>
-              </ng-container>
-            </mat-card-title>
-            <mat-card-content>
-              <div fxLayout="column" fxLayoutAlign="space-between" fxFlexFill>
-                <div [innerHTML]="warning.content" fxFlex="100"></div>
-                <div class="author" fxFlex="100">
-                  {{ warning.user.fullName }},
-                  {{ warning.updated | amDateFormat: "D.M.Y H:mm" }}
+      <ng-template swiperSlide *ngFor="let warning of warnings">
+        <div class="slide">
+          <div class="slide-inner-wrap">
+            <mat-card class="warning">
+              <mat-card-title>
+                <ng-container *ngIf="warning.route">
+                  <a
+                    [routerLink]="[
+                      '/plezalisca',
+                      warning.route.crag.country.slug,
+                      warning.route.crag.slug,
+                      warning.route.slug
+                    ]"
+                    >{{ warning.route.name }}</a
+                  >,
+                  {{ warning.route.crag.name }}
+                </ng-container>
+                <ng-container *ngIf="warning.crag">
+                  <a
+                    [routerLink]="[
+                      '/plezalisca',
+                      warning.crag.country.slug,
+                      warning.crag.slug,
+                      { tab: 'komentarji' }
+                    ]"
+                  >
+                    {{ warning.crag.name }}
+                  </a>
+                </ng-container>
+              </mat-card-title>
+              <mat-card-content>
+                <div fxLayout="column" fxLayoutAlign="space-between" fxFlexFill>
+                  <div [innerHTML]="warning.content" fxFlex="100"></div>
+                  <div class="author" fxFlex="100">
+                    {{ warning.user.fullName }},
+                    {{ warning.updated | amDateFormat: "D.M.Y H:mm" }}
+                  </div>
                 </div>
-              </div>
-            </mat-card-content>
-          </mat-card>
+              </mat-card-content>
+            </mat-card>
+          </div>
         </div>
-      </div>
-    </ngx-slick-carousel>
+      </ng-template>
+      <div slot="container-end" class="swiper-pagination pagination-test"></div>
+    </swiper>
   </div>
 </ng-container>
