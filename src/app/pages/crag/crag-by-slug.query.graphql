@@ -52,6 +52,7 @@ query CragBySlug($crag: String!) {
       created
       updated
       type
+      exposedUntil
       user {
         id
         fullName

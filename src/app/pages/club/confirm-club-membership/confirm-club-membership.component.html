@@ -1,0 +1,19 @@
+<div class="white-back mt-16">
+  <div class="container py-8">
+    <h1>Potrditev članstva v klubu</h1>
+  </div>
+</div>
+
+<div class="container mt-16">
+  <app-loader *ngIf="loading"></app-loader>
+  <div *ngIf="!loading && !error">
+    Tvoje članstvo v klubu
+    <a [routerLink]="['/moj-profil/moji-klubi/', club.slug]">
+      {{ club.name }}
+    </a>
+    je uspešno potrjeno.
+  </div>
+  <div *ngIf="!loading && error">
+    Prišlo je do napake pri potrjevanju tvojega članstva v klubu.
+  </div>
+</div>

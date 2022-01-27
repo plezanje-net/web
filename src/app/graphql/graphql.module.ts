@@ -50,6 +50,9 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
       query: {
         errorPolicy: 'all',
       },
+      mutate: {
+        errorPolicy: 'all',
+      },
     },
   };
 }

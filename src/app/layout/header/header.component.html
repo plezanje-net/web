@@ -32,31 +32,41 @@
         >Plezališča</a
       >
 
-      <a mat-button [matMenuTriggerFor]="alpinism">Alpinizem</a>
-      <mat-menu #alpinism="matMenu">
-        <a mat-menu-item [routerLink]="['/slapovi']">Slapovi</a>
-      </mat-menu>
+      <a mat-button [matMenuTriggerFor]="alpinismMenu">Alpinizem</a>
+
       <a mat-button [routerLink]="['/plezalni-dnevnik']">Plezalni dnevnik</a>
-      <a *ngIf="!loggedIn" mat-button (click)="login()">Prijava</a>
+      <a *ngIf="!(user != null)" mat-button (click)="login()">Prijava</a>
       <a
-        *ngIf="loggedIn"
+        *ngIf="user != null"
         mat-icon-button
         fxHide
         fxShow.gt-sm
-        [matMenuTriggerFor]="menu"
+        [matMenuTriggerFor]="authMenu"
       >
         <mat-icon>account_circle</mat-icon>
       </a>
-      <a *ngIf="loggedIn" mat-button fxHide.gt-sm [routerLink]="['/moj-profil']"
+      <a
+        *ngIf="user != null"
+        mat-button
+        fxHide.gt-sm
+        [routerLink]="['/moj-profil']"
         >Moj profil</a
       >
-      <a *ngIf="loggedIn" mat-button fxHide.gt-sm (click)="logout()">Odjava</a>
-      <mat-menu #menu="matMenu">
-        <a mat-menu-item [routerLink]="['/moj-profil']">Moj profil</a>
-        <button mat-menu-item (click)="logout()">
-          <span>Odjava</span>
-        </button>
-      </mat-menu>
+      <a *ngIf="user != null" mat-button fxHide.gt-sm (click)="logout()"
+        >Odjava</a
+      >
     </nav>
   </div>
 </header>
+
+<mat-menu #alpinismMenu="matMenu">
+  <a mat-menu-item [routerLink]="['/slapovi']">Slapovi</a>
+</mat-menu>
+
+<mat-menu #authMenu="matMenu">
+  <button mat-menu-item disabled>{{ user?.fullName }}</button>
+  <a mat-menu-item [routerLink]="['/moj-profil']">Moj profil</a>
+  <button mat-menu-item (click)="logout()">
+    <span>Odjava</span>
+  </button>
+</mat-menu>

@@ -16,9 +16,7 @@
       {{ warning.created | amDateFormat: "D.M.Y H:mm" }}
       <app-comment-options
         *ngIf="
-          authService.currentUser &&
-          warning.user &&
-          warning.user.id == authService.currentUser.id
+          user != null && warning.user != null && warning.user.id == user.id
         "
         [comment]="warning"
       ></app-comment-options>

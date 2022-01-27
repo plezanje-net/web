@@ -15,8 +15,18 @@
       >
     </p>
 
-    <button mat-flat-button color="primary" [disabled]="!addMemberForm.valid">
-      DODAJ ČLANA
-    </button>
+    <div class="button-w-loading">
+      <button
+        *ngIf="!loading"
+        mat-flat-button
+        color="primary"
+        [disabled]="!addMemberForm.valid"
+      >
+        DODAJ ČLANA
+      </button>
+      <span *ngIf="loading" class="loading">
+        <mat-spinner diameter="30"></mat-spinner>
+      </span>
+    </div>
   </form>
 </mat-dialog-content>

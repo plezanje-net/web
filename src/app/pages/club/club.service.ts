@@ -1,8 +1,21 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { QueryRef } from 'apollo-angular';
-import { BehaviorSubject, ReplaySubject, Subject, Subscription } from 'rxjs';
+import {
+  BehaviorSubject,
+  map,
+  ReplaySubject,
+  Subject,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
-import { Club, ClubBySlugGQL, ClubMember } from 'src/generated/graphql';
+import {
+  Club,
+  ClubBySlugGQL,
+  ClubBySlugQuery,
+  ClubMember,
+  User,
+} from 'src/generated/graphql';
 
 @Injectable()
 export class ClubService implements OnDestroy {
@@ -23,25 +36,39 @@ export class ClubService implements OnDestroy {
 
   fetchClub(clubSlug: string) {
     this.clubQuery = this.clubBySlugGQL.watch({ clubSlug });
-    this.clubQuerySubscription = this.clubQuery.valueChanges.subscribe(
-      (data) => {
-        if (data.errors != null) {
-          this.club.error(data.errors);
-        } else {
-          const club = data.data.clubBySlug;
-          const amClubAdmin = club.members.some(
-            (member: ClubMember) =>
-              member.user.id === this.authService.currentUser.id && member.admin
-          );
-          this.amClubAdmin.next(amClubAdmin);
-          this.club.next(club);
-        }
-      }
-    );
+
+    // use switchmap with current user
+
+    this.clubQuerySubscription = this.clubQuery.valueChanges
+      .pipe(
+        switchMap((data) =>
+          this.authService.currentUser.pipe(
+            map((user) => ({ user: user, data: data }))
+          )
+        )
+      )
+      .subscribe({
+        next: ({ data, user }) => {
+          if (data.errors != null || user == null) {
+            this.club.error(data.errors);
+          } else {
+            const club = data.data.clubBySlug;
+            const amClubAdmin = club.members.some(
+              (member: ClubMember) => member.user.id === user.id && member.admin
+            );
+            this.amClubAdmin.next(amClubAdmin);
+            this.club.next(club);
+          }
+        },
+      });
   }
 
-  refetchClub() {
-    this.clubQuery.refetch();
+  refetchClub(slug = null) {
+    if (slug) {
+      this.clubQuery.refetch({ clubSlug: slug });
+    } else {
+      this.clubQuery.refetch();
+    }
   }
 
   ngOnDestroy() {

@@ -4,30 +4,58 @@ import {
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
+  HttpResponse,
 } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { AuthService } from './auth.service';
+import { GraphQLError } from 'graphql';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private snackbar: MatSnackBar,
+    private router: Router
+  ) {}
 
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    let headers = {};
+    const token = this.authService.getToken();
 
-    let token = this.authService.getToken();
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return next.handle(request).pipe(
+        tap((event) => {
+          if (event instanceof HttpResponse && event.body.errors != null) {
+            this.checkForTokenExpiredError(event.body.errors);
+          }
+        })
+      );
     }
 
-    request = request.clone({
-      setHeaders: headers,
-    });
-
     return next.handle(request);
+  }
+
+  checkForTokenExpiredError(errors: GraphQLError[]) {
+    if (errors.find((e) => e.message == 'token_expired')) {
+      this.authService.logout().then(() => {
+        this.snackbar.open(
+          'Zaradi spremmebe v uporabniškem računu se moraš ponovno prijavit',
+          null,
+          { duration: 3000 }
+        );
+        this.router.navigate(['/']);
+      });
+    }
   }
 }

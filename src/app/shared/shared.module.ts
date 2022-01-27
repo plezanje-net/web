@@ -26,6 +26,9 @@ import { MomentModule } from 'ngx-moment';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { CommentFormComponent } from './components/comment-form/comment-form.component';
 import { CommentOptionsComponent } from './components/comment/comment-options/comment-options.component';
+import { WarningsComponent } from './components/warnings/warnings.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -35,6 +38,7 @@ import { CommentOptionsComponent } from './components/comment/comment-options/co
     CommentComponent,
     CommentOptionsComponent,
     CommentFormComponent,
+    WarningsComponent,
     LoaderComponent,
     ConfirmationDialogComponent,
     AscentTypePipe,
@@ -57,6 +61,8 @@ import { CommentOptionsComponent } from './components/comment/comment-options/co
     NgxMatSelectSearchModule,
     MatMomentDateModule,
     MomentModule,
+    MatDatepickerModule,
+    MatInputModule,
   ],
   providers: [CustomBreakpointsProvider],
   exports: [
@@ -65,11 +71,14 @@ import { CommentOptionsComponent } from './components/comment/comment-options/co
     GradeSelectComponent,
     CommentComponent,
     CommentFormComponent,
-    ConfirmationDialogComponent,
+    WarningsComponent,
     LoaderComponent,
+    ConfirmationDialogComponent,
     AscentTypePipe,
     GenderizeVerbPipe,
     OrientationPipe,
+    MatDatepickerModule,
+    MatInputModule,
   ],
 })
 export class SharedModule {}

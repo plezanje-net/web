@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GraphQLError } from 'graphql';
@@ -7,7 +7,7 @@ import {
   DeleteClubMemberGQL,
   namedOperations,
 } from 'src/generated/graphql';
-import { Observable } from 'rxjs';
+import { Observable, Subscription, take } from 'rxjs';
 import { filter, mergeMap } from 'rxjs/operators';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ClubService } from '../club.service';
@@ -18,10 +18,12 @@ import { AuthService } from 'src/app/auth/auth.service';
   templateUrl: './club-members.component.html',
   styleUrls: ['./club-members.component.scss'],
 })
-export class ClubMembersComponent implements OnInit {
+export class ClubMembersComponent implements OnInit, OnDestroy {
   loading = true;
   club$: Observable<Club>;
-  meId = this.authService.currentUser.id;
+  meId: string;
+
+  subscription: Subscription;
 
   constructor(
     private clubService: ClubService,
@@ -33,6 +35,14 @@ export class ClubMembersComponent implements OnInit {
 
   ngOnInit(): void {
     this.club$ = this.clubService.club$;
+
+    this.subscription = this.authService.currentUser.subscribe(
+      (user) => (this.meId = user ? user.id : null)
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   deleteMember(id: string, memberFullName: string) {
@@ -67,18 +77,19 @@ export class ClubMembersComponent implements OnInit {
           );
         })
       )
-      .subscribe(
-        (data) => {
+      .pipe(take(1))
+      .subscribe({
+        next: (data) => {
           if (data.errors != null) {
             this.queryError(data.errors);
           } else {
             this.displaySuccess();
           }
         },
-        (_) => {
+        error: () => {
           this.queryError();
-        }
-      );
+        },
+      });
   }
 
   queryError(errors?: readonly GraphQLError[]) {

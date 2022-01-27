@@ -42,10 +42,9 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if (this.authService.currentUser) {
-      this.loading = true; // needed because we cannot pass ascents to activity log (through local storage) until this loads
-      this.loadActivity();
-    }
+    this.authService.currentUser.subscribe((user) =>
+      this.loadActivity(user != null)
+    );
 
     const activitySelection: ActivitySelection = this.localStorageService.getItem('activity-selection');
     if (activitySelection && activitySelection.routes.length && activitySelection.crag.id === this.crag.id) {
@@ -106,22 +105,52 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
         },
       })
       .onAction()
-      .subscribe(() => {
-        this.addActivity();
-      });
+      .subscribe(() => this.addActivity());
+  }
+
+  addRoutesToLocalStorage(routes: Route[]) {
+    this.localStorageService.setItem(
+      'activity-selection',
+      {
+        crag: this.crag,
+        routes: routes,
+      },
+      moment(new Date()).add(1, 'day').toISOString()
+    );
   }
 
   addActivity(): void {
-    this.authService.guardedAction({}).then((success) => {
-      if (success) {
-        this.router.navigate(['/plezalni-dnevnik/vpis']);
-      } else {
-        this.openSnackBar();
-      }
-    });
+    this.authService
+      .guardedAction({
+        message: 'Za uporabo plezalnega dnevnika se moraš prijaviti.',
+      })
+      .then((success) => {
+        if (success) {
+          // Append users previous activity (summary) to the routes that are being logged
+          const selectedRoutesWTouch = this.selectedRoutes.map((route) => ({
+            ...route,
+            tried: !!this.ascents[route.id],
+            ticked: ASCENT_TYPES.some(
+              (ascentType) =>
+                this.ascents[route.id] == ascentType.value && ascentType.tick
+            ),
+          }));
+
+          this.addRoutesToLocalStorage(selectedRoutesWTouch);
+
+          this.router.navigate(['/plezalni-dnevnik/vpis']);
+        } else {
+          this.openSnackBar();
+        }
+      });
   }
 
-  loadActivity(): void {
+  loadActivity(authenticated: boolean): void {
+    if (!authenticated) {
+      this.ascents = [];
+      return;
+    }
+
     this.myCragSummaryGQL.watch({ input: { cragId: this.crag.id } }).valueChanges.subscribe((result) => {
       this.loading = false;
       result.data?.myCragSummary.forEach((ascent) => {

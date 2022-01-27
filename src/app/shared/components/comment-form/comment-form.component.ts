@@ -2,7 +2,6 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Apollo, gql } from 'apollo-angular';
 import {
   Comment,
   Crag,
@@ -37,11 +36,12 @@ export class CommentFormComponent implements OnInit {
     content: new FormControl(),
   });
 
+  maxDate?: Date;
+
   constructor(
     public dialogRef: MatDialogRef<CommentFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private snackbar: MatSnackBar,
-    private apollo: Apollo,
     private createCommentGQL: CreateCommentGQL,
     private updateCommentGQL: UpdateCommentGQL
   ) {}
@@ -50,10 +50,19 @@ export class CommentFormComponent implements OnInit {
     if (this.data.comment != null) {
       this.title = 'Uredi komentar';
       this.commentForm.patchValue({ content: this.data.comment.content });
+
+      if (this.data.comment.type === 'warning') {
+        this.addExposedUntilField();
+        this.commentForm.patchValue({
+          exposedUntil: this.data.comment.exposedUntil,
+        });
+      }
     }
 
     if (this.data.type == 'warning') {
       this.title = 'Dodaj opozorilo';
+
+      this.addExposedUntilField();
     }
 
     if (this.data.type == 'condition') {
@@ -63,6 +72,12 @@ export class CommentFormComponent implements OnInit {
     if (this.data.type == 'comment') {
       this.title = 'Dodaj komentar';
     }
+  }
+
+  addExposedUntilField() {
+    this.commentForm.addControl('exposedUntil', new FormControl());
+    this.maxDate = new Date();
+    this.maxDate.setMonth(this.maxDate.getMonth() + 1); // let user choose max 1 month validity of warning exposure
   }
 
   save() {
@@ -84,6 +99,10 @@ export class CommentFormComponent implements OnInit {
       routeId: this.data.route ? this.data.route.id : null,
       cragId: this.data.crag ? this.data.crag.id : null,
       peakId: this.data.peak ? this.data.peak.id : null,
+      exposedUntil:
+        this.data.type === 'warning'
+          ? this.commentForm.value.exposedUntil
+          : null,
     };
 
     this.createCommentGQL
@@ -116,6 +135,10 @@ export class CommentFormComponent implements OnInit {
     const value = {
       id: this.data.comment.id,
       content: this.commentForm.value.content,
+      exposedUntil:
+        this.data.comment.type === 'warning'
+          ? this.commentForm.value.exposedUntil
+          : null,
     };
 
     this.updateCommentGQL

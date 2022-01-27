@@ -12,18 +12,14 @@ import {
   MatFormFieldDefaultOptions,
   MAT_FORM_FIELD_DEFAULT_OPTIONS,
 } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatExpansionModule } from '@angular/material/expansion';
-
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -52,17 +48,11 @@ import { CragRoutesComponent } from './pages/crag/crag-routes/crag-routes.compon
 import { CragInfoComponent } from './pages/crag/crag-info/crag-info.component';
 import { CragCommentsComponent } from './pages/crag/crag-comments/crag-comments.component';
 import { MomentModule } from 'ngx-moment';
-import { CragLocationComponent } from './pages/crag/crag-location/crag-location.component';
-import { WarningsComponent } from './shared/components/warnings/warnings.component';
 import { ActivityFormComponent } from './forms/activity-form/activity-form.component';
 import { ActivityFormRouteComponent } from './forms/activity-form/activity-form-route/activity-form-route.component';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import {
-  MatMomentDateModule,
-  MomentDateAdapter,
-} from '@angular/material-moment-adapter';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { CragGalleryComponent } from './pages/crag/crag-gallery/crag-gallery.component';
-
 import { RouteComponent } from './pages/route/route.component';
 import { RouteInfoComponent } from './pages/route/route-info/route-info.component';
 import { DistributionChartComponent } from './common/distribution-chart/distribution-chart.component';
@@ -102,6 +92,7 @@ import { ExposedWarningsComponent } from './pages/home/exposed-warnings/expsoed-
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { IceFallsModule } from './ice-falls/ice-falls.module';
 import { CragRoutePreviewComponent } from './pages/crag/crag-route-preview/crag-route-preview.component';
+import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -129,8 +120,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     CragRoutesComponent,
     CragInfoComponent,
     CragCommentsComponent,
-    CragLocationComponent,
-    WarningsComponent,
     ActivityFormComponent,
     ActivityFormRouteComponent,
     CragGalleryComponent,
@@ -166,6 +155,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ImageFullComponent,
     ExposedWarningsComponent,
     CragRoutePreviewComponent,
+    ConfirmClubMembershipComponent,
   ],
   imports: [
     BrowserModule,
@@ -180,13 +170,11 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MatIconModule,
     MatCheckboxModule,
     MatFormFieldModule,
-    MatInputModule,
     MatSnackBarModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatSelectModule,
-    MatDatepickerModule,
     GraphQLModule,
     HttpClientModule,
     MatMomentDateModule,

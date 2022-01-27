@@ -2,12 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { GraphQLError } from 'graphql';
-import {
-  namedOperations,
-  UpdateClubGQL,
-  CreateClubGQL,
-} from 'src/generated/graphql';
+import { UpdateClubGQL, CreateClubGQL } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-club-form',
@@ -25,7 +22,8 @@ export class ClubFormComponent implements OnInit {
     private updateClubGQL: UpdateClubGQL,
     private createClubGQL: CreateClubGQL,
     public dialogRef: MatDialogRef<ClubFormComponent>,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -53,41 +51,33 @@ export class ClubFormComponent implements OnInit {
     };
 
     this.updateClubGQL
-      .mutate(
-        { input: updateClubInput },
-        {
-          errorPolicy: 'all',
-          refetchQueries: [namedOperations.Query.ClubBySlug],
-        }
-      )
+      .mutate({ input: updateClubInput })
       .subscribe((result) => {
         if (result.errors != null) {
           this.queryError(result.errors);
         } else {
+          this.router.navigate([
+            '/moj-profil/moji-klubi',
+            result.data.updateClub.slug,
+          ]);
+
           this.displaySuccess('Ime kluba je bilo uspešno spremenjeno.');
         }
-        this.dialogRef.close();
+        this.dialogRef.close(result.data.updateClub.slug);
       });
   }
 
   createClub() {
     const name = this.clubForm.value.name;
 
-    this.createClubGQL
-      .mutate(
-        { input: { name } },
-        {
-          errorPolicy: 'all',
-        }
-      )
-      .subscribe((result) => {
-        if (result.errors != null) {
-          this.queryError(result.errors);
-        } else {
-          this.displaySuccess('Nov klub je bil ustvarjen.');
-        }
-        this.dialogRef.close();
-      });
+    this.createClubGQL.mutate({ input: { name } }).subscribe((result) => {
+      if (result.errors != null) {
+        this.queryError(result.errors);
+      } else {
+        this.displaySuccess('Nov klub je bil ustvarjen.');
+      }
+      this.dialogRef.close();
+    });
   }
 
   queryError(errors: readonly GraphQLError[]) {

@@ -14,15 +14,16 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Promise<boolean> {
-    return this.authService.getCurrentUser().then((user) => {
-      if (!user) {
-        this.authService.openLogin$.next({
-          returnUrl: state.url,
-          message:
-            'Možnost, ki ste jo izbrali, je dostopna samo registriranim uporabnikom. Zanadaljevanje se morate prijaviti.',
-        });
-      }
-      return user != null;
-    });
+    if (!this.authService.currentUser.value) {
+      this.authService.openLogin$.next({
+        returnUrl: state.url,
+        message:
+          'Stran je dostopna samo registriranim uporabnikom. Za nadaljevanje se moraš prijaviti.',
+      });
+
+      return false;
+    }
+
+    return true;
   }
 }

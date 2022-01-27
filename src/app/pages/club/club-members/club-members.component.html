@@ -1,4 +1,4 @@
-<div class="container mt-16">
+<div class="container mt-16" *ngIf="meId">
   <div class="card">
     <table class="card-table">
       <tr class="row header">
@@ -6,13 +6,32 @@
         <td></td>
       </tr>
       <tr *ngFor="let member of (club$ | async).members" class="row">
-        <td>{{ member.user.fullName }}</td>
+        <td>
+          <span
+            [class.pending]="member.status === 'pending'"
+            [matTooltip]="
+              member.status === 'pending'
+                ? 'Uporabnik mora potrditi svoje članstvo v klubu'
+                : null
+            "
+          >
+            {{ member.user.fullName }}
+          </span>
+        </td>
         <td class="tools">
-          <button mat-icon-button [mat-menu-trigger-for]="menu">
+          <button
+            mat-icon-button
+            [mat-menu-trigger-for]="menu"
+            *ngIf="
+              member.status === 'active' ||
+              ((clubService.amClubAdmin$ | async) && member.user.id !== meId)
+            "
+          >
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
             <button
+              *ngIf="member.status === 'active'"
               mat-menu-item
               [routerLink]="[
                 '/moj-profil/moji-klubi',
