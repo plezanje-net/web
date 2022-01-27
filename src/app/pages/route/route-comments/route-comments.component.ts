@@ -22,6 +22,7 @@ export class RouteCommentsComponent implements AfterViewInit {
   descriptions: IComment[];
 
   @Output() onViewInit = new EventEmitter<void>();
+  @Input() showAddCommentButtons: boolean = true;
   @Input() set comments(comments: IComment[]) {
     this.allComments = comments;
 

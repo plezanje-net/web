@@ -4,5 +4,6 @@
                           (onViewInit)="onChildViewInit('grades')"></app-distribution-chart>
   <app-route-comments *ngIf="!routeCommentsLoading && routeComments"
                       [comments]="routeComments"
+                      [showAddCommentButtons]="false"
                       (onViewInit)="onChildViewInit('comments')"></app-route-comments>
 </div>

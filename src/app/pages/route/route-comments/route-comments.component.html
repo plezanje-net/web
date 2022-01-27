@@ -5,7 +5,8 @@
       fxLayout.lt-md="column">
     <span fxFlex="100">Komentarji</span>
     <div fxFlex>
-      <button mat-button
+      <button *ngIf="showAddCommentButtons"
+              mat-button
               color="primary">Dodaj komentar</button>
     </div>
   </h3>
@@ -22,7 +23,8 @@
       fxLayout.lt-md="column">
     <span fxFlex="100">Opisi razmer</span>
     <div fxFlex>
-      <button mat-button
+      <button *ngIf="showAddCommentButtons"
+              mat-button
               color="primary">Dodaj opis razmer</button>
     </div>
   </h3>
@@ -39,7 +41,8 @@
       fxLayout.lt-md="column">
     <span fxFlex="100">Opisi smeri</span>
     <div fxFlex>
-      <button mat-button
+      <button *ngIf="showAddCommentButtons"
+              mat-button
               color="primary">Dodaj opis smeri</button>
     </div>
   </h3>
