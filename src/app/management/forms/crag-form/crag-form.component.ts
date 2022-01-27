@@ -140,7 +140,7 @@ export class CragFormComponent implements OnInit, OnDestroy {
         ...this.crag,
         countryId: this.crag.country?.id,
         areaId: this.crag.area?.id,
-        defaultGradingSystemId: this.crag.defaultGradingSystem.id,
+        defaultGradingSystemId: this.crag.defaultGradingSystem?.id,
       });
     }
 

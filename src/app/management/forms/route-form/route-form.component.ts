@@ -145,6 +145,11 @@ export class RouteFormComponent implements OnInit, OnDestroy {
     );
     this.subscriptions.push(typeSub);
 
+    const lengthSub = this.form.controls.length.valueChanges
+      .pipe(filter((value) => value == ''))
+      .subscribe(() => this.form.patchValue({ length: null }));
+    this.subscriptions.push(lengthSub);
+
     this.initializeFormData();
   }
 

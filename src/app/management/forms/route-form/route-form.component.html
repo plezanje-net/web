@@ -19,7 +19,7 @@
 
     <mat-form-field fxFlex *ngIf="form.controls.routeTypeId.value != 'boulder'">
       <mat-label>Dolžina smeri</mat-label>
-      <input matInput formControlName="length" />
+      <input matInput formControlName="length" mask="9999" suffix=" m" />
     </mat-form-field>
   </div>
   <div

@@ -34,6 +34,7 @@
     "graphql": "^15.0.0",
     "jquery": "^3.6.0",
     "moment": "^2.29.1",
+    "ngx-mask": "^13.1.1",
     "ngx-mat-select-search": "^3.3.3",
     "ngx-moment": "^5.0.0",
     "ngx-slick-carousel": "^0.5.1",

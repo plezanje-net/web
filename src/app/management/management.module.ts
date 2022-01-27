@@ -24,6 +24,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CragSectorRoutesComponent } from './pages/crag-sector-routes/crag-sector-routes.component';
+import { NgxMaskModule, IConfig } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { CragSectorRoutesComponent } from './pages/crag-sector-routes/crag-secto
     MatProgressSpinnerModule,
     MatCheckboxModule,
     MatDialogModule,
+    NgxMaskModule.forRoot(),
     SharedModule,
     DragDropModule,
     ReactiveFormsModule,

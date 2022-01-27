@@ -41,7 +41,7 @@
             <button mat-button *ngIf="route.difficulty != null">
               <app-grade
                 [difficulty]="route.difficulty"
-                [gradingSystemId]="route.defaultGradingSystem.id"
+                [gradingSystemId]="route.defaultGradingSystem?.id"
                 [showModifier]="true"
               ></app-grade>
             </button>
