@@ -114,12 +114,14 @@ export class RouteFormComponent implements OnInit, OnDestroy {
   gradingSystemsLoaded() {
     this.loadDifficultyOptions(this.form.value.defaultGradingSystemId);
 
+    // grading system changes: load difficulty options for the chosen system
     const gradeSub =
       this.form.controls.defaultGradingSystemId.valueChanges.subscribe(
         (gradingSystemId) => this.loadDifficultyOptions(gradingSystemId)
       );
     this.subscriptions.push(gradeSub);
 
+    // project changes: reset base difficulty if route is set as project
     const projectSub = this.form.controls.isProject.valueChanges
       .pipe(filter((value) => value == true))
       .subscribe(() => {
@@ -129,6 +131,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
       });
     this.subscriptions.push(projectSub);
 
+    // route type changes: unset length for boulders, filter grading systems and reset grading system if necessary
     const typeSub = this.form.controls.routeTypeId.valueChanges.subscribe(
       (value) => {
         if (value == 'boulder') {
@@ -141,10 +144,21 @@ export class RouteFormComponent implements OnInit, OnDestroy {
           (system) =>
             system.routeTypes.filter((type) => type.id == value).length > 0
         );
+
+        if (
+          this.gradingSystemOptions.find(
+            (option) => option.id == this.form.value.defaultGradingSystemId
+          ) == null
+        ) {
+          this.form.patchValue({
+            defaultGradingSystemId: null,
+          });
+        }
       }
     );
     this.subscriptions.push(typeSub);
 
+    // length changes: set to null if string is empty
     const lengthSub = this.form.controls.length.valueChanges
       .pipe(filter((value) => value == ''))
       .subscribe(() => this.form.patchValue({ length: null }));
