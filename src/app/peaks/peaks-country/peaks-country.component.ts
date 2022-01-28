@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { PeaksCountryGQL, PeaksCountryQuery } from 'src/generated/graphql';
 import { LayoutService } from 'src/app/services/layout.service';
 
@@ -20,9 +20,10 @@ type Areas = Array<Area>;
   templateUrl: './peaks-country.component.html',
   styleUrls: ['./peaks-country.component.scss'],
 })
-export class PeaksCountryComponent implements OnInit {
+export class PeaksCountryComponent implements OnInit, OnDestroy {
   loading = true;
   error = false;
+  subscription: Subscription;
 
   countrySlug: string;
   areaSlug = '';
@@ -39,7 +40,7 @@ export class PeaksCountryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.params
+    this.subscription = this.activatedRoute.params
       .pipe(
         switchMap((params) => {
           this.loading = true;
@@ -134,5 +135,9 @@ export class PeaksCountryComponent implements OnInit {
     };
 
     return [currentArea, ...flatChildAreasWithPeakCount];
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

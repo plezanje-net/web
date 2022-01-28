@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { LayoutService } from 'src/app/services/layout.service';
 import { PeakBySlugGQL, PeakBySlugQuery } from 'src/generated/graphql';
 
@@ -9,9 +9,10 @@ import { PeakBySlugGQL, PeakBySlugQuery } from 'src/generated/graphql';
   templateUrl: './peak-crags.component.html',
   styleUrls: ['./peak-crags.component.scss'],
 })
-export class PeakCragsComponent implements OnInit {
+export class PeakCragsComponent implements OnInit, OnDestroy {
   loading = true;
   error = false;
+  subscription: Subscription;
 
   peak: PeakBySlugQuery['peak'];
 
@@ -22,7 +23,7 @@ export class PeakCragsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.params
+    this.subscription = this.activatedRoute.params
       .pipe(
         switchMap((params) => {
           const peakSlug = params.peak;
@@ -60,5 +61,9 @@ export class PeakCragsComponent implements OnInit {
         name: this.peak.name,
       },
     ]);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

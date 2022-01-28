@@ -16,7 +16,8 @@
 
   <div
     *ngIf="!loading"
-    fxLayout="row"
+    fxLayout="column"
+    fxLayout.gt-xs="row"
     fxLayoutGap="16px"
     class="container mt-16"
   >
@@ -48,7 +49,10 @@
 
     <!-- peak walls (crags) -->
     <div fxFlex="66.67">
-      <mat-card>
+      <div *ngIf="!peak.crags.length" class="p-16">
+        Za ta vrh ni vnesenih sten.
+      </div>
+      <mat-card *ngIf="peak.crags.length">
         <mat-card-content>
           <table>
             <thead>

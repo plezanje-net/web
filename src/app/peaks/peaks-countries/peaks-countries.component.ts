@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { LayoutService } from 'src/app/services/layout.service';
 import { PeaksCountriesGQL, PeaksCountriesQuery } from 'src/generated/graphql';
 
@@ -7,7 +8,7 @@ import { PeaksCountriesGQL, PeaksCountriesQuery } from 'src/generated/graphql';
   templateUrl: './peaks-countries.component.html',
   styleUrls: ['./peaks-countries.component.scss'],
 })
-export class PeaksCountriesComponent implements OnInit {
+export class PeaksCountriesComponent implements OnInit, OnDestroy {
   constructor(
     private layoutService: LayoutService,
     private peaksCountriesGQL: PeaksCountriesGQL
@@ -15,11 +16,12 @@ export class PeaksCountriesComponent implements OnInit {
 
   loading = true;
   error = false;
+  subscription: Subscription;
 
   peaksCountries: PeaksCountriesQuery['countries'];
 
   ngOnInit(): void {
-    this.peaksCountriesGQL.fetch().subscribe({
+    this.subscription = this.peaksCountriesGQL.fetch().subscribe({
       next: (result) => {
         this.peaksCountries = result.data.countries;
         this.setBreadcrumbs();
@@ -41,5 +43,9 @@ export class PeaksCountriesComponent implements OnInit {
         name: 'Vrhovi',
       },
     ]);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }
