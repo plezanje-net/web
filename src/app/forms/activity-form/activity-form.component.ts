@@ -163,6 +163,9 @@ export class ActivityFormComponent implements OnInit {
             .subscribe(() => {
               this.router.navigate(['/plezalni-dnevnik']);
             });
+
+          //TODO: should know if coming from alpinism or sport section to proerly redirect. after cragType is merged you can do this
+          // this.router.navigate(['/alpinizem', 'stena', this.crag.slug]);
           this.router.navigate([
             '/plezalisca/',
             this.crag.country.slug,

@@ -4,7 +4,7 @@
   <div class="white-back mt-16">
     <div class="container py-8">
       <h1>
-        Vrhovi v državi
+        Vrhovi -
         <span *ngIf="!loading">
           {{ peaks[0].country.name }}
         </span>
@@ -15,8 +15,50 @@
   <app-loader *ngIf="loading"></app-loader>
 
   <div *ngIf="!loading" class="container mt-16">
-    <div fxLayout="row" fxLayoutGap="16px">
-      <div fxFlex="33.33">
+    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="16px">
+      <div
+        fxFlex
+        fxLayout="column"
+        fxLayout.gt-xs="row"
+        fxLayoutGap="16px"
+        fxHide.gt-sm
+      >
+        <mat-form-field fxFlex class="no-hint">
+          <mat-label>Območje</mat-label>
+          <mat-select
+            [value]="areaSlug"
+            (selectionChange)="changeArea($event.value)"
+          >
+            <mat-option>Vsa območja</mat-option>
+
+            <ng-container *ngFor="let area of areas">
+              <mat-option
+                *ngIf="area.branchNrPeaks || showEmptyAreas"
+                [value]="area.slug"
+                [disabled]="area.peaks.length < 1"
+                [style.padding-left]="(area.depth + 1) * 16 + 'px'"
+                >{{ area.name }}</mat-option
+              >
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field fxFlex class="no-hint">
+          <mat-label>Država</mat-label>
+          <mat-select
+            [value]="countrySlug"
+            (selectionChange)="changeCountry($event.value)"
+          >
+            <mat-option
+              *ngFor="let country of countries"
+              [value]="country.slug"
+              >{{ country.name }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex fxHide fxShow.gt-sm>
         <mat-card>
           <mat-card-content>
             <table>
@@ -63,26 +105,27 @@
               <thead>
                 <tr>
                   <th>Država</th>
-                  <th></th>
+                  <th>Št. vrhov</th>
                 </tr>
               </thead>
               <tbody>
-                <tr
-                  *ngFor="let country of countries"
-                  [routerLink]="['/alpinizem/vrhovi/drzava', country.slug]"
-                  [ngClass]="{ active: country.slug == countrySlug }"
-                  class="is-link"
-                >
-                  <td>{{ country.name }}</td>
-                  <td>{{ country.nrPeaks }}</td>
-                </tr>
+                <ng-container *ngFor="let country of countries">
+                  <tr
+                    [routerLink]="['/alpinizem/vrhovi/drzava', country.slug]"
+                    [ngClass]="{ active: country.slug == countrySlug }"
+                    class="is-link"
+                  >
+                    <td>{{ country.name }}</td>
+                    <td>{{ country.nrPeaks }}</td>
+                  </tr>
+                </ng-container>
               </tbody>
             </table>
           </mat-card-content>
         </mat-card>
       </div>
 
-      <div fxFlex="66.67">
+      <div fxFlex>
         <mat-card>
           <mat-card-content>
             <table>

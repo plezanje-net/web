@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { SharedModule } from '../shared/shared.module';
@@ -21,6 +23,8 @@ import { PeakCragsComponent } from './peak-crags/peak-crags.component';
     SharedModule,
     PeaksRoutingModule,
     MatCardModule,
+    MatSelectModule,
+    MatFormFieldModule,
     FlexLayoutModule,
   ],
 })

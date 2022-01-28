@@ -79,11 +79,21 @@ export class CragComponent implements OnInit, OnDestroy {
       ? 'alpinism'
       : 'sport';
 
-    this.layoutService.$breadcrumbs.next([
-      {
-        name: 'Plezališča',
-      },
-    ]);
+    this.layoutService.$breadcrumbs.next(
+      this.section === 'alpinism'
+        ? [
+            { name: 'Alpinizem', path: '/alpinizem' },
+            {
+              name: 'Vrhovi',
+              path: '/alpinizem/vrhovi/drzave',
+            },
+          ]
+        : [
+            {
+              name: 'Plezališča',
+            },
+          ]
+    );
 
     const routeSub = this.activatedRoute.params.subscribe((params) => {
       this.loading = true;

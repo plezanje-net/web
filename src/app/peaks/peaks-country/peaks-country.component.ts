@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-
+import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
-import { LayoutService } from 'src/app/services/layout.service';
 import { PeaksCountryGQL, PeaksCountryQuery } from 'src/generated/graphql';
+import { LayoutService } from 'src/app/services/layout.service';
 
 type Area = {
   __typename?: 'Area';
@@ -33,8 +32,9 @@ export class PeaksCountryComponent implements OnInit {
   showEmptyAreas = false; // toggle this to show/hide areas with no peaks (branchwise)
 
   constructor(
-    private layoutService: LayoutService,
     private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private layoutService: LayoutService,
     private peaksCountryGQL: PeaksCountryGQL
   ) {}
 
@@ -68,6 +68,18 @@ export class PeaksCountryComponent implements OnInit {
           this.error = true;
         },
       });
+  }
+
+  changeCountry(countrySlug: string) {
+    this.router.navigate(['/alpinizem/vrhovi/drzava', countrySlug]);
+  }
+
+  changeArea(areaSlug: string) {
+    this.router.navigate([
+      '/alpinizem/vrhovi/drzava',
+      this.countrySlug,
+      areaSlug ? { area: areaSlug } : {},
+    ]);
   }
 
   private setBreadcrumbs() {
