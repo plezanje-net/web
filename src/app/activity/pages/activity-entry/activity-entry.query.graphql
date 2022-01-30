@@ -8,6 +8,7 @@ query ActivityEntry($id: String!) {
     partners
     duration
     routes {
+      id
       date
       ascentType
       notes

@@ -71,7 +71,10 @@
     <button mat-menu-item>
       <span>Uredi vzpon</span>
     </button>
-    <button mat-menu-item>
+    <button
+      mat-menu-item
+      (click)="rowAction.next({ item: route, action: 'delete' })"
+    >
       <span>Odstrani vzpon</span>
     </button>
   </mat-menu>
