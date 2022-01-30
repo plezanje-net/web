@@ -147,25 +147,20 @@
       ></textarea>
     </mat-form-field>
   </div>
-  <div
-    fxFlex
-    fxLayout="row"
-    fxLayout.lt-sm="column"
-    fxLayoutGap="16px"
-    fxLayoutAlign="start center"
-  >
+  <div fxFlex fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="16px">
     <div fxFlex="50">
       <app-grade-select
-        class="no-hint"
         [control]="route.controls.votedDifficulty"
         label="Predlog ocene"
         emptyText="Ne predlagaj ocene"
         [gradingSystemId]="route.value.defaultGradingSystemId"
+        [noHint]="true"
       ></app-grade-select>
     </div>
-    <mat-form-field fxFlex="50">
+    <mat-form-field fxFlex="50" class="no-hint">
       <mat-label>Lepota smeri</mat-label>
       <mat-select formControlName="stars">
+        <mat-option [value]="null">Ne predlagaj lepote</mat-option>
         <mat-option [value]="1">*</mat-option>
         <mat-option [value]="2">* *</mat-option>
         <mat-option [value]="3">* * *</mat-option>
