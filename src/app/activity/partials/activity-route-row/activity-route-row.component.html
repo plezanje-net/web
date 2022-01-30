@@ -50,7 +50,7 @@
 
   <mat-menu #menu="matMenu">
     <button
-      *ngIf="route.activity"
+      *ngIf="route.activity && displayType != 'activity'"
       mat-menu-item
       [routerLink]="['/plezalni-dnevnik', route.activity.id]"
     >
