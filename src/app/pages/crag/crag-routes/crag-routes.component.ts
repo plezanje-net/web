@@ -23,9 +23,6 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   ascents: any = {};
   difficultyVotesLoading: boolean;
   difficultyVotes: Record<string, string | any>[];
-  activeDifficultyVotesPopupId: string | null = null;
-  activeCommentsPopupId: string | null = null;
-  activePitchesPopupId: string | null = null;
   loading = false;
   expandedRowId: string;
   previousExpandedRowId: string;
@@ -157,13 +154,6 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
         this.ascents[ascent.route.id] = ascent.ascentType;
       });
     });
-  }
-  displayRoutePitches(route: Route): void {
-    this.activePitchesPopupId = route.id;
-  }
-
-  hideRoutePitches(route: Route): void {
-    this.activePitchesPopupId = null;
   }
 
   expandRow(routeId: string): void {

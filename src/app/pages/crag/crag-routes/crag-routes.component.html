@@ -97,25 +97,11 @@
             </div>
             <div class="route-details right" fxLayoutGap="14px">
               <div class="route-icons">
-                <div *ngIf="route.pitches.length > 0" class="popover-container">
-                  <button
-                    mat-icon-button
-                    color="primary"
-                    (mouseenter)="displayRoutePitches(route)"
-                    (mouseleave)="hideRoutePitches(route)"
-                  >
-                    MP
-                  </button>
-                  <div class="popover" *ngIf="false && activePitchesPopupId === route.id">
-                    <div class="popover-title">Raztežaji</div>
-                    <div>
-                      <text *ngFor="let pitch of route.pitches; let isLast = last"
-                        >{{ pitch.difficulty }} {{ isLast ? "" : ", " }}</text
-                      >
-                    </div>
-                  </div>
-                  <div class="popover-arrow"></div>
-                </div>
+                <button
+                  *ngIf="route.pitches.length > 0"
+                  mat-icon-button
+                  color="primary"
+                >MP</button>
                 <button *ngIf="route.comments.length > 0" mat-icon-button>
                   <mat-icon>comment</mat-icon>
                 </button>
