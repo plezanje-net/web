@@ -168,7 +168,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   }
 
   onPreviewHeightEvent(height: number): void {
-    height += 40; // for the 20px padding above and below the content
+    height += 20; // for the 20px padding above the content
     this.expandedRowHeight = height;
     this.changeDetection.detectChanges();
   }
