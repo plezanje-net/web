@@ -6,8 +6,12 @@
       #swiper
       [slidesPerView]="1"
       [spaceBetween]="0"
-      [breakpoints]="{ '905': { slidesPerView: 2, slidesPerGroup: 1 } }"
-      [loop]="true"
+      [breakpoints]="
+        warnings.length > 1
+          ? { '905': { slidesPerView: 2, slidesPerGroup: 1 } }
+          : {}
+      "
+      [loop]="warnings.length > 1"
       [pagination]="{}"
       [slidesPerGroup]="1"
       [centerInsufficientSlides]="true"
@@ -21,7 +25,7 @@
       }"
     >
       <ng-template swiperSlide *ngFor="let warning of warnings">
-        <div class="slide">
+        <div [class.slide]="warnings.length > 1">
           <div class="slide-inner-wrap">
             <mat-card class="warning">
               <mat-card-title>
