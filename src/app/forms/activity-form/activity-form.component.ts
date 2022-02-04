@@ -164,13 +164,16 @@ export class ActivityFormComponent implements OnInit {
               this.router.navigate(['/plezalni-dnevnik']);
             });
 
-          //TODO: should know if coming from alpinism or sport section to proerly redirect. after cragType is merged you can do this
-          // this.router.navigate(['/alpinizem', 'stena', this.crag.slug]);
-          this.router.navigate([
-            '/plezalisca/',
-            this.crag.country.slug,
-            this.crag.slug,
-          ]);
+          // based on crag type navigate back to either peaks(alpinism) or sport climbing section
+          if (this.crag.type === 'alpine') {
+            this.router.navigate(['/alpinizem', 'stena', this.crag.slug]);
+          } else {
+            this.router.navigate([
+              '/plezalisca/',
+              this.crag.country.slug,
+              this.crag.slug,
+            ]);
+          }
         },
         error: () => {
           this.loading = false;
