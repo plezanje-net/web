@@ -106,7 +106,7 @@ const routes: Routes = [
     component: CragComponent,
   },
   {
-    path: 'plezalisca/:country/:crag/:route',
+    path: 'plezalisce/:crag/smer/:route',
     component: RouteComponent,
   },
   {

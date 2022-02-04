@@ -91,9 +91,9 @@
               fxLayoutGap="5px"
               class="row"
               [routerLink]="[
-                '/plezalisca',
-                route.crag.country.slug,
+                '/plezalisce',
                 route.crag.slug,
+                'smer',
                 route.slug
               ]"
             >
@@ -199,9 +199,9 @@
               [routerLink]="
                 comment?.route
                   ? [
-                      '/plezalisca',
-                      comment.route.crag.country.slug,
+                      '/plezalisce',
                       comment.route.crag.slug,
+                      'smer',
                       comment.route.slug
                     ]
                   : ['/plezalisce', comment.crag.slug]

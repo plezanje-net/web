@@ -3,12 +3,7 @@
     <div fxFlex="100" fxLayout="row" fxLayoutGap="12px">
       <ng-container *ngIf="route.value.routeId">
         <a
-          [routerLink]="[
-            '/plezalisca',
-            crag.country.slug,
-            crag.slug,
-            route.value.routeId
-          ]"
+          [routerLink]="['/plezalisce', crag.slug, 'smer', route.value.slug]"
           class="route-name"
           >{{ route.value.name }}
         </a>
