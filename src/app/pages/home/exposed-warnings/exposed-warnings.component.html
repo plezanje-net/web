@@ -5,6 +5,7 @@
     <swiper
       #swiper
       [slidesPerView]="1"
+      [slidesPerGroup]="1"
       [spaceBetween]="0"
       [breakpoints]="
         warnings.length > 1
@@ -12,8 +13,6 @@
           : {}
       "
       [loop]="warnings.length > 1"
-      [pagination]="{}"
-      [slidesPerGroup]="1"
       [centerInsufficientSlides]="true"
       [autoHeight]="true"
       [autoplay]="{
@@ -67,7 +66,7 @@
           </div>
         </div>
       </ng-template>
-      <div slot="container-end" class="swiper-pagination pagination-test"></div>
+      <div slot="container-end" class="swiper-pagination"></div>
     </swiper>
   </div>
 </ng-container>

@@ -1,10 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  OnInit,
-  Output,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { take } from 'rxjs';
 import {
   ExposedWarningsGQL,
@@ -13,7 +7,7 @@ import {
 import { DataError } from '../../../types/data-error';
 import { LoadingSpinnerService } from '../loading-spinner.service';
 
-import SwiperCore, { Autoplay, Pagination, Swiper } from 'swiper';
+import SwiperCore, { Autoplay, Pagination } from 'swiper';
 
 SwiperCore.use([Pagination, Autoplay]);
 
