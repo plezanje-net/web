@@ -35,7 +35,7 @@
             </div>
             <div
               *ngFor="let crag of searchResults.crags"
-              [routerLink]="['/plezalisca', crag.country.slug, crag.slug]"
+              [routerLink]="['/plezalisce', crag.slug]"
               fxLayout="row"
               fxLayoutAlign="start center"
               fxLayoutGap="5px"
@@ -133,11 +133,7 @@
               fxLayout="row"
               fxLayoutAlign="start center"
               class="row"
-              [routerLink]="[
-                '/plezalisca',
-                sector.crag.country.slug,
-                sector.crag.slug
-              ]"
+              [routerLink]="['/plezalisce', sector.crag.slug]"
             >
               <div fxFlex>
                 <a [innerHtml]="highlight(sector.name, searchString)"></a>
@@ -208,11 +204,7 @@
                       comment.route.crag.slug,
                       comment.route.slug
                     ]
-                  : [
-                      '/plezalisca',
-                      comment.crag.country.slug,
-                      comment.crag.slug
-                    ]
+                  : ['/plezalisce', comment.crag.slug]
               "
             >
               <div

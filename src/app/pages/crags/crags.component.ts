@@ -101,11 +101,7 @@ export class CragsComponent implements OnInit {
 
   searchKeyDown(e: KeyboardEvent) {
     if (e.key == 'Enter' && this.filteredCrags.length == 1) {
-      this.router.navigate([
-        '/plezalisca',
-        this.country.slug,
-        this.filteredCrags[0].slug,
-      ]);
+      this.router.navigate(['/plezalisce', this.filteredCrags[0].slug]);
     }
   }
 

@@ -20,14 +20,9 @@
             fxShow.gt-sm
           >
             <td>
-              <a
-                [routerLink]="[
-                  '/plezalisca/',
-                  popularCrag.crag.country.slug,
-                  popularCrag.crag.slug
-                ]"
-                >{{ popularCrag.crag.name }}</a
-              >
+              <a [routerLink]="['/plezalisce', popularCrag.crag.slug]">{{
+                popularCrag.crag.name
+              }}</a>
             </td>
             <td>{{ popularCrag.nrVisits }}</td>
           </tr>

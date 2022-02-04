@@ -130,14 +130,9 @@
             <td>{{ route.user.fullName }}</td>
             <td>{{ route.date | amDateFormat: "DD.MM.YYYY" }}</td>
             <td>
-              <a
-                [routerLink]="[
-                  '/plezalisca',
-                  route.route.crag.country.slug,
-                  route.route.crag.slug
-                ]"
-                >{{ route.route.crag.name }}</a
-              >
+              <a [routerLink]="['/plezalisce', route.route.crag.slug]">{{
+                route.route.crag.name
+              }}</a>
             </td>
             <td>
               <a

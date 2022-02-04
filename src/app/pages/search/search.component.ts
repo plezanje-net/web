@@ -98,7 +98,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     switch (optionValue.__typename) {
       case 'Crag':
         const crag = optionValue;
-        this.router.navigate(['/plezalisca', crag.country.slug, crag.slug]);
+        this.router.navigate(['/plezalisce', crag.slug]);
         break;
 
       case 'Route':
@@ -113,11 +113,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
       case 'Sector':
         const sector = optionValue;
-        this.router.navigate([
-          '/plezalisca',
-          sector.crag.country.slug,
-          sector.crag.slug,
-        ]);
+        this.router.navigate(['/plezalisce', sector.crag.slug]);
         break;
 
       case 'User':
@@ -135,11 +131,7 @@ export class SearchComponent implements OnInit, OnDestroy {
             comment.route.id,
           ]);
         } else {
-          this.router.navigate([
-            '/plezalisca',
-            comment.crag.country.slug,
-            comment.crag.slug,
-          ]);
+          this.router.navigate(['/plezalisce', comment.crag.slug]);
         }
     }
   }

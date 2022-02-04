@@ -2,14 +2,9 @@
 <div #popup class="popup" [hidden]="true" title="Plezališče">
   <div>
     <p>
-      <a
-        [routerLink]="[
-          '/plezalisca/',
-          selectedCrag?.country.slug,
-          selectedCrag?.slug
-        ]"
-        >{{ selectedCrag?.name }}</a
-      >
+      <a [routerLink]="['/plezalisce/', selectedCrag?.slug]">{{
+        selectedCrag?.name
+      }}</a>
     </p>
     <p>
       <span *ngIf="selectedCrag?.nrRoutes">
