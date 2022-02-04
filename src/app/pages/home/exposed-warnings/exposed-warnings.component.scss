@@ -32,7 +32,7 @@ h2 {
   font-weight: 400;
   line-height: normal;
   margin-top: 32px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   padding: 0;
   box-shadow: none;
 }
@@ -47,6 +47,7 @@ h2 {
   }
 }
 
-swiper {
-  padding-bottom: 30px;
+.swiper-pagination {
+  position: relative;
+  top: 0;
 }

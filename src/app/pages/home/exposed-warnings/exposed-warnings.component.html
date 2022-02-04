@@ -20,7 +20,9 @@
         disableOnInteraction: false
       }"
       [pagination]="{
-        clickable: true
+        clickable: true,
+        el: '.swiper-pagination',
+        type: 'bullets'
       }"
     >
       <ng-template swiperSlide *ngFor="let warning of warnings">

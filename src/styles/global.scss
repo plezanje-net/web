@@ -246,3 +246,8 @@ span.highlight {
 .d-block {
   display: block;
 }
+
+.swiper-pagination-bullet-active {
+  background-color: $primary !important;
+  opacity: 1 !important;
+}
