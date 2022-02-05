@@ -178,8 +178,8 @@ export class RouteFormComponent implements OnInit, OnDestroy {
       this.editing = true;
       this.form.patchValue({
         ...this.data.route,
-        defaultGradingSystemId: this.data.route.defaultGradingSystem.id,
         routeTypeId: this.data.route.routeType.id,
+        defaultGradingSystemId: this.data.route.defaultGradingSystem.id,
       });
     }
   }
