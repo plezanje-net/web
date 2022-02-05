@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from '../../types/data-error';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Subject, take } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription, take } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { CragsQuery, CragsGQL } from '../../../generated/graphql';
 import { GraphQLError } from 'graphql';
@@ -13,7 +13,7 @@ import { FormControl } from '@angular/forms';
   templateUrl: './crags.component.html',
   styleUrls: ['./crags.component.scss'],
 })
-export class CragsComponent implements OnInit {
+export class CragsComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   cragsLoading: boolean = false;
   error: DataError = null;
@@ -26,6 +26,7 @@ export class CragsComponent implements OnInit {
   map: any;
 
   search = new FormControl();
+  searchSub: Subscription;
 
   filteredCrags: CragsQuery['countryBySlug']['crags'] = [];
 
@@ -76,7 +77,9 @@ export class CragsComponent implements OnInit {
         });
     });
 
-    this.search.valueChanges.subscribe(() => this.filterCrags());
+    this.searchSub = this.search.valueChanges.subscribe(() =>
+      this.filterCrags()
+    );
   }
 
   filterCrags(): void {
@@ -135,5 +138,9 @@ export class CragsComponent implements OnInit {
         name: this.country.name,
       },
     ]);
+  }
+
+  ngOnDestroy(): void {
+    this.searchSub.unsubscribe();
   }
 }
