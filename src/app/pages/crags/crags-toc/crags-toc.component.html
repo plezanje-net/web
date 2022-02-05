@@ -34,8 +34,8 @@
     </a>
     <a
       *ngFor="let area of country.areas"
-      [routerLink]="makeRoute(country.slug, { area: area.id })"
-      [class.active]="area.id == params.area"
+      [routerLink]="makeRoute(country.slug, { area: area.slug })"
+      [class.active]="area.slug == params.area"
       class="row"
       fxLayout="row"
       fxLayoutAlign="start center"

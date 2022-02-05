@@ -2,13 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from '../../types/data-error';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, take } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { CragsQuery, CragsGQL } from '../../../generated/graphql';
 import { GraphQLError } from 'graphql';
 import { FormControl } from '@angular/forms';
-
-declare var ol: any;
 
 @Component({
   selector: 'app-crags',
@@ -55,12 +53,13 @@ export class CragsComponent implements OnInit {
         .fetch({
           country: params.country,
           input: {
-            area: params.area,
+            areaSlug: params.area,
             routeTypeId: params.type,
           },
         })
-        .subscribe(
-          (result) => {
+        .pipe(take(1))
+        .subscribe({
+          next: (result) => {
             this.loading = false;
             this.cragsLoading = false;
 
@@ -70,11 +69,11 @@ export class CragsComponent implements OnInit {
               this.querySuccess(result.data.countryBySlug);
             }
           },
-          (_) => {
+          error: () => {
             this.loading = false;
             this.queryError();
-          }
-        );
+          },
+        });
     });
 
     this.search.valueChanges.subscribe(() => this.filterCrags());
