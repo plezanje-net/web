@@ -189,8 +189,6 @@ export class RouteFormComponent implements OnInit, OnDestroy {
       (gradingSystem) => gradingSystem.id == gradingSystemId
     );
 
-    console.log(this.form.value.baseDifficulty, gradingSystem.grades);
-
     this.difficultyOptions = gradingSystem ? gradingSystem.grades : [];
 
     const baseDifficulty = this.form.value.baseDifficulty;

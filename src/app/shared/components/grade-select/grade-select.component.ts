@@ -45,9 +45,13 @@ export class GradeSelectComponent implements OnInit, OnChanges {
     const gradingSystems = this.gradingSystemService.getGradingSystems();
 
     gradingSystems.then((gradingSystems) => {
-      const grades = gradingSystems.find(
+      const gradingSystem = gradingSystems.find(
         (gradingSystem) => gradingSystem.id === this.gradingSystemId
-      ).grades;
+      );
+
+      if (gradingSystem == null) return;
+
+      const grades = gradingSystem.grades;
       this.allGrades = grades;
 
       this.populateGradesDropdown();
