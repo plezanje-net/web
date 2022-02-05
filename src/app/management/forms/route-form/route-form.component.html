@@ -62,7 +62,7 @@
     <div fxFlex *ngIf="!editing && !form.value.isProject">
       <app-grade-select
         fxFlex
-        label="Bazna ocena"
+        label="Bazna ocena *"
         [control]="form.controls.baseDifficulty"
         [gradingSystemId]="form.value.defaultGradingSystemId"
       ></app-grade-select>
