@@ -62,14 +62,14 @@ export class CragFormComponent implements OnInit, OnDestroy {
   ];
 
   statuses: Registry[] = [
-    {
-      value: 'user',
-      label: 'Začasno / zasebno',
-    },
-    {
-      value: 'proposal',
-      label: 'Predlagaj administratorju',
-    },
+    // {
+    //   value: 'user',
+    //   label: 'Začasno / zasebno',
+    // },
+    // {
+    //   value: 'proposal',
+    //   label: 'Predlagaj administratorju',
+    // },
     {
       value: 'admin',
       label: 'Vidno administratorjem',
