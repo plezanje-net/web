@@ -40,15 +40,6 @@ export interface RouteFormValues {
   addAnother?: boolean;
 }
 
-const RouteFormValidator: ValidatorFn = (fg: FormGroup) => {
-  const id = fg.get('id').value;
-  const isProject = fg.get('isProject').value;
-  const baseDifficulty = fg.get('baseDifficulty').value;
-  return id == null && !isProject && baseDifficulty == null
-    ? { baseDifficultyRequired: true }
-    : null;
-};
-
 @Component({
   selector: 'app-route-form',
   templateUrl: './route-form.component.html',
@@ -59,23 +50,18 @@ export class RouteFormComponent implements OnInit, OnDestroy {
 
   editing = false;
 
-  form = new FormGroup(
-    {
-      id: new FormControl(),
-      name: new FormControl(null, Validators.required),
-      routeTypeId: new FormControl('sport', Validators.required),
-      length: new FormControl(),
-      defaultGradingSystemId: new FormControl('french', Validators.required),
-      isProject: new FormControl(false),
-      baseDifficulty: new FormControl(null),
-      position: new FormControl(),
-      sectorId: new FormControl(),
-      addAnother: new FormControl(false),
-    },
-    {
-      validators: [RouteFormValidator],
-    }
-  );
+  form = new FormGroup({
+    id: new FormControl(),
+    name: new FormControl(null, Validators.required),
+    routeTypeId: new FormControl('sport', Validators.required),
+    length: new FormControl(),
+    defaultGradingSystemId: new FormControl('french', Validators.required),
+    isProject: new FormControl(false),
+    baseDifficulty: new FormControl(null, Validators.required),
+    position: new FormControl(),
+    sectorId: new FormControl(),
+    addAnother: new FormControl(false),
+  });
 
   gradingSystems: GradingSystem[];
 
@@ -122,13 +108,19 @@ export class RouteFormComponent implements OnInit, OnDestroy {
     this.subscriptions.push(gradeSub);
 
     // project changes: reset base difficulty if route is set as project
-    const projectSub = this.form.controls.isProject.valueChanges
-      .pipe(filter((value) => value == true))
-      .subscribe(() => {
-        this.form.patchValue({
-          baseDifficulty: null,
-        });
-      });
+    const projectSub = this.form.controls.isProject.valueChanges.subscribe(
+      (value) => {
+        const baseDifficultyControl = this.form.controls.baseDifficulty;
+        if (value == true) {
+          baseDifficultyControl.setValue(null);
+          baseDifficultyControl.clearValidators();
+        } else {
+          baseDifficultyControl.addValidators(Validators.required);
+        }
+
+        baseDifficultyControl.updateValueAndValidity();
+      }
+    );
     this.subscriptions.push(projectSub);
 
     // route type changes: unset length for boulders, filter grading systems and reset grading system if necessary
