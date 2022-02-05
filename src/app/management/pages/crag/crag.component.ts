@@ -17,6 +17,7 @@ import { CragAdminBreadcrumbs } from '../../utils/crag-admin-breadcrumbs';
 })
 export class CragComponent implements OnInit {
   loading: boolean = true;
+  error: boolean = false;
   heading: string = '';
 
   crag: Crag;
@@ -42,24 +43,30 @@ export class CragComponent implements OnInit {
           }
         })
       )
-      .subscribe((result) => {
-        if (result != null) {
-          this.crag = <Crag>result.data.crag;
+      .subscribe({
+        next: (result) => {
+          if (result != null) {
+            this.crag = <Crag>result.data.crag;
 
-          this.layoutService.$breadcrumbs.next(
-            new CragAdminBreadcrumbs(this.crag).build()
-          );
+            this.layoutService.$breadcrumbs.next(
+              new CragAdminBreadcrumbs(this.crag).build()
+            );
 
-          this.heading = `${this.crag.name}`;
-        } else {
-          this.layoutService.$breadcrumbs.next([
-            {
-              name: 'Dodajanje plezališča',
-            },
-          ]);
-          this.heading = `Dodajanje plezališča`;
-        }
-        this.loading = false;
+            this.heading = `${this.crag.name}`;
+          } else {
+            this.layoutService.$breadcrumbs.next([
+              {
+                name: 'Dodajanje plezališča',
+              },
+            ]);
+            this.heading = `Dodajanje plezališča`;
+          }
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+          this.error = true;
+        },
       });
   }
 }

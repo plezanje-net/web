@@ -1,4 +1,5 @@
-<div *ngIf="!loading">
+<div *ngIf="!loading && error" class="container py-8">Plezališče ne obstaja.</div>
+<div *ngIf="!loading && !error">
   <div class="white-back mt-16">
     <div
       class="container py-8"
