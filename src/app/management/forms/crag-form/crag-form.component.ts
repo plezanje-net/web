@@ -189,10 +189,12 @@ export class CragFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  formatCoordinate(event: { target: { value: string } }) {
-    event.target.value = event.target.value
-      ? parseFloat(event.target.value).toFixed(5)
-      : null;
+  formatCoordinate(event: { target: { value: string } }, controlName: string) {
+    this.cragForm.patchValue({
+      [controlName]: event.target.value
+        ? Math.round(parseFloat(event.target.value) * 100000) / 100000
+        : null,
+    });
   }
 
   save(): void {

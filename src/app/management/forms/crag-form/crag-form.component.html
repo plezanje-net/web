@@ -54,9 +54,9 @@
           matInput
           type="number"
           formControlName="lat"
-          (blur)="formatCoordinate($event)"
+          (blur)="formatCoordinate($event, 'lat')"
         />
-        <mat-hint>Google koordinata, npr.: 45.96882330502303</mat-hint>
+        <mat-hint>Google koordinata, npr.: 45,96882</mat-hint>
       </mat-form-field>
     </p>
     <p fxFlex="50">
@@ -66,9 +66,9 @@
           matInput
           type="number"
           formControlName="lon"
-          (blur)="formatCoordinate($event)"
+          (blur)="formatCoordinate($event, 'lon')"
         />
-        <mat-hint>Google koordinata, npr.: 14.009368654412414</mat-hint>
+        <mat-hint>Google koordinata, npr.: 14,00936</mat-hint>
       </mat-form-field>
     </p>
   </div>
