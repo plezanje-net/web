@@ -1,5 +1,5 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Params } from '@angular/router';
@@ -32,7 +32,7 @@ interface TmpRoute {
   templateUrl: './crag-sector-routes.component.html',
   styleUrls: ['./crag-sector-routes.component.scss'],
 })
-export class CragSectorRoutesComponent implements OnInit {
+export class CragSectorRoutesComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   savingPositions: boolean = false;
   heading: string = '';
@@ -55,7 +55,7 @@ export class CragSectorRoutesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.params
+    const sectorSub = this.activatedRoute.params
       .pipe(
         filter((params) => params.sector != null),
         switchMap(
@@ -83,6 +83,12 @@ export class CragSectorRoutesComponent implements OnInit {
           new CragAdminBreadcrumbs(this.crag).build()
         );
       });
+
+    this.subscriptions.push(sectorSub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   drop(event: CdkDragDrop<string[]>) {
