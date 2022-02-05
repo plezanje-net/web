@@ -35,7 +35,7 @@ export class SectorFormComponent implements OnInit {
   form = new FormGroup({
     label: new FormControl(''),
     name: new FormControl(''),
-    status: new FormControl(null, Validators.required),
+    status: new FormControl('public', Validators.required),
   });
 
   constructor(
