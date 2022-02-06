@@ -145,12 +145,19 @@ export class CragSectorsComponent implements OnInit {
         filter((value) => value != null),
         switchMap(() => this.deleteSectorGQL.mutate({ id: sector.id }))
       )
-      .subscribe(() => {
-        this.apollo.client.resetStore().then(() => {
-          this.snackBar.open('Sektor je bil izbrisan', null, {
-            duration: 2000,
+      .subscribe({
+        next: () =>
+          this.apollo.client.resetStore().then(() => {
+            this.snackBar.open('Sektor je bil izbrisan', null, {
+              duration: 2000,
+            });
+          }),
+        error: (error) => {
+          this.snackBar.open(error.message, null, {
+            panelClass: 'error',
+            duration: 3000,
           });
-        });
+        },
       });
   }
 }
