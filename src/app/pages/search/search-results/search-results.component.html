@@ -1,4 +1,6 @@
-<div class="container mt-16">
+<app-data-error *ngIf="error" [error]="error"></app-data-error>
+
+<div *ngIf="!error" class="container mt-16">
   <app-search></app-search>
 
   <app-loader *ngIf="loading"></app-loader>
@@ -45,7 +47,9 @@
                 <a [innerHtml]="highlight(crag.name, searchString)"></a>
               </div>
 
-              <div fxFlex="25%">{{ crag.nrRoutes | pluralizeNoun : 'smer' }}</div>
+              <div fxFlex="25%">
+                {{ crag.nrRoutes | pluralizeNoun: "smer" }}
+              </div>
               <div fxFlex="20px">
                 {{ crag.orientation }}
               </div>

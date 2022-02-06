@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { EMPTY, switchMap } from 'rxjs';
 import { LayoutService } from 'src/app/services/layout.service';
 import { SearchGQL, SearchQuery } from 'src/generated/graphql';
 
@@ -13,6 +14,7 @@ export class SearchResultsComponent implements OnInit {
   searchStringTooShort = false;
   searchResults: SearchQuery['search'];
   loading = true;
+  error = null;
   firstNonEmptyTabIndex: number;
   noResults = true;
 
@@ -23,38 +25,48 @@ export class SearchResultsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe((params) => {
-      this.searchString = params.search;
-      this.setBreadcrumbs();
+    this.activatedRoute.params
+      .pipe(
+        switchMap((params) => {
+          this.searchString = params.search;
+          this.setBreadcrumbs();
 
-      // query is shorter than 3 non space characters -> no go
-      if (this.searchString.replace(/\s/g, '').length < 3) {
-        this.searchStringTooShort = true;
-        this.loading = false;
-      } // fetch what is searched for and display results
-      else {
-        this.searchStringTooShort = false;
-        this.loading = true;
-        this.searchGQL
-          .fetch({
-            query: this.searchString,
-          })
-          .subscribe((result) => {
+          // query is shorter than 3 non space characters -> no go
+          if (this.searchString.replace(/\s/g, '').length < 3) {
+            this.searchStringTooShort = true;
             this.loading = false;
-            this.searchResults = result.data.search;
+            return EMPTY;
+          } else {
+            // fetch what is searched for and display results
+            this.searchStringTooShort = false;
+            this.loading = true;
+            return this.searchGQL.fetch({
+              query: this.searchString,
+            });
+          }
+        })
+      )
+      .subscribe({
+        next: (result) => {
+          this.loading = false;
+          this.searchResults = result.data.search;
 
-            this.firstNonEmptyTabIndex = [
-              this.searchResults.crags,
-              this.searchResults.routes,
-              this.searchResults.sectors,
-              this.searchResults.users,
-              this.searchResults.comments,
-            ].findIndex((val) => val.length > 0);
+          this.firstNonEmptyTabIndex = [
+            this.searchResults.crags,
+            this.searchResults.routes,
+            this.searchResults.sectors,
+            this.searchResults.users,
+            this.searchResults.comments,
+          ].findIndex((val) => val.length > 0);
 
-            this.noResults = this.firstNonEmptyTabIndex < 0;
-          });
-      }
-    });
+          this.noResults = this.firstNonEmptyTabIndex < 0;
+        },
+        error: () => {
+          this.error = {
+            message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
+          };
+        },
+      });
   }
 
   setBreadcrumbs() {
