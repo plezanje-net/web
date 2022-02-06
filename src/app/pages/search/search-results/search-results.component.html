@@ -45,7 +45,7 @@
                 <a [innerHtml]="highlight(crag.name, searchString)"></a>
               </div>
 
-              <div fxFlex="25%">{{ crag.nrRoutes }} smeri</div>
+              <div fxFlex="25%">{{ crag.nrRoutes | pluralizeNoun : 'smer' }}</div>
               <div fxFlex="20px">
                 {{ crag.orientation }}
               </div>
