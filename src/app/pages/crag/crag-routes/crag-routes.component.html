@@ -50,7 +50,7 @@
           fxFlex.lt-md
           fxHide.lt-md
         >
-          <ng-container *ngIf="route.routeType.id !== 'boulder'"
+          <ng-container *ngIf="route.routeType.id !== 'boulder' && route.length"
             >{{ route.length }} m</ng-container
           >
         </div>
