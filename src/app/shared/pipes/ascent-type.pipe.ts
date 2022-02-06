@@ -11,6 +11,8 @@ export class AscentTypePipe implements PipeTransform {
         return 'na flash';
       case 'redpoint':
         return 'z rdečo piko';
+      case 'repeat':
+        return 'ponovno';
       default:
         return ascentType;
     }
