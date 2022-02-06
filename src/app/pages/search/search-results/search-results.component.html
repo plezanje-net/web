@@ -51,6 +51,7 @@
               </div>
               <div fxFlex class="lastColumn">
                 <app-grade
+                  *ngIf="crag.minDifficulty"
                   [difficulty]="crag.minDifficulty"
                   [gradingSystemId]="crag.defaultGradingSystem.id"
                 ></app-grade>
@@ -60,6 +61,7 @@
                     : ""
                 }}
                 <app-grade
+                  *ngIf="crag.maxDifficulty"
                   [difficulty]="crag.maxDifficulty"
                   [gradingSystemId]="crag.defaultGradingSystem.id"
                 ></app-grade>
