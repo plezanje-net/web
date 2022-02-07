@@ -111,7 +111,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
     const projectSub = this.form.controls.isProject.valueChanges.subscribe(
       (value) => {
         const baseDifficultyControl = this.form.controls.baseDifficulty;
-        if (value == true) {
+        if (value == true || this.data.route) {
           baseDifficultyControl.setValue(null);
           baseDifficultyControl.clearValidators();
         } else {
