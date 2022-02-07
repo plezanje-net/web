@@ -1,0 +1,45 @@
+@import "../../../../styles/colors.scss";
+
+.sector {
+  background: #fff;
+  box-shadow: 0 2px 6px 0 #6494ff26;
+  padding: 4px 12px;
+  border-left: 1px solid #ffc107;
+  min-height: 52px;
+  .name {
+    color: $text-gray;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 12px 0;
+    span {
+      color: $primary;
+    }
+  }
+
+  .mat-icon-button:not(.mat-accent) {
+    color: #666;
+  }
+}
+
+.buttons {
+  padding: 12px 0;
+  text-align: center;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drop-list.saving {
+  position: relative;
+  &:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.4);
+    z-index: 1;
+  }
+}

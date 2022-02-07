@@ -19,7 +19,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from '../shared/shared.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { CragSectorsComponent } from './pages/crag/crag-sectors/crag-sectors.component';
+import { CragSectorsComponent } from './pages/crag-sectors/crag-sectors.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatDialogModule } from '@angular/material/dialog';
+import { CragSectorRoutesComponent } from './pages/crag-sector-routes/crag-sector-routes.component';
+import { NgxMaskModule, IConfig } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -28,6 +33,7 @@ import { CragSectorsComponent } from './pages/crag/crag-sectors/crag-sectors.com
     SectorFormComponent,
     RouteFormComponent,
     CragSectorsComponent,
+    CragSectorRoutesComponent,
   ],
   imports: [
     CommonModule,
@@ -42,7 +48,11 @@ import { CragSectorsComponent } from './pages/crag/crag-sectors/crag-sectors.com
     MatTooltipModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    MatCheckboxModule,
+    MatDialogModule,
+    NgxMaskModule.forRoot(),
     SharedModule,
+    DragDropModule,
     ReactiveFormsModule,
     ManagementRoutingModule,
   ],

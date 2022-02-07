@@ -29,12 +29,14 @@ import { CommentOptionsComponent } from './components/comment/comment-options/co
 import { WarningsComponent } from './components/warnings/warnings.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
+import { GradeComponent } from './components/grade/grade.component';
 
 @NgModule({
   declarations: [
     EditorComponent,
     SnackBarButtonsComponent,
     GradeSelectComponent,
+    GradeComponent,
     CommentComponent,
     CommentOptionsComponent,
     CommentFormComponent,
@@ -69,6 +71,7 @@ import { MatInputModule } from '@angular/material/input';
     EditorComponent,
     SnackBarButtonsComponent,
     GradeSelectComponent,
+    GradeComponent,
     CommentComponent,
     CommentFormComponent,
     WarningsComponent,

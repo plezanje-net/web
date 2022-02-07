@@ -44,6 +44,9 @@ body {
     width: 1040px;
   }
 }
+.mt-8 {
+  margin-top: 8px;
+}
 
 .mt-16 {
   margin-top: 16px;
@@ -184,6 +187,13 @@ b {
 }
 
 body {
+  .form.no-hints {
+    .mat-form-field {
+      .mat-form-field-wrapper {
+        margin-bottom: -1.25em;
+      }
+    }
+  }
   .mat-dialog-container {
     border-radius: 2px;
   }

@@ -1,0 +1,5 @@
+mutation ManagementCreateSector($input: CreateSectorInput!) {
+  createSector(input: $input) {
+    id
+  }
+}

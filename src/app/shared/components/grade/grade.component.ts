@@ -3,7 +3,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import {
   GradingSystemsService,
   IGrade,
-} from '../../shared/services/grading-systems.service';
+} from '../../services/grading-systems.service';
 
 @Component({
   selector: 'app-grade',
@@ -25,12 +25,14 @@ export class GradeComponent implements OnInit {
   constructor(private GradingSystemsService: GradingSystemsService) {}
 
   ngOnInit(): void {
-    this.GradingSystemsService.diffToGrade(
-      this.difficulty,
-      this.gradingSystemId,
-      this.legacy
-    ).then((grade) => {
-      this.grade = grade;
-    });
+    if (this.difficulty != null) {
+      this.GradingSystemsService.diffToGrade(
+        this.difficulty,
+        this.gradingSystemId,
+        this.legacy
+      ).then((grade) => {
+        this.grade = grade;
+      });
+    }
   }
 }

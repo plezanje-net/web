@@ -1,5 +1,9 @@
-<form [formGroup]="cragForm" (submit)="save()" class="card padding no-border">
-  <div fxLayout="row" fxLayoutGap="8px">
+<form
+  [formGroup]="cragForm"
+  (submit)="save()"
+  class="card padding no-border mt-16"
+>
+  <div fxLayout="row" fxLayoutGap="8px" fxLayout.lt-sm="column">
     <p fxFlex="50">
       <mat-form-field>
         <mat-label>Ime plezališča</mat-label>
@@ -7,20 +11,24 @@
       </mat-form-field>
     </p>
     <p fxFlex="50">
-      <mat-form-field>
-        <mat-label>Slug</mat-label>
-        <input matInput type="text" formControlName="slug" />
-        <mat-hint>Računalniku prijazno ime, uporabljeno v URL povezavi</mat-hint>
+      <mat-form-field class="no-hint">
+        <mat-label>Vrsta plezanja</mat-label>
+        <mat-select formControlName="type">
+          <mat-option *ngFor="let type of types" [value]="type.value"
+            >{{ type.label }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
     </p>
   </div>
 
-  <div fxLayout="row" fxLayoutGap="8px">
+  <div fxLayout="row" fxLayoutGap="8px" fxLayout.lt-sm="column">
     <p fxFlex="50">
       <mat-form-field class="no-hint">
         <mat-label>Država</mat-label>
         <mat-select formControlName="countryId">
-          <mat-option *ngFor="let country of countries" [value]="country.id">{{ country.name }}
+          <mat-option *ngFor="let country of countries" [value]="country.id"
+            >{{ country.name }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -30,36 +38,50 @@
       <mat-form-field class="no-hint">
         <mat-label>Regija</mat-label>
         <mat-select formControlName="areaId">
-          <mat-option *ngFor="let area of areas" [value]="area.id">{{ area.name }}
+          <mat-option *ngFor="let area of areas" [value]="area.id"
+            >{{ area.name }}
           </mat-option>
         </mat-select>
       </mat-form-field>
     </p>
   </div>
 
-  <div fxLayout="row" fxLayoutGap="8px">
+  <div fxLayout="row" fxLayoutGap="8px" fxLayout.lt-sm="column">
     <p fxFlex="50">
       <mat-form-field>
         <mat-label>Zemljepisna širina</mat-label>
-        <input matInput type="text" formControlName="lat" />
-        <mat-hint>Google koordinata, npr.: 45.96882330502303</mat-hint>
+        <input
+          matInput
+          type="number"
+          formControlName="lat"
+          (blur)="formatCoordinate($event, 'lat')"
+        />
+        <mat-hint>Google koordinata, npr.: 45,96882</mat-hint>
       </mat-form-field>
     </p>
     <p fxFlex="50">
       <mat-form-field>
         <mat-label>Zemljepisna dolžina</mat-label>
-        <input matInput type="text" formControlName="lon" />
-        <mat-hint>Google koordinata, npr.: 14.009368654412414</mat-hint>
+        <input
+          matInput
+          type="number"
+          formControlName="lon"
+          (blur)="formatCoordinate($event, 'lon')"
+        />
+        <mat-hint>Google koordinata, npr.: 14,00936</mat-hint>
       </mat-form-field>
     </p>
   </div>
 
-  <div fxLayout="row" fxLayoutGap="8px">
+  <div fxLayout="row" fxLayoutGap="8px" fxLayout.lt-sm="column">
     <p fxFlex="50">
       <mat-form-field class="no-hint">
         <mat-label>Usmerjenost</mat-label>
         <mat-select formControlName="orientation">
-          <mat-option *ngFor="let orientation of orientations" [value]="orientation.value">{{ orientation.label }}
+          <mat-option
+            *ngFor="let orientation of orientations"
+            [value]="orientation.value"
+            >{{ orientation.label }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -67,28 +89,52 @@
   </div>
 
   <p>
-    <app-editor label="Opis plezališča" [control]="cragForm.controls.description"></app-editor>
+    <app-editor
+      label="Opis plezališča"
+      [control]="cragForm.controls.description"
+    ></app-editor>
   </p>
 
   <p>
-    <app-editor label="Opis dostopa" [control]="cragForm.controls.access"></app-editor>
+    <app-editor
+      label="Opis dostopa"
+      [control]="cragForm.controls.access"
+    ></app-editor>
   </p>
 
-  <div fxLayout="row" fxLayoutGap="8px">
+  <div fxLayout="row" fxLayoutGap="8px" fxLayout.lt-sm="column">
     <p fxFlex="50">
       <mat-form-field>
         <mat-label>Status</mat-label>
         <mat-select formControlName="status">
-          <mat-option *ngFor="let status of statuses" [value]="status.value">{{ status.label }}
+          <mat-option *ngFor="let status of statuses" [value]="status.value"
+            >{{ status.label }}
           </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </p>
+    <p fxFlex="50">
+      <mat-form-field fxFlex>
+        <mat-label>Privzeti sistem ocenjevanja</mat-label>
+        <mat-select formControlName="defaultGradingSystemId">
+          <mat-option
+            *ngFor="let option of gradingSystems"
+            [value]="option.id"
+            >{{ option.name }}</mat-option
+          >
         </mat-select>
       </mat-form-field>
     </p>
   </div>
 
   <div fxLayout="row" fxLayoutAlign="end center">
-    <button *ngIf="!loading" mat-flat-button color="primary" [disabled]="!cragForm.valid || cragForm.pristine">
-      SHRANI
+    <button
+      *ngIf="!loading"
+      mat-button
+      color="primary"
+      [disabled]="!cragForm.valid || cragForm.pristine"
+    >
+      Shrani
     </button>
     <span *ngIf="loading" class="loading">
       <mat-spinner diameter="30"></mat-spinner>

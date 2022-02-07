@@ -31,7 +31,6 @@ import { DataErrorComponent } from './layout/data-error/data-error.component';
 import { GraphQLModule } from './graphql/graphql.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CragsTocComponent } from './pages/crags/crags-toc/crags-toc.component';
-import { GradeComponent } from './common/grade/grade.component';
 import { CragComponent } from './pages/crag/crag.component';
 import { LoginComponent } from './auth/login/login.component';
 import { ProfileComponent } from './pages/account/profile/profile.component';
@@ -77,7 +76,6 @@ import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/c
 import { ClubFormComponent } from './forms/club-form/club-form.component';
 import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
 import { ActivityInputComponent } from './pages/activity/activity-input/activity-input.component';
-import { ManagementModule } from './management/management.module';
 import { SharedModule } from './shared/shared.module';
 import { SearchComponent } from './pages/search/search.component';
 import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
@@ -106,7 +104,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     BreadcrumbsComponent,
     DataErrorComponent,
     CragsTocComponent,
-    GradeComponent,
     CragComponent,
     LoginComponent,
     ProfileComponent,
@@ -181,7 +178,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MatListModule,
     NgxMatSelectSearchModule,
     SharedModule,
-    ManagementModule,
     IceFallsModule,
     AppRoutingModule,
     MatGridListModule,
