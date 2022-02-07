@@ -136,7 +136,6 @@ export class ClubComponent implements OnInit, OnDestroy {
             { id: this.club.id },
             {
               update: (cache) => {
-                console.log(cache);
                 cache.evict({
                   id: 'ROOT_QUERY',
                   fieldName: 'myClubs',
