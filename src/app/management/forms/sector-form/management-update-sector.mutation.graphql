@@ -1,0 +1,5 @@
+mutation ManagementUpdateSector($input: UpdateSectorInput!) {
+  updateSector(input: $input) {
+    id
+  }
+}

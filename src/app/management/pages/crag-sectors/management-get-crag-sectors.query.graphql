@@ -1,0 +1,22 @@
+query ManagementGetCragSectors($id: String!) {
+  crag(id: $id) {
+    sectors {
+      id
+      label
+      name
+      status
+      position
+      routes {
+        id
+      }
+    }
+    slug
+    name
+    id
+    country {
+      name
+      id
+      slug
+    }
+  }
+}

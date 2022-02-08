@@ -1,0 +1,5 @@
+mutation ManagementCreateRoute($input: CreateRouteInput!) {
+  createRoute(input: $input) {
+    id
+  }
+}

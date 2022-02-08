@@ -1,0 +1,26 @@
+query ManagementGetCrag($id: String!) {
+  crag(id: $id) {
+    slug
+    type
+    status
+    orientation
+    defaultGradingSystem {
+      id
+    }
+    name
+    lon
+    lat
+    id
+    description
+    access
+    area {
+      id
+      name
+    }
+    country {
+      name
+      id
+      slug
+    }
+  }
+}
