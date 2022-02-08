@@ -19,7 +19,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -189,7 +188,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     AppRoutingModule,
     MatGridListModule,
     SlickCarouselModule,
-    MatExpansionModule,
   ],
   providers: [
     AuthGuard,
