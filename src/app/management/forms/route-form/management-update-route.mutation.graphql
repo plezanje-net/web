@@ -1,0 +1,5 @@
+mutation ManagementUpdateRoute($input: UpdateRouteInput!) {
+  updateRoute(input: $input) {
+    id
+  }
+}

@@ -30,13 +30,14 @@ import { WarningsComponent } from './components/warnings/warnings.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { DataErrorComponent } from '../layout/data-error/data-error.component';
-import { GradeComponent } from '../common/grade/grade.component';
+import { GradeComponent } from './components/grade/grade.component';
 
 @NgModule({
   declarations: [
     EditorComponent,
     SnackBarButtonsComponent,
     GradeSelectComponent,
+    GradeComponent,
     CommentComponent,
     CommentOptionsComponent,
     CommentFormComponent,
@@ -73,6 +74,7 @@ import { GradeComponent } from '../common/grade/grade.component';
     EditorComponent,
     SnackBarButtonsComponent,
     GradeSelectComponent,
+    GradeComponent,
     CommentComponent,
     CommentFormComponent,
     WarningsComponent,

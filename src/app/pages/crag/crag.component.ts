@@ -37,8 +37,8 @@ export class CragComponent implements OnInit, OnDestroy {
 
   tabs: Array<Tab> = [
     {
-      slug: 'lokacija',
-      label: 'Lokacija & dostop',
+      slug: 'info',
+      label: 'Info',
     },
     {
       slug: 'smeri',
@@ -47,10 +47,6 @@ export class CragComponent implements OnInit, OnDestroy {
     {
       slug: 'komentarji',
       label: 'Komentarji',
-    },
-    {
-      slug: 'info',
-      label: 'Info',
     },
     {
       slug: 'galerija',
@@ -114,13 +110,21 @@ export class CragComponent implements OnInit, OnDestroy {
           } else {
             this.querySuccess(result.data.cragBySlug);
           }
-        });
 
-      if (params.tab != null) {
-        this.activeTab = params.tab;
-      } else {
-        this.activeTab = 'smeri';
-      }
+          if (
+            params.tab == 'info' &&
+            !this.breakpointObserver.isMatched([
+              Breakpoints.Small,
+              Breakpoints.XSmall,
+            ])
+          ) {
+            this.setActiveTab(this.tabs[1]);
+          } else if (params.tab != null) {
+            this.activeTab = params.tab;
+          } else {
+            this.activeTab = 'smeri';
+          }
+        });
     });
     this.subscriptions.push(routeSub);
 
@@ -147,7 +151,7 @@ export class CragComponent implements OnInit, OnDestroy {
     const breakpointSub = this.breakpointObserver
       .observe([Breakpoints.Small, Breakpoints.XSmall])
       .subscribe((res) => {
-        if (!res.matches && this.activeTab == 'lokacija') {
+        if (!res.matches && this.activeTab == 'info') {
           this.setActiveTab(this.tabs[1]);
         }
       });

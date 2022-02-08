@@ -30,7 +30,6 @@ import { BreadcrumbsComponent } from './layout/breadcrumbs/breadcrumbs.component
 import { GraphQLModule } from './graphql/graphql.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CragsTocComponent } from './pages/crags/crags-toc/crags-toc.component';
-import { GradeComponent } from './common/grade/grade.component';
 import { CragComponent } from './pages/crag/crag.component';
 import { LoginComponent } from './auth/login/login.component';
 import { ProfileComponent } from './pages/account/profile/profile.component';
@@ -46,7 +45,6 @@ import { CragRoutesComponent } from './pages/crag/crag-routes/crag-routes.compon
 import { CragInfoComponent } from './pages/crag/crag-info/crag-info.component';
 import { CragCommentsComponent } from './pages/crag/crag-comments/crag-comments.component';
 import { MomentModule } from 'ngx-moment';
-import { CragLocationComponent } from './pages/crag/crag-location/crag-location.component';
 import { ActivityFormComponent } from './forms/activity-form/activity-form.component';
 import { ActivityFormRouteComponent } from './forms/activity-form/activity-form-route/activity-form-route.component';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -77,7 +75,6 @@ import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/c
 import { ClubFormComponent } from './forms/club-form/club-form.component';
 import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
 import { ActivityInputComponent } from './pages/activity/activity-input/activity-input.component';
-import { ManagementModule } from './management/management.module';
 import { SharedModule } from './shared/shared.module';
 import { SearchComponent } from './pages/search/search.component';
 import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
@@ -88,10 +85,10 @@ import { LatestImagesComponent } from './pages/home/latest-images/latest-images.
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ImageFullComponent } from './common/image-full/image-full.component';
 import { ExposedWarningsComponent } from './pages/home/exposed-warnings/expsoed-warnings.component';
-import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { IceFallsModule } from './ice-falls/ice-falls.module';
 import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
 import { PeaksModule } from './peaks/peaks.module';
+import { SwiperModule } from 'swiper/angular';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -117,7 +114,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     CragRoutesComponent,
     CragInfoComponent,
     CragCommentsComponent,
-    CragLocationComponent,
     ActivityFormComponent,
     ActivityFormRouteComponent,
     CragGalleryComponent,
@@ -181,12 +177,11 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MatListModule,
     NgxMatSelectSearchModule,
     SharedModule,
-    ManagementModule,
     IceFallsModule,
     MatGridListModule,
-    SlickCarouselModule,
     PeaksModule,
     AppRoutingModule,
+    SwiperModule,
   ],
   providers: [
     AuthGuard,

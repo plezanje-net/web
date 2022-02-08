@@ -118,6 +118,11 @@ const routes: Routes = [
     component: SearchResultsComponent,
   },
   {
+    path: 'admin',
+    loadChildren: () =>
+      import('./management/management.module').then((m) => m.ManagementModule),
+  },
+  {
     path: '**',
     component: NotFoundComponent,
   },

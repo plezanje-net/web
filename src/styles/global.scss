@@ -44,6 +44,9 @@ body {
     width: 1040px;
   }
 }
+.mt-8 {
+  margin-top: 8px;
+}
 
 .mt-16 {
   margin-top: 16px;
@@ -188,6 +191,13 @@ b {
 }
 
 body {
+  .form.no-hints {
+    .mat-form-field {
+      .mat-form-field-wrapper {
+        margin-bottom: -1.25em;
+      }
+    }
+  }
   .mat-dialog-container {
     border-radius: 2px;
   }
@@ -251,11 +261,7 @@ span.highlight {
   display: block;
 }
 
-.slick-list {
-  transition: all 0.3s ease;
-}
-
-.slick-dots {
-  position: relative !important;
-  bottom: 0 !important;
+.swiper-pagination-bullet-active {
+  background-color: $primary !important;
+  opacity: 1 !important;
 }
