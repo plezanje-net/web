@@ -1,9 +1,8 @@
-import { query } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { debounceTime, filter, take } from 'rxjs/operators';
+import { debounceTime, filter, switchMap, take } from 'rxjs/operators';
 import {
   ASCENT_TYPES,
   PUBLISH_OPTIONS,
@@ -12,7 +11,6 @@ import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from 'src/app/types/data-error';
 import {
   ActivityRoute,
-  Crag,
   FindActivityRoutesInput,
   MyActivityRoutesGQL,
   MyActivityRoutesQuery,
@@ -20,7 +18,6 @@ import {
   ActivityFiltersCragQuery,
   ActivityFiltersRouteGQL,
   ActivityFiltersRouteQuery,
-  Route,
 } from 'src/generated/graphql';
 import { FilteredTable } from '../../../common/filtered-table';
 
@@ -101,32 +98,35 @@ export class ActivityRoutesComponent implements OnInit {
       this.router.navigate(['/plezalni-dnevnik/vzponi', params])
     );
 
-    this.activatedRoute.params.subscribe((params) => {
-      ft.setRouteParams(params);
+    this.activatedRoute.params
+      .pipe(
+        switchMap((params) => {
+          ft.setRouteParams(params);
 
-      this.ignoreFormChange = true;
-      this.filters.patchValue(ft.filterParams, { emitEvent: false });
+          this.ignoreFormChange = true;
+          this.filters.patchValue(ft.filterParams, { emitEvent: false });
 
-      this.applyRelationFilterDisplayValues();
+          this.applyRelationFilterDisplayValues();
 
-      this.loading = true;
+          this.loading = true;
 
-      const queryParams: FindActivityRoutesInput = ft.queryParams;
+          const queryParams: FindActivityRoutesInput = ft.queryParams;
 
-      this.myActivityRoutesGQL
-        .watch({ input: queryParams })
-        .valueChanges.subscribe((result) => {
+          return this.myActivityRoutesGQL.watch({ input: queryParams })
+            .valueChanges;
+        })
+      )
+      .subscribe({
+        next: (result) => {
           this.loading = false;
           ft.navigating = false;
           this.ignoreFormChange = false;
-
-          if (result.errors != null) {
-            this.queryError();
-          } else {
-            this.querySuccess(result.data.myActivityRoutes);
-          }
-        });
-    });
+          this.querySuccess(result.data.myActivityRoutes);
+        },
+        error: () => {
+          this.queryError();
+        },
+      });
 
     this.filters.valueChanges
       .pipe(
