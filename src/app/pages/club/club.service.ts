@@ -9,13 +9,7 @@ import {
   switchMap,
 } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
-import {
-  Club,
-  ClubBySlugGQL,
-  ClubBySlugQuery,
-  ClubMember,
-  User,
-} from 'src/generated/graphql';
+import { Club, ClubBySlugGQL, ClubMember } from 'src/generated/graphql';
 
 @Injectable()
 export class ClubService implements OnDestroy {
@@ -28,6 +22,9 @@ export class ClubService implements OnDestroy {
 
   clubQuery: QueryRef<any>;
   clubQuerySubscription: Subscription;
+
+  private error = new Subject<Error>();
+  error$ = this.error.asObservable();
 
   constructor(
     private clubBySlugGQL: ClubBySlugGQL,
@@ -49,7 +46,7 @@ export class ClubService implements OnDestroy {
       )
       .subscribe({
         next: ({ data, user }) => {
-          if (data.errors != null || user == null) {
+          if (user == null) {
             this.club.error(data.errors);
           } else {
             const club = data.data.clubBySlug;
@@ -60,6 +57,9 @@ export class ClubService implements OnDestroy {
             this.club.next(club);
           }
         },
+        error: (error) => {
+          this.club.error(error);
+        },
       });
   }
 
@@ -69,6 +69,10 @@ export class ClubService implements OnDestroy {
     } else {
       this.clubQuery.refetch();
     }
+  }
+
+  emitError(error: Error) {
+    this.error.next(error);
   }
 
   ngOnDestroy() {

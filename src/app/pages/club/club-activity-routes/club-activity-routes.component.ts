@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { QueryRef } from 'apollo-angular';
-import { GraphQLError } from 'graphql';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, switchMap, take } from 'rxjs/operators';
 import { ASCENT_TYPES } from 'src/app/common/activity.constants';
@@ -131,15 +130,16 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
           return this.activityRoutesQuery.valueChanges;
         })
       )
-      .subscribe((result: any) => {
-        this.loading = false;
-        this.ignoreFormChange = false;
+      .subscribe({
+        next: (result: any) => {
+          this.loading = false;
+          this.ignoreFormChange = false;
 
-        if (result.errors != null) {
-          this.queryError(result.errors);
-        } else {
           this.querySuccess(result.data);
-        }
+        },
+        error: (error) => {
+          this.clubService.emitError(error);
+        },
       });
 
     this.filtersSubscription = this.filters.valueChanges
@@ -177,28 +177,6 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
           break;
       }
     });
-  }
-
-  queryError(errors: GraphQLError[]) {
-    if (
-      errors.length > 0 &&
-      errors[0].message.startsWith('Could not find any entity of type')
-    ) {
-      this.error = {
-        message: 'Klub ne obstaja.',
-      };
-      return;
-    } else if (errors.length > 0 && errors[0].message === 'Forbidden') {
-      this.error = {
-        message:
-          'Nisi član kluba, zato nimaš pravic za prikaz podatkov o klubu.',
-      };
-      return;
-    }
-
-    this.error = {
-      message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
-    };
   }
 
   querySuccess(data: any) {
