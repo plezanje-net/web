@@ -18,8 +18,6 @@ import {
 } from 'src/generated/graphql';
 import { ClubService } from '../club.service';
 
-// TODO: keep scroll position when paginating? what is the expected behaviour?
-
 @Component({
   selector: 'app-club-activity-routes',
   templateUrl: './club-activity-routes.component.html',
@@ -146,7 +144,7 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
 
     this.filtersSubscription = this.filters.valueChanges
       .pipe(
-        filter((_) => {
+        filter(() => {
           return !this.ignoreFormChange; // date picker ignores emitEvent:false. This is a workaround
         }),
         debounceTime(100) // datepicker triggers 4 valueChanges events. this is a workaround

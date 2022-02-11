@@ -31,6 +31,8 @@ export class FilteredTable {
 
   sortColumn: string;
   sortDirection: string;
+  defaultSortColumn: string;
+  defaultSortDirection: string;
 
   constructor(columns: ColumnDefinition[], filters: FilterDefinition[]) {
     this.columns = columns.map((column) => {
@@ -43,8 +45,8 @@ export class FilteredTable {
     const sortCol = this.columns.find((col) => col.defaultSort != null);
 
     if (sortCol) {
-      this.sortColumn = sortCol.name;
-      this.sortDirection = sortCol.defaultSort;
+      this.defaultSortColumn = this.sortColumn = sortCol.name;
+      this.defaultSortDirection = this.sortDirection = sortCol.defaultSort;
     }
 
     this.filters = filters;
@@ -80,15 +82,28 @@ export class FilteredTable {
     }
 
     if (values.sort != null) {
+      // sort field was passed, use it to sort
       const sortCol = values.sort.split(',');
       this.sortColumn = sortCol[0];
       this.sortDirection = sortCol[1];
+    } else {
+      // sort field was not passed, but we might have a default sort set
+      if (this.defaultSortColumn && this.defaultSortDirection) {
+        // use default sort that was set in filteredTable constructor
+        this.sortColumn = this.defaultSortColumn;
+        this.sortDirection = this.defaultSortDirection;
+      } else {
+        // we dont't have a default sort, so unset the sort
+        this.sortColumn = this.sortDirection = null;
+      }
     }
 
-    qp.orderBy = {
-      field: this.sortColumn,
-      direction: this.sortDirection,
-    };
+    if (this.sortColumn && this.sortDirection) {
+      qp.orderBy = {
+        field: this.sortColumn,
+        direction: this.sortDirection,
+      };
+    }
 
     this.setFilterParams(fp, false);
 

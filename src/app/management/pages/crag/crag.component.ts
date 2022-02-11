@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { param } from 'jquery';
 import { filter, of, Subscription, switchMap, take } from 'rxjs';
 import { LayoutService } from 'src/app/services/layout.service';
 import {

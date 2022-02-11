@@ -1,11 +1,9 @@
 import { query } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import moment, { Moment } from 'moment';
 import { Subject } from 'rxjs';
-import { debounce, debounceTime, take } from 'rxjs/operators';
+import { debounceTime, filter, take } from 'rxjs/operators';
 import {
   ASCENT_TYPES,
   PUBLISH_OPTIONS,
@@ -74,6 +72,7 @@ export class ActivityRoutesComponent implements OnInit {
       { name: 'routeId', type: 'relation' },
     ]
   );
+  ignoreFormChange = true;
 
   rowAction$ = new Subject<RowAction>();
 
@@ -105,7 +104,8 @@ export class ActivityRoutesComponent implements OnInit {
     this.activatedRoute.params.subscribe((params) => {
       ft.setRouteParams(params);
 
-      this.filters.patchValue(ft.filterParams);
+      this.ignoreFormChange = true;
+      this.filters.patchValue(ft.filterParams, { emitEvent: false });
 
       this.applyRelationFilterDisplayValues();
 
@@ -118,6 +118,7 @@ export class ActivityRoutesComponent implements OnInit {
         .valueChanges.subscribe((result) => {
           this.loading = false;
           ft.navigating = false;
+          this.ignoreFormChange = false;
 
           if (result.errors != null) {
             this.queryError();
@@ -127,13 +128,20 @@ export class ActivityRoutesComponent implements OnInit {
         });
     });
 
-    this.filters.valueChanges.subscribe((values) => {
-      if (ft.navigating) {
-        ft.navigating = false;
-      } else {
-        ft.setFilterParams(values);
-      }
-    });
+    this.filters.valueChanges
+      .pipe(
+        filter(() => {
+          return !this.ignoreFormChange; // date picker ignores emitEvent:false. This is a workaround
+        }),
+        debounceTime(100) // datepicker triggers 4 valueChanges events. this is a workaround
+      )
+      .subscribe((values) => {
+        if (ft.navigating) {
+          ft.navigating = false;
+        } else {
+          ft.setFilterParams(values);
+        }
+      });
 
     this.rowAction$.subscribe((action) => {
       switch (action.action) {
