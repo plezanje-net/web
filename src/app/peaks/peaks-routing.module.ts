@@ -15,7 +15,7 @@ const routes: Routes = [
     component: PeaksCountryComponent,
   },
   {
-    path: 'alpinizem/vrh/:peak',
+    path: 'alpinizem/vrhovi/vrh/:peak',
     component: PeakCragsComponent,
   },
 ];
