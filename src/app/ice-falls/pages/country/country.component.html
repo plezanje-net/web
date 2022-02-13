@@ -1,0 +1,154 @@
+<app-data-error *ngIf="error" [error]="error"></app-data-error>
+
+<div *ngIf="!error">
+  <div class="white-back mt-16">
+    <div
+      class="container py-8"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+    >
+      <h1>
+        Zaledeneli slapovi<ng-container *ngIf="country">
+          - {{ country.name }}</ng-container
+        >
+      </h1>
+    </div>
+  </div>
+
+  <app-loader *ngIf="loading"></app-loader>
+
+  <div
+    class="container mt-16"
+    fxLayout="row"
+    fxLayoutGap="16px"
+    *ngIf="!loading"
+    fxLayout.lt-md="column"
+  >
+    <div fxFlex="320px" fxFlex.lt-md>
+      <div fxLayout="column" fxLayoutGap="16px" fxHide.lt-md>
+        <div class="card" *ngIf="countries">
+          <h3>Območja in doline</h3>
+          <a
+            [class.active]="!areaSlug"
+            [routerLink]="['/alpinizem/slapovi/drzava', country.slug]"
+            class="row"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            disabled
+            ><span>Vsa območja</span></a
+          >
+          <ng-container *ngFor="let listArea of areas">
+            <a
+              [class.active]="listArea.area.slug == areaSlug"
+              [routerLink]="
+                listArea.area.iceFalls.length > 0
+                  ? [
+                      '/alpinizem/slapovi/drzava',
+                      country.slug,
+                      { obmocje: listArea.area.slug }
+                    ]
+                  : null
+              "
+              class="row"
+              [class.disabled]="listArea.area.iceFalls.length == 0"
+              fxLayout="row"
+              fxLayoutAlign="start center"
+            >
+              <span [fxFlex]="listArea.depth * 16 + 'px'"></span>
+              <span fxFlex="100">{{ listArea.area.name }}</span>
+              <span class="nr"
+                >{{ listArea.area.iceFalls.length }} /
+                {{ listArea.nrIceFalls }}</span
+              >
+            </a>
+          </ng-container>
+        </div>
+
+        <div class="card" *ngIf="countries">
+          <h3>Države</h3>
+          <ng-container *ngFor="let listCountry of countries; let i = index">
+            <a
+              [class.active]="listCountry.slug == country.slug"
+              [routerLink]="['/alpinizem/slapovi/drzava', listCountry.slug]"
+              class="row"
+              fxLayout="row"
+              fxLayoutAlign="start center"
+            >
+              <span fxFlex="100">{{ listCountry.name }}</span>
+              <span>{{ listCountry.nrIceFalls }}</span>
+            </a>
+          </ng-container>
+        </div>
+      </div>
+
+      <div
+        fxLayout="column"
+        fxLayout.gt-xs="row"
+        fxLayoutGap="16px"
+        fxHide.gt-sm
+      >
+        <mat-form-field fxFlex class="no-hint infix-width-auto">
+          <mat-label>Država</mat-label>
+          <mat-select
+            [value]="country.slug"
+            (selectionChange)="changeCountry($event.value)"
+          >
+            <mat-option
+              *ngFor="let listCountry of countries"
+              [value]="listCountry.slug"
+              >{{ listCountry.name }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field fxFlex class="no-hint infix-width-auto">
+          <mat-label>Območje, dolina</mat-label>
+          <mat-select
+            [value]="areaSlug"
+            (selectionChange)="changeArea($event.value)"
+          >
+            <mat-option
+              [style.padding-left]="(listArea.depth + 1) * 16 + 'px'"
+              *ngFor="let listArea of areas"
+              [value]="listArea.area.slug"
+              >{{ listArea.area.name }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div fxFlex="100" fxFlex.lt-md>
+      <div class="card no-border">
+        <div
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          fxHide.lt-md
+          class="row header"
+          fxLayoutGap="14px"
+        >
+          <div fxFlex="100">Ime</div>
+          <div fxFlex="80px" fxFlex.lt-md>Dolžina</div>
+          <div fxFlex="80px" fxFlex.lt-md>Težavnost</div>
+        </div>
+        <div
+          *ngFor="let iceFall of iceFalls"
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          class="row"
+          fxLayoutGap="14px"
+        >
+          <div fxFlex="100">
+            <a [routerLink]="['/alpinizem/slapovi/slap', iceFall.slug]">{{
+              iceFall.name
+            }}</a>
+          </div>
+          <div fxFlex="80px" fxFlex.lt-md>
+            {{ iceFall.grade }}
+          </div>
+          <div fxFlex="80px" fxFlex.lt-md fxHide.lt-md>
+            {{ iceFall.height }} m
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
