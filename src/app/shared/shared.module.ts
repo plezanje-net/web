@@ -29,6 +29,7 @@ import { CommentOptionsComponent } from './components/comment/comment-options/co
 import { WarningsComponent } from './components/warnings/warnings.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
+import { DataErrorComponent } from '../layout/data-error/data-error.component';
 import { GradeComponent } from './components/grade/grade.component';
 
 @NgModule({
@@ -42,10 +43,12 @@ import { GradeComponent } from './components/grade/grade.component';
     CommentFormComponent,
     WarningsComponent,
     LoaderComponent,
+    DataErrorComponent,
     ConfirmationDialogComponent,
     AscentTypePipe,
     GenderizeVerbPipe,
     OrientationPipe,
+    GradeComponent,
   ],
   imports: [
     CommonModule,
@@ -76,12 +79,14 @@ import { GradeComponent } from './components/grade/grade.component';
     CommentFormComponent,
     WarningsComponent,
     LoaderComponent,
+    DataErrorComponent,
     ConfirmationDialogComponent,
     AscentTypePipe,
     GenderizeVerbPipe,
     OrientationPipe,
     MatDatepickerModule,
     MatInputModule,
+    GradeComponent,
   ],
 })
 export class SharedModule {}
