@@ -1,12 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import {
   CountriesTocGQL,
   CountriesTocQuery,
   Country,
 } from '../../../../generated/graphql';
-import { Tab } from 'src/app/types/tab';
+import { ROUTE_TYPES } from 'src/app/common/route-types.constants';
 
 @Component({
   selector: 'app-crags-toc',
@@ -22,20 +21,7 @@ export class CragsTocComponent implements OnInit {
 
   params: any;
 
-  routeTypes: Tab[] = [
-    {
-      slug: 'sport',
-      label: 'Športne',
-    },
-    {
-      slug: 'boulder',
-      label: 'Balvani',
-    },
-    {
-      slug: 'multipitch',
-      label: 'Večraztežajne',
-    },
-  ];
+  routeTypes = ROUTE_TYPES;
 
   constructor(
     private router: Router,
@@ -57,15 +43,15 @@ export class CragsTocComponent implements OnInit {
   }
 
   changeArea(id: string) {
-    this.router.navigate(this.makeRoute(this.country.slug, { area: id }));
+    this.router.navigate(this.makeRoute(this.country.slug, { obmocje: id }));
   }
 
   changeCountry(slug: string) {
-    this.router.navigate(this.makeRoute(slug, { area: null }));
+    this.router.navigate(this.makeRoute(slug, { obmocje: null }));
   }
 
   changeType(slug: string) {
-    this.router.navigate(this.makeRoute(this.country.slug, { type: slug }));
+    this.router.navigate(this.makeRoute(this.country.slug, { tip: slug }));
   }
 
   makeRoute(country: string, params: any = {}) {

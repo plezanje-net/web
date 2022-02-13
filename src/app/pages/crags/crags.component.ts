@@ -2,11 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from '../../types/data-error';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Subject, Subscription, take } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
+import { BehaviorSubject, Subscription, take } from 'rxjs';
 import { CragsQuery, CragsGQL } from '../../../generated/graphql';
 import { GraphQLError } from 'graphql';
 import { FormControl } from '@angular/forms';
+import { Tab } from 'src/app/types/tab';
+import { ROUTE_TYPES } from 'src/app/common/route-types.constants';
 
 @Component({
   selector: 'app-crags',
@@ -30,11 +31,12 @@ export class CragsComponent implements OnInit, OnDestroy {
 
   filteredCrags: CragsQuery['countryBySlug']['crags'] = [];
 
+  routeTypes = ROUTE_TYPES;
+
   constructor(
     private layoutService: LayoutService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private dialog: MatDialog,
     private cragsGQL: CragsGQL
   ) {}
 
@@ -50,12 +52,14 @@ export class CragsComponent implements OnInit, OnDestroy {
     this.activatedRoute.params.subscribe((params) => {
       this.cragsLoading = true;
 
+      const rotueType = this.routeTypes.find((rt) => rt.slug === params['tip']);
+
       this.cragsGQL
         .fetch({
           country: params.country,
           input: {
-            areaSlug: params.area,
-            routeTypeId: params.type,
+            areaSlug: params['obmocje'],
+            routeTypeId: rotueType?.id,
           },
         })
         .pipe(take(1))
