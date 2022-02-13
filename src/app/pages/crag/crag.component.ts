@@ -222,13 +222,9 @@ export class CragComponent implements OnInit, OnDestroy {
   }
 
   setActiveTab(tab: Tab) {
-    let routeParams: any[] = ['/plezalisce/', this.crag.slug];
-
-    if (tab.slug != 'smeri') {
-      routeParams.push({ tab: tab.slug });
-    }
-
-    this.router.navigate(routeParams);
+    this.router.navigate([tab.slug === 'smeri' ? {} : { tab: tab.slug }], {
+      relativeTo: this.activatedRoute,
+    });
   }
 
   addComment(type: string) {
