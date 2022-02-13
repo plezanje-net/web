@@ -107,9 +107,12 @@
   <div fxFlex="100">
     <mat-form-field class="no-hint infix-width-auto" *ngIf="country.areas">
       <mat-label>Regija</mat-label>
-      <mat-select [value]="areaId" (selectionChange)="changeArea($event.value)">
+      <mat-select
+        [value]="params.obmocje"
+        (selectionChange)="changeArea($event.value)"
+      >
         <mat-option [value]="null">Vse regije</mat-option>
-        <mat-option *ngFor="let area of country.areas" [value]="area.id">{{
+        <mat-option *ngFor="let area of country.areas" [value]="area.slug">{{
           area.name
         }}</mat-option>
       </mat-select>

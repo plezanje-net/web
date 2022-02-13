@@ -42,8 +42,8 @@ export class CragsTocComponent implements OnInit {
     });
   }
 
-  changeArea(id: string) {
-    this.router.navigate(this.makeRoute(this.country.slug, { obmocje: id }));
+  changeArea(slug: string) {
+    this.router.navigate(this.makeRoute(this.country.slug, { obmocje: slug }));
   }
 
   changeCountry(slug: string) {
