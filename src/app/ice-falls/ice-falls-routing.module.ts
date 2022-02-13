@@ -5,16 +5,16 @@ import { IceFallComponent } from './pages/ice-fall/ice-fall.component';
 
 const routes: Routes = [
   {
-    path: 'alpinizem/slapovi',
-    redirectTo: 'alpinizem/slapovi/drzava/slovenija',
+    path: '',
+    redirectTo: 'drzava/slovenija',
     pathMatch: 'full',
   },
   {
-    path: 'alpinizem/slapovi/drzava/:country',
+    path: 'drzava/:country',
     component: CountryComponent,
   },
   {
-    path: 'alpinizem/slapovi/slap/:icefall',
+    path: 'slap/:icefall',
     component: IceFallComponent,
   },
 ];
