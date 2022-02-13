@@ -37,6 +37,8 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   activePitchesPopupId: string | null = null;
   loading = false;
 
+  section: string;
+
   constructor(
     private snackBar: MatSnackBar,
     private authService: AuthService,
@@ -48,6 +50,10 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.section = this.router.url.includes('/alpinizem/stena')
+      ? 'alpinism'
+      : 'sport';
+
     this.authService.currentUser.subscribe((user) =>
       this.loadActivity(user != null)
     );

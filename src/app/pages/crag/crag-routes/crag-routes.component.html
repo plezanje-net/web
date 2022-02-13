@@ -36,12 +36,11 @@
         </div>
         <div fxFlex>
           <a
-            [routerLink]="[
-              '/plezalisca/',
-              crag.country.slug,
-              crag.slug,
-              route.slug
-            ]"
+            [routerLink]="
+              section === 'alpinism'
+                ? ['/alpinizem', 'stena', crag.slug, 'smer', route.slug]
+                : ['/plezalisca/', crag.country.slug, crag.slug, route.slug]
+            "
             >{{ route.name }}</a
           >
         </div>

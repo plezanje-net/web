@@ -1,0 +1,56 @@
+query PeaksCountry($countrySlug: String!, $areaSlug: String) {
+  countryPeaks: countryBySlug(slug: $countrySlug) {
+    id
+    peaks(areaSlug: $areaSlug) {
+      id
+      name
+      slug
+      nrCrags
+      country {
+        id
+        name
+        slug
+      }
+    }
+  }
+
+  countries(
+    input: { orderBy: { field: "name", direction: "ASC" }, hasPeaks: true }
+  ) {
+    id
+    name
+    slug
+    nrPeaks
+  }
+
+  countryAreas: countryBySlug(slug: $countrySlug) {
+    id
+    areas {
+      id
+      name
+      slug
+      peaks {
+        id
+        name
+      }
+      areas {
+        id
+        name
+        slug
+        peaks {
+          id
+          name
+        }
+        areas {
+          id
+          name
+          slug
+          peaks {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+}

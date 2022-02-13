@@ -1,0 +1,59 @@
+$border-color: rgba(0, 0, 0, 0.08); // very light gray
+$table-header-text-color: #0000008a; // light gray
+
+.mat-card {
+  border-radius: 0;
+
+  .mat-card-content {
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+
+      tr {
+        padding: 0;
+        outline: none;
+
+        &:hover {
+          background: #f6f9ff;
+        }
+
+        td,
+        th {
+          font-size: 0.875rem;
+          line-height: 1.25rem;
+          padding: 1px 16px;
+
+          vertical-align: middle;
+
+          &:last-child {
+            text-align: right;
+            border-bottom: none;
+          }
+        }
+
+        td {
+          height: 42px;
+          border-top: 1px solid $border-color;
+          cursor: pointer;
+        }
+
+        th {
+          height: 56px;
+
+          text-align: left;
+          position: sticky;
+          top: 0px;
+
+          font-weight: 400;
+          color: $table-header-text-color;
+          background-color: #fff;
+
+          &:last-child {
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+  }
+}

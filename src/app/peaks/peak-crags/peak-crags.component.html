@@ -1,0 +1,93 @@
+<app-data-error *ngIf="error"></app-data-error>
+
+<div *ngIf="!error">
+  <div class="white-back mt-16">
+    <div class="container py-8">
+      <h1>
+        Vrh:
+        <span *ngIf="!loading">
+          {{ peak.name }}
+        </span>
+      </h1>
+    </div>
+  </div>
+
+  <app-loader *ngIf="loading"></app-loader>
+
+  <div
+    *ngIf="!loading"
+    fxLayout="column"
+    fxLayout.gt-xs="row"
+    fxLayoutGap="16px"
+    class="container mt-16"
+  >
+    <!-- peak info -->
+    <div fxFlex="33.33">
+      <mat-card>
+        <mat-card-content>
+          <table>
+            <thead>
+              <tr>
+                <th>Info</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Višina</td>
+                <td>{{ peak.height }}m</td>
+              </tr>
+              <tr *ngIf="peak.lat && peak.lon">
+                <td>Koordinate</td>
+                <td>{{ peak.lat }}<br />{{ peak.lon }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- peak walls (crags) -->
+    <div fxFlex="66.67">
+      <div *ngIf="!peak.crags.length" class="p-16">
+        Za ta vrh ni vnesenih sten.
+      </div>
+      <mat-card *ngIf="peak.crags.length">
+        <mat-card-content>
+          <table>
+            <thead>
+              <tr>
+                <th>Stena</th>
+                <th>Št. smeri</th>
+                <th>Težavnost</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let crag of peak.crags"
+                [routerLink]="['/alpinizem/stena', crag.slug]"
+                class="is-link"
+              >
+                <td>{{ crag.name }}</td>
+                <td>{{ crag.nrRoutes }}</td>
+                <td>
+                  <app-grade
+                    *ngIf="crag.minDifficulty"
+                    [difficulty]="crag.minDifficulty"
+                    [gradingSystemId]="crag.defaultGradingSystem.id"
+                  ></app-grade>
+                  {{ crag.minDifficulty && crag.maxDifficulty ? " do " : "" }}
+                  <app-grade
+                    *ngIf="crag.maxDifficulty"
+                    [difficulty]="crag.maxDifficulty"
+                    [gradingSystemId]="crag.defaultGradingSystem.id"
+                  ></app-grade>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

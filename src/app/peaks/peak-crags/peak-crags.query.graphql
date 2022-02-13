@@ -1,0 +1,25 @@
+query PeakBySlug($slug: String!) {
+  peak(slug: $slug) {
+    id
+    name
+    height
+    lat
+    lon
+    crags {
+      id
+      name
+      slug
+      nrRoutes
+      defaultGradingSystem {
+        id
+      }
+      minDifficulty
+      maxDifficulty
+    }
+    country {
+      id
+      slug
+      name
+    }
+  }
+}

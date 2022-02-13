@@ -55,6 +55,7 @@ export class CragComponent implements OnInit, OnDestroy {
   ];
 
   activeTab: string = 'smeri';
+  section: string;
 
   cragSub: Subscription;
   subscriptions: Subscription[] = [];
@@ -70,11 +71,25 @@ export class CragComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.layoutService.$breadcrumbs.next([
-      {
-        name: 'Plezališča',
-      },
-    ]);
+    this.section = this.router.url.includes('/alpinizem/stena')
+      ? 'alpinism'
+      : 'sport';
+
+    this.layoutService.$breadcrumbs.next(
+      this.section === 'alpinism'
+        ? [
+            { name: 'Alpinizem', path: '/alpinizem' },
+            {
+              name: 'Vrhovi',
+              path: '/alpinizem/vrhovi/drzave',
+            },
+          ]
+        : [
+            {
+              name: 'Plezališča',
+            },
+          ]
+    );
 
     const routeSub = this.activatedRoute.params.subscribe((params) => {
       this.loading = true;
@@ -167,33 +182,49 @@ export class CragComponent implements OnInit, OnDestroy {
       (comment: Comment) => comment.type === 'warning'
     );
 
-    this.layoutService.$breadcrumbs.next([
-      {
-        name: 'Plezališča',
-        path: '/plezalisca',
-      },
-      {
-        name: this.crag.country.name,
-        path: '/plezalisca/' + this.crag.country.slug,
-      },
-      {
-        name: this.crag.name,
-      },
-    ]);
+    if (this.section === 'alpinism') {
+      this.layoutService.$breadcrumbs.next([
+        {
+          name: 'Alpinizem',
+          path: '/alpinizem',
+        },
+        {
+          name: 'Vrhovi',
+          path: '/alpinizem/vrhovi/drzave',
+        },
+        {
+          name: this.crag.country.name,
+          path: '/alpinizem/vrhovi/drzava/' + this.crag.country.slug,
+        },
+        {
+          name: this.crag.peak.name,
+          path: '/alpinizem/vrh/' + this.crag.peak.slug,
+        },
+        {
+          name: this.crag.name,
+        },
+      ]);
+    } else {
+      this.layoutService.$breadcrumbs.next([
+        {
+          name: 'Plezališča',
+          path: '/plezalisca',
+        },
+        {
+          name: this.crag.country.name,
+          path: '/plezalisca/' + this.crag.country.slug,
+        },
+        {
+          name: this.crag.name,
+        },
+      ]);
+    }
   }
 
   setActiveTab(tab: Tab) {
-    let routeParams: any[] = [
-      '/plezalisca/',
-      this.crag.country.slug,
-      this.crag.slug,
-    ];
-
-    if (tab.slug != 'smeri') {
-      routeParams.push({ tab: tab.slug });
-    }
-
-    this.router.navigate(routeParams);
+    this.router.navigate([tab.slug === 'smeri' ? {} : { tab: tab.slug }], {
+      relativeTo: this.activatedRoute,
+    });
   }
 
   addComment(type: string) {

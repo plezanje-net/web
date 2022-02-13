@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { Apollo, gql } from 'apollo-angular';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { DataError } from '../../types/data-error';
 import { LayoutService } from '../../services/layout.service';
 import { RouteBySlugGQL, RouteBySlugQuery } from 'src/generated/graphql';
@@ -16,13 +15,20 @@ export class RouteComponent implements OnInit {
   route: RouteBySlugQuery['routeBySlug'];
   warnings: RouteBySlugQuery['routeBySlug']['comments'];
 
+  section: string;
+
   constructor(
+    private router: Router,
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
     private routeBySlugGQL: RouteBySlugGQL
   ) {}
 
   ngOnInit(): void {
+    this.section = this.router.url.includes('/alpinizem/stena')
+      ? 'alpinism'
+      : 'sport';
+
     this.activatedRoute.params.subscribe((params: Params) => {
       this.routeBySlugGQL
         .watch({
@@ -61,22 +67,50 @@ export class RouteComponent implements OnInit {
       (comment) => comment.type === 'warning'
     );
 
-    this.layoutService.$breadcrumbs.next([
-      {
-        name: 'Plezališča',
-        path: '/plezalisca',
-      },
-      {
-        name: this.route.sector.crag.country.name,
-        path: `/plezalisca/${this.route.sector.crag.country.slug}`,
-      },
-      {
-        name: this.route.sector.crag.name,
-        path: `/plezalisca/${this.route.sector.crag.country.slug}/${this.route.sector.crag.slug}`,
-      },
-      {
-        name: this.route.name,
-      },
-    ]);
+    if (this.section === 'alpinism') {
+      this.layoutService.$breadcrumbs.next([
+        {
+          name: 'Alpinizem',
+          path: '/alpinizem',
+        },
+        {
+          name: 'Vrhovi',
+          path: '/alpinizem/vrhovi',
+        },
+        {
+          name: this.route.sector.crag.country.name,
+          path: `/alpinizem/vrhovi/${this.route.sector.crag.country.slug}`,
+        },
+        {
+          name: this.route.sector.crag.peak.name,
+          path: `/alpinizem/vrh/${this.route.sector.crag.peak.slug}`,
+        },
+        {
+          name: this.route.sector.crag.name,
+          path: `/alpinizem/stena/${this.route.sector.crag.slug}`,
+        },
+        {
+          name: this.route.name,
+        },
+      ]);
+    } else {
+      this.layoutService.$breadcrumbs.next([
+        {
+          name: 'Plezališča',
+          path: '/plezalisca',
+        },
+        {
+          name: this.route.sector.crag.country.name,
+          path: `/plezalisca/${this.route.sector.crag.country.slug}`,
+        },
+        {
+          name: this.route.sector.crag.name,
+          path: `/plezalisca/${this.route.sector.crag.country.slug}/${this.route.sector.crag.slug}`,
+        },
+        {
+          name: this.route.name,
+        },
+      ]);
+    }
   }
 }

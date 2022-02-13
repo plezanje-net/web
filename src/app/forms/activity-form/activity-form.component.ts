@@ -163,11 +163,17 @@ export class ActivityFormComponent implements OnInit {
             .subscribe(() => {
               this.router.navigate(['/plezalni-dnevnik']);
             });
-          this.router.navigate([
-            '/plezalisca/',
-            this.crag.country.slug,
-            this.crag.slug,
-          ]);
+
+          // based on crag type navigate back to either peaks(alpinism) or sport climbing section
+          if (this.crag.type === 'alpine') {
+            this.router.navigate(['/alpinizem', 'stena', this.crag.slug]);
+          } else {
+            this.router.navigate([
+              '/plezalisca/',
+              this.crag.country.slug,
+              this.crag.slug,
+            ]);
+          }
         },
         error: () => {
           this.loading = false;

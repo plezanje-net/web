@@ -102,7 +102,15 @@ const routes: Routes = [
     component: CragComponent,
   },
   {
+    path: 'alpinizem/stena/:crag',
+    component: CragComponent,
+  },
+  {
     path: 'plezalisca/:country/:crag/:route',
+    component: RouteComponent,
+  },
+  {
+    path: 'alpinizem/stena/:crag/smer/:route',
     component: RouteComponent,
   },
   {

@@ -5,5 +5,9 @@
 </div>
 
 <div class="container mt-16">
-  <p>{{ error.message }}</p>
+  <p>
+    {{
+      error?.message || "Prišlo je do nepričakovane napake pri zajemu podatkov."
+    }}
+  </p>
 </div>
