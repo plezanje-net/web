@@ -85,7 +85,6 @@ import { LatestImagesComponent } from './pages/home/latest-images/latest-images.
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ImageFullComponent } from './common/image-full/image-full.component';
 import { ExposedWarningsComponent } from './pages/home/exposed-warnings/expsoed-warnings.component';
-import { IceFallsModule } from './ice-falls/ice-falls.module';
 import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
 import { PeaksModule } from './peaks/peaks.module';
 import { SwiperModule } from 'swiper/angular';
@@ -177,7 +176,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MatListModule,
     NgxMatSelectSearchModule,
     SharedModule,
-    IceFallsModule,
     MatGridListModule,
     PeaksModule,
     AppRoutingModule,

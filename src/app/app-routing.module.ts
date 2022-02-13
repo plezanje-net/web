@@ -123,6 +123,11 @@ const routes: Routes = [
       import('./management/management.module').then((m) => m.ManagementModule),
   },
   {
+    path: 'alpinizem/slapovi',
+    loadChildren: () =>
+      import('./ice-falls/ice-falls.module').then((m) => m.IceFallsModule),
+  },
+  {
     path: '**',
     component: NotFoundComponent,
   },
