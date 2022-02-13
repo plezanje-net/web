@@ -7,15 +7,15 @@ import { PeaksCountryComponent } from './peaks-country/peaks-country.component';
 
 const routes: Routes = [
   {
-    path: 'alpinizem/vrhovi/drzave',
+    path: 'drzave',
     component: PeaksCountriesComponent,
   },
   {
-    path: 'alpinizem/vrhovi/drzava/:country',
+    path: 'drzava/:country',
     component: PeaksCountryComponent,
   },
   {
-    path: 'alpinizem/vrhovi/vrh/:peak',
+    path: 'vrh/:peak',
     component: PeakCragsComponent,
   },
 ];
