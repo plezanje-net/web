@@ -1,0 +1,48 @@
+fragment AreaData on Area {
+  id
+  slug
+  name
+  type
+  iceFalls {
+    id
+  }
+}
+
+query IceFallsCountry($countrySlug: String!, $areaSlug: String) {
+  countries(
+    input: { orderBy: { field: "name", direction: "ASC" }, hasIceFalls: true }
+  ) {
+    name
+    slug
+    nrIceFalls
+  }
+
+  countryAreas: countryBySlug(slug: $countrySlug) {
+    id
+    name
+    slug
+    code
+    areas {
+      ...AreaData
+      areas {
+        ...AreaData
+        areas {
+          ...AreaData
+        }
+      }
+    }
+    iceFalls {
+      id
+    }
+  }
+
+  countryIceFalls: countryBySlug(slug: $countrySlug) {
+    iceFalls(areaSlug: $areaSlug) {
+      id
+      name
+      slug
+      grade
+      height
+    }
+  }
+}

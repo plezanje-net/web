@@ -1,4 +1,7 @@
-@import "../../../../../styles/colors.scss";
+.nr {
+  white-space: nowrap;
+}
+@import "../../../../styles/colors.scss";
 
 a.row {
   text-decoration: none;
@@ -11,12 +14,11 @@ a.row {
     cursor: default;
     background: #f6f9ff;
   }
-}
-.show-all {
-  color: #0000008a;
-  padding: 12px;
-  cursor: pointer;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  &.disabled {
+    &:hover {
+      color: #000;
+    }
+  }
 }
 .mat-form-field {
   width: 100%;
