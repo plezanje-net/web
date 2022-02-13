@@ -24,7 +24,8 @@ export class IceFallsBreadcrumbs {
         },
         {
           name: area.name,
-          path: `/slapovi/${country.slug}/${area.slug}`,
+          path: `/alpinizem/slapovi/drzava/${country.slug}`,
+          params: { obmocje: area.slug },
         }
       );
     } else {
@@ -38,18 +39,19 @@ export class IceFallsBreadcrumbs {
 
       breadcrumbs.push({
         name: area.name,
-        path: `/slapovi/${country.slug}/${area.slug}`,
+        path: `/alpinizem/slapovi/drzava/${country.slug}`,
+        params: { obmocje: area.slug },
       });
     }
 
     breadcrumbs.push({
       name: country.name,
-      path: `/slapovi/${country.slug}`,
+      path: `/alpinizem/slapovi/drzava/${country.slug}`,
     });
 
     breadcrumbs.push({
       name: 'Slapovi',
-      path: '/slapovi',
+      path: '/alpinizem/slapovi',
     });
 
     return breadcrumbs.reverse();
