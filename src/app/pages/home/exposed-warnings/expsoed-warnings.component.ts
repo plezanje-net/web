@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   EventEmitter,
+  OnDestroy,
   OnInit,
   Output,
   ViewChild,
@@ -24,12 +25,15 @@ SwiperCore.use([Pagination, Autoplay]);
   templateUrl: './exposed-warnings.component.html',
   styleUrls: ['./exposed-warnings.component.scss'],
 })
-export class ExposedWarningsComponent implements OnInit, AfterViewInit {
+export class ExposedWarningsComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   @Output() errorEvent = new EventEmitter<DataError>();
 
   warnings: ExposedWarningsQuery['exposedWarnings'];
 
   @ViewChild('swiper', { static: false }) swiper: SwiperComponent;
+  swiperObserver: IntersectionObserver;
 
   constructor(
     private exposedWarnings: ExposedWarningsGQL,
@@ -38,7 +42,7 @@ export class ExposedWarningsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     // add observer so that the slider is stopped when out of view (to prevent flickering of content)
-    const swiperObserver = new IntersectionObserver(
+    this.swiperObserver = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
         if (entry.isIntersecting) {
@@ -53,7 +57,7 @@ export class ExposedWarningsComponent implements OnInit, AfterViewInit {
       }
     );
     const swiperEl = document.querySelector('swiper');
-    swiperObserver.observe(swiperEl);
+    this.swiperObserver.observe(swiperEl);
   }
 
   ngOnInit(): void {
@@ -82,5 +86,9 @@ export class ExposedWarningsComponent implements OnInit, AfterViewInit {
     this.errorEvent.emit({
       message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
     });
+  }
+
+  ngOnDestroy(): void {
+    this.swiperObserver.disconnect();
   }
 }
