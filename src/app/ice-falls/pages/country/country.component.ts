@@ -100,7 +100,7 @@ export class CountryComponent implements OnInit {
     this.layoutService.$breadcrumbs.next([
       {
         name: 'Slapovi',
-        path: '/slapovi',
+        path: '/alpinizem/slapovi',
       },
       {
         name: this.country.name,
