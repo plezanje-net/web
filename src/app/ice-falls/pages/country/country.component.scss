@@ -15,8 +15,10 @@ a.row {
     background: #f6f9ff;
   }
   &.disabled {
+    color: #0000008a;
     &:hover {
-      color: #000;
+      color: #0000008a;
+      background: none;
     }
   }
 }
