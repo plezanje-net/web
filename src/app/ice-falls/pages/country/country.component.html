@@ -110,6 +110,7 @@
               [style.padding-left]="(listArea.depth + 1) * 16 + 'px'"
               *ngFor="let listArea of areas"
               [value]="listArea.area.slug"
+              [disabled]="listArea.area.iceFalls.length < 1"
               >{{ listArea.area.name }}</mat-option
             >
           </mat-select>
