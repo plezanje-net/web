@@ -33,6 +33,10 @@ query ActivityEntry($id: String!) {
         id
         slug
       }
+      pitch {
+        number
+        difficulty
+      }
     }
     crag {
       id
