@@ -19,16 +19,26 @@
       route.route.crag.slug,
       route.route.slug
     ]"
-    >{{ route.route.name }}</a
+    >{{ route.route.name
+    }}{{ route.pitch ? " (R" + route.pitch.number + ")" : "" }}</a
   >
 </td>
 
 <td>
-  <app-grade
-    [difficulty]="route.route.difficulty"
-    [gradingSystemId]="route.route.defaultGradingSystem.id"
-    [showModifier]="true"
-  ></app-grade>
+  <span *ngIf="route.pitch; else notPitchOnly">
+    <app-grade
+      [difficulty]="route.pitch.difficulty"
+      [gradingSystemId]="route.route.defaultGradingSystem.id"
+      [showModifier]="true"
+    ></app-grade>
+  </span>
+  <ng-template #notPitchOnly>
+    <app-grade
+      [difficulty]="route.route.difficulty"
+      [gradingSystemId]="route.route.defaultGradingSystem.id"
+      [showModifier]="true"
+    ></app-grade>
+  </ng-template>
 </td>
 <td>
   <app-ascent-type [value]="route.ascentType"></app-ascent-type>

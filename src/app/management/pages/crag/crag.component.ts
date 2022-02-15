@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+<<<<<<< HEAD
 import { of, Subscription, switchMap } from 'rxjs';
+=======
+
+import { filter, of, Subscription, switchMap, take } from 'rxjs';
+>>>>>>> 8f9f171 (Remove leftover jquery import in crag component.)
 import { LayoutService } from 'src/app/services/layout.service';
 import { Crag, ManagementGetCragGQL } from 'src/generated/graphql';
 import { CragAdminBreadcrumbs } from '../../utils/crag-admin-breadcrumbs';
