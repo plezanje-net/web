@@ -31,7 +31,7 @@ export class AuthService {
   logout(): Promise<any> {
     this.currentUser.next(null);
     localStorage.removeItem(this.getCookieName('auth'));
-    return this.apollo.client.resetStore();
+    return this.apollo.client.clearStore();
   }
 
   login(loginResponse: LoginResponse): Promise<any> {
