@@ -21,6 +21,7 @@ import { ActivityEntryComponent } from './pages/activity/activity-entry/activity
 import { ActivityInputComponent } from './pages/activity/activity-input/activity-input.component';
 import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
 import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
+import { AlpinismComponent } from './pages/alpinism/alpinism.component';
 
 const routes: Routes = [
   {
@@ -126,6 +127,10 @@ const routes: Routes = [
     path: 'alpinizem/slapovi',
     loadChildren: () =>
       import('./ice-falls/ice-falls.module').then((m) => m.IceFallsModule),
+  },
+  {
+    path: 'alpinizem',
+    component: AlpinismComponent,
   },
   {
     path: '**',

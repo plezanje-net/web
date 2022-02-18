@@ -88,6 +88,7 @@ import { ExposedWarningsComponent } from './pages/home/exposed-warnings/expsoed-
 import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
 import { PeaksModule } from './peaks/peaks.module';
 import { SwiperModule } from 'swiper/angular';
+import { AlpinismComponent } from './pages/alpinism/alpinism.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -148,6 +149,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ImageFullComponent,
     ExposedWarningsComponent,
     ConfirmClubMembershipComponent,
+    AlpinismComponent,
   ],
   imports: [
     BrowserModule,
