@@ -173,8 +173,9 @@ export class SearchComponent implements OnInit, OnDestroy {
     searchTerm = searchTerm.replace(/[sš]/gi, '[sš]');
     searchTerm = searchTerm.replace(/[zž]/gi, '[zž]');
 
-    // should start with nothing or a space
-    searchTerm = '(?<![^\\s])' + '(' + searchTerm + ')';
+    // a match should be at the start of a word
+    searchTerm = '\\b' + searchTerm;
+
     const regExp = new RegExp(searchTerm, 'gi');
 
     // cut begining of comment if first matched term more than 5 chars 'deep'
@@ -189,15 +190,3 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 }
-
-// TODO: going back from link -> reselect last selected tab ?
-
-// TODO: link to sector -> sector anchors
-
-// TODO: link to comment -> anchor
-
-// TODO: what is comment status. currently all statuses are 'active'
-
-// TODO: sticky headers on results lists?
-
-// TODO: common words such as 'smer' yield a lot of results. pagination/load more?
