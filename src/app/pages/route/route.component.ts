@@ -105,7 +105,7 @@ export class RouteComponent implements OnInit {
         },
         {
           name: this.route.sector.crag.name,
-          path: `/plezalisca/${this.route.sector.crag.country.slug}/${this.route.sector.crag.slug}`,
+          path: `/plezalisce/${this.route.sector.crag.slug}`,
         },
         {
           name: this.route.name,

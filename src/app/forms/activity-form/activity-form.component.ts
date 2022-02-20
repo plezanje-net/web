@@ -169,11 +169,7 @@ export class ActivityFormComponent implements OnInit {
           if (this.crag.type === 'alpine') {
             this.router.navigate(['/alpinizem', 'stena', this.crag.slug]);
           } else {
-            this.router.navigate([
-              '/plezalisca/',
-              this.crag.country.slug,
-              this.crag.slug,
-            ]);
+            this.router.navigate(['/plezalisce/', this.crag.slug]);
           }
         },
         error: () => {

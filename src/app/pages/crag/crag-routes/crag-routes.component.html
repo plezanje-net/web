@@ -39,12 +39,7 @@
                   [routerLink]="
                     section === 'alpinism'
                       ? ['/alpinizem', 'stena', crag.slug, 'smer', route.slug]
-                      : [
-                          '/plezalisca/',
-                          crag.country.slug,
-                          crag.slug,
-                          route.slug
-                        ]
+                      : ['/plezalisce', crag.slug, 'smer', route.slug]
                   "
                   (click)="$event.stopPropagation()"
                   >{{ route.name }}</a
