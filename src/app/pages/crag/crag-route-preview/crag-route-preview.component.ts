@@ -22,14 +22,11 @@ import {
   styleUrls: ['./crag-route-preview.component.scss'],
 })
 export class CragRoutePreviewComponent implements OnChanges {
-  gradeDistribution: IDistribution[];
+  gradeDistribution: IDistribution[] = [];
   gradeDistributionLoading: boolean;
   routeComments: Record<string, string | any>[];
   routeCommentsLoading: boolean;
-  childViewsInitialized = {
-    grades: false,
-    comments: false,
-  };
+  childViewsInitialized = {};
 
   @Input() routeId: string;
   @Output() heightChangeEvent = new EventEmitter<number>();
@@ -67,6 +64,9 @@ export class CragRoutePreviewComponent implements OnChanges {
     this.gradeDistribution = getGradeDistribution(
       queryData.route.difficultyVotes.filter((vote) => !vote.isBase)
     );
+    if (this.gradeDistribution.length) {
+      this.childViewsInitialized['grades'] = false;
+    }
   }
 
   routeDiffVotesQueryError(): void {
@@ -91,6 +91,9 @@ export class CragRoutePreviewComponent implements OnChanges {
 
   routeCommentsQuerySuccess(queryData: RouteCommentsQuery): void {
     this.routeComments = queryData.route.comments;
+    if (this.routeComments.length) {
+      this.childViewsInitialized['comments'] = false;
+    }
     // TODO filter out conditions and warnings? ask in slack
   }
 
@@ -101,7 +104,10 @@ export class CragRoutePreviewComponent implements OnChanges {
   onChildViewInit(child: string): void {
     this.childViewsInitialized[child] = true;
 
-    if (!Object.values(this.childViewsInitialized).includes(false)) {
+    if (
+      Object.keys(this.childViewsInitialized).length &&
+      !Object.values(this.childViewsInitialized).includes(false)
+    ) {
       this.heightChangeEvent.emit(
         (this.container.nativeElement as HTMLDivElement).clientHeight
       );

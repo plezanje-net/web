@@ -1,9 +1,5 @@
 <div #container>
-  <container
-    *ngIf="
-      !gradeDistributionLoading && gradeDistribution && gradeDistribution.length
-    "
-  >
+  <container *ngIf="!gradeDistributionLoading && gradeDistribution.length">
     <h3>Ocene uporabnikov</h3>
     <app-distribution-chart
       [distribution]="gradeDistribution"
@@ -11,7 +7,7 @@
     ></app-distribution-chart>
   </container>
   <app-route-comments
-    *ngIf="!routeCommentsLoading && routeComments"
+    *ngIf="!routeCommentsLoading && routeComments.length"
     [comments]="routeComments"
     [previewMode]="true"
     (onViewInit)="onChildViewInit('comments')"
