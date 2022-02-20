@@ -143,44 +143,34 @@ export class ActivityFormComponent implements OnInit {
       };
     });
 
-    this.createActivityGQL
-      .mutate(
-        { input: activity, routes },
-        {
-          refetchQueries: [
-            namedOperations.Query.MyActivities,
-            namedOperations.Query.MyActivityRoutes,
-          ],
-        }
-      )
-      .subscribe({
-        next: () => {
-          this.localStorageService.removeItem('activity-selection');
-          this.snackBar
-            .open('Vnos je bil shranjen v plezalni dnevnik', 'Na dnevnik', {
-              duration: 3000,
-            })
-            .onAction()
-            .subscribe(() => {
-              this.router.navigate(['/plezalni-dnevnik']);
-            });
+    this.createActivityGQL.mutate({ input: activity, routes }).subscribe({
+      next: () => {
+        this.localStorageService.removeItem('activity-selection');
+        this.snackBar
+          .open('Vnos je bil shranjen v plezalni dnevnik', 'Na dnevnik', {
+            duration: 3000,
+          })
+          .onAction()
+          .subscribe(() => {
+            this.router.navigate(['/plezalni-dnevnik']);
+          });
 
-          // based on crag type navigate back to either peaks(alpinism) or sport climbing section
-          if (this.crag.type === 'alpine') {
-            this.router.navigate(['/alpinizem', 'stena', this.crag.slug]);
-          } else {
-            this.router.navigate(['/plezalisce/', this.crag.slug]);
-          }
-        },
-        error: () => {
-          this.loading = false;
-          this.activityForm.enable();
-          this.snackBar.open(
-            'Vnosa ni bilo mogoče shraniti v plezalni dnevnik',
-            null,
-            { panelClass: 'error', duration: 3000 }
-          );
-        },
-      });
+        // based on crag type navigate back to either peaks(alpinism) or sport climbing section
+        if (this.crag.type === 'alpine') {
+          this.router.navigate(['/alpinizem', 'stena', this.crag.slug]);
+        } else {
+          this.router.navigate(['/plezalisce/', this.crag.slug]);
+        }
+      },
+      error: () => {
+        this.loading = false;
+        this.activityForm.enable();
+        this.snackBar.open(
+          'Vnosa ni bilo mogoče shraniti v plezalni dnevnik',
+          null,
+          { panelClass: 'error', duration: 3000 }
+        );
+      },
+    });
   }
 }
