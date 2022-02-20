@@ -3,12 +3,8 @@ import { BehaviorSubject, Subject, take } from 'rxjs';
 import { LoginRequest } from '../types/login-request';
 import { Apollo } from 'apollo-angular';
 import { GuardedActionOptions } from '../types/guarded-action-options';
-import {
-  LoginResponse,
-  ProfileGQL,
-  ProfileQuery,
-  User,
-} from 'src/generated/graphql';
+import { LoginResponse, User } from 'src/generated/graphql';
+import { LocalStorageService } from '../services/local-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,27 +14,26 @@ export class AuthService {
 
   public openLogin$ = new Subject<LoginRequest>();
 
-  constructor(private apollo: Apollo, private profileGQL: ProfileGQL) {}
+  constructor(
+    private apollo: Apollo,
+    private localStorageService: LocalStorageService
+  ) {}
 
   public initialize(): void {
-    const authString = localStorage.getItem(this.getCookieName('auth'));
-    if (authString) {
-      const { user } = JSON.parse(authString);
-      this.currentUser.next(user);
+    const authData = this.localStorageService.getItem('auth');
+    if (authData != null && authData.user) {
+      this.currentUser.next(authData.user);
     }
   }
 
   logout(): Promise<any> {
     this.currentUser.next(null);
-    localStorage.removeItem(this.getCookieName('auth'));
+    this.localStorageService.removeItem('auth');
     return this.apollo.client.clearStore();
   }
 
   login(loginResponse: LoginResponse): Promise<any> {
-    localStorage.setItem(
-      this.getCookieName('auth'),
-      JSON.stringify(loginResponse)
-    );
+    this.localStorageService.setItem('auth', loginResponse);
 
     this.currentUser.next(loginResponse.user);
 
@@ -46,17 +41,13 @@ export class AuthService {
   }
 
   getToken(): string {
-    const authString = localStorage.getItem(this.getCookieName('auth'));
-    if (authString) {
-      const { token } = JSON.parse(authString);
-      return token;
+    const authData = this.localStorageService.getItem('auth');
+
+    if (authData != null && authData.user) {
+      return authData.token;
     }
 
     return null;
-  }
-
-  getCookieName(type: string): string {
-    return `plezanjenet-${type}`;
   }
 
   async guardedAction(options: GuardedActionOptions): Promise<any> {
