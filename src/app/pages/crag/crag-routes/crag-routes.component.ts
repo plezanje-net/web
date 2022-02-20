@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -6,16 +6,9 @@ import { SnackBarButtonsComponent } from 'src/app/shared/snack-bar-buttons/snack
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import moment from 'moment';
 import ActivitySelection from 'src/app/types/activity-selection.interface';
-import {
-  Crag,
-  MyCragSummaryGQL,
-  Route,
-  RouteDifficultyVotesGQL,
-  RouteDifficultyVotesQuery,
-  RouteCommentsGQL,
-  RouteCommentsQuery,
-} from 'src/generated/graphql';
+import { Crag, MyCragSummaryGQL, Route } from 'src/generated/graphql';
 import { ASCENT_TYPES } from 'src/app/common/activity.constants';
+import { IDistribution } from 'src/app/common/distribution-chart/distribution-chart.component';
 
 @Component({
   selector: 'app-crag-routes',
@@ -28,14 +21,13 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   selectedRoutes: Route[] = [];
   selectedRoutesIds: string[] = [];
   ascents: any = {};
-  routeDiffVotesLoading: boolean;
+  difficultyVotesLoading: boolean;
   difficultyVotes: Record<string, string | any>[];
-  activeDiffVotesPopupId: string | null = null;
-  activeCommentsPopupId: string | null = null;
-  routeCommentsLoading: boolean;
-  routeComments: Record<string, string | any>[];
-  activePitchesPopupId: string | null = null;
   loading = false;
+  expandedRowId: string;
+  previousExpandedRowId: string;
+  gradeDistribution: IDistribution[];
+  expandedRowHeight: number;
 
   section: string;
 
@@ -45,8 +37,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     private router: Router,
     private myCragSummaryGQL: MyCragSummaryGQL,
     private localStorageService: LocalStorageService,
-    private routeDifficultyVotesGQL: RouteDifficultyVotesGQL,
-    private routeCommentsGQL: RouteCommentsGQL
+    private changeDetection: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -58,13 +49,8 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       this.loadActivity(user != null)
     );
 
-    const activitySelection: ActivitySelection =
-      this.localStorageService.getItem('activity-selection');
-    if (
-      activitySelection &&
-      activitySelection.routes.length &&
-      activitySelection.crag.id === this.crag.id
-    ) {
+    const activitySelection: ActivitySelection = this.localStorageService.getItem('activity-selection');
+    if (activitySelection && activitySelection.routes.length && activitySelection.crag.id === this.crag.id) {
       this.selectedRoutes = activitySelection.routes;
       this.selectedRoutesIds = this.selectedRoutes.map((route) => route.id);
       this.openSnackBar();
@@ -86,11 +72,23 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     if (this.selectedRoutes.length > 0) {
       this.openSnackBar();
 
-      this.selectedRoutesIds = this.selectedRoutes.map(
-        (selectedRoute) => selectedRoute.id
-      );
+      this.selectedRoutesIds = this.selectedRoutes.map((selectedRoute) => selectedRoute.id);
 
-      this.addRoutesToLocalStorage(this.selectedRoutes);
+      // Append users previous activity (summary) to the routes that are being logged
+      const selectedRoutesWTouch = this.selectedRoutes.map((route) => ({
+        ...route,
+        tried: !!this.ascents[route.id],
+        ticked: ASCENT_TYPES.some((ascentType) => this.ascents[route.id] == ascentType.value && ascentType.tick),
+      }));
+
+      this.localStorageService.setItem(
+        'activity-selection',
+        {
+          crag: this.crag,
+          routes: selectedRoutesWTouch,
+        },
+        moment(new Date()).add(1, 'day').toISOString()
+      );
     } else {
       this.snackBar.dismiss();
       this.localStorageService.removeItem('activity-selection');
@@ -156,86 +154,28 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.myCragSummaryGQL
-      .watch({ input: { cragId: this.crag.id } })
-      .valueChanges.subscribe((result) => {
-        this.loading = false;
-        result.data?.myCragSummary.forEach((ascent) => {
-          this.ascents[ascent.route.id] = ascent.ascentType;
-        });
+    this.myCragSummaryGQL.watch({ input: { cragId: this.crag.id } }).valueChanges.subscribe((result) => {
+      this.loading = false;
+      result.data?.myCragSummary.forEach((ascent) => {
+        this.ascents[ascent.route.id] = ascent.ascentType;
       });
+    });
   }
 
-  displayRouteDifficultyVotes(route: Route): void {
-    this.activeDiffVotesPopupId = route.id;
-    this.activeCommentsPopupId = null;
-    this.activePitchesPopupId = null;
-    this.routeDiffVotesLoading = true;
-
-    this.routeDifficultyVotesGQL
-      .watch({ routeId: route.id })
-      .valueChanges.subscribe((result) => {
-        this.routeDiffVotesLoading = false;
-
-        if (!result.errors) {
-          this.routeDiffVotesQuerySuccess(result.data);
-        } else {
-          this.routeDiffVotesQueryError();
-        }
-      });
+  expandRow(routeId: string): void {
+    if (this.expandedRowId === routeId) {
+      this.previousExpandedRowId = this.expandedRowId;
+      this.expandedRowId = null;
+    } else {
+      // TODO move saved comments and votes to previous comments and votes
+      this.previousExpandedRowId = this.expandedRowId;
+      this.expandedRowId = routeId;
+    }
   }
 
-  hideRouteDifficultyVotes(route: Route): void {
-    this.activeDiffVotesPopupId = null;
-  }
-
-  routeDiffVotesQuerySuccess(queryData: RouteDifficultyVotesQuery): void {
-    this.difficultyVotes = queryData.route.difficultyVotes;
-  }
-
-  routeDiffVotesQueryError(): void {
-    console.error('TODO');
-  }
-
-  displayRouteComments(route: Route): void {
-    this.activeCommentsPopupId = route.id;
-    this.activeDiffVotesPopupId = null;
-    this.activePitchesPopupId = null;
-    this.routeCommentsLoading = true;
-
-    this.routeCommentsGQL
-      .watch({ routeId: route.id })
-      .valueChanges.subscribe((result) => {
-        this.routeCommentsLoading = false;
-
-        if (!result.errors) {
-          this.routeCommentsQuerySuccess(result.data);
-        } else {
-          this.routeCommentsQueryError();
-        }
-      });
-  }
-
-  hideRouteComments(route: Route): void {
-    this.activeCommentsPopupId = null;
-  }
-
-  displayRoutePitches(route: Route): void {
-    this.activePitchesPopupId = route.id;
-    this.activeCommentsPopupId = null;
-    this.activeDiffVotesPopupId = null;
-  }
-
-  hideRoutePitches(route: Route): void {
-    this.activePitchesPopupId = null;
-  }
-
-  routeCommentsQuerySuccess(queryData: RouteCommentsQuery): void {
-    this.routeComments = queryData.route.comments;
-    // TODO filter out conditions and warnings? ask in slack
-  }
-
-  routeCommentsQueryError(): void {
-    console.error('TODO');
+  onPreviewHeightEvent(height: number): void {
+    height += 20; // for the 20px padding above the content
+    this.expandedRowHeight = height;
+    this.changeDetection.detectChanges();
   }
 }

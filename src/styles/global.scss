@@ -2,6 +2,7 @@
 @import "reset.scss";
 @import "colors.scss";
 @import "editor.scss";
+@import "variables.scss";
 
 body {
   background: #eef5f9;
@@ -14,7 +15,7 @@ body {
 }
 
 /* SM (small) */
-@media (min-width: 600px) {
+@media (min-width: $breakpoint-sm) {
   .container {
     margin: 0 32px;
     width: auto;
@@ -22,7 +23,7 @@ body {
 }
 
 /* MD (medium) */
-@media (min-width: 905px) {
+@media (min-width: $breakpoint-md) {
   .container {
     margin: 0 auto;
     width: 840px;
@@ -30,7 +31,7 @@ body {
 }
 
 /* LG (large) */
-@media (min-width: 1240px) {
+@media (min-width: $breakpoint-lg) {
   .container {
     margin: 0 200px;
     width: auto;
@@ -38,7 +39,7 @@ body {
 }
 
 /* XL (extra large) */
-@media (min-width: 1440px) {
+@media (min-width: $breakpoint-xl) {
   .container {
     margin: 0 auto;
     width: 1040px;
