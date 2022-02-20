@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AreasTocComponent } from './areas-toc.component';
+import { CragRoutePreviewComponent } from './crag-route-preview.component';
 
-describe('AreasTocComponent', () => {
-  let component: AreasTocComponent;
-  let fixture: ComponentFixture<AreasTocComponent>;
+describe('CragRoutePreviewComponent', () => {
+  let component: CragRoutePreviewComponent;
+  let fixture: ComponentFixture<CragRoutePreviewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AreasTocComponent ]
+      declarations: [ CragRoutePreviewComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AreasTocComponent);
+    fixture = TestBed.createComponent(CragRoutePreviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

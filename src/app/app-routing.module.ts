@@ -128,6 +128,11 @@ const routes: Routes = [
       import('./peaks/peaks.module').then((m) => m.PeaksModule),
   },
   {
+    path: 'alpinizem/slapovi',
+    loadChildren: () =>
+      import('./ice-falls/ice-falls.module').then((m) => m.IceFallsModule),
+  },
+  {
     path: '**',
     component: NotFoundComponent,
   },

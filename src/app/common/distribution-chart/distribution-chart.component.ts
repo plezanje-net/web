@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 
 export interface IDistribution {
   label: string;
@@ -10,13 +10,15 @@ export interface IDistribution {
   templateUrl: './distribution-chart.component.html',
   styleUrls: ['./distribution-chart.component.scss'],
 })
-export class DistributionChartComponent implements OnInit {
+export class DistributionChartComponent implements OnChanges, AfterViewInit {
   @Input() distribution: IDistribution[] = [];
+  @Output() onViewInit = new EventEmitter<void>();
+
   maxValue: number;
 
   constructor() {}
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     if (!this.distribution) {
       return;
     }
@@ -30,5 +32,10 @@ export class DistributionChartComponent implements OnInit {
     });
 
     this.maxValue = maxValue;
+  }
+
+  ngAfterViewInit(): void {
+    // this is used when this component is a child of CragRoutePreviewComponent which measures the height after view init
+    this.onViewInit.emit();
   }
 }

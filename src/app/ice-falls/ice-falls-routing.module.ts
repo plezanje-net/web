@@ -1,25 +1,20 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AreaComponent } from './pages/area/area.component';
-import { AreasComponent } from './pages/areas/areas.component';
+import { CountryComponent } from './pages/country/country.component';
 import { IceFallComponent } from './pages/ice-fall/ice-fall.component';
 
 const routes: Routes = [
   {
-    path: 'slapovi',
-    redirectTo: 'slapovi/slovenija',
+    path: '',
+    redirectTo: 'drzava/slovenija',
     pathMatch: 'full',
   },
   {
-    path: 'slapovi/:country',
-    component: AreasComponent,
+    path: 'drzava/:country',
+    component: CountryComponent,
   },
   {
-    path: 'slapovi/:country/:area',
-    component: AreaComponent,
-  },
-  {
-    path: 'slapovi/:country/:area/:icefall',
+    path: 'slap/:icefall',
     component: IceFallComponent,
   },
 ];
