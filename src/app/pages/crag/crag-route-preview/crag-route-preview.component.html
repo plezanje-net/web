@@ -1,10 +1,19 @@
 <div #container>
-  <h3>Ocene uporabnikov</h3>
-  <app-distribution-chart *ngIf="!gradeDistributionLoading && gradeDistribution"
-                          [distribution]="gradeDistribution"
-                          (onViewInit)="onChildViewInit('grades')"></app-distribution-chart>
-  <app-route-comments *ngIf="!routeCommentsLoading && routeComments"
-                      [comments]="routeComments"
-                      [previewMode]="true"
-                      (onViewInit)="onChildViewInit('comments')"></app-route-comments>
+  <container
+    *ngIf="
+      !gradeDistributionLoading && gradeDistribution && gradeDistribution.length
+    "
+  >
+    <h3>Ocene uporabnikov</h3>
+    <app-distribution-chart
+      [distribution]="gradeDistribution"
+      (onViewInit)="onChildViewInit('grades')"
+    ></app-distribution-chart>
+  </container>
+  <app-route-comments
+    *ngIf="!routeCommentsLoading && routeComments"
+    [comments]="routeComments"
+    [previewMode]="true"
+    (onViewInit)="onChildViewInit('comments')"
+  ></app-route-comments>
 </div>

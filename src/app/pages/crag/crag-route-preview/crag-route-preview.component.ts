@@ -1,7 +1,20 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { IDistribution } from 'src/app/common/distribution-chart/distribution-chart.component';
 import { getGradeDistribution } from 'src/app/common/grade-distribution';
-import { RouteCommentsGQL, RouteCommentsQuery, RouteDifficultyVotesGQL, RouteDifficultyVotesQuery } from 'src/generated/graphql';
+import {
+  RouteCommentsGQL,
+  RouteCommentsQuery,
+  RouteDifficultyVotesGQL,
+  RouteDifficultyVotesQuery,
+} from 'src/generated/graphql';
 
 @Component({
   selector: 'app-crag-route-preview',
@@ -22,7 +35,10 @@ export class CragRoutePreviewComponent implements OnChanges {
   @Output() heightChangeEvent = new EventEmitter<number>();
   @ViewChild('container') container: ElementRef;
 
-  constructor(private routeCommentsGQL: RouteCommentsGQL, private routeDifficultyVotesGQL: RouteDifficultyVotesGQL) {}
+  constructor(
+    private routeCommentsGQL: RouteCommentsGQL,
+    private routeDifficultyVotesGQL: RouteDifficultyVotesGQL
+  ) {}
 
   ngOnChanges(): void {
     if (this.routeId) {
@@ -34,19 +50,23 @@ export class CragRoutePreviewComponent implements OnChanges {
   fetchDifficultyVotesDistribution(routeId: string): void {
     this.gradeDistributionLoading = true;
 
-    this.routeDifficultyVotesGQL.watch({ routeId }).valueChanges.subscribe((result) => {
-      this.gradeDistributionLoading = false;
+    this.routeDifficultyVotesGQL
+      .watch({ routeId })
+      .valueChanges.subscribe((result) => {
+        this.gradeDistributionLoading = false;
 
-      if (!result.errors) {
-        this.routeDiffVotesQuerySuccess(result.data);
-      } else {
-        this.routeDiffVotesQueryError();
-      }
-    });
+        if (!result.errors) {
+          this.routeDiffVotesQuerySuccess(result.data);
+        } else {
+          this.routeDiffVotesQueryError();
+        }
+      });
   }
 
   routeDiffVotesQuerySuccess(queryData: RouteDifficultyVotesQuery): void {
-    this.gradeDistribution = getGradeDistribution(queryData.route.difficultyVotes);
+    this.gradeDistribution = getGradeDistribution(
+      queryData.route.difficultyVotes.filter((vote) => !vote.isBase)
+    );
   }
 
   routeDiffVotesQueryError(): void {
@@ -56,15 +76,17 @@ export class CragRoutePreviewComponent implements OnChanges {
   fetchRouteComments(routeId: string): void {
     this.routeCommentsLoading = true;
 
-    this.routeCommentsGQL.watch({ routeId: routeId }).valueChanges.subscribe((result) => {
-      this.routeCommentsLoading = false;
+    this.routeCommentsGQL
+      .watch({ routeId: routeId })
+      .valueChanges.subscribe((result) => {
+        this.routeCommentsLoading = false;
 
-      if (!result.errors) {
-        this.routeCommentsQuerySuccess(result.data);
-      } else {
-        this.routeCommentsQueryError();
-      }
-    });
+        if (!result.errors) {
+          this.routeCommentsQuerySuccess(result.data);
+        } else {
+          this.routeCommentsQueryError();
+        }
+      });
   }
 
   routeCommentsQuerySuccess(queryData: RouteCommentsQuery): void {
@@ -80,7 +102,9 @@ export class CragRoutePreviewComponent implements OnChanges {
     this.childViewsInitialized[child] = true;
 
     if (!Object.values(this.childViewsInitialized).includes(false)) {
-      this.heightChangeEvent.emit((this.container.nativeElement as HTMLDivElement).clientHeight);
+      this.heightChangeEvent.emit(
+        (this.container.nativeElement as HTMLDivElement).clientHeight
+      );
     }
   }
 }
