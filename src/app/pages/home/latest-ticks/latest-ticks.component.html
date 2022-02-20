@@ -20,9 +20,9 @@
                 smer
                 <a
                   [routerLink]="[
-                    '/plezalisca',
-                    tick.route.crag.country.slug,
+                    '/plezalisce',
                     tick.route.crag.slug,
+                    'smer',
                     tick.route.slug
                   ]"
                 >
@@ -36,13 +36,7 @@
                 >
                 </app-grade>
                 v plezališču
-                <a
-                  [routerLink]="[
-                    '/plezalisca',
-                    tick.route.crag.country.slug,
-                    tick.route.crag.slug
-                  ]"
-                >
+                <a [routerLink]="['/plezalisce', tick.route.crag.slug]">
                   {{ tick.route.crag.name }}</a
                 >,
                 <a [routerLink]="['/plezalisca', tick.route.crag.country.slug]">

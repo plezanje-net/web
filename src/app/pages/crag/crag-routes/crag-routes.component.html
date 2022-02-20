@@ -5,187 +5,151 @@
       <span>{{ sector.name != "" ? " - " + sector.name : "" }}</span>
     </h3>
     <div class="card">
-      <div
-        fxLayout="row"
-        fxLayoutAlign="start center"
-        fxHide.lt-md
-        class="row header"
-        fxLayoutGap="14px"
-      >
-        <div fxFlex="12px"></div>
-        <div fxFlex>Ime</div>
-        <div *ngIf="!sector.bouldersOnly" fxFlex="80px" fxFlex.lt-md>
-          Dolžina
+      <div class="row header route-row" fxLayoutGap="14px">
+        <div class="route-checkbox"></div>
+        <div class="route-details-container">
+          <div class="route-details left" fxLayoutGap="14px">
+            <div class="route-name">Ime</div>
+            <div *ngIf="!sector.bouldersOnly" class="route-length">Dolžina</div>
+            <div class="route-grade">Težavnost</div>
+          </div>
+          <div class="route-details right" fxLayoutGap="14px">
+            <div class="route-icons"></div>
+          </div>
         </div>
-        <div fxFlex="0 1 80px">Težavnost</div>
-        <div fxFlex="160px"></div>
       </div>
-      <div
-        *ngFor="let route of sector.routes"
-        fxLayout="row"
-        fxLayoutAlign="start center"
-        class="row"
-        fxLayoutGap="14px"
-      >
-        <div fxFlex="12px">
-          <mat-checkbox
-            (change)="changeSelection(route)"
-            [checked]="selectedRoutesIds.indexOf(route.id) > -1"
-          >
-          </mat-checkbox>
-        </div>
-        <div fxFlex>
-          <a
-            [routerLink]="
-              section === 'alpinism'
-                ? ['/alpinizem', 'stena', crag.slug, 'smer', route.slug]
-                : ['/plezalisca/', crag.country.slug, crag.slug, route.slug]
-            "
-            >{{ route.name }}</a
-          >
-        </div>
-        <div
-          *ngIf="!sector.bouldersOnly"
-          fxFlex="80px"
-          fxFlex.lt-md
-          fxHide.lt-md
-        >
-          <ng-container *ngIf="route.routeType.id !== 'boulder' && route.length"
-            >{{ route.length }} m</ng-container
-          >
-        </div>
-        <div
-          fxFlex="0 1 80px"
-          (mouseenter)="displayRouteDifficultyVotes(route)"
-          (mouseleave)="hideRouteDifficultyVotes(route)"
-          class="popover-container"
-        >
-          <span *ngIf="route.isProject">P</span>
-          <app-grade
-            *ngIf="!route.isProject"
-            [difficulty]="route.difficulty"
-            [gradingSystemId]="route.defaultGradingSystem.id"
-            [showModifier]="true"
-          ></app-grade>
-          <div
-            class="popover"
-            *ngIf="
-              activeDiffVotesPopupId === route.id && !routeDiffVotesLoading
-            "
-          >
-            <div class="popover-title">Ocene smeri {{ route.name }}</div>
-            <table>
-              <tbody>
-                <tr
-                  *ngFor="let difficultyVote of difficultyVotes"
-                  [ngClass]="
-                    difficultyVote.includedInCalculation ? 'grade-included' : ''
-                  "
-                >
-                  <td>
-                    <app-grade
-                      class="grade"
-                      [difficulty]="difficultyVote.difficulty"
-                      [gradingSystemId]="route.defaultGradingSystem.id"
-                      [legacy]="true"
-                    ></app-grade>
-                  </td>
-                  <td class="grade-author">
-                    <ng-container *ngIf="difficultyVote.isBase"
-                      >Bazna ocena</ng-container
-                    >
-                    <ng-container
-                      *ngIf="!difficultyVote.isBase && difficultyVote.user"
-                      >{{
-                        difficultyVote.user.firstname +
-                          " " +
-                          difficultyVote.user.lastname
-                      }}</ng-container
-                    >
-                  </td>
-                  <td class="grade-date">
-                    {{ difficultyVote.created | amDateFormat: "D. M. Y" }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="popover-arrow"></div>
-          </div>
-        </div>
 
-        <div fxLayout="row" fxFlex="160px" fxLayoutAlign="center" class="icons">
-          <div *ngIf="route.pitches.length > 0" class="popover-container">
-            <button
-              mat-icon-button
-              color="primary"
-              (mouseenter)="displayRoutePitches(route)"
-              (mouseleave)="hideRoutePitches(route)"
+      <div *ngFor="let route of sector.routes">
+        <div
+          class="row route-row"
+          fxLayoutGap="14px"
+          (click)="expandRow(route.id)"
+        >
+          <div class="route-checkbox">
+            <mat-checkbox
+              (change)="changeSelection(route)"
+              [checked]="selectedRoutesIds.indexOf(route.id) > -1"
             >
-              MP
-            </button>
-            <div class="popover" *ngIf="activePitchesPopupId === route.id">
-              <div class="popover-title">Raztežaji</div>
-              <div>
-                <text *ngFor="let pitch of route.pitches; let isLast = last"
-                  ><span *ngIf="pitch.isProject">P</span>
+            </mat-checkbox>
+          </div>
+          <div class="route-details-container">
+            <div class="route-details left" fxLayoutGap="14px">
+              <div class="route-name">
+                <a
+                  [routerLink]="
+                    section === 'alpinism'
+                      ? ['/alpinizem', 'stena', crag.slug, 'smer', route.slug]
+                      : [
+                          '/plezalisca/',
+                          crag.country.slug,
+                          crag.slug,
+                          route.slug
+                        ]
+                  "
+                  (click)="$event.stopPropagation()"
+                  >{{ route.name }}</a
+                >
+              </div>
+              <div class="route-numbers">
+                <div *ngIf="!sector.bouldersOnly" class="route-length">
+                  <ng-container
+                    *ngIf="route.routeType.id !== 'boulder' && route.length"
+                    >{{ route.length }} m</ng-container
+                  >
+                </div>
+                <div class="route-grade">
+                  <span *ngIf="route.isProject">P</span>
                   <app-grade
-                    *ngIf="!pitch.isProject"
-                    [difficulty]="pitch.difficulty"
+                    *ngIf="!route.isProject"
+                    [difficulty]="route.difficulty"
+                    [modifier]="true"
                     [gradingSystemId]="route.defaultGradingSystem.id"
-                    [showModifier]="true"
-                  ></app-grade
-                  >{{ isLast ? "" : ", " }}</text
-                >
-              </div>
-            </div>
-            <div class="popover-arrow"></div>
-          </div>
-          <div *ngIf="route.comments.length > 0" class="popover-container">
-            <button
-              mat-icon-button
-              (mouseenter)="displayRouteComments(route)"
-              (mouseleave)="hideRouteComments(route)"
-            >
-              <mat-icon>comment</mat-icon>
-            </button>
-            <div
-              class="popover comments"
-              *ngIf="
-                activeCommentsPopupId === route.id && !routeCommentsLoading
-              "
-            >
-              <div class="popover-title">Komentarji</div>
-              <div>
-                <ng-container
-                  *ngFor="let comment of routeComments; let i = index"
-                >
-                  <div class="row route-comment" [ngClass]="{ first: i === 0 }">
-                    <div class="route-comment-content">
-                      {{ comment.content }}
+                  ></app-grade>
+                  <div
+                    class="popover"
+                    *ngIf="
+                      false &&
+                      activeDifficultyVotesPopupId === route.id &&
+                      !difficultyVotesLoading
+                    "
+                  >
+                    <div class="popover-title">
+                      Ocene smeri {{ route.name }}
                     </div>
-                    <div class="route-comment-author">
-                      <span *ngIf="comment.user">{{
-                        comment.user.firstname +
-                          " " +
-                          comment.user.lastname +
-                          ", "
-                      }}</span>
-                      <span>{{
-                        comment.created | amDateFormat: "D. M. Y"
-                      }}</span>
-                    </div>
+                    <table>
+                      <tbody>
+                        <tr
+                          *ngFor="let vote of difficultyVotes"
+                          [ngClass]="
+                            vote.includedInCalculation
+                              ? 'difficulty-vote-included'
+                              : ''
+                          "
+                        >
+                          <td>
+                            <app-grade
+                              class="grade"
+                              [difficulty]="vote.difficulty"
+                            ></app-grade>
+                          </td>
+                          <td class="difficulty-vote-author">
+                            <ng-container *ngIf="vote.isBase"
+                              >Bazna ocena</ng-container
+                            >
+                            <ng-container *ngIf="!vote.isBase && vote.user">{{
+                              vote.user.firstname + " " + vote.user.lastname
+                            }}</ng-container>
+                          </td>
+                          <td class="difficulty-vote-date">
+                            {{ vote.created | amDateFormat: "D. M. Y" }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="popover-arrow"></div>
                   </div>
-                </ng-container>
+                </div>
               </div>
             </div>
-            <div class="popover-arrow"></div>
+            <div class="route-details right" fxLayoutGap="14px">
+              <div class="route-icons">
+                <button
+                  *ngIf="route.pitches.length > 0"
+                  mat-icon-button
+                  color="primary"
+                >
+                  MP
+                </button>
+                <button *ngIf="route.comments.length > 0" mat-icon-button>
+                  <mat-icon>comment</mat-icon>
+                </button>
+                <app-ascent-type
+                  *ngIf="ascents[route.id] != null"
+                  [value]="ascents[route.id]"
+                  displayType="icon"
+                >
+                </app-ascent-type>
+              </div>
+            </div>
           </div>
-          <app-ascent-type
-            *ngIf="ascents[route.id] != null"
-            [value]="ascents[route.id]"
-            displayType="icon"
+        </div>
+        <div
+          class="route-expanding-container"
+          [ngStyle]="{
+            'max-height.px': route.id === expandedRowId ? expandedRowHeight : 0
+          }"
+        >
+          <div
+            *ngIf="
+              expandedRowId === route.id || previousExpandedRowId === route.id
+            "
+            class="route-expanding-details"
           >
-          </app-ascent-type>
+            <app-crag-route-preview
+              [routeId]="route.id"
+              (heightChangeEvent)="onPreviewHeightEvent($event)"
+            ></app-crag-route-preview>
+          </div>
         </div>
       </div>
     </div>

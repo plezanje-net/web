@@ -198,7 +198,7 @@ export class CragComponent implements OnInit, OnDestroy {
         },
         {
           name: this.crag.peak.name,
-          path: '/alpinizem/vrh/' + this.crag.peak.slug,
+          path: '/alpinizem/vrhovi/vrh/' + this.crag.peak.slug,
         },
         {
           name: this.crag.name,

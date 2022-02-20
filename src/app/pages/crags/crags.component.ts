@@ -1,21 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from '../../types/data-error';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
+import { BehaviorSubject, Subscription, take } from 'rxjs';
 import { CragsQuery, CragsGQL } from '../../../generated/graphql';
 import { GraphQLError } from 'graphql';
 import { FormControl } from '@angular/forms';
-
-declare var ol: any;
+import { Tab } from 'src/app/types/tab';
+import { ROUTE_TYPES } from 'src/app/common/route-types.constants';
 
 @Component({
   selector: 'app-crags',
   templateUrl: './crags.component.html',
   styleUrls: ['./crags.component.scss'],
 })
-export class CragsComponent implements OnInit {
+export class CragsComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   cragsLoading: boolean = false;
   error: DataError = null;
@@ -28,14 +27,16 @@ export class CragsComponent implements OnInit {
   map: any;
 
   search = new FormControl();
+  searchSub: Subscription;
 
   filteredCrags: CragsQuery['countryBySlug']['crags'] = [];
+
+  routeTypes = ROUTE_TYPES;
 
   constructor(
     private layoutService: LayoutService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private dialog: MatDialog,
     private cragsGQL: CragsGQL
   ) {}
 
@@ -51,16 +52,19 @@ export class CragsComponent implements OnInit {
     this.activatedRoute.params.subscribe((params) => {
       this.cragsLoading = true;
 
+      const rotueType = this.routeTypes.find((rt) => rt.slug === params['tip']);
+
       this.cragsGQL
         .fetch({
           country: params.country,
           input: {
-            area: params.area,
-            routeTypeId: params.type,
+            areaSlug: params['obmocje'],
+            routeTypeId: rotueType?.id,
           },
         })
-        .subscribe(
-          (result) => {
+        .pipe(take(1))
+        .subscribe({
+          next: (result) => {
             this.loading = false;
             this.cragsLoading = false;
 
@@ -70,14 +74,16 @@ export class CragsComponent implements OnInit {
               this.querySuccess(result.data.countryBySlug);
             }
           },
-          (_) => {
+          error: () => {
             this.loading = false;
             this.queryError();
-          }
-        );
+          },
+        });
     });
 
-    this.search.valueChanges.subscribe(() => this.filterCrags());
+    this.searchSub = this.search.valueChanges.subscribe(() =>
+      this.filterCrags()
+    );
   }
 
   filterCrags(): void {
@@ -101,11 +107,7 @@ export class CragsComponent implements OnInit {
 
   searchKeyDown(e: KeyboardEvent) {
     if (e.key == 'Enter' && this.filteredCrags.length == 1) {
-      this.router.navigate([
-        '/plezalisca',
-        this.country.slug,
-        this.filteredCrags[0].slug,
-      ]);
+      this.router.navigate(['/plezalisce', this.filteredCrags[0].slug]);
     }
   }
 
@@ -140,5 +142,9 @@ export class CragsComponent implements OnInit {
         name: this.country.name,
       },
     ]);
+  }
+
+  ngOnDestroy(): void {
+    this.searchSub.unsubscribe();
   }
 }

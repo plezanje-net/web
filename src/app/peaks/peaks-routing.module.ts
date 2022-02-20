@@ -7,20 +7,20 @@ import { PeaksCountryComponent } from './peaks-country/peaks-country.component';
 
 const routes: Routes = [
   {
-    path: 'alpinizem/vrhovi',
-    redirectTo: 'alpinizem/vrhovi/drzave',
+    path: '',
+    redirectTo: 'drzave',
     pathMatch: 'full',
   },
   {
-    path: 'alpinizem/vrhovi/drzave',
+    path: 'drzave',
     component: PeaksCountriesComponent,
   },
   {
-    path: 'alpinizem/vrhovi/drzava/:country',
+    path: 'drzava/:country',
     component: PeaksCountryComponent,
   },
   {
-    path: 'alpinizem/vrh/:peak',
+    path: 'vrh/:peak',
     component: PeakCragsComponent,
   },
 ];

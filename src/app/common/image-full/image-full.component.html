@@ -31,31 +31,22 @@
             <a
               *ngIf="data.image.route"
               [routerLink]="[
-                '/plezalisca',
-                data.image.route.crag.country.slug,
+                '/plezalisce',
                 data.image.route.crag.slug,
+                'smer',
                 data.image.route.slug
               ]"
               >{{ data.image.route.name }}</a
             >, plezališče
-            <a
-              [routerLink]="[
-                '/plezalisca',
-                data.image.route.crag.country.slug,
-                data.image.route.crag.slug
-              ]"
-              >{{ data.image.route.crag.name }}</a
-            >
+            <a [routerLink]="['/plezalisce', data.image.route.crag.slug]">{{
+              data.image.route.crag.name
+            }}</a>
           </span>
 
           <span *ngIf="data.image.crag && !data.image.route">plezališče </span>
           <a
             *ngIf="data.image.crag"
-            [routerLink]="[
-              '/plezalisca',
-              data.image.crag.country.slug,
-              data.image.crag.slug
-            ]"
+            [routerLink]="['/plezalisce', data.image.crag.slug]"
             >{{ data.image.crag.name }}</a
           >
         </div>

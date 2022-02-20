@@ -4,11 +4,11 @@ import { Crag } from 'src/generated/graphql';
 import { IDistribution } from '../../../common/distribution-chart/distribution-chart.component';
 
 @Component({
-  selector: 'app-crag-info',
-  templateUrl: './crag-info.component.html',
-  styleUrls: ['./crag-info.component.scss'],
+  selector: 'app-crag-location',
+  templateUrl: './crag-location.component.html',
+  styleUrls: ['./crag-location.component.scss'],
 })
-export class CragInfoComponent implements OnInit {
+export class CragLocationComponent implements OnInit {
   @Input() crag: Crag;
 
   @Input() id: string = 'default';

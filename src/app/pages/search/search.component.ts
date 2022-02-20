@@ -114,26 +114,22 @@ export class SearchComponent implements OnInit, OnDestroy {
     switch (optionValue.__typename) {
       case 'Crag':
         const crag = optionValue;
-        this.router.navigate(['/plezalisca', crag.country.slug, crag.slug]);
+        this.router.navigate(['/plezalisce', crag.slug]);
         break;
 
       case 'Route':
         const route = optionValue;
         this.router.navigate([
-          '/plezalisca',
-          route.crag.country.slug,
+          '/plezalisce',
           route.crag.slug,
+          'smer',
           route.slug,
         ]);
         break;
 
       case 'Sector':
         const sector = optionValue;
-        this.router.navigate([
-          '/plezalisca',
-          sector.crag.country.slug,
-          sector.crag.slug,
-        ]);
+        this.router.navigate(['/plezalisce', sector.crag.slug]);
         break;
 
       case 'User':
@@ -145,17 +141,13 @@ export class SearchComponent implements OnInit, OnDestroy {
         const comment = optionValue;
         if (comment?.route) {
           this.router.navigate([
-            '/plezalisca',
-            comment.route.crag.country.slug,
+            '/plezalisce',
             comment.route.crag.slug,
-            comment.route.id,
+            'smer',
+            comment.route.slug,
           ]);
         } else {
-          this.router.navigate([
-            '/plezalisca',
-            comment.crag.country.slug,
-            comment.crag.slug,
-          ]);
+          this.router.navigate(['/plezalisce', comment.crag.slug]);
         }
     }
   }

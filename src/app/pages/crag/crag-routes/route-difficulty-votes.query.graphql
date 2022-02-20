@@ -9,12 +9,11 @@ query RouteDifficultyVotes($routeId: String!) {
     name
     length
     difficultyVotes {
-      id
-      difficulty
       user {
         firstname
         lastname
       }
+      difficulty
       created
       updated
       isBase

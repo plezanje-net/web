@@ -1,50 +1,55 @@
-<h3 *ngIf="regularComments.length"
-    fxLayout="row"
-    fxLayoutAlign="center center"
-    fxLayout.lt-md="column">
-  <span fxFlex="100">Komentarji</span>
-  <div fxFlex>
-    <button mat-button
-            color="primary">Dodaj komentar</button>
+<div #container>
+  <h3 *ngIf="regularComments.length"
+      fxLayout="row"
+      fxLayoutAlign="center center"
+      fxLayout.lt-md="column">
+    <span fxFlex="100">{{ previewMode ? 'Najnovejši komentarji' : 'Komentarji' }}</span>
+    <div fxFlex>
+      <button *ngIf="!previewMode"
+              mat-button
+              color="primary">Dodaj komentar</button>
+    </div>
+  </h3>
+  <div *ngFor="let comment of regularComments | slice:0: previewMode ? 3 : 1000"
+       class="comment"
+       fxLayout="column"
+       fxLayoutGap="8px">
+    <app-comment [comment]="comment"></app-comment>
   </div>
-</h3>
-<div *ngFor="let comment of regularComments"
-     class="comment"
-     fxLayout="column"
-     fxLayoutGap="8px">
-  <app-comment [comment]="comment"></app-comment>
-</div>
 
-<h3 *ngIf="conditions.length"
-    fxLayout="row"
-    fxLayoutAlign="center center"
-    fxLayout.lt-md="column">
-  <span fxFlex="100">Opisi razmer</span>
-  <div fxFlex>
-    <button mat-button
-            color="primary">Dodaj opis razmer</button>
-  </div>
-</h3>
-<div *ngFor="let conditionComment of conditions"
-     class="comment"
-     fxLayout="column"
-     fxLayoutGap="8px">
-  <app-comment [comment]="conditionComment"></app-comment>
-</div>
+  <ng-container *ngIf="!previewMode">
+    <h3 *ngIf="conditions.length"
+        fxLayout="row"
+        fxLayoutAlign="center center"
+        fxLayout.lt-md="column">
+      <span fxFlex="100">Opisi razmer</span>
+      <div fxFlex>
+        <button mat-button
+                color="primary">Dodaj opis razmer</button>
+      </div>
+    </h3>
+    <div *ngFor="let conditionComment of conditions"
+        class="comment"
+        fxLayout="column"
+        fxLayoutGap="8px">
+      <app-comment [comment]="conditionComment"></app-comment>
+    </div>
 
-<h3 *ngIf="descriptions.length"
-    fxLayout="row"
-    fxLayoutAlign="center center"
-    fxLayout.lt-md="column">
-  <span fxFlex="100">Opisi smeri</span>
-  <div fxFlex>
-    <button mat-button
-            color="primary">Dodaj opis smeri</button>
-  </div>
-</h3>
-<div *ngFor="let description of descriptions"
-     class="comment"
-     fxLayout="column"
-     fxLayoutGap="8px">
-  <app-comment [comment]="description"></app-comment>
+    <h3 *ngIf="descriptions.length"
+        fxLayout="row"
+        fxLayoutAlign="center center"
+        fxLayout.lt-md="column">
+      <span fxFlex="100">Opisi smeri</span>
+      <div fxFlex>
+        <button mat-button
+                color="primary">Dodaj opis smeri</button>
+      </div>
+    </h3>
+    <div *ngFor="let description of descriptions"
+        class="comment"
+        fxLayout="column"
+        fxLayoutGap="8px">
+      <app-comment [comment]="description"></app-comment>
+    </div>
+  </ng-container>
 </div>
