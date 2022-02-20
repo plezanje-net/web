@@ -7,6 +7,11 @@ import { PeaksCountryComponent } from './peaks-country/peaks-country.component';
 
 const routes: Routes = [
   {
+    path: '',
+    redirectTo: 'drzave',
+    pathMatch: 'full',
+  },
+  {
     path: 'drzave',
     component: PeaksCountriesComponent,
   },

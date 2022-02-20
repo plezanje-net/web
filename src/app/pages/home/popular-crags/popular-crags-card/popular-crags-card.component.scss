@@ -33,7 +33,6 @@ div.table-wrapper {
 
         &:last-child {
           text-align: right;
-          border-bottom: none;
         }
       }
 
@@ -54,7 +53,7 @@ div.table-wrapper {
         background-color: #fff;
 
         &:last-child {
-          white-space: nowrap;
+          width: 110px;
         }
       }
     }

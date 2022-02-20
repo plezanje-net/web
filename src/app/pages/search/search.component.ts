@@ -2,8 +2,14 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { debounceTime, filter, take } from 'rxjs/operators';
+import { EMPTY, Subscription } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  switchMap,
+} from 'rxjs/operators';
 import {
   Comment,
   Crag,
@@ -34,29 +40,39 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   searchString = '';
   searchResults: SearchQuery['search'];
+  error = false;
 
-  fvcSubscription: Subscription;
+  subscription: Subscription;
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => {
       this.searchForm.controls.searchControl.setValue(params.search);
     });
 
-    this.fvcSubscription = this.searchForm.controls.searchControl.valueChanges
+    this.subscription = this.searchForm.controls.searchControl.valueChanges
       .pipe(
         debounceTime(300),
-        filter((value) => value.length >= 3)
+        filter((value) => value.length >= 3),
+        distinctUntilChanged(),
+        switchMap((searchString: string) => {
+          this.searchString = searchString;
+          this.error = false;
+          return this.searchGQL
+            .fetch({
+              query: searchString,
+            })
+            .pipe(
+              catchError(() => {
+                this.error = true;
+                return EMPTY;
+              })
+            );
+        })
       )
-      .subscribe((searchString) => {
-        this.searchString = searchString;
-        this.searchGQL
-          .fetch({
-            query: searchString,
-          })
-          .pipe(take(1))
-          .subscribe((result) => {
-            this.searchResults = result.data.search;
-          });
+      .subscribe({
+        next: (result) => {
+          this.searchResults = result.data.search;
+        },
       });
   }
 
@@ -149,8 +165,9 @@ export class SearchComponent implements OnInit, OnDestroy {
     searchTerm = searchTerm.replace(/[sš]/gi, '[sš]');
     searchTerm = searchTerm.replace(/[zž]/gi, '[zž]');
 
-    // should start with nothing or a space
-    searchTerm = '(?<![^\\s])' + '(' + searchTerm + ')';
+    // a match should be at the start of a word
+    searchTerm = '\\b' + searchTerm;
+
     const regExp = new RegExp(searchTerm, 'gi');
 
     // cut begining of comment if first matched term more than 5 chars 'deep'
@@ -162,18 +179,6 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.fvcSubscription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 }
-
-// TODO: going back from link -> reselect last selected tab ?
-
-// TODO: link to sector -> sector anchors
-
-// TODO: link to comment -> anchor
-
-// TODO: what is comment status. currently all statuses are 'active'
-
-// TODO: sticky headers on results lists?
-
-// TODO: common words such as 'smer' yield a lot of results. pagination/load more?

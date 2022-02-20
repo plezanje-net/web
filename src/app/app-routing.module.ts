@@ -21,6 +21,7 @@ import { ActivityEntryComponent } from './pages/activity/activity-entry/activity
 import { ActivityInputComponent } from './pages/activity/activity-input/activity-input.component';
 import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
 import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
+import { AlpinismComponent } from './pages/alpinism/alpinism.component';
 
 const routes: Routes = [
   {
@@ -121,6 +122,10 @@ const routes: Routes = [
     path: 'admin',
     loadChildren: () =>
       import('./management/management.module').then((m) => m.ManagementModule),
+  },
+  {
+    path: 'alpinizem',
+    component: AlpinismComponent,
   },
   {
     path: 'alpinizem/vrhovi',

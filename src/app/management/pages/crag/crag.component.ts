@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { of, Subscription, switchMap } from 'rxjs';
+import { filter, of, Subscription, switchMap, take } from 'rxjs';
 import { LayoutService } from 'src/app/services/layout.service';
 import { Crag, ManagementGetCragGQL } from 'src/generated/graphql';
 import { CragAdminBreadcrumbs } from '../../utils/crag-admin-breadcrumbs';

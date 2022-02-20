@@ -31,6 +31,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { DataErrorComponent } from '../layout/data-error/data-error.component';
 import { GradeComponent } from './components/grade/grade.component';
+import { PluralizeNoun } from './pipes/pluralize-noun.pipe';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { GradeComponent } from './components/grade/grade.component';
     GenderizeVerbPipe,
     OrientationPipe,
     GradeComponent,
+    PluralizeNoun,
   ],
   imports: [
     CommonModule,
@@ -87,6 +89,7 @@ import { GradeComponent } from './components/grade/grade.component';
     MatDatepickerModule,
     MatInputModule,
     GradeComponent,
+    PluralizeNoun,
   ],
 })
 export class SharedModule {}

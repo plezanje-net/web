@@ -1,73 +1,71 @@
-<ng-container *ngIf="warnings?.length">
-  <h2>Opozorila</h2>
+<h2 *ngIf="warnings?.length">Opozorila</h2>
 
-  <div class="carousel-outer-wrap">
-    <swiper
-      #swiper
-      [slidesPerView]="1"
-      [slidesPerGroup]="1"
-      [spaceBetween]="0"
-      [breakpoints]="
-        warnings.length > 1
-          ? { '905': { slidesPerView: 2, slidesPerGroup: 1 } }
-          : {}
-      "
-      [loop]="warnings.length > 1"
-      [centerInsufficientSlides]="true"
-      [autoHeight]="true"
-      [autoplay]="{
-        delay: 2500,
-        disableOnInteraction: false
-      }"
-      [pagination]="{
-        clickable: true,
-        el: '.swiper-pagination',
-        type: 'bullets'
-      }"
-    >
-      <ng-template swiperSlide *ngFor="let warning of warnings">
-        <div [class.slide]="warnings.length > 1">
-          <div class="slide-inner-wrap">
-            <mat-card class="warning">
-              <mat-card-title>
-                <ng-container *ngIf="warning.route">
-                  <a
-                    [routerLink]="[
-                      '/plezalisce',
-                      warning.route.crag.slug,
-                      'smer',
-                      warning.route.slug
-                    ]"
-                    >{{ warning.route.name }}</a
-                  >,
-                  {{ warning.route.crag.name }}
-                </ng-container>
-                <ng-container *ngIf="warning.crag">
-                  <a
-                    [routerLink]="[
-                      '/plezalisce',
-                      warning.crag.slug,
-                      { tab: 'komentarji' }
-                    ]"
-                  >
-                    {{ warning.crag.name }}
-                  </a>
-                </ng-container>
-              </mat-card-title>
-              <mat-card-content>
-                <div fxLayout="column" fxLayoutAlign="space-between" fxFlexFill>
-                  <div [innerHTML]="warning.content" fxFlex="100"></div>
-                  <div class="author" fxFlex="100">
-                    {{ warning.user.fullName }},
-                    {{ warning.updated | amDateFormat: "D.M.Y H:mm" }}
-                  </div>
+<div class="carousel-outer-wrap">
+  <swiper
+    #swiper
+    [slidesPerView]="1"
+    [slidesPerGroup]="1"
+    [spaceBetween]="0"
+    [breakpoints]="
+      warnings?.length > 1
+        ? { '905': { slidesPerView: 2, slidesPerGroup: 1 } }
+        : {}
+    "
+    [centerInsufficientSlides]="true"
+    [autoHeight]="true"
+    [autoplay]="{
+      delay: 2500,
+      disableOnInteraction: false
+    }"
+    [pagination]="{
+      clickable: true,
+      el: '.swiper-pagination',
+      type: 'bullets'
+    }"
+  >
+    <ng-template swiperSlide *ngFor="let warning of warnings">
+      <div [class.slide]="warnings.length > 1">
+        <div class="slide-inner-wrap">
+          <mat-card class="warning">
+            <mat-card-title>
+              <ng-container *ngIf="warning.route">
+                <a
+                  [routerLink]="[
+                    '/plezalisca',
+                    warning.route.crag.country.slug,
+                    warning.route.crag.slug,
+                    warning.route.slug
+                  ]"
+                  >{{ warning.route.name }}</a
+                >,
+                {{ warning.route.crag.name }}
+              </ng-container>
+              <ng-container *ngIf="warning.crag">
+                <a
+                  [routerLink]="[
+                    '/plezalisca',
+                    warning.crag.country.slug,
+                    warning.crag.slug,
+                    { tab: 'komentarji' }
+                  ]"
+                >
+                  {{ warning.crag.name }}
+                </a>
+              </ng-container>
+            </mat-card-title>
+            <mat-card-content>
+              <div fxLayout="column" fxLayoutAlign="space-between" fxFlexFill>
+                <div [innerHTML]="warning.content" fxFlex="100"></div>
+                <div class="author" fxFlex="100">
+                  {{ warning.user.fullName }},
+                  {{ warning.updated | amDateFormat: "D.M.Y H:mm" }}
                 </div>
-              </mat-card-content>
-            </mat-card>
-          </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
         </div>
-      </ng-template>
-      <div slot="container-end" class="swiper-pagination"></div>
-    </swiper>
-  </div>
-</ng-container>
+      </div>
+    </ng-template>
+    <div slot="container-end" class="swiper-pagination"></div>
+  </swiper>
+</div>

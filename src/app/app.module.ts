@@ -88,6 +88,7 @@ import { ExposedWarningsComponent } from './pages/home/exposed-warnings/expsoed-
 import { CragRoutePreviewComponent } from './pages/crag/crag-route-preview/crag-route-preview.component';
 import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
 import { SwiperModule } from 'swiper/angular';
+import { AlpinismComponent } from './pages/alpinism/alpinism.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -149,6 +150,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ExposedWarningsComponent,
     CragRoutePreviewComponent,
     ConfirmClubMembershipComponent,
+    AlpinismComponent,
   ],
   imports: [
     BrowserModule,
