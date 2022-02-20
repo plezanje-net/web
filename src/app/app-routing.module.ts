@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { CragsComponent } from './pages/crags/crags.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -98,7 +98,7 @@ const routes: Routes = [
     component: CragsComponent,
   },
   {
-    path: 'plezalisca/:country/:crag',
+    path: 'plezalisce/:crag',
     component: CragComponent,
   },
   {
@@ -106,7 +106,7 @@ const routes: Routes = [
     component: CragComponent,
   },
   {
-    path: 'plezalisca/:country/:crag/:route',
+    path: 'plezalisce/:crag/smer/:route',
     component: RouteComponent,
   },
   {
@@ -123,6 +123,11 @@ const routes: Routes = [
       import('./management/management.module').then((m) => m.ManagementModule),
   },
   {
+    path: 'alpinizem/vrhovi',
+    loadChildren: () =>
+      import('./peaks/peaks.module').then((m) => m.PeaksModule),
+  },
+  {
     path: 'alpinizem/slapovi',
     loadChildren: () =>
       import('./ice-falls/ice-falls.module').then((m) => m.IceFallsModule),
@@ -134,7 +139,12 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'top' })],
+  imports: [
+    RouterModule.forRoot(routes, {
+      scrollPositionRestoration: 'top',
+      preloadingStrategy: PreloadAllModules,
+    }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

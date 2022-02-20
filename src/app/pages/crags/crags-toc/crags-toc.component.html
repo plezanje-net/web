@@ -1,8 +1,8 @@
 <div fxLayout="column" fxLayoutGap="12px" fxHide.lt-md>
   <div class="card">
     <a
-      [routerLink]="makeRoute(country.slug, { type: null })"
-      [class.active]="!params.type"
+      [routerLink]="makeRoute(country.slug, { tip: null })"
+      [class.active]="!params.tip"
       class="row"
       fxLayout="row"
       fxLayoutAlign="start center"
@@ -11,8 +11,8 @@
     </a>
     <a
       *ngFor="let type of routeTypes"
-      [routerLink]="makeRoute(country.slug, { type: type.slug })"
-      [class.active]="type.slug == params.type"
+      [routerLink]="makeRoute(country.slug, { tip: type.slug })"
+      [class.active]="type.slug == params.tip"
       class="row"
       fxLayout="row"
       fxLayoutAlign="start center"
@@ -23,8 +23,8 @@
   <div class="card">
     <h3>{{ country.name }}</h3>
     <a
-      [routerLink]="makeRoute(country.slug, { area: null })"
-      [class.active]="!params.area"
+      [routerLink]="makeRoute(country.slug, { obmocje: null })"
+      [class.active]="!params.obmocje"
       class="row"
       fxLayout="row"
       fxLayoutAlign="start center"
@@ -34,8 +34,8 @@
     </a>
     <a
       *ngFor="let area of country.areas"
-      [routerLink]="makeRoute(country.slug, { area: area.id })"
-      [class.active]="area.id == params.area"
+      [routerLink]="makeRoute(country.slug, { obmocje: area.slug })"
+      [class.active]="area.slug == params.obmocje"
       class="row"
       fxLayout="row"
       fxLayoutAlign="start center"
@@ -51,7 +51,7 @@
       <ng-container *ngIf="showAllCountries || i <= 5">
         <a
           *ngIf="listCountry.slug != country.slug"
-          [routerLink]="makeRoute(listCountry.slug, { area: null })"
+          [routerLink]="makeRoute(listCountry.slug, { obmocje: null })"
           class="row"
           fxLayout="row"
           fxLayoutAlign="start center"
@@ -79,7 +79,7 @@
     <mat-form-field class="no-hint infix-width-auto">
       <mat-label>Vrsta smeri</mat-label>
       <mat-select
-        [value]="params.type"
+        [value]="params.tip"
         (selectionChange)="changeType($event.value)"
       >
         <mat-option [value]="null">Vse vrste smeri</mat-option>
@@ -107,9 +107,12 @@
   <div fxFlex="100">
     <mat-form-field class="no-hint infix-width-auto" *ngIf="country.areas">
       <mat-label>Regija</mat-label>
-      <mat-select [value]="areaId" (selectionChange)="changeArea($event.value)">
+      <mat-select
+        [value]="params.obmocje"
+        (selectionChange)="changeArea($event.value)"
+      >
         <mat-option [value]="null">Vse regije</mat-option>
-        <mat-option *ngFor="let area of country.areas" [value]="area.id">{{
+        <mat-option *ngFor="let area of country.areas" [value]="area.slug">{{
           area.name
         }}</mat-option>
       </mat-select>

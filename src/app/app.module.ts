@@ -87,7 +87,6 @@ import { ImageFullComponent } from './common/image-full/image-full.component';
 import { ExposedWarningsComponent } from './pages/home/exposed-warnings/expsoed-warnings.component';
 import { CragRoutePreviewComponent } from './pages/crag/crag-route-preview/crag-route-preview.component';
 import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
-import { PeaksModule } from './peaks/peaks.module';
 import { SwiperModule } from 'swiper/angular';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
@@ -179,7 +178,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     NgxMatSelectSearchModule,
     SharedModule,
     MatGridListModule,
-    PeaksModule,
     AppRoutingModule,
     SwiperModule,
   ],

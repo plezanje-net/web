@@ -83,7 +83,7 @@ export class RouteComponent implements OnInit {
         },
         {
           name: this.route.sector.crag.peak.name,
-          path: `/alpinizem/vrh/${this.route.sector.crag.peak.slug}`,
+          path: `/alpinizem/vrhovi/vrh/${this.route.sector.crag.peak.slug}`,
         },
         {
           name: this.route.sector.crag.name,

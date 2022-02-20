@@ -26,6 +26,7 @@ query Crags($country: String!, $input: FindCragsInput) {
     areas(hasCrags: true) {
       id
       name
+      slug
     }
   }
 }
