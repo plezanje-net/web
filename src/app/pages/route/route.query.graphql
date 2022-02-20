@@ -17,6 +17,7 @@ query RouteBySlug($cragSlug: String!, $routeSlug: String!) {
     }
     pitches {
       difficulty
+      isProject
       number
       height
     }
@@ -51,6 +52,10 @@ query RouteBySlug($cragSlug: String!, $routeSlug: String!) {
         country {
           slug
           name
+        }
+        peak {
+          name
+          slug
         }
       }
     }

@@ -27,7 +27,6 @@ import { CragsComponent } from './pages/crags/crags.component';
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { BreadcrumbsComponent } from './layout/breadcrumbs/breadcrumbs.component';
-import { DataErrorComponent } from './layout/data-error/data-error.component';
 import { GraphQLModule } from './graphql/graphql.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CragsTocComponent } from './pages/crags/crags-toc/crags-toc.component';
@@ -86,9 +85,9 @@ import { LatestImagesComponent } from './pages/home/latest-images/latest-images.
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ImageFullComponent } from './common/image-full/image-full.component';
 import { ExposedWarningsComponent } from './pages/home/exposed-warnings/expsoed-warnings.component';
-import { IceFallsModule } from './ice-falls/ice-falls.module';
 import { CragRoutePreviewComponent } from './pages/crag/crag-route-preview/crag-route-preview.component';
 import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
+import { PeaksModule } from './peaks/peaks.module';
 import { SwiperModule } from 'swiper/angular';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
@@ -103,7 +102,6 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     HomeComponent,
     NotFoundComponent,
     BreadcrumbsComponent,
-    DataErrorComponent,
     CragsTocComponent,
     CragComponent,
     LoginComponent,
@@ -180,9 +178,9 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MatListModule,
     NgxMatSelectSearchModule,
     SharedModule,
-    IceFallsModule,
-    AppRoutingModule,
     MatGridListModule,
+    PeaksModule,
+    AppRoutingModule,
     SwiperModule,
   ],
   providers: [

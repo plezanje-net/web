@@ -1,11 +1,8 @@
-import { query } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import moment, { Moment } from 'moment';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { debounce, debounceTime, take } from 'rxjs/operators';
+import { debounceTime, filter, switchMap, take } from 'rxjs/operators';
 import {
   ASCENT_TYPES,
   PUBLISH_OPTIONS,
@@ -14,7 +11,6 @@ import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from 'src/app/types/data-error';
 import {
   ActivityRoute,
-  Crag,
   FindActivityRoutesInput,
   MyActivityRoutesGQL,
   MyActivityRoutesQuery,
@@ -22,7 +18,6 @@ import {
   ActivityFiltersCragQuery,
   ActivityFiltersRouteGQL,
   ActivityFiltersRouteQuery,
-  Route,
 } from 'src/generated/graphql';
 import { FilteredTable } from '../../../common/filtered-table';
 
@@ -74,6 +69,7 @@ export class ActivityRoutesComponent implements OnInit {
       { name: 'routeId', type: 'relation' },
     ]
   );
+  ignoreFormChange = true;
 
   rowAction$ = new Subject<RowAction>();
 
@@ -102,38 +98,50 @@ export class ActivityRoutesComponent implements OnInit {
       this.router.navigate(['/plezalni-dnevnik/vzponi', params])
     );
 
-    this.activatedRoute.params.subscribe((params) => {
-      ft.setRouteParams(params);
+    this.activatedRoute.params
+      .pipe(
+        switchMap((params) => {
+          ft.setRouteParams(params);
 
-      this.filters.patchValue(ft.filterParams);
+          this.ignoreFormChange = true;
+          this.filters.patchValue(ft.filterParams, { emitEvent: false });
 
-      this.applyRelationFilterDisplayValues();
+          this.applyRelationFilterDisplayValues();
 
-      this.loading = true;
+          this.loading = true;
 
-      const queryParams: FindActivityRoutesInput = ft.queryParams;
+          const queryParams: FindActivityRoutesInput = ft.queryParams;
 
-      this.myActivityRoutesGQL
-        .watch({ input: queryParams })
-        .valueChanges.subscribe((result) => {
+          return this.myActivityRoutesGQL.watch({ input: queryParams })
+            .valueChanges;
+        })
+      )
+      .subscribe({
+        next: (result) => {
           this.loading = false;
           ft.navigating = false;
+          this.ignoreFormChange = false;
+          this.querySuccess(result.data.myActivityRoutes);
+        },
+        error: () => {
+          this.queryError();
+        },
+      });
 
-          if (result.errors != null) {
-            this.queryError();
-          } else {
-            this.querySuccess(result.data.myActivityRoutes);
-          }
-        });
-    });
-
-    this.filters.valueChanges.subscribe((values) => {
-      if (ft.navigating) {
-        ft.navigating = false;
-      } else {
-        ft.setFilterParams(values);
-      }
-    });
+    this.filters.valueChanges
+      .pipe(
+        filter(() => {
+          return !this.ignoreFormChange; // date picker ignores emitEvent:false. This is a workaround
+        }),
+        debounceTime(100) // datepicker triggers 4 valueChanges events. this is a workaround
+      )
+      .subscribe((values) => {
+        if (ft.navigating) {
+          ft.navigating = false;
+        } else {
+          ft.setFilterParams(values);
+        }
+      });
 
     this.rowAction$.subscribe((action) => {
       switch (action.action) {

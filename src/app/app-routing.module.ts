@@ -102,7 +102,15 @@ const routes: Routes = [
     component: CragComponent,
   },
   {
+    path: 'alpinizem/stena/:crag',
+    component: CragComponent,
+  },
+  {
     path: 'plezalisca/:country/:crag/:route',
+    component: RouteComponent,
+  },
+  {
+    path: 'alpinizem/stena/:crag/smer/:route',
     component: RouteComponent,
   },
   {
@@ -113,6 +121,11 @@ const routes: Routes = [
     path: 'admin',
     loadChildren: () =>
       import('./management/management.module').then((m) => m.ManagementModule),
+  },
+  {
+    path: 'alpinizem/slapovi',
+    loadChildren: () =>
+      import('./ice-falls/ice-falls.module').then((m) => m.IceFallsModule),
   },
   {
     path: '**',

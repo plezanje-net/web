@@ -26,6 +26,10 @@ query MyActivityRoutes($input: FindActivityRoutesInput) {
         slug
         id
       }
+      pitch {
+        number
+        difficulty
+      }
     }
     meta {
       itemCount

@@ -20,7 +20,14 @@
     <div class="label">Raztežaji</div>
     <span>
       <text *ngFor="let pitch of route.pitches; let isLast = last"
-        >{{ pitch.difficulty }}{{ isLast ? "" : ", " }}</text
+        ><span *ngIf="pitch.isProject">P</span>
+        <app-grade
+          *ngIf="!pitch.isProject"
+          [difficulty]="pitch.difficulty"
+          [gradingSystemId]="route.defaultGradingSystem.id"
+          [showModifier]="true"
+        ></app-grade
+        >{{ isLast ? "" : ", " }}</text
       >
     </span>
   </div>

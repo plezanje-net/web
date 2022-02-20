@@ -3,12 +3,17 @@ query CragBySlug($crag: String!) {
     id
     slug
     name
+    type
     orientation
     lat
     lon
     access
     description
     activityByMonth
+    peak {
+      name
+      slug
+    }
     area {
       id
       name
@@ -40,6 +45,7 @@ query CragBySlug($crag: String!) {
         }
         pitches {
           difficulty
+          isProject
           number
           height
         }
