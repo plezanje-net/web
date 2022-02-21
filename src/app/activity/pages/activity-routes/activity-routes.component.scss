@@ -1,4 +1,7 @@
 .scrollable-table {
   max-width: 100%;
   overflow-x: auto;
+  .cart-table {
+    min-width: 980px;
+  }
 }
