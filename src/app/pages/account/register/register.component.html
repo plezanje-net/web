@@ -63,6 +63,22 @@
           </mat-form-field>
         </p>
 
+        <div class="gender">
+          <div>
+            <label id="gender-radio-group-label">Spol</label>
+          </div>
+          <div>
+            <mat-radio-group
+              aria-labelledby="gender-radio-group-label"
+              formControlName="gender"
+            >
+              <mat-radio-button value="F">Ženski</mat-radio-button>
+              <mat-radio-button value="M">Moški</mat-radio-button>
+              <mat-radio-button value="O">Drugo</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+
         <p class="conditions">
           <mat-checkbox formControlName="conditions"
             >Strinjam se s <a href="#">pogoji uporabe portala</a>

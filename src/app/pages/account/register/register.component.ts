@@ -21,6 +21,7 @@ export class RegisterComponent implements OnInit {
     ]),
     firstname: new FormControl('', [Validators.required]),
     lastname: new FormControl('', [Validators.required]),
+    gender: new FormControl(''),
     conditions: new FormControl(false, [Validators.requiredTrue]),
   });
 
@@ -51,7 +52,8 @@ export class RegisterComponent implements OnInit {
             email: "${value.email}",
             password: "${value.password}",
             firstname: "${value.firstname}",
-            lastname: "${value.lastname}"
+            lastname: "${value.lastname}",
+            gender: "${value.gender}"
           })
         }
       `,

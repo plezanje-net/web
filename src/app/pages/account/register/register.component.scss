@@ -11,9 +11,22 @@ form {
 .mat-form-field {
   width: 100%;
 }
+
 .mat-flat-button {
   width: 100%;
 }
+
 .conditions {
-  padding: 12px 0;
+  margin: 16px 0;
+}
+
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 16px;
+}
+
+.gender {
+  margin-top: 16px;
+  div {
+    margin-top: 8px;
+  }
 }
