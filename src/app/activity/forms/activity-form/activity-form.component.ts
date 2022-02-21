@@ -147,7 +147,7 @@ export class ActivityFormComponent implements OnInit {
       next: () => {
         this.localStorageService.removeItem('activity-selection');
         this.snackBar
-          .open('Vnos je bil shranjen v plezalni dnevnik', 'Na dnevnik', {
+          .open('Vnos je bil shranjen v plezalni dnevnik', 'Odpri dnevnik', {
             duration: 3000,
           })
           .onAction()
