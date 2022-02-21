@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { LayoutService } from 'src/app/services/layout.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Apollo, gql } from 'apollo-angular';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { RegisterGQL } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-register',
@@ -27,8 +27,8 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private layoutService: LayoutService,
-    private apollo: Apollo,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private registerGQL: RegisterGQL
   ) {}
 
   ngOnInit(): void {
@@ -44,25 +44,21 @@ export class RegisterComponent implements OnInit {
 
     const value = this.form.value;
 
-    this.apollo
+    this.registerGQL
       .mutate({
-        mutation: gql`
-        mutation {
-          register(input: {
-            email: "${value.email}",
-            password: "${value.password}",
-            firstname: "${value.firstname}",
-            lastname: "${value.lastname}",
-            gender: "${value.gender}"
-          })
-        }
-      `,
+        input: {
+          email: value.email,
+          password: value.password,
+          firstname: value.firstname,
+          lastname: value.lastname,
+          gender: value.gender,
+        },
       })
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.success = true;
         },
-        (error) => {
+        error: (error) => {
           this.loading = false;
 
           let message =
@@ -78,7 +74,7 @@ export class RegisterComponent implements OnInit {
             panelClass: 'error',
             duration: 3000,
           });
-        }
-      );
+        },
+      });
   }
 }
