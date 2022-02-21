@@ -1,13 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { debounceTime, filter, switchMap, take } from 'rxjs/operators';
+import {
+  concatMap,
+  debounceTime,
+  filter,
+  Subject,
+  Subscription,
+  switchMap,
+  take,
+} from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 import {
   ASCENT_TYPES,
   PUBLISH_OPTIONS,
 } from 'src/app/common/activity.constants';
 import { LayoutService } from 'src/app/services/layout.service';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { DataError } from 'src/app/types/data-error';
 import {
   ActivityRoute,
@@ -18,6 +29,8 @@ import {
   ActivityFiltersCragQuery,
   ActivityFiltersRouteGQL,
   ActivityFiltersRouteQuery,
+  namedOperations,
+  DeleteActivityRouteGQL,
 } from 'src/generated/graphql';
 import { FilteredTable } from '../../../common/filtered-table';
 
@@ -31,7 +44,7 @@ export interface RowAction {
   templateUrl: './activity-routes.component.html',
   styleUrls: ['./activity-routes.component.scss'],
 })
-export class ActivityRoutesComponent implements OnInit {
+export class ActivityRoutesComponent implements OnInit, OnDestroy {
   error: DataError = null;
 
   routes: MyActivityRoutesQuery['myActivityRoutes']['items'];
@@ -76,13 +89,19 @@ export class ActivityRoutesComponent implements OnInit {
   ascentTypes = ASCENT_TYPES;
   publishOptions = PUBLISH_OPTIONS;
 
+  subscriptions: Subscription[] = [];
+
   constructor(
     private router: Router,
+    private dialog: MatDialog,
+    private snackbar: MatSnackBar,
+    private authService: AuthService,
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
     private myActivityRoutesGQL: MyActivityRoutesGQL,
     private activityFiltersCragGQL: ActivityFiltersCragGQL,
-    private activityFiltersRouteGQL: ActivityFiltersRouteGQL
+    private activityFiltersRouteGQL: ActivityFiltersRouteGQL,
+    private deleteActivityRouteGQL: DeleteActivityRouteGQL
   ) {}
 
   ngOnInit(): void {
@@ -94,11 +113,12 @@ export class ActivityRoutesComponent implements OnInit {
 
     const ft = this.filteredTable;
 
-    ft.navigate$.subscribe((params) =>
+    const navSub = ft.navigate$.subscribe((params) =>
       this.router.navigate(['/plezalni-dnevnik/vzponi', params])
     );
+    this.subscriptions.push(navSub);
 
-    this.activatedRoute.params
+    const routeParamsSub = this.activatedRoute.params
       .pipe(
         switchMap((params) => {
           ft.setRouteParams(params);
@@ -128,7 +148,9 @@ export class ActivityRoutesComponent implements OnInit {
         },
       });
 
-    this.filters.valueChanges
+    this.subscriptions.push(routeParamsSub);
+
+    const filtersSub = this.filters.valueChanges
       .pipe(
         filter(() => {
           return !this.ignoreFormChange; // date picker ignores emitEvent:false. This is a workaround
@@ -142,8 +164,9 @@ export class ActivityRoutesComponent implements OnInit {
           ft.setFilterParams(values);
         }
       });
+    this.subscriptions.push(filtersSub);
 
-    this.rowAction$.subscribe((action) => {
+    const rowActionsSub = this.rowAction$.subscribe((action) => {
       switch (action.action) {
         case 'filterByCrag':
           this.forCrag = action.item.route.crag;
@@ -158,8 +181,12 @@ export class ActivityRoutesComponent implements OnInit {
             routeId: action.item.route.id,
           });
           break;
+        case 'delete':
+          this.deleteActivityRoute(action.item);
+          break;
       }
     });
+    this.subscriptions.push(rowActionsSub);
   }
 
   applyRelationFilterDisplayValues() {
@@ -186,6 +213,10 @@ export class ActivityRoutesComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
   queryError(): void {
     this.error = {
       message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
@@ -195,5 +226,45 @@ export class ActivityRoutesComponent implements OnInit {
   querySuccess(data: MyActivityRoutesQuery['myActivityRoutes']): void {
     this.routes = data.items;
     this.pagination = data.meta;
+  }
+
+  deleteActivityRoute(activityRoute: ActivityRoute) {
+    this.authService.currentUser
+      .pipe(
+        concatMap((user) =>
+          this.dialog
+            .open(ConfirmationDialogComponent, {
+              data: {
+                title: 'Brisanje vzpona',
+                message: `Si prepričan${
+                  user.gender == 'F' ? 'a' : ''
+                }, da želiš izbrisati ta vzpon?`,
+              },
+            })
+            .afterClosed()
+        ),
+        filter((response) => response != null),
+        switchMap(() =>
+          this.deleteActivityRouteGQL.mutate(
+            { id: activityRoute.id },
+            {
+              refetchQueries: [namedOperations.Query.MyActivityRoutes],
+            }
+          )
+        )
+      )
+      .subscribe({
+        next: () => {
+          this.snackbar.open('Vzpon je bil uspešno izbrisan', null, {
+            duration: 2000,
+          });
+        },
+        error: () => {
+          this.snackbar.open('Pri brisanju vzpona je prišlo do napake', null, {
+            panelClass: 'error',
+            duration: 3000,
+          });
+        },
+      });
   }
 }

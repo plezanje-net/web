@@ -9,7 +9,11 @@
       fxLayoutGap.lt-md="0"
     >
       <h3>Plezalni dan</h3>
-      <mat-checkbox formControlName="onlyRoutes" class="only-routes-checkbox">
+      <mat-checkbox
+        formControlName="onlyRoutes"
+        class="only-routes-checkbox"
+        *ngIf="type == 'crag'"
+      >
         Vpiši samo preplezane smeri
       </mat-checkbox>
     </div>
@@ -20,6 +24,34 @@
       class="p-16"
       *ngIf="!activityForm.value.onlyRoutes"
     >
+      <div
+        fxLayout="row"
+        fxLayout.lt-md="column"
+        fxLayoutGap="16px"
+        *ngIf="type != 'crag'"
+      >
+        <mat-form-field
+          fxFlex="50"
+          class.no-hint="activityForm.value.type != 'crag' || type != 'crag'"
+        >
+          <mat-label>Vrsta vnosa</mat-label>
+          <mat-select formControlName="type">
+            <mat-option
+              *ngFor="let option of typeOptions"
+              [value]="option.value"
+              >{{ option.label }}
+            </mat-option>
+          </mat-select>
+          <mat-hint *ngIf="activityForm.value.type == 'crag' && type != 'crag'"
+            >Za vnos smeri iz baze jih najprej obkljukaj na strani
+            plezališča</mat-hint
+          >
+        </mat-form-field>
+        <mat-form-field fxFlex="50" class="no-hint">
+          <mat-label>Lokacija</mat-label>
+          <input matInput type="text" formControlName="name" />
+        </mat-form-field>
+      </div>
       <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="16px">
         <mat-form-field class="no-hint" fxFlex="50">
           <mat-label>Datum</mat-label>
@@ -30,6 +62,10 @@
           ></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
+        <mat-form-field class="no-hint" fxFlex="50" *ngIf="type != 'crag'">
+          <mat-label>Trajanje (min)</mat-label>
+          <input matInput type="number" formControlName="duration" />
+        </mat-form-field>
         <mat-form-field class="no-hint" fxFlex="50">
           <mat-label>Soplezalci</mat-label>
           <input matInput type="text" formControlName="partners" />
@@ -37,14 +73,14 @@
       </div>
       <div fxLayout="row">
         <mat-form-field fxFlex="100">
-          <mat-label>Dodatni zaznamki</mat-label>
+          <mat-label>Opis</mat-label>
           <textarea matInput formControlName="notes"></textarea>
         </mat-form-field>
       </div>
     </div>
   </div>
 
-  <div class="card mt-16">
+  <div class="card mt-16" *ngIf="type == 'crag'">
     <h3>Preplezane smeri</h3>
 
     <div class="p-16">
@@ -67,23 +103,19 @@
         ></app-activity-form-route>
       </div>
     </div>
+  </div>
 
-    <div fxLayout="row" fxLayoutAlign="end center" class="px-16 py-16">
-      <div *ngIf="!loading">
-        <button
-          type="button"
-          mat-button
-          [routerLink]="['/plezalisca', crag.country.slug, crag.slug]"
-        >
-          Prekliči
-        </button>
-        <button mat-button color="primary" [disabled]="!activityForm.valid">
-          SHRANI
-        </button>
-      </div>
-      <span *ngIf="loading" class="loading">
-        <mat-spinner diameter="30"></mat-spinner>
-      </span>
+  <div fxLayout="row" fxLayoutAlign="end center" class="p-16">
+    <div *ngIf="!loading">
+      <button type="button" mat-button (click)="location.back()">
+        Prekliči
+      </button>
+      <button mat-button color="primary" [disabled]="!activityForm.valid">
+        SHRANI
+      </button>
     </div>
+    <span *ngIf="loading" class="loading">
+      <mat-spinner diameter="30"></mat-spinner>
+    </span>
   </div>
 </form>

@@ -1,6 +1,7 @@
 query MyActivityRoutes($input: FindActivityRoutesInput) {
   myActivityRoutes(input: $input) {
     items {
+      id
       date
       ascentType
       notes

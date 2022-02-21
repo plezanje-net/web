@@ -1,27 +1,40 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   Crag,
   CreateActivityGQL,
+  IceFall,
   namedOperations,
+  Peak,
   Route,
 } from 'src/generated/graphql';
 import moment from 'moment';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { Subscription } from 'rxjs';
+import { ACTIVITY_TYPES } from 'src/app/common/activity.constants';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-activity-form',
   templateUrl: './activity-form.component.html',
   styleUrls: ['./activity-form.component.scss'],
 })
-export class ActivityFormComponent implements OnInit {
+export class ActivityFormComponent implements OnInit, OnDestroy {
   loading: boolean = false;
 
   routes = new FormArray([]);
 
+  typeOptions = ACTIVITY_TYPES;
+
   activityForm = new FormGroup({
+    type: new FormControl(null),
+    name: new FormControl(),
+    cragId: new FormControl(null),
+    peakId: new FormControl(null),
+    iceFallId: new FormControl(null),
+    duration: new FormControl(null),
     date: new FormControl(moment()),
     partners: new FormControl(),
     notes: new FormControl(),
@@ -29,13 +42,20 @@ export class ActivityFormComponent implements OnInit {
     routes: this.routes,
   });
 
+  @Input() type: string;
   @Input() crag: Crag;
   @Input() selectedRoutes: Route[];
+  @Input() peak: Peak;
+  @Input() iceFall: IceFall;
+
+  subscriptions: Subscription[] = [];
 
   constructor(
     private snackBar: MatSnackBar,
     private createActivityGQL: CreateActivityGQL,
     private router: Router,
+    public location: Location,
+    private activatedRoute: ActivatedRoute,
     private localStorageService: LocalStorageService
   ) {}
 
@@ -58,7 +78,15 @@ export class ActivityFormComponent implements OnInit {
       }
     });
 
-    this.activityForm.patchValue({ date: moment() });
+    this.activityForm.patchValue({ date: moment(), type: this.type });
+
+    if (this.crag != null) {
+      this.activityForm.patchValue({ name: this.crag.name });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   patchRouteDates(value: moment.Moment): void {
@@ -122,11 +150,14 @@ export class ActivityFormComponent implements OnInit {
 
     const activity = {
       date: moment(data.date).format('YYYY-MM-DD'),
-      name: this.crag.name,
-      type: 'crag', // TODO: resolve from parameters
+      name: data.name,
+      duration: data.duration,
+      type: data.type,
       notes: data.notes,
       partners: data.partners,
-      cragId: this.crag.id,
+      cragId: data.cragId,
+      peakId: data.peakId,
+      iceFallId: data.iceFallId,
     };
 
     const routes = this.routes.value.map((route: any, i: number) => {
@@ -145,22 +176,14 @@ export class ActivityFormComponent implements OnInit {
 
     this.createActivityGQL.mutate({ input: activity, routes }).subscribe({
       next: () => {
-        this.localStorageService.removeItem('activity-selection');
-        this.snackBar
-          .open('Vnos je bil shranjen v plezalni dnevnik', 'Odpri dnevnik', {
-            duration: 3000,
-          })
-          .onAction()
-          .subscribe(() => {
-            this.router.navigate(['/plezalni-dnevnik']);
-          });
-
-        // based on crag type navigate back to either peaks(alpinism) or sport climbing section
-        if (this.crag.type === 'alpine') {
-          this.router.navigate(['/alpinizem', 'stena', this.crag.slug]);
-        } else {
-          this.router.navigate(['/plezalisce/', this.crag.slug]);
+        if (this.crag) {
+          this.successCragWithRoutes();
+          return;
         }
+        this.snackBar.open('Vnos je bil shranjen v plezalni dnevnik', null, {
+          duration: 3000,
+        });
+        this.router.navigate(['/plezalni-dnevnik']);
       },
       error: () => {
         this.loading = false;
@@ -172,5 +195,26 @@ export class ActivityFormComponent implements OnInit {
         );
       },
     });
+  }
+
+  successCragWithRoutes() {
+    this.localStorageService.removeItem('activity-selection');
+    this.snackBar
+      .open('Vnos je bil shranjen v plezalni dnevnik', 'Odpri dnevnik', {
+        duration: 3000,
+      })
+      .onAction()
+      .subscribe(() => {
+        if (this.crag) {
+          this.router.navigate(['/plezalni-dnevnik']);
+        }
+      });
+
+    // based on crag type navigate back to either peaks(alpinism) or sport climbing section
+    if (this.crag.type === 'alpine') {
+      this.router.navigate(['/alpinizem', 'stena', this.crag.slug]);
+    } else {
+      this.router.navigate(['/plezalisce/', this.crag.slug]);
+    }
   }
 }

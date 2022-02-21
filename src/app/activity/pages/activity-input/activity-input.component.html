@@ -4,16 +4,19 @@
   </div>
 </div>
 
-<ng-container *ngIf="routes.length">
+<ng-container>
   <div class="container mt-16">
     <app-activity-form
       [crag]="crag"
+      [peak]="peak"
+      [iceFall]="iceFall"
       [selectedRoutes]="routes"
+      [type]="type"
     ></app-activity-form>
   </div>
 </ng-container>
 
-<ng-container *ngIf="!routes.length">
+<ng-container *ngIf="type == 'crag' && !routes.length">
   <div class="container mt-16">
     Izgleda, da nimaš izbranih smeri za vpis v dnevnik.
     <br />

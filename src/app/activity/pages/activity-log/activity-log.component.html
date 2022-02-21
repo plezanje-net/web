@@ -49,7 +49,7 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field *ngIf="forCrag">
+    <mat-form-field *ngIf="forCrag" fxFlex>
       <mat-label>Plezališče</mat-label>
       <input matInput disabled [value]="forCrag.name" />
       <button
@@ -60,6 +60,14 @@
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
+
+    <button
+      [routerLink]="['/plezalni-dnevnik/vpis']"
+      mat-button
+      color="primary"
+    >
+      Dodaj vnos
+    </button>
   </div>
 
   <div class="card has-loader scrollable-table mt-16">

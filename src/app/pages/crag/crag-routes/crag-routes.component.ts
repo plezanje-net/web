@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -49,8 +55,13 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       this.loadActivity(user != null)
     );
 
-    const activitySelection: ActivitySelection = this.localStorageService.getItem('activity-selection');
-    if (activitySelection && activitySelection.routes.length && activitySelection.crag.id === this.crag.id) {
+    const activitySelection: ActivitySelection =
+      this.localStorageService.getItem('activity-selection');
+    if (
+      activitySelection &&
+      activitySelection.routes.length &&
+      activitySelection.crag.id === this.crag.id
+    ) {
       this.selectedRoutes = activitySelection.routes;
       this.selectedRoutesIds = this.selectedRoutes.map((route) => route.id);
       this.openSnackBar();
@@ -72,13 +83,18 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     if (this.selectedRoutes.length > 0) {
       this.openSnackBar();
 
-      this.selectedRoutesIds = this.selectedRoutes.map((selectedRoute) => selectedRoute.id);
+      this.selectedRoutesIds = this.selectedRoutes.map(
+        (selectedRoute) => selectedRoute.id
+      );
 
       // Append users previous activity (summary) to the routes that are being logged
       const selectedRoutesWTouch = this.selectedRoutes.map((route) => ({
         ...route,
         tried: !!this.ascents[route.id],
-        ticked: ASCENT_TYPES.some((ascentType) => this.ascents[route.id] == ascentType.value && ascentType.tick),
+        ticked: ASCENT_TYPES.some(
+          (ascentType) =>
+            this.ascents[route.id] == ascentType.value && ascentType.tick
+        ),
       }));
 
       this.localStorageService.setItem(
@@ -141,7 +157,10 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
 
           this.addRoutesToLocalStorage(selectedRoutesWTouch);
 
-          this.router.navigate(['/plezalni-dnevnik/vpis']);
+          this.router.navigate([
+            '/plezalni-dnevnik/vpis',
+            { crag: this.crag.id },
+          ]);
         } else {
           this.openSnackBar();
         }
@@ -154,12 +173,14 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.myCragSummaryGQL.watch({ input: { cragId: this.crag.id } }).valueChanges.subscribe((result) => {
-      this.loading = false;
-      result.data?.myCragSummary.forEach((ascent) => {
-        this.ascents[ascent.route.id] = ascent.ascentType;
+    this.myCragSummaryGQL
+      .watch({ input: { cragId: this.crag.id } })
+      .valueChanges.subscribe((result) => {
+        this.loading = false;
+        result.data?.myCragSummary.forEach((ascent) => {
+          this.ascents[ascent.route.id] = ascent.ascentType;
+        });
       });
-    });
   }
 
   expandRow(routeId: string): void {

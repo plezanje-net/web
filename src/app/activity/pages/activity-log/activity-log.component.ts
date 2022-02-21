@@ -1,21 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { debounceTime, take } from 'rxjs/operators';
+import {
+  concatMap,
+  filter,
+  Subject,
+  Subscription,
+  switchMap,
+  take,
+} from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 import { ACTIVITY_TYPES } from 'src/app/common/activity.constants';
 import { FilteredTable } from 'src/app/common/filtered-table';
 import { LayoutService } from 'src/app/services/layout.service';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { DataError } from 'src/app/types/data-error';
 import {
   Activity,
   ActivityFiltersCragGQL,
   ActivityFiltersCragQuery,
+  ActivityRoute,
+  DeleteActivityGQL,
+  DeleteActivityRouteGQL,
   FindActivitiesInput,
   MyActivitiesGQL,
   MyActivitiesQuery,
   MyActivitiesQueryVariables,
+  namedOperations,
 } from 'src/generated/graphql';
 
 export interface RowAction {
@@ -28,7 +42,7 @@ export interface RowAction {
   templateUrl: './activity-log.component.html',
   styleUrls: ['./activity-log.component.scss'],
 })
-export class ActivityLogComponent implements OnInit {
+export class ActivityLogComponent implements OnInit, OnDestroy {
   error: DataError = null;
 
   activities: MyActivitiesQuery['myActivities']['items'];
@@ -64,12 +78,18 @@ export class ActivityLogComponent implements OnInit {
 
   activityTypes = ACTIVITY_TYPES;
 
+  subscriptions: Subscription[] = [];
+
   constructor(
     private router: Router,
+    private authService: AuthService,
+    private dialog: MatDialog,
+    private snackbar: MatSnackBar,
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
     private myActivitiesGQL: MyActivitiesGQL,
-    private activityFiltersCragGQL: ActivityFiltersCragGQL
+    private activityFiltersCragGQL: ActivityFiltersCragGQL,
+    private deleteActivityGQL: DeleteActivityGQL
   ) {}
 
   ngOnInit(): void {
@@ -81,11 +101,12 @@ export class ActivityLogComponent implements OnInit {
 
     const ft = this.filteredTable;
 
-    ft.navigate$.subscribe((params) =>
+    const navSub = ft.navigate$.subscribe((params) =>
       this.router.navigate(['/plezalni-dnevnik', params])
     );
+    this.subscriptions.push(navSub);
 
-    this.activatedRoute.params.subscribe((params) => {
+    const routeParamsSub = this.activatedRoute.params.subscribe((params) => {
       ft.setRouteParams(params);
 
       this.filters.patchValue(ft.filterParams);
@@ -109,16 +130,18 @@ export class ActivityLogComponent implements OnInit {
           }
         });
     });
+    this.subscriptions.push(routeParamsSub);
 
-    this.filters.valueChanges.subscribe((values) => {
+    const filtersSub = this.filters.valueChanges.subscribe((values) => {
       if (ft.navigating) {
         ft.navigating = false;
       } else {
         ft.setFilterParams(values);
       }
     });
+    this.subscriptions.push(filtersSub);
 
-    this.rowAction$.subscribe((action) => {
+    const actionsSub = this.rowAction$.subscribe((action) => {
       switch (action.action) {
         case 'filterByCrag':
           this.forCrag = action.item.crag;
@@ -126,8 +149,16 @@ export class ActivityLogComponent implements OnInit {
             cragId: action.item.crag.id,
           });
           break;
+        case 'delete':
+          this.deleteActivity(action.item);
+          break;
       }
     });
+    this.subscriptions.push(actionsSub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   applyRelationFilterDisplayValues() {
@@ -152,5 +183,45 @@ export class ActivityLogComponent implements OnInit {
   querySuccess(data: MyActivitiesQuery['myActivities']): void {
     this.activities = data.items;
     this.pagination = data.meta;
+  }
+
+  deleteActivity(activity: Activity) {
+    this.authService.currentUser
+      .pipe(
+        concatMap((user) =>
+          this.dialog
+            .open(ConfirmationDialogComponent, {
+              data: {
+                title: 'Brisanje vnosa',
+                message: `Si prepričan${
+                  user.gender == 'F' ? 'a' : ''
+                }, da želiš izbrisati ta vnos?`,
+              },
+            })
+            .afterClosed()
+        ),
+        filter((response) => response != null),
+        switchMap(() =>
+          this.deleteActivityGQL.mutate(
+            { id: activity.id },
+            {
+              refetchQueries: [namedOperations.Query.MyActivities],
+            }
+          )
+        )
+      )
+      .subscribe({
+        next: () => {
+          this.snackbar.open('Vnos je bil uspešno izbrisan', null, {
+            duration: 2000,
+          });
+        },
+        error: () => {
+          this.snackbar.open('Pri brisanju vnosa je prišlo do napake', null, {
+            panelClass: 'error',
+            duration: 3000,
+          });
+        },
+      });
   }
 }
