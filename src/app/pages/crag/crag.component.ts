@@ -13,7 +13,6 @@ import {
   Comment,
   Crag,
 } from 'src/generated/graphql';
-import { GraphQLError } from 'graphql';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
