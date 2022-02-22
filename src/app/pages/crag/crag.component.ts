@@ -102,28 +102,29 @@ export class CragComponent implements OnInit, OnDestroy {
         .watch({
           crag: params.crag,
         })
-        .valueChanges.subscribe((result) => {
-          this.loading = false;
-
-          if (result.errors != null) {
-            this.queryError(result.errors);
-          } else {
+        .valueChanges.subscribe({
+          next: (result) => {
+            this.loading = false;
             this.querySuccess(result.data.cragBySlug);
-          }
 
-          if (
-            params.tab == 'info' &&
-            !this.breakpointObserver.isMatched([
-              Breakpoints.Small,
-              Breakpoints.XSmall,
-            ])
-          ) {
-            this.setActiveTab(this.tabs[1]);
-          } else if (params.tab != null) {
-            this.activeTab = params.tab;
-          } else {
-            this.activeTab = 'smeri';
-          }
+            if (
+              params.tab == 'info' &&
+              !this.breakpointObserver.isMatched([
+                Breakpoints.Small,
+                Breakpoints.XSmall,
+              ])
+            ) {
+              this.setActiveTab(this.tabs[1]);
+            } else if (params.tab != null) {
+              this.activeTab = params.tab;
+            } else {
+              this.activeTab = 'smeri';
+            }
+          },
+          error: (error) => {
+            this.loading = false;
+            this.queryError(error);
+          },
         });
     });
     this.subscriptions.push(routeSub);
@@ -163,8 +164,8 @@ export class CragComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
-  queryError(errors: readonly GraphQLError[]) {
-    if (errors.length > 0 && errors[0].message == 'entity_not_found') {
+  queryError(error: Error) {
+    if (error.message === 'entity_not_found') {
       this.error = {
         message: 'Plezališče ne obstaja v bazi.',
       };
