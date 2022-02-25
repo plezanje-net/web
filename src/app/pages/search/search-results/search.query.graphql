@@ -2,6 +2,7 @@ query Search($query: String) {
   search(input: $query) {
     crags {
       __typename
+      id
       name
       slug
       nrRoutes
@@ -12,6 +13,7 @@ query Search($query: String) {
         id
       }
       country {
+        id
         slug
       }
     }
@@ -27,6 +29,7 @@ query Search($query: String) {
       isProject
       length
       crag {
+        id
         name
         slug
         country {
@@ -36,22 +39,28 @@ query Search($query: String) {
     }
     sectors {
       __typename
+      id
       name
       crag {
+        id
         name
         slug
         country {
+          id
           slug
         }
       }
     }
     comments {
       __typename
+      id
       content
       crag {
+        id
         name
         slug
         country {
+          id
           slug
         }
       }
@@ -61,20 +70,24 @@ query Search($query: String) {
         slug
         name
         crag {
+          id
           name
           slug
           country {
+            id
             slug
           }
         }
       }
       user {
+        id
         fullName
       }
       created
     }
     users {
       __typename
+      id
       fullName
     }
   }

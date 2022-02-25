@@ -54,18 +54,6 @@
               {{ user.fullName }}
             </mat-option>
           </mat-optgroup>
-
-          <mat-optgroup
-            *ngIf="searchResults?.comments.length"
-            label="Komentarji"
-          >
-            <mat-option
-              *ngFor="let comment of searchResults.comments"
-              [value]="comment"
-            >
-              {{ truncateComment(comment.content) }}
-            </mat-option>
-          </mat-optgroup>
         </ng-container>
       </mat-autocomplete>
       <button
