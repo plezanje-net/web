@@ -33,6 +33,7 @@ query Search($query: String) {
         name
         slug
         country {
+          id
           slug
         }
       }
