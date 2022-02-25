@@ -1,9 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataError } from '../../types/data-error';
 import { LayoutService } from '../../services/layout.service';
-import { RouteBySlugGQL, RouteBySlugQuery } from 'src/generated/graphql';
-import { Subject } from 'rxjs';
+import {
+  Comment,
+  Route,
+  RouteBySlugGQL,
+  RouteBySlugQuery,
+} from 'src/generated/graphql';
+import { Subject, Subscription, switchMap } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CommentFormComponent } from 'src/app/shared/components/comment-form/comment-form.component';
@@ -13,15 +18,17 @@ import { CommentFormComponent } from 'src/app/shared/components/comment-form/com
   templateUrl: './route.component.html',
   styleUrls: ['./route.component.scss'],
 })
-export class RouteComponent implements OnInit {
+export class RouteComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   error: DataError = null;
-  route: RouteBySlugQuery['routeBySlug'];
-  warnings: RouteBySlugQuery['routeBySlug']['comments'];
+  route: Route;
+  warnings: Comment[];
 
   section: string;
 
   action$ = new Subject<string>();
+  actionSubscription: Subscription;
+  routeQuerySubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -37,24 +44,27 @@ export class RouteComponent implements OnInit {
       ? 'alpinism'
       : 'sport';
 
-    this.activatedRoute.params.subscribe((params: Params) => {
-      this.routeBySlugGQL
-        .watch({
-          cragSlug: params.crag,
-          routeSlug: params.route,
+    this.routeQuerySubscription = this.activatedRoute.params
+      .pipe(
+        switchMap((params) => {
+          return this.routeBySlugGQL.watch({
+            cragSlug: params.crag,
+            routeSlug: params.route,
+          }).valueChanges;
         })
-        .valueChanges.subscribe((result) => {
+      )
+      .subscribe({
+        next: (result) => {
           this.loading = false;
+          this.querySuccess(result.data);
+        },
+        error: (error) => {
+          this.loading = false;
+          this.queryError(error);
+        },
+      });
 
-          if (result.errors != null) {
-            this.queryError(result.errors);
-          } else {
-            this.querySuccess(result.data);
-          }
-        });
-    });
-
-    this.action$.subscribe((action) => {
+    this.actionSubscription = this.action$.subscribe((action) => {
       switch (action) {
         case 'add-comment':
           this.addComment('comment');
@@ -83,12 +93,11 @@ export class RouteComponent implements OnInit {
     });
   }
 
-  queryError(errors: any): void {
-    if (errors.length > 0 && errors[0].message === 'entity_not_found') {
+  queryError(error: Error): void {
+    if (error.message === 'entity_not_found') {
       this.error = {
         message: 'Smer ne obstaja v bazi.',
       };
-
       return;
     }
 
@@ -98,7 +107,7 @@ export class RouteComponent implements OnInit {
   }
 
   querySuccess(data: RouteBySlugQuery): void {
-    this.route = data.routeBySlug;
+    this.route = <Route>data.routeBySlug;
     this.warnings = this.route?.comments.filter(
       (comment) => comment.type === 'warning'
     );
@@ -148,5 +157,10 @@ export class RouteComponent implements OnInit {
         },
       ]);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.routeQuerySubscription.unsubscribe();
+    this.actionSubscription.unsubscribe();
   }
 }
