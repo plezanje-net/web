@@ -115,6 +115,54 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * determines if the log is possible based on users previous logs and some ascentType
+   *
+   * @param ascentType
+   * @returns boolean
+   */
+  logPossible(ascentType: string) {
+    if (
+      this.route.value.ticked &&
+      ['redpoint', 't_redpoint'].includes(ascentType)
+    ) {
+      return false;
+    }
+
+    if (
+      this.route.value.tried &&
+      ['onsight', 'flash', 't_onsight', 't_flash'].includes(ascentType)
+    ) {
+      return false;
+    }
+
+    if (
+      !this.route.value.ticked &&
+      ['repeat', 't_repeat'].includes(ascentType)
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * determines if a log could ever be possible based on route type and some ascent type
+   *
+   * @param ascentType
+   * @returns boolean
+   */
+  logPossibleEver(ascentType: string) {
+    if (
+      this.route.value.type === 'boulder' &&
+      ['onsight', 't_onsight'].includes(ascentType)
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

@@ -86,7 +86,7 @@ export class ActivityFormComponent implements OnInit {
         votedDifficulty: new FormControl(),
         ticked: new FormControl(route.ticked),
         tried: new FormControl(route.tried),
-        type: new FormControl(route.type),
+        type: new FormControl(route.routeType.id),
       })
     );
   }
