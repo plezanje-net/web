@@ -3,6 +3,10 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { DataError } from '../../types/data-error';
 import { LayoutService } from '../../services/layout.service';
 import { RouteBySlugGQL, RouteBySlugQuery } from 'src/generated/graphql';
+import { Subject } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { CommentFormComponent } from 'src/app/shared/components/comment-form/comment-form.component';
 
 @Component({
   selector: 'app-route',
@@ -17,10 +21,14 @@ export class RouteComponent implements OnInit {
 
   section: string;
 
+  action$ = new Subject<string>();
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
+    private authService: AuthService,
+    private dialog: MatDialog,
     private routeBySlugGQL: RouteBySlugGQL
   ) {}
 
@@ -44,6 +52,34 @@ export class RouteComponent implements OnInit {
             this.querySuccess(result.data);
           }
         });
+    });
+
+    this.action$.subscribe((action) => {
+      switch (action) {
+        case 'add-comment':
+          this.addComment('comment');
+          break;
+        case 'add-condition':
+          this.addComment('condition');
+          break;
+        case 'add-description':
+          this.addComment('description');
+          break;
+      }
+    });
+  }
+
+  addComment(type: string) {
+    this.authService.guardedAction({}).then((success) => {
+      if (success) {
+        this.dialog.open(CommentFormComponent, {
+          data: {
+            route: this.route,
+            type,
+          },
+          autoFocus: false,
+        });
+      }
     });
   }
 
