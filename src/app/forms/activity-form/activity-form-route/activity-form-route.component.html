@@ -82,7 +82,9 @@
                     (route.value.ticked && type.value == 'redpoint') ||
                     (route.value.tried &&
                       (type.value == 'onsight' || type.value == 'flash')) ||
-                    (route.value.type == 'boulder' && type.value == 'onsight')
+                    (route.value.type == 'boulder' &&
+                      type.value == 'onsight') ||
+                    (type.value == 'repeat' && !route.value.ticked)
                   "
                   >{{ type.label }}
                 </mat-option>
@@ -102,7 +104,8 @@
                       ((type.value == 't_onsight' || type.value == 't_flash') &&
                         route.value.tried) ||
                       (route.value.type == 'boulder' &&
-                        type.value == 't_onsight')
+                        type.value == 't_onsight') ||
+                      (type.value == 't_repeat' && !route.value.ticked)
                     "
                     >{{ type.label }}
                   </mat-option>
