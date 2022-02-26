@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   Crag,
@@ -10,6 +10,7 @@ import {
 import moment from 'moment';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { ActivityFormService } from './activity-form.service';
 
 @Component({
   selector: 'app-activity-form',
@@ -36,7 +37,8 @@ export class ActivityFormComponent implements OnInit {
     private snackBar: MatSnackBar,
     private createActivityGQL: CreateActivityGQL,
     private router: Router,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private activityFormService: ActivityFormService
   ) {}
 
   ngOnInit(): void {
@@ -59,6 +61,8 @@ export class ActivityFormComponent implements OnInit {
     });
 
     this.activityForm.patchValue({ date: moment() });
+
+    this.activityFormService.initialize(this.routes);
   }
 
   patchRouteDates(value: moment.Moment): void {
@@ -77,7 +81,9 @@ export class ActivityFormComponent implements OnInit {
         difficulty: new FormControl(route.difficulty),
         defaultGradingSystemId: new FormControl(route.defaultGradingSystem.id),
         isProject: new FormControl(route.isProject),
-        ascentType: new FormControl(!route?.ticked ? 'redpoint' : 'repeat'),
+        ascentType: new FormControl(!route?.ticked ? 'redpoint' : 'repeat', [
+          Validators.required,
+        ]),
         date: new FormControl(),
         partner: new FormControl(),
         publish: new FormControl('public'),
@@ -115,7 +121,10 @@ export class ActivityFormComponent implements OnInit {
   private copyFormFroup(formGroupOriginal: FormGroup) {
     const formGroupData = Object.keys(formGroupOriginal.controls).reduce(
       (fgData, key) => {
-        fgData[key] = new FormControl(formGroupOriginal.get(key).value);
+        fgData[key] = new FormControl(
+          formGroupOriginal.get(key).value,
+          formGroupOriginal.get(key).validator
+        );
         return fgData;
       },
       {}

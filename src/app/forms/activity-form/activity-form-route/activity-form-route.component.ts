@@ -14,6 +14,7 @@ import {
 } from '../../../common/activity.constants';
 import { Crag } from 'src/generated/graphql';
 import { Subject, takeUntil } from 'rxjs';
+import { ActivityFormService } from '../activity-form.service';
 
 @Component({
   selector: 'app-activity-form-route',
@@ -23,6 +24,7 @@ import { Subject, takeUntil } from 'rxjs';
 export class ActivityFormRouteComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
+  @Input() myIndex: number;
   @Input() activity = true;
   @Input() route: FormGroup;
   @Input() first: boolean;
@@ -37,7 +39,7 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
 
   publishOptions = PUBLISH_OPTIONS;
 
-  constructor() {}
+  constructor(public activityFormService: ActivityFormService) {}
 
   ngOnInit(): void {
     this.route.controls.publish.valueChanges
@@ -113,37 +115,6 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
       this.route.get('votedDifficulty').setValue(null);
       this.route.get('votedDifficulty').disable();
     }
-  }
-
-  /**
-   * determines if the log is possible based on users previous logs and some ascentType
-   *
-   * @param ascentType
-   * @returns boolean
-   */
-  logPossible(ascentType: string) {
-    if (
-      this.route.value.ticked &&
-      ['redpoint', 't_redpoint'].includes(ascentType)
-    ) {
-      return false;
-    }
-
-    if (
-      this.route.value.tried &&
-      ['onsight', 'flash', 't_onsight', 't_flash'].includes(ascentType)
-    ) {
-      return false;
-    }
-
-    if (
-      !this.route.value.ticked &&
-      ['repeat', 't_repeat'].includes(ascentType)
-    ) {
-      return false;
-    }
-
-    return true;
   }
 
   /**

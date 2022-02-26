@@ -76,7 +76,13 @@
                 <mat-option
                   *ngIf="logPossibleEver(type.value)"
                   [value]="type.value"
-                  [disabled]="!logPossible(type.value)"
+                  [disabled]="
+                    !activityFormService.logPossible(
+                      type.value,
+                      myIndex,
+                      route.value.routeId
+                    )
+                  "
                   >{{ type.label }}
                 </mat-option>
               </ng-container>
@@ -85,7 +91,13 @@
                   <mat-option
                     *ngIf="logPossibleEver(type.value)"
                     [value]="type.value"
-                    [disabled]="!logPossible(type.value)"
+                    [disabled]="
+                      !activityFormService.logPossible(
+                        type.value,
+                        myIndex,
+                        route.value.routeId
+                      )
+                    "
                     >{{ type.label }}
                   </mat-option>
                 </ng-container>
