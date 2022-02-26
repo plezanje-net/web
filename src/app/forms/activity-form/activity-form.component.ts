@@ -92,25 +92,35 @@ export class ActivityFormComponent implements OnInit {
   }
 
   moveRoute(routeIndex: number, direction: number): void {
-    if (direction === 0) {
-      this.routes.controls.splice(routeIndex, 1);
-      return;
+    switch (direction) {
+      case 0:
+        // delete the route at routeIndex
+        this.routes.removeAt(routeIndex);
+        break;
+      case 2:
+        // add a copy of the same route
+        const routeFormGroupOriginal = <FormGroup>this.routes.at(routeIndex);
+        const routeFormGroupCopy = this.copyFormFroup(routeFormGroupOriginal);
+        this.routes.insert(routeIndex + 1, routeFormGroupCopy);
+        break;
+      default:
+        // switch position of adjacent routes
+        const temp = this.routes.controls[routeIndex + direction];
+        this.routes.controls[routeIndex + direction] =
+          this.routes.controls[routeIndex];
+        this.routes.controls[routeIndex] = temp;
     }
+  }
 
-    if (direction === 2) {
-      this.routes.controls.splice(
-        routeIndex,
-        0,
-        this.routes.controls[routeIndex]
-      );
-      return;
-    }
-
-    const temp = this.routes.controls[routeIndex + direction];
-
-    this.routes.controls[routeIndex + direction] =
-      this.routes.controls[routeIndex];
-    this.routes.controls[routeIndex] = temp;
+  private copyFormFroup(formGroupOriginal: FormGroup) {
+    const formGroupData = Object.keys(formGroupOriginal.controls).reduce(
+      (fgData, key) => {
+        fgData[key] = new FormControl(formGroupOriginal.get(key).value);
+        return fgData;
+      },
+      {}
+    );
+    return new FormGroup(formGroupData);
   }
 
   save(): void {
