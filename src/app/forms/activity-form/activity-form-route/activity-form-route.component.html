@@ -54,6 +54,7 @@
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
       <button
+        *ngIf="this.activityFormService.numOfRoutes > 1"
         type="button"
         mat-icon-button
         (click)="move.emit(0)"

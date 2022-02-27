@@ -26,6 +26,10 @@ export class ActivityFormService {
     );
   }
 
+  get numOfRoutes() {
+    return this.routesBeingLoggedFormArray.length;
+  }
+
   logPossible(ascentType: string, routeIndex: number, routeId: string) {
     // should assume that routesBeingLogged array already includes the 'incoming' route which we are checking the possible ascentType for
     // simulate logging the routes in order and adjust possible logs on each step until the target route is reached
