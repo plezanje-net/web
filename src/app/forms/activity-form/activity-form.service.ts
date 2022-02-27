@@ -7,6 +7,7 @@ import { ASCENT_TYPES } from 'src/app/common/activity.constants';
 })
 export class ActivityFormService {
   routesBeingLoggedFormArray: FormArray;
+  distinctRouteIds: Set<string>;
 
   allPossibleAscentTypes = new Set(ASCENT_TYPES.map((at) => at.value));
 
@@ -18,6 +19,11 @@ export class ActivityFormService {
 
   initialize(routes: FormArray) {
     this.routesBeingLoggedFormArray = routes;
+    this.distinctRouteIds = new Set(
+      routes.controls.map(
+        (routeFormGroup) => routeFormGroup.get('routeId').value
+      )
+    );
   }
 
   logPossible(ascentType: string, routeIndex: number, routeId: string) {
@@ -32,7 +38,7 @@ export class ActivityFormService {
 
     for (
       let index = 0;
-      index < this.routesBeingLoggedFormArray.length;
+      index < this.routesBeingLoggedFormArray.controls.length;
       index++
     ) {
       const routeFormGroup = this.routesBeingLoggedFormArray.controls[
@@ -90,5 +96,28 @@ export class ActivityFormService {
         return possibleAscentTypes.has(ascentType);
       }
     }
+  }
+
+  conditionallyDisableVotedDifficultyInputs() {
+    // Go through all distinct routes being logged. For each of them enable voted difficulty input if it is the first instance with ascent type that is a tick, or disable it in all other cases.
+    this.distinctRouteIds.forEach((routeId) => {
+      let someVDIEnabled = false;
+      this.routesBeingLoggedFormArray.controls
+        .filter(
+          (routeFormGroup) => routeFormGroup.get('routeId').value === routeId
+        )
+        .forEach((routeFormGroup) => {
+          if (
+            this.tickAscentTypes.has(routeFormGroup.get('ascentType').value) &&
+            !someVDIEnabled
+          ) {
+            someVDIEnabled = true;
+            routeFormGroup.get('votedDifficulty').enable();
+          } else {
+            routeFormGroup.get('votedDifficulty').setValue(null);
+            routeFormGroup.get('votedDifficulty').disable();
+          }
+        });
+    });
   }
 }

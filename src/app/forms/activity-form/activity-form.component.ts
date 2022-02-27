@@ -11,6 +11,7 @@ import moment from 'moment';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { ActivityFormService } from './activity-form.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-activity-form',
@@ -18,6 +19,9 @@ import { ActivityFormService } from './activity-form.service';
   styleUrls: ['./activity-form.component.scss'],
 })
 export class ActivityFormComponent implements OnInit {
+  @Input() crag: Crag;
+  @Input() selectedRoutes: Route[];
+
   loading: boolean = false;
 
   routes = new FormArray([]);
@@ -30,8 +34,7 @@ export class ActivityFormComponent implements OnInit {
     routes: this.routes,
   });
 
-  @Input() crag: Crag;
-  @Input() selectedRoutes: Route[];
+  afMutex = false;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -63,6 +66,13 @@ export class ActivityFormComponent implements OnInit {
     this.activityForm.patchValue({ date: moment() });
 
     this.activityFormService.initialize(this.routes);
+    this.activityForm.valueChanges
+      .pipe(filter(() => !this.afMutex))
+      .subscribe(() => {
+        this.afMutex = true;
+        this.activityFormService.conditionallyDisableVotedDifficultyInputs();
+        this.afMutex = false;
+      });
   }
 
   patchRouteDates(value: moment.Moment): void {
