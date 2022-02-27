@@ -36,7 +36,8 @@
   &.left {
     flex: 1 1 100%;
 
-    @media (max-width: $breakpoint-sm) {  // TODO use min-width instead
+    @media (max-width: $breakpoint-sm) {
+      // TODO use min-width instead
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -60,11 +61,13 @@
   flex: 1 1 100%;
 }
 
-.route-numbers {  // TODO take care of boulder places ... different width probably
+.route-numbers {
+  // TODO take care of boulder places ... different width probably
   display: flex;
   flex: 0 0 160px;
 
-  @media (max-width: $breakpoint-sm) {  // TODO use min-width instead
+  @media (max-width: $breakpoint-sm) {
+    // TODO use min-width instead
     flex-direction: row;
     flex: 1 1 auto;
   }
@@ -112,55 +115,6 @@ h3 {
 .ascent-type-filler {
   width: 36px;
   display: inline-block;
-}
-
-.popover-container {
-  position: relative;
-
-  // text-align: center;
-}
-.pitches {
-  text-align: center;
-}
-
-.popover {
-  position: absolute;
-  bottom: calc(100% + 5px);
-  transform: translateX(-50%);
-  left: 50%;
-  z-index: 100;
-  background: #ffffff;
-  text-align: left;
-  border: 1px solid #d1d7db;
-  padding: 10px;
-  @include mat-elevation(5);
-
-  td {
-    white-space: nowrap;
-  }
-
-  .popover-arrow {
-    height: 10px;
-    width: 10px;
-
-    background-color: #fff;
-    position: absolute;
-    bottom: -11px;
-    left: 50%;
-
-    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-    border-right: 1px solid rgba(0, 0, 0, 0.3);
-    transform: translate(-50%, -50%) rotate(45deg);
-  }
-
-  &.comments {
-    min-width: 400px;
-  }
-}
-
-.popover-title {
-  margin-bottom: 10px;
-  font-weight: bold;
 }
 
 .difficulty-vote-included {

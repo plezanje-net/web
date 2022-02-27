@@ -5,7 +5,6 @@
       <span>{{ sector.name != "" ? " - " + sector.name : "" }}</span>
     </h3>
     <div class="card">
-
       <div class="row header route-row" fxLayoutGap="14px">
         <div class="route-checkbox"></div>
         <div class="route-details-container">
@@ -21,7 +20,11 @@
       </div>
 
       <div *ngFor="let route of sector.routes">
-        <div class="row route-row" fxLayoutGap="14px" (click)="expandRow(route.id)">
+        <div
+          class="row route-row"
+          fxLayoutGap="14px"
+          (click)="expandRow(route.id)"
+        >
           <div class="route-checkbox">
             <mat-checkbox
               (change)="changeSelection(route)"
@@ -36,7 +39,12 @@
                   [routerLink]="
                     section === 'alpinism'
                       ? ['/alpinizem', 'stena', crag.slug, 'smer', route.slug]
-                      : ['/plezalisca/', crag.country.slug, crag.slug, route.slug]
+                      : [
+                          '/plezalisca/',
+                          crag.country.slug,
+                          crag.slug,
+                          route.slug
+                        ]
                   "
                   (click)="$event.stopPropagation()"
                   >{{ route.name }}</a
@@ -56,41 +64,6 @@
                     [modifier]="true"
                     [gradingSystemId]="route.defaultGradingSystem.id"
                   ></app-grade>
-                  <div
-                    class="popover"
-                    *ngIf="false && activeDifficultyVotesPopupId === route.id && !difficultyVotesLoading"
-                  >
-                    <div class="popover-title">Ocene smeri {{ route.name }}</div>
-                    <table>
-                      <tbody>
-                        <tr
-                          *ngFor="let vote of difficultyVotes"
-                          [ngClass]="
-                            vote.includedInCalculation ? 'difficulty-vote-included' : ''
-                          "
-                        >
-                          <td>
-                            <app-grade
-                              class="grade"
-                              [difficulty]="vote.difficulty"
-                            ></app-grade>
-                          </td>
-                          <td class="difficulty-vote-author">
-                            <ng-container *ngIf="vote.isBase"
-                              >Bazna ocena</ng-container
-                            >
-                            <ng-container *ngIf="!vote.isBase && vote.user">{{
-                              vote.user.firstname + " " + vote.user.lastname
-                            }}</ng-container>
-                          </td>
-                          <td class="difficulty-vote-date">
-                            {{ vote.created | amDateFormat: "D. M. Y" }}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <div class="popover-arrow"></div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -100,19 +73,38 @@
                   *ngIf="route.pitches.length > 0"
                   mat-icon-button
                   color="primary"
-                >MP</button>
+                >
+                  MP
+                </button>
                 <button *ngIf="route.comments.length > 0" mat-icon-button>
                   <mat-icon>comment</mat-icon>
                 </button>
-                <app-ascent-type *ngIf="ascents[route.id] != null" [value]="ascents[route.id]" displayType="icon">
+                <app-ascent-type
+                  *ngIf="ascents[route.id] != null"
+                  [value]="ascents[route.id]"
+                  displayType="icon"
+                >
                 </app-ascent-type>
               </div>
             </div>
           </div>
         </div>
-        <div class="route-expanding-container" [ngStyle]="{ 'max-height.px': route.id === expandedRowId ? expandedRowHeight : 0 }">
-          <div *ngIf="expandedRowId === route.id || previousExpandedRowId === route.id" class="route-expanding-details">
-            <app-crag-route-preview [routeId]="route.id" (heightChangeEvent)="onPreviewHeightEvent($event)"></app-crag-route-preview>
+        <div
+          class="route-expanding-container"
+          [ngStyle]="{
+            'max-height.px': route.id === expandedRowId ? expandedRowHeight : 0
+          }"
+        >
+          <div
+            *ngIf="
+              expandedRowId === route.id || previousExpandedRowId === route.id
+            "
+            class="route-expanding-details"
+          >
+            <app-crag-route-preview
+              [routeId]="route.id"
+              (heightChangeEvent)="onPreviewHeightEvent($event)"
+            ></app-crag-route-preview>
           </div>
         </div>
       </div>
