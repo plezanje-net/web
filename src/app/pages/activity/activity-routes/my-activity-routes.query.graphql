@@ -18,6 +18,7 @@ query MyActivityRoutes($input: FindActivityRoutesInput) {
             slug
           }
         }
+        isProject
         difficulty
         defaultGradingSystem {
           id
@@ -28,6 +29,7 @@ query MyActivityRoutes($input: FindActivityRoutesInput) {
       }
       pitch {
         number
+        isProject
         difficulty
       }
     }
