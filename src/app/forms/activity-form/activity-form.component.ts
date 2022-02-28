@@ -87,7 +87,6 @@ export class ActivityFormComponent implements OnInit {
         routeId: new FormControl(route.id),
         name: new FormControl(route.name),
         slug: new FormControl(route.slug),
-        grade: new FormControl(route.grade),
         difficulty: new FormControl(route.difficulty),
         defaultGradingSystemId: new FormControl(route.defaultGradingSystem.id),
         isProject: new FormControl(route.isProject),
