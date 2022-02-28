@@ -14,6 +14,7 @@ import {
 } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
@@ -164,6 +165,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MatMenuModule,
     MatIconModule,
     MatCheckboxModule,
+    MatRadioModule,
     MatFormFieldModule,
     MatSnackBarModule,
     MatPaginatorModule,

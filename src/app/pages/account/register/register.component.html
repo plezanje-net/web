@@ -11,11 +11,16 @@
         Vnesi zahtevane podatke in na vnešeni e-naslov ti bomo poslali povezavo
         za aktivacijo računa.
       </p>
-      <form [formGroup]="form" (submit)="register()">
+      <form [formGroup]="form" (submit)="register()" id="sign-up">
         <p>
           <mat-form-field>
             <mat-label>E-naslov</mat-label>
-            <input matInput formControlName="email" />
+            <input
+              matInput
+              formControlName="email"
+              id="email"
+              autocomplete="email"
+            />
             <mat-hint>Služi kot uporabniško ime ob prijavi</mat-hint>
           </mat-form-field>
         </p>
@@ -23,7 +28,13 @@
         <p>
           <mat-form-field>
             <mat-label>Geslo</mat-label>
-            <input matInput formControlName="password" type="password" />
+            <input
+              matInput
+              formControlName="password"
+              type="password"
+              id="new-password"
+              autocomplete="new-password"
+            />
             <mat-hint>Najmanj 8 znakov</mat-hint>
           </mat-form-field>
         </p>
@@ -31,16 +42,42 @@
         <p>
           <mat-form-field class="no-hint">
             <mat-label>Ime</mat-label>
-            <input matInput formControlName="firstname" />
+            <input
+              matInput
+              formControlName="firstname"
+              id="given-name"
+              autocomplete="given-name"
+            />
           </mat-form-field>
         </p>
 
         <p>
           <mat-form-field class="no-hint">
             <mat-label>Priimek</mat-label>
-            <input matInput formControlName="lastname" />
+            <input
+              matInput
+              formControlName="lastname"
+              id="family-name"
+              autocomplete="family-name"
+            />
           </mat-form-field>
         </p>
+
+        <div class="gender">
+          <div>
+            <label id="gender-radio-group-label">Spol</label>
+          </div>
+          <div>
+            <mat-radio-group
+              aria-labelledby="gender-radio-group-label"
+              formControlName="gender"
+            >
+              <mat-radio-button value="F">Ženski</mat-radio-button>
+              <mat-radio-button value="M">Moški</mat-radio-button>
+              <mat-radio-button value="O">Drugo</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
 
         <p class="conditions">
           <mat-checkbox formControlName="conditions"
@@ -66,7 +103,7 @@
     </div>
     <div *ngIf="success">
       <h2>Registracija uspešna.</h2>
-      Na naslov {{ form.value.email }} smo poslali povezavo za aktivacijo
+      Na naslov {{ form.value.email }} smo ti poslali povezavo za aktivacijo
       računa.
     </div>
   </div>
