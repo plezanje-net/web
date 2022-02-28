@@ -28,7 +28,7 @@
   >
     <app-comment [comment]="comment"></app-comment>
   </div>
-  <div *ngIf="!regularComments.length && !previewMode">
+  <div *ngIf="!regularComments.length && !previewMode" class="p-16">
     Ta smer nima še nobenega komentarja.
   </div>
 
@@ -38,7 +38,11 @@
     fxLayoutAlign="center center"
     fxLayout.lt-md="column"
   >
-    <span fxFlex="100">Opisi razmer</span>
+    <span fxFlex="100"
+      ><ng-container *ngIf="conditions.length > 0"
+        >Opisi razmer</ng-container
+      ></span
+    >
     <div fxFlex>
       <button mat-button color="primary" (click)="addComment('add-condition')">
         Dodaj opis razmer
@@ -53,9 +57,6 @@
   >
     <app-comment [comment]="conditionComment"></app-comment>
   </div>
-  <div *ngIf="!conditions.length && !previewMode">
-    Ta smer nima še nobenega opisa razmer.
-  </div>
 
   <h3
     *ngIf="!previewMode"
@@ -63,7 +64,11 @@
     fxLayoutAlign="center center"
     fxLayout.lt-md="column"
   >
-    <span fxFlex="100">Opisi smeri</span>
+    <span fxFlex="100"
+      ><ng-container *ngIf="descriptions.length > 0"
+        >Opisi smeri</ng-container
+      ></span
+    >
     <div fxFlex>
       <button
         mat-button
@@ -81,8 +86,5 @@
     fxLayoutGap="8px"
   >
     <app-comment [comment]="description"></app-comment>
-  </div>
-  <div *ngIf="!descriptions.length && !previewMode">
-    Ta smer nima še nobenega opisa.
   </div>
 </div>
