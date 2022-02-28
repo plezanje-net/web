@@ -69,7 +69,7 @@
   <div fxLayout="row" fxLayoutGap="12px" fxLayout.lt-md="column">
     <div fxFlex="60" fxLayout="column">
       <div fxFlex fxLayout="row" fxLayoutGap="12px grid">
-        <div fxFlex="25" fxLayout="column" fxLayoutAlign="start stretch">
+        <div fxFlex="33.33" fxLayout="column" fxLayoutAlign="start stretch">
           <mat-form-field class="no-hint">
             <mat-label>Vrsta vzpona</mat-label>
             <mat-select formControlName="ascentType">
@@ -107,15 +107,15 @@
           </mat-form-field>
         </div>
 
-        <mat-form-field class="no-hint" fxFlex="25">
+        <!-- <mat-form-field class="no-hint" fxFlex="25">
           <mat-label>Lepota</mat-label>
           <mat-select formControlName="stars">
             <mat-option [value]="1">1</mat-option>
             <mat-option [value]="2">2</mat-option>
             <mat-option [value]="3">3</mat-option>
           </mat-select>
-        </mat-form-field>
-        <mat-form-field class="no-hint" fxFlex="25">
+        </mat-form-field> -->
+        <mat-form-field class="no-hint" fxFlex="33.33">
           <mat-label>Objava</mat-label>
           <mat-select formControlName="publish">
             <mat-option
@@ -127,7 +127,7 @@
         </mat-form-field>
         <app-grade-select
           class="no-hint"
-          fxFlex="25"
+          fxFlex="33.33"
           [control]="route.controls.votedDifficulty"
           label="Predlog ocene"
           [gradingSystemId]="route.value.defaultGradingSystemId"
