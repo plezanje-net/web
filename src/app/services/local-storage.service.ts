@@ -9,15 +9,19 @@ export class LocalStorageService {
   constructor() {}
 
   getItem(key: string): any {
-    key = this.getKey(key);
+    const prefixedKey = this.getKey(key);
 
-    const item = JSON.parse(localStorage.getItem(key));
+    const item = JSON.parse(localStorage.getItem(prefixedKey));
 
     if (!item) {
       return;
     }
 
-    if (moment(item.expirationDate).isBefore(moment(new Date()))) {
+    // Check that the item is not expired, but only if expiration date is set. Otherwise assume that the item never expires.
+    if (
+      item.expirationDate &&
+      moment(item.expirationDate).isBefore(moment(new Date()))
+    ) {
       this.removeItem(key);
       return;
     } else {
