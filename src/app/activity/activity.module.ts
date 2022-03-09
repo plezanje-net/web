@@ -29,6 +29,7 @@ import { ActivityFormRouteComponent } from './forms/activity-form/activity-form-
 import { ActivityFormComponent } from './forms/activity-form/activity-form.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
     MatSnackBarModule,
     MatCheckboxModule,
     MatProgressSpinnerModule,
+    MatPaginatorModule,
     ReactiveFormsModule,
     MomentModule,
     SharedModule,
