@@ -32,7 +32,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
   activityForm = new FormGroup({
     type: new FormControl(null, Validators.required),
-    name: new FormControl(),
+    name: new FormControl(''),
     cragId: new FormControl(null),
     peakId: new FormControl(null),
     iceFallId: new FormControl(null),
