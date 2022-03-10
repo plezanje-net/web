@@ -12,11 +12,6 @@ query Crags($country: String!, $input: FindCragsInput) {
       orientation
       lon
       lat
-      country {
-        id
-        name
-        slug
-      }
       minDifficulty
       maxDifficulty
       defaultGradingSystem {
