@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   Crag,
@@ -29,7 +29,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   typeOptions = ACTIVITY_TYPES;
 
   activityForm = new FormGroup({
-    type: new FormControl(null),
+    type: new FormControl(null, Validators.required),
     name: new FormControl(),
     cragId: new FormControl(null),
     peakId: new FormControl(null),
