@@ -5,6 +5,7 @@ query MyActivities($input: FindActivitiesInput) {
       name
       date
       type
+      duration
       routes {
         route {
           difficulty

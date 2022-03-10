@@ -12,7 +12,14 @@
   >
   <span *ngIf="!(activity.crag != null)">{{ activity.name }}</span>
 </td>
-<td>{{ activity.routes.length }}</td>
+<td>
+  <ng-container *ngIf="activity.type == 'crag'">{{
+    activity.routes.length | pluralizeNoun: "smer"
+  }}</ng-container>
+  <ng-container *ngIf="activity.duration != null"
+    >{{ activity.duration }} min</ng-container
+  >
+</td>
 
 <td class="tools">
   <button mat-icon-button [mat-menu-trigger-for]="menu">
