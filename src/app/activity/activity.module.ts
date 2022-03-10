@@ -28,6 +28,7 @@ import { MomentModule } from 'ngx-moment';
 import { ActivityFormRouteComponent } from './forms/activity-form/activity-form-route/activity-form-route.component';
 import { ActivityFormComponent } from './forms/activity-form/activity-form.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
@@ -57,6 +58,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatTooltipModule,
     MatSnackBarModule,
     MatCheckboxModule,
+    MatRadioModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
     ReactiveFormsModule,
