@@ -26,7 +26,9 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
   routes = new FormArray([]);
 
-  typeOptions = ACTIVITY_TYPES;
+  typeOptions = ACTIVITY_TYPES.filter(
+    (type) => type.value != 'iceFall' && type.value != 'peak'
+  );
 
   activityForm = new FormGroup({
     type: new FormControl(null, Validators.required),
