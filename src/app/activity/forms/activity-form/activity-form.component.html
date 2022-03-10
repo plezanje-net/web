@@ -62,11 +62,19 @@
           ></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
-        <mat-form-field class="no-hint" fxFlex="50" *ngIf="type != 'crag'">
+        <mat-form-field
+          class="no-hint"
+          fxFlex="50"
+          *ngIf="activityForm.value.type != 'crag'"
+        >
           <mat-label>Trajanje (min)</mat-label>
           <input matInput type="number" formControlName="duration" />
         </mat-form-field>
-        <mat-form-field class="no-hint" fxFlex="50">
+        <mat-form-field
+          class="no-hint"
+          fxFlex="50"
+          *ngIf="activityForm.value.type == 'crag'"
+        >
           <mat-label>Soplezalci</mat-label>
           <input matInput type="text" formControlName="partners" />
         </mat-form-field>
