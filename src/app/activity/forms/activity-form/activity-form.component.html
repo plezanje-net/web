@@ -9,8 +9,8 @@
         ><mat-radio-button [value]="false">Vnesi plezalni dan</mat-radio-button
         ><span
           >V tvojem dnevniku se bo pojavil <b>Plezalni dan</b> s preplezanmi
-          smermi. Datum in soplezalec bosta skupna vsem vzponom. Priporočamo za
-          sprotno vnašanje.</span
+          smermi. Datum in soplezalec bosta skupna vsem vzponom.<br />
+          (Priporočamo za sprotno vnašanje.)</span
         ></label
       >
       <label fxFlex="50">
@@ -18,14 +18,15 @@
           >Vnesi samo preplezane smeri </mat-radio-button
         ><span
           >Označene smeri bodo zavedene v tvojem plezalnem dnevniku vsaka
-          posebej. Datum lahko nastaviš na vsakem posameznem vzponu (priporočamo
-          pri vnašanju za nazaj).
+          posebej. Datum lahko nastaviš na vsakem posameznem vzponu.<br />
+          (Priporočamo pri vnašanju za nazaj.)
         </span>
       </label>
     </mat-radio-group>
   </div>
 
-  <div class="card mt-16">
+  <div *ngIf="!activityForm.value.onlyRoutes" class="card mt-16">
+    <h3 *ngIf="type === 'crag'">Plezalni dan</h3>
     <div
       fxLayout="row"
       fxLayout.lt-md="column"
@@ -35,12 +36,7 @@
       fxLayoutGap.lt-md="0"
     ></div>
 
-    <div
-      fxLayout="column"
-      fxLayoutGap="16px"
-      class="p-16"
-      *ngIf="!activityForm.value.onlyRoutes"
-    >
+    <div fxLayout="column" fxLayoutGap="16px" class="p-16">
       <div
         fxLayout="row"
         fxLayout.lt-md="column"
