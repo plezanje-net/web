@@ -13,7 +13,7 @@
   <span *ngIf="!(activity.crag != null)">{{ activity.name }}</span>
 </td>
 <td>
-  <ng-container *ngIf="activity.type == 'crag'">{{
+  <ng-container *ngIf="activity.type == 'crag' && activity.crag != null">{{
     activity.routes.length | pluralizeNoun: "smer"
   }}</ng-container>
   <ng-container *ngIf="activity.duration != null"
