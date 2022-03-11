@@ -1,0 +1,122 @@
+<app-activity-header active="dnevnik"></app-activity-header>
+
+<div class="container mt-16">
+  <div
+    fxLayout="row"
+    fxLayout.lt-sm="column"
+    [formGroup]="filters"
+    fxLayoutGap="16px"
+  >
+    <mat-form-field class="no-hint infix-width-auto" fxFlex>
+      <mat-label>Časovno obdobje</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input
+          matStartDate
+          formControlName="dateFrom"
+          placeholder="Start date"
+        />
+        <input matEndDate formControlName="dateTo" placeholder="End date" />
+      </mat-date-range-input>
+      <div matSuffix fxLayout="row">
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="filters.value.dateFrom != null || filters.value.dateTo != null"
+          (click)="filters.patchValue({ dateFrom: null, dateTo: null })"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      </div>
+
+      <mat-date-range-picker #picker></mat-date-range-picker>
+
+      <mat-error
+        *ngIf="filters.controls.dateFrom.hasError('matStartDateInvalid')"
+        >Neveljaven začetni datum</mat-error
+      >
+      <mat-error *ngIf="filters.controls.dateTo.hasError('matEndDateInvalid')"
+        >Neveljaven končni datum</mat-error
+      >
+    </mat-form-field>
+
+    <mat-form-field class="no-hint infix-width-auto" fxFlex>
+      <mat-label>Vrsta aktivnosti</mat-label>
+      <mat-select formControlName="type" multiple>
+        <mat-option *ngFor="let type of activityTypes" [value]="type.value"
+          >{{ type.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="forCrag" fxFlex>
+      <mat-label>Plezališče</mat-label>
+      <input matInput disabled [value]="forCrag.name" />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="filters.patchValue({ cragId: null })"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <button
+      [routerLink]="['/plezalni-dnevnik/vpis']"
+      mat-button
+      color="primary"
+    >
+      Dodaj vnos
+    </button>
+  </div>
+
+  <div class="card has-loader scrollable-table mt-16">
+    <div class="card-loader" *ngIf="loading">
+      <app-loader></app-loader>
+    </div>
+
+    <table class="card-table">
+      <tr class="row header">
+        <td *ngFor="let column of filteredTable.columns">
+          <span
+            *ngIf="column.sortable"
+            class="sortable"
+            [class.sorted]="filteredTable.sortColumn == column.name"
+            (click)="filteredTable.sort(column)"
+          >
+            {{ column.label }}
+            <mat-icon inline *ngIf="filteredTable.sortColumn != column.name"
+              >sort</mat-icon
+            >
+            <mat-icon inline *ngIf="filteredTable.sortColumn == column.name">{{
+              filteredTable.sortDirection == "DESC"
+                ? "arrow_downward"
+                : "arrow_upward"
+            }}</mat-icon>
+          </span>
+          <span *ngIf="!column.sortable">{{ column.label }}</span>
+        </td>
+        <td></td>
+      </tr>
+
+      <tr
+        class="row"
+        *ngFor="let activity of activities"
+        app-activity-row
+        [activity]="activity"
+        [rowAction]="rowAction$"
+      ></tr>
+    </table>
+  </div>
+
+  <mat-paginator
+    *ngIf="pagination != null"
+    hidePageSize
+    showFirstLastButtons
+    [length]="pagination.itemCount"
+    [pageIndex]="pagination.pageNumber - 1"
+    [pageSize]="pagination.pageSize"
+    (page)="filteredTable.paginate($event)"
+  >
+  </mat-paginator>
+</div>

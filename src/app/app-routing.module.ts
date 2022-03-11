@@ -10,15 +10,10 @@ import { RegisterComponent } from './pages/account/register/register.component';
 import { ConfirmAccountComponent } from './pages/account/confirm-account/confirm-account.component';
 import { SelectPasswordComponent } from './pages/account/select-password/select-password.component';
 import { RouteComponent } from './pages/route/route.component';
-import { ActivityLogComponent } from './pages/activity/activity-log/activity-log.component';
-import { ActivityRoutesComponent } from './pages/activity/activity-routes/activity-routes.component';
-import { ActivityStatisticsComponent } from './pages/activity/activity-statistics/activity-statistics.component';
 import { ClubsComponent } from './pages/clubs/clubs.component';
 import { ClubMembersComponent } from './pages/club/club-members/club-members.component';
 import { ClubActivityRoutesComponent } from './pages/club/club-activity-routes/club-activity-routes.component';
 import { ClubComponent } from './pages/club/club.component';
-import { ActivityEntryComponent } from './pages/activity/activity-entry/activity-entry.component';
-import { ActivityInputComponent } from './pages/activity/activity-input/activity-input.component';
 import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
 import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
 import { AlpinismComponent } from './pages/alpinism/alpinism.component';
@@ -57,31 +52,6 @@ const routes: Routes = [
     component: ConfirmClubMembershipComponent,
   },
   {
-    path: 'plezalni-dnevnik',
-    component: ActivityLogComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'plezalni-dnevnik/vzponi',
-    component: ActivityRoutesComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'plezalni-dnevnik/statistika',
-    component: ActivityStatisticsComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'plezalni-dnevnik/vpis',
-    component: ActivityInputComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'plezalni-dnevnik/:id',
-    component: ActivityEntryComponent,
-    canActivate: [AuthGuard],
-  },
-  {
     path: 'aktivacija/:id/:token',
     component: ConfirmAccountComponent,
   },
@@ -117,6 +87,11 @@ const routes: Routes = [
   {
     path: 'iskanje/:search',
     component: SearchResultsComponent,
+  },
+  {
+    path: 'plezalni-dnevnik',
+    loadChildren: () =>
+      import('./activity/activity.module').then((m) => m.ActivityModule),
   },
   {
     path: 'admin',

@@ -34,7 +34,9 @@
 
       <a mat-button [matMenuTriggerFor]="alpinismMenu">Alpinizem</a>
 
-      <a mat-button [routerLink]="['/plezalni-dnevnik']">Plezalni dnevnik</a>
+      <a mat-button [routerLink]="['/plezalni-dnevnik/vzponi']"
+        >Plezalni dnevnik</a
+      >
       <a *ngIf="!(user != null)" mat-button (click)="login()">Prijava</a>
       <a
         *ngIf="user != null"

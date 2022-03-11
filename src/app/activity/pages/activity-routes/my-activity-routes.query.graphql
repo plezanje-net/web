@@ -1,0 +1,42 @@
+query MyActivityRoutes($input: FindActivityRoutesInput) {
+  myActivityRoutes(input: $input) {
+    items {
+      id
+      date
+      ascentType
+      notes
+      partner
+      publish
+      activity {
+        id
+      }
+      route {
+        crag {
+          id
+          name
+          slug
+          country {
+            slug
+          }
+        }
+        difficulty
+        defaultGradingSystem {
+          id
+        }
+        name
+        slug
+        id
+      }
+      pitch {
+        number
+        difficulty
+      }
+    }
+    meta {
+      itemCount
+      pageCount
+      pageNumber
+      pageSize
+    }
+  }
+}

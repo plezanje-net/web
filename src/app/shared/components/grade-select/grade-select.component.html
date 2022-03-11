@@ -1,4 +1,4 @@
-<mat-form-field class="w-100">
+<mat-form-field class="w-100" [class.no-hint]="noHint">
   <mat-label>{{ label }}</mat-label>
   <mat-select [formControl]="control">
     <mat-option>
@@ -8,9 +8,9 @@
         noEntriesFoundLabel="Ocena ne obstaja"
       ></ngx-mat-select-search>
     </mat-option>
-    <mat-option *ngIf="!gradeFilterControl.value" [value]="null"
-      >Brez ocene</mat-option
-    >
+    <mat-option *ngIf="!gradeFilterControl.value" [value]="null">{{
+      emptyText
+    }}</mat-option>
     <mat-option
       *ngFor="let grade of filteredGrades"
       [value]="grade.difficulty"

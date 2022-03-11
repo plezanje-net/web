@@ -1,0 +1,30 @@
+query MyActivities($input: FindActivitiesInput) {
+  myActivities(input: $input) {
+    items {
+      id
+      name
+      date
+      type
+      duration
+      routes {
+        route {
+          difficulty
+        }
+      }
+      crag {
+        id
+        name
+        slug
+        country {
+          slug
+        }
+      }
+    }
+    meta {
+      itemCount
+      pageCount
+      pageNumber
+      pageSize
+    }
+  }
+}

@@ -17,8 +17,10 @@ import { GradingSystemsService } from '../../services/grading-systems.service';
 })
 export class GradeSelectComponent implements OnInit, OnChanges {
   @Input() label: string;
+  @Input() emptyText: string = 'Brez ocene';
   @Input() control: FormControl;
   @Input() gradingSystemId: string;
+  @Input() noHint = false;
 
   allGrades: GradingSystemsQuery['gradingSystems'][0]['grades'];
   filteredGrades: GradingSystemsQuery['gradingSystems'][0]['grades'];

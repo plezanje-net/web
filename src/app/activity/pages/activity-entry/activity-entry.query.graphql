@@ -1,0 +1,51 @@
+query ActivityEntry($id: String!) {
+  activity(id: $id) {
+    id
+    name
+    date
+    type
+    notes
+    partners
+    duration
+    routes {
+      id
+      date
+      ascentType
+      notes
+      partner
+      publish
+      activity {
+        id
+      }
+      route {
+        defaultGradingSystem {
+          id
+        }
+        difficulty
+        crag {
+          id
+          name
+          slug
+          country {
+            slug
+          }
+        }
+        name
+        id
+        slug
+      }
+      pitch {
+        number
+        difficulty
+      }
+    }
+    crag {
+      id
+      name
+      slug
+      country {
+        slug
+      }
+    }
+  }
+}
