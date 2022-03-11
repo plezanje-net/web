@@ -95,6 +95,10 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
           (ascentType) =>
             this.ascents[route.id] == ascentType.value && ascentType.tick
         ),
+        // TODO: add this info to ASCENT_TYPES constant
+        trTicked: ['t_flash', 't_onsight', 't_redpoint', 't_repeat'].includes(
+          this.ascents[route.id]
+        ),
       }));
 
       this.localStorageService.setItem(
@@ -145,6 +149,8 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       })
       .then((success) => {
         if (success) {
+          // TODO: some dry refactor?
+
           // Append users previous activity (summary) to the routes that are being logged
           const selectedRoutesWTouch = this.selectedRoutes.map((route) => ({
             ...route,
@@ -153,6 +159,12 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
               (ascentType) =>
                 this.ascents[route.id] == ascentType.value && ascentType.tick
             ),
+            trTicked: [
+              't_flash',
+              't_onsight',
+              't_redpoint',
+              't_repeat',
+            ].includes(this.ascents[route.id]),
           }));
 
           this.addRoutesToLocalStorage(selectedRoutesWTouch);

@@ -15,6 +15,14 @@ export class ActivityFormService {
     ASCENT_TYPES.filter((at) => at.tick).map((at) => at.value)
   );
 
+  // TODO: expand ASCENT_TYPES constants to hold this as a flag
+  trTickAscentTypes = new Set([
+    't_onsight',
+    't_flash',
+    't_repeat',
+    't_redpoint',
+  ]);
+
   constructor() {}
 
   initialize(routes: FormArray) {
@@ -71,6 +79,11 @@ export class ActivityFormService {
           possibleAscentTypes.add('repeat');
           possibleAscentTypes.add('t_repeat');
         }
+
+        if (this.trTickAscentTypes.has(routeFormGroup.value.ascentType)) {
+          possibleAscentTypes.delete('t_redpoint');
+          possibleAscentTypes.add('t_repeat');
+        }
       }
 
       // if the passed in route index is the same as the routesFormArray index then we are at the route for which we are deciding if a log is possible. check if the type is in the set and return the answer
@@ -86,6 +99,10 @@ export class ActivityFormService {
           possibleAscentTypes.delete('redpoint');
           possibleAscentTypes.delete('t_redpoint');
           possibleAscentTypes.add('repeat');
+          possibleAscentTypes.add('t_repeat');
+        }
+        if (routeFormGroup.value.trTicked) {
+          possibleAscentTypes.delete('t_redpoint');
           possibleAscentTypes.add('t_repeat');
         }
 
