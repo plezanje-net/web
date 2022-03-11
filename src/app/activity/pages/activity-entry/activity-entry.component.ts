@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { formatDate } from '@angular/common';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { concatMap, filter, Subject, switchMap } from 'rxjs';
+import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from 'src/app/types/data-error';
 import { Registry } from 'src/app/types/registry';
 import {
@@ -38,7 +40,9 @@ export class ActivityEntryComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
-    private authService: AuthService
+    private authService: AuthService,
+    private layoutService: LayoutService,
+    @Inject(LOCALE_ID) public locale: string
   ) {}
 
   ngOnInit(): void {
@@ -57,6 +61,21 @@ export class ActivityEntryComponent implements OnInit {
             this.activityType = ACTIVITY_TYPES.find(
               (t) => t.value == result.data.activity.type
             );
+
+            this.layoutService.$breadcrumbs.next([
+              {
+                name: 'Plezalni dnevnik',
+                path: 'plezalni-dnevnik',
+              },
+              {
+                name:
+                  formatDate(this.activity.date, 'dd.MM.YYYY', this.locale) +
+                  ', ' +
+                  this.activityType.label +
+                  ': ' +
+                  this.activity.name,
+              },
+            ]);
           },
           error: () => {
             this.loading = false;
