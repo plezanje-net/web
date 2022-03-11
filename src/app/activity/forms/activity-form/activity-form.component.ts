@@ -83,7 +83,10 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     this.activityForm.patchValue({ date: moment(), type: this.type });
 
     if (this.crag != null) {
-      this.activityForm.patchValue({ name: this.crag.name });
+      this.activityForm.patchValue({
+        name: this.crag.name,
+        cragId: this.crag.id,
+      });
     }
   }
 
