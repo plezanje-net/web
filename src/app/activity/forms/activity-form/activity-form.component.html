@@ -1,7 +1,6 @@
 <form [formGroup]="activityForm" (submit)="save()">
   <div class="mt-16" *ngIf="type == 'crag'">
     <mat-radio-group
-      aria-label="Select an option"
       fxLayout="row"
       fxLayoutAlign="start start"
       formControlName="onlyRoutes"
@@ -52,7 +51,7 @@
           fxFlex="50"
           class.no-hint="activityForm.value.type != 'crag' || type != 'crag'"
         >
-          <mat-label>Vrsta vnosa</mat-label>
+          <mat-label>Vrsta aktivnosti</mat-label>
           <mat-select formControlName="type">
             <mat-option
               *ngFor="let option of typeOptions"
