@@ -16,7 +16,7 @@
   <ng-container *ngIf="activity.type == 'crag' && activity.crag != null">{{
     activity.routes.length | pluralizeNoun: "smer"
   }}</ng-container>
-  <ng-container *ngIf="activity.duration != null"
+  <ng-container *ngIf="activity.duration"
     >{{ activity.duration }} min</ng-container
   >
 </td>
