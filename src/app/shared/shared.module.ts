@@ -75,7 +75,7 @@ import { AscentPublishOptionComponent } from './components/ascent-publish-option
     MatDatepickerModule,
     MatInputModule,
   ],
-  providers: [CustomBreakpointsProvider],
+  providers: [CustomBreakpointsProvider, GenderizeVerbPipe],
   exports: [
     EditorComponent,
     SnackBarButtonsComponent,

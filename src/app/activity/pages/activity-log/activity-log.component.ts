@@ -18,6 +18,7 @@ import { FilteredTable } from 'src/app/common/filtered-table';
 import { LayoutService } from 'src/app/services/layout.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { DataError } from 'src/app/types/data-error';
+import { GenderizeVerbPipe } from 'src/app/shared/pipes/genderize-verb.pipe';
 import {
   Activity,
   ActivityFiltersCragGQL,
@@ -89,7 +90,8 @@ export class ActivityLogComponent implements OnInit, OnDestroy {
     private layoutService: LayoutService,
     private myActivitiesGQL: MyActivitiesGQL,
     private activityFiltersCragGQL: ActivityFiltersCragGQL,
-    private deleteActivityGQL: DeleteActivityGQL
+    private deleteActivityGQL: DeleteActivityGQL,
+    private genderizeVerbPipe: GenderizeVerbPipe
   ) {}
 
   ngOnInit(): void {
@@ -188,18 +190,32 @@ export class ActivityLogComponent implements OnInit, OnDestroy {
   deleteActivity(activity: Activity) {
     this.authService.currentUser
       .pipe(
-        concatMap((user) =>
-          this.dialog
+        concatMap((user) => {
+          console.log(activity);
+          return this.dialog
             .open(ConfirmationDialogComponent, {
               data: {
                 title: 'Brisanje vnosa',
-                message: `Si prepričan${
-                  user.gender == 'F' ? 'a' : ''
-                }, da želiš izbrisati ta vnos?`,
+                message: `Si ${this.genderizeVerbPipe.transform(
+                  'prepričan',
+                  user.gender
+                )}, da želiš izbrisati ta vnos?`,
+                finePrint:
+                  activity.type === 'crag' && activity.crag
+                    ? `Z brisanjem vnosa boš ${this.genderizeVerbPipe.transform(
+                        'pobrisal',
+                        user.gender
+                      )} tudi vse smeri v tem plezalnem dnevu.<br/>
+                Če plezalni dan vsebuje vnos smeri, ki pomeni tvoj prvi uspeši vzpon v tej smeri, lahko pride do avtomatske spremembe tipa vzpona pri tvojih drugih vnosih za to smer.<br/>
+                Če plezalni dan vsebuje vnos smeri, ki pomeni tvoj edini uspešni vzpon v tej smeri, boš s tem ${this.genderizeVerbPipe.transform(
+                  'pobrisal',
+                  user.gender
+                )} tudi svoj glas o težavnosti te smeri in svojo oceno lepote te smeri.`
+                    : null,
               },
             })
-            .afterClosed()
-        ),
+            .afterClosed();
+        }),
         filter((response) => response != null),
         switchMap(() =>
           this.deleteActivityGQL.mutate(

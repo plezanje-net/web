@@ -1,4 +1,11 @@
-<mat-dialog-content>{{ data.message }}</mat-dialog-content>
+<mat-dialog-content>
+  {{ data.message }}
+  <div
+    *ngIf="data.finePrint"
+    class="fine-print"
+    [innerHtml]="data.finePrint"
+  ></div>
+</mat-dialog-content>
 <mat-dialog-actions align="end">
   <button type="button" mat-button [mat-dialog-close]="null">Prekliči</button>
   <button mat-button color="primary" cdkFocusInitial [mat-dialog-close]="true">

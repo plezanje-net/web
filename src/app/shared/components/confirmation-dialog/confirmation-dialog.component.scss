@@ -1,3 +1,5 @@
+@import "../../../../styles/colors.scss";
+
 .mat-dialog-content {
   width: 400px;
   max-width: 100%;
@@ -5,4 +7,9 @@
 .mat-dialog-actions {
   margin-bottom: -12px;
   margin-top: 12px;
+}
+.fine-print {
+  margin-top: 16px;
+  color: $text-gray;
+  font-size: 13px;
 }
