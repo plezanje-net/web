@@ -19,6 +19,7 @@ import {
 } from 'src/app/common/activity.constants';
 import { LayoutService } from 'src/app/services/layout.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
+import { GenderizeVerbPipe } from 'src/app/shared/pipes/genderize-verb.pipe';
 import { DataError } from 'src/app/types/data-error';
 import {
   ActivityRoute,
@@ -98,6 +99,7 @@ export class ActivityRoutesComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
+    private genderizeVerbPipe: GenderizeVerbPipe,
     private myActivityRoutesGQL: MyActivityRoutesGQL,
     private activityFiltersCragGQL: ActivityFiltersCragGQL,
     private activityFiltersRouteGQL: ActivityFiltersRouteGQL,
@@ -231,18 +233,44 @@ export class ActivityRoutesComponent implements OnInit, OnDestroy {
   deleteActivityRoute(activityRoute: ActivityRoute) {
     this.authService.currentUser
       .pipe(
-        concatMap((user) =>
-          this.dialog
+        concatMap((user) => {
+          let finePrint = '';
+
+          finePrint += ['redpoint', 'flash', 'onsight'].includes(
+            activityRoute.ascentType
+          )
+            ? `Ker je to tvoj prvi uspešni vzpon v tej smeri, lahko pride do avtomatske spremembe tipa vzpona pri tvojih drugih vnosih za to smer.`
+            : '';
+
+          finePrint += ['t_redpoint', 't_flash', 't_onsight'].includes(
+            activityRoute.ascentType
+          )
+            ? `Ker je to tvoj prvi uspešni toprope vzpon v tej smeri, lahko pride do avtomatske spremembe tipa vzpona pri tvojih drugih vnosih za to smer.`
+            : '';
+
+          finePrint += ['redpoint', 'flash', 'onsight'].includes(
+            activityRoute.ascentType
+          )
+            ? `<br/>
+            Če je to tvoj edini uspešni vzpon v tej smeri, boš s tem ${this.genderizeVerbPipe.transform(
+              'pobrisal',
+              user.gender
+            )} tudi svoj glas o težavnosti te smeri in svojo oceno lepote te smeri.`
+            : ``;
+
+          return this.dialog
             .open(ConfirmationDialogComponent, {
               data: {
                 title: 'Brisanje vzpona',
-                message: `Si prepričan${
-                  user.gender == 'F' ? 'a' : ''
-                }, da želiš izbrisati ta vzpon?`,
+                message: `Si ${this.genderizeVerbPipe.transform(
+                  'prepričan',
+                  user.gender
+                )}, da želiš izbrisati ta vzpon?`,
+                finePrint: finePrint,
               },
             })
-            .afterClosed()
-        ),
+            .afterClosed();
+        }),
         filter((response) => response != null),
         switchMap(() =>
           this.deleteActivityRouteGQL.mutate(

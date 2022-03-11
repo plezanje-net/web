@@ -190,9 +190,8 @@ export class ActivityLogComponent implements OnInit, OnDestroy {
   deleteActivity(activity: Activity) {
     this.authService.currentUser
       .pipe(
-        concatMap((user) => {
-          console.log(activity);
-          return this.dialog
+        concatMap((user) =>
+          this.dialog
             .open(ConfirmationDialogComponent, {
               data: {
                 title: 'Brisanje vnosa',
@@ -206,7 +205,7 @@ export class ActivityLogComponent implements OnInit, OnDestroy {
                         'pobrisal',
                         user.gender
                       )} tudi vse smeri v tem plezalnem dnevu.<br/>
-                Če plezalni dan vsebuje vnos smeri, ki pomeni tvoj prvi uspeši vzpon v tej smeri, lahko pride do avtomatske spremembe tipa vzpona pri tvojih drugih vnosih za to smer.<br/>
+                Če plezalni dan vsebuje vnos smeri, ki pomeni tvoj prvi uspešni vzpon v tej smeri, lahko pride do avtomatske spremembe tipa vzpona pri tvojih drugih vnosih za to smer.<br/>
                 Če plezalni dan vsebuje vnos smeri, ki pomeni tvoj edini uspešni vzpon v tej smeri, boš s tem ${this.genderizeVerbPipe.transform(
                   'pobrisal',
                   user.gender
@@ -214,8 +213,8 @@ export class ActivityLogComponent implements OnInit, OnDestroy {
                     : null,
               },
             })
-            .afterClosed();
-        }),
+            .afterClosed()
+        ),
         filter((response) => response != null),
         switchMap(() =>
           this.deleteActivityGQL.mutate(
