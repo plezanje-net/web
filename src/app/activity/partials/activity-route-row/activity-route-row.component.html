@@ -21,14 +21,18 @@
 
 <td>
   <span *ngIf="route.pitch; else notPitchOnly">
+    <span *ngIf="route.pitch.isProject">P</span>
     <app-grade
+      *ngIf="!route.pitch.isProject"
       [difficulty]="route.pitch.difficulty"
       [gradingSystemId]="route.route.defaultGradingSystem.id"
       [showModifier]="true"
     ></app-grade>
   </span>
   <ng-template #notPitchOnly>
+    <span *ngIf="route.route.isProject">P</span>
     <app-grade
+      *ngIf="!route.route.isProject"
       [difficulty]="route.route.difficulty"
       [gradingSystemId]="route.route.defaultGradingSystem.id"
       [showModifier]="true"

@@ -56,6 +56,7 @@
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
       <button
+        *ngIf="this.activityFormService.numOfRoutes > 1"
         type="button"
         mat-icon-button
         (click)="move.emit(0)"
@@ -75,15 +76,14 @@
           <mat-select-trigger>{{ ascentTypeTrigger }}</mat-select-trigger>
           <ng-container *ngFor="let type of nonTopRopeAscentTypes">
             <mat-option
-              *ngIf="
-                !(route.value.type == 'boulder' && type.value == 'onsight')
-              "
+              *ngIf="logPossibleEver(type.value)"
               [value]="type.value"
               [disabled]="
-                (route.value.ticked && type.value == 'redpoint') ||
-                (route.value.tried &&
-                  (type.value == 'onsight' || type.value == 'flash')) ||
-                (route.value.type == 'boulder' && type.value == 'onsight')
+                !activityFormService.logPossible(
+                  type.value,
+                  myIndex,
+                  route.value.routeId
+                )
               "
               >{{ type.label }}
             </mat-option>
@@ -91,15 +91,14 @@
           <mat-optgroup label="Top rope">
             <ng-container *ngFor="let type of topRopeAscentTypes">
               <mat-option
-                *ngIf="
-                  !(route.value.type == 'boulder' && type.value == 't_onsight')
-                "
+                *ngIf="logPossibleEver(type.value)"
                 [value]="type.value"
                 [disabled]="
-                  (route.value.ticked && type.value == 't_redpoint') ||
-                  ((type.value == 't_onsight' || type.value == 't_flash') &&
-                    route.value.tried) ||
-                  (route.value.type == 'boulder' && type.value == 't_onsight')
+                  !activityFormService.logPossible(
+                    type.value,
+                    myIndex,
+                    route.value.routeId
+                  )
                 "
                 >{{ type.label }}
               </mat-option>

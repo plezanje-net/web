@@ -14,6 +14,7 @@ import {
 } from '../../../../common/activity.constants';
 import { Crag } from 'src/generated/graphql';
 import { Subject, takeUntil } from 'rxjs';
+import { ActivityFormService } from '../activity-form.service';
 
 @Component({
   selector: 'app-activity-form-route',
@@ -23,6 +24,7 @@ import { Subject, takeUntil } from 'rxjs';
 export class ActivityFormRouteComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
+  @Input() myIndex: number;
   @Input() activity = true;
   @Input() route: FormGroup;
   @Input() first: boolean;
@@ -39,7 +41,7 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
 
   publishOptions = PUBLISH_OPTIONS;
 
-  constructor() {}
+  constructor(public activityFormService: ActivityFormService) {}
 
   ngOnInit(): void {
     this.route.controls.publish.valueChanges
@@ -60,20 +62,18 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
         }
       });
 
-    // should disable possibility to vote on route if ascent type not a tick
+    // Should disable possibility to vote on route if ascent type not a tick.
     const ascentTypeSelected = this.route.get('ascentType').value;
-    this.conditionallyDisableVotedDifficulty(ascentTypeSelected);
     this.setAscentTypeTriggerValue(ascentTypeSelected);
 
     this.route
       .get('ascentType')
       .valueChanges.pipe(takeUntil(this.destroy$))
       .subscribe((at) => {
-        this.conditionallyDisableVotedDifficulty(at);
         this.setAscentTypeTriggerValue(at);
       });
 
-    // if a route is a project than a vote on diff should always be cast
+    // If a route is a project then a vote on diff should always be cast.
     if (this.route.get('isProject').value) {
       this.conditionallyRequireVotedDifficulty(ascentTypeSelected);
 
@@ -103,22 +103,20 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * determines if a log could ever be possible based on route type and some ascent type
    *
-   * @param ascentTypeSelected
-   *
-   * Make voting on difficulty possible only if a user is ticking a route
+   * @param ascentType
+   * @returns boolean
    */
-  conditionallyDisableVotedDifficulty(ascentTypeSelected: string) {
-    const isTick = ASCENT_TYPES.some(
-      (at) => at.value === ascentTypeSelected && at.tick
-    );
-    // Only if route is being newly ticked or repeated (which also is a tick) can one cast a vote on difficulty (i.e. new vote or modifying existing one)
-    if (isTick) {
-      this.route.get('votedDifficulty').enable();
-    } else {
-      this.route.get('votedDifficulty').setValue(null);
-      this.route.get('votedDifficulty').disable();
+  logPossibleEver(ascentType: string) {
+    if (
+      this.route.value.type === 'boulder' &&
+      ['onsight', 't_onsight'].includes(ascentType)
+    ) {
+      return false;
     }
+
+    return true;
   }
 
   /**

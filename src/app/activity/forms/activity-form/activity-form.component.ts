@@ -5,13 +5,14 @@ import {
   Crag,
   CreateActivityGQL,
   IceFall,
-  namedOperations,
   Peak,
   Route,
 } from 'src/generated/graphql';
 import moment from 'moment';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { ActivityFormService } from './activity-form.service';
+import { filter } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { ACTIVITY_TYPES } from 'src/app/common/activity.constants';
 import { Location } from '@angular/common';
@@ -22,6 +23,12 @@ import { Location } from '@angular/common';
   styleUrls: ['./activity-form.component.scss'],
 })
 export class ActivityFormComponent implements OnInit, OnDestroy {
+  @Input() type: string;
+  @Input() crag: Crag;
+  @Input() selectedRoutes: Route[];
+  @Input() peak: Peak;
+  @Input() iceFall: IceFall;
+
   loading: boolean = false;
 
   routes = new FormArray([]);
@@ -44,11 +51,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     routes: this.routes,
   });
 
-  @Input() type: string;
-  @Input() crag: Crag;
-  @Input() selectedRoutes: Route[];
-  @Input() peak: Peak;
-  @Input() iceFall: IceFall;
+  afMutex = false;
 
   subscriptions: Subscription[] = [];
 
@@ -56,9 +59,10 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private createActivityGQL: CreateActivityGQL,
     private router: Router,
-    public location: Location,
     private activatedRoute: ActivatedRoute,
-    private localStorageService: LocalStorageService
+    public location: Location,
+    private localStorageService: LocalStorageService,
+    private activityFormService: ActivityFormService
   ) {}
 
   ngOnInit(): void {
@@ -88,6 +92,15 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         cragId: this.crag.id,
       });
     }
+
+    this.activityFormService.initialize(this.routes);
+    this.activityForm.valueChanges
+      .pipe(filter(() => !this.afMutex))
+      .subscribe(() => {
+        this.afMutex = true;
+        this.activityFormService.conditionallyDisableVotedDifficultyInputs();
+        this.afMutex = false;
+      });
   }
 
   ngOnDestroy(): void {
@@ -106,11 +119,12 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         routeId: new FormControl(route.id),
         name: new FormControl(route.name),
         slug: new FormControl(route.slug),
-        grade: new FormControl(route.grade),
         difficulty: new FormControl(route.difficulty),
         defaultGradingSystemId: new FormControl(route.defaultGradingSystem.id),
         isProject: new FormControl(route.isProject),
-        ascentType: new FormControl(!route?.ticked ? 'redpoint' : 'repeat'),
+        ascentType: new FormControl(!route?.ticked ? 'redpoint' : 'repeat', [
+          Validators.required,
+        ]),
         date: new FormControl(),
         partner: new FormControl(),
         publish: new FormControl('public'),
@@ -119,31 +133,45 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         votedDifficulty: new FormControl(),
         ticked: new FormControl(route.ticked),
         tried: new FormControl(route.tried),
-        type: new FormControl(route.type),
+        trTicked: new FormControl(route.trTicked),
+        type: new FormControl(route.routeType.id),
       })
     );
   }
 
   moveRoute(routeIndex: number, direction: number): void {
-    if (direction === 0) {
-      this.routes.controls.splice(routeIndex, 1);
-      return;
+    switch (direction) {
+      case 0:
+        // delete the route at routeIndex
+        this.routes.removeAt(routeIndex);
+        break;
+      case 2:
+        // add a copy of the same route
+        const routeFormGroupOriginal = <FormGroup>this.routes.at(routeIndex);
+        const routeFormGroupCopy = this.copyFormFroup(routeFormGroupOriginal);
+        this.routes.insert(routeIndex + 1, routeFormGroupCopy);
+        break;
+      default:
+        // switch position of adjacent routes
+        const temp = this.routes.controls[routeIndex + direction];
+        this.routes.controls[routeIndex + direction] =
+          this.routes.controls[routeIndex];
+        this.routes.controls[routeIndex] = temp;
     }
+  }
 
-    if (direction === 2) {
-      this.routes.controls.splice(
-        routeIndex,
-        0,
-        this.routes.controls[routeIndex]
-      );
-      return;
-    }
-
-    const temp = this.routes.controls[routeIndex + direction];
-
-    this.routes.controls[routeIndex + direction] =
-      this.routes.controls[routeIndex];
-    this.routes.controls[routeIndex] = temp;
+  private copyFormFroup(formGroupOriginal: FormGroup) {
+    const formGroupData = Object.keys(formGroupOriginal.controls).reduce(
+      (fgData, key) => {
+        fgData[key] = new FormControl(
+          formGroupOriginal.get(key).value,
+          formGroupOriginal.get(key).validator
+        );
+        return fgData;
+      },
+      {}
+    );
+    return new FormGroup(formGroupData);
   }
 
   save(): void {
