@@ -1,7 +1,20 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { IDistribution } from 'src/app/common/distribution-chart/distribution-chart.component';
-import { getGradeDistribution } from 'src/app/common/grade-distribution';
-import { RouteCommentsGQL, RouteCommentsQuery, RouteDifficultyVotesGQL, RouteDifficultyVotesQuery } from 'src/generated/graphql';
+import {
+  RouteCommentsGQL,
+  RouteCommentsQuery,
+  RouteDifficultyVotesGQL,
+  RouteDifficultyVotesQuery,
+} from 'src/generated/graphql';
+import { GradeDistributionService } from 'src/app/shared/services/grade-distribution.service';
 
 @Component({
   selector: 'app-crag-route-preview',
@@ -9,20 +22,24 @@ import { RouteCommentsGQL, RouteCommentsQuery, RouteDifficultyVotesGQL, RouteDif
   styleUrls: ['./crag-route-preview.component.scss'],
 })
 export class CragRoutePreviewComponent implements OnChanges {
-  gradeDistribution: IDistribution[];
+  gradeDistribution: IDistribution[] = [];
   gradeDistributionLoading: boolean;
   routeComments: Record<string, string | any>[];
   routeCommentsLoading: boolean;
-  childViewsInitialized = {
-    grades: false,
-    comments: false,
-  };
+
+  childViewsInitialized = {};
+  _routeCommentsInitialized: boolean | null;
+  _routeGradesInitialized: boolean | null;
 
   @Input() routeId: string;
   @Output() heightChangeEvent = new EventEmitter<number>();
   @ViewChild('container') container: ElementRef;
 
-  constructor(private routeCommentsGQL: RouteCommentsGQL, private routeDifficultyVotesGQL: RouteDifficultyVotesGQL) {}
+  constructor(
+    private routeCommentsGQL: RouteCommentsGQL,
+    private routeDifficultyVotesGQL: RouteDifficultyVotesGQL,
+    private gradeDistributionService: GradeDistributionService
+  ) {}
 
   ngOnChanges(): void {
     if (this.routeId) {
@@ -34,53 +51,89 @@ export class CragRoutePreviewComponent implements OnChanges {
   fetchDifficultyVotesDistribution(routeId: string): void {
     this.gradeDistributionLoading = true;
 
-    this.routeDifficultyVotesGQL.watch({ routeId }).valueChanges.subscribe((result) => {
-      this.gradeDistributionLoading = false;
+    this.routeDifficultyVotesGQL
+      .watch({ routeId })
+      .valueChanges.subscribe((result) => {
+        this.gradeDistributionLoading = false;
 
-      if (!result.errors) {
-        this.routeDiffVotesQuerySuccess(result.data);
-      } else {
-        this.routeDiffVotesQueryError();
-      }
-    });
+        if (!result.errors) {
+          this.routeDiffVotesQuerySuccess(result.data);
+        } else {
+          console.error('Error fetching route difficulty votes');
+        }
+      });
   }
 
   routeDiffVotesQuerySuccess(queryData: RouteDifficultyVotesQuery): void {
-    this.gradeDistribution = getGradeDistribution(queryData.route.difficultyVotes);
-  }
+    this.gradeDistributionService
+      .getDistribution(
+        queryData.route.difficultyVotes,
+        queryData.route.defaultGradingSystem.id
+      )
+      .then((dist: IDistribution[]) => {
+        this.gradeDistribution = dist;
+      });
 
-  routeDiffVotesQueryError(): void {
-    console.error('TODO');
+    if (this.gradeDistribution.length) {
+      this.routeGradesInitialized = false;
+    } else {
+      this.routeGradesInitialized = null;
+    }
   }
 
   fetchRouteComments(routeId: string): void {
     this.routeCommentsLoading = true;
 
-    this.routeCommentsGQL.watch({ routeId: routeId }).valueChanges.subscribe((result) => {
-      this.routeCommentsLoading = false;
+    this.routeCommentsGQL
+      .watch({ routeId: routeId })
+      .valueChanges.subscribe((result) => {
+        this.routeCommentsLoading = false;
 
-      if (!result.errors) {
-        this.routeCommentsQuerySuccess(result.data);
-      } else {
-        this.routeCommentsQueryError();
-      }
-    });
+        if (!result.errors) {
+          this.routeCommentsQuerySuccess(result.data);
+        } else {
+          console.error('Error fetching route comments');
+        }
+      });
   }
 
   routeCommentsQuerySuccess(queryData: RouteCommentsQuery): void {
     this.routeComments = queryData.route.comments;
-    // TODO filter out conditions and warnings? ask in slack
+
+    if (this.routeComments.length) {
+      this.routeCommentsInitialized = false;
+    } else {
+      this.routeCommentsInitialized = null;
+    }
   }
 
-  routeCommentsQueryError(): void {
-    console.error('TODO');
+  get routeGradesInitialized() {
+    return this._routeGradesInitialized;
   }
 
-  onChildViewInit(child: string): void {
-    this.childViewsInitialized[child] = true;
+  get routeCommentsInitialized() {
+    return this._routeCommentsInitialized;
+  }
 
-    if (!Object.values(this.childViewsInitialized).includes(false)) {
-      this.heightChangeEvent.emit((this.container.nativeElement as HTMLDivElement).clientHeight);
+  set routeGradesInitialized(value: boolean | null) {
+    this._routeGradesInitialized = value;
+    this.afterChildInitialized();
+  }
+
+  set routeCommentsInitialized(value: boolean | null) {
+    this._routeCommentsInitialized = value;
+    this.afterChildInitialized();
+  }
+
+  afterChildInitialized() {
+    if (
+      ![this.routeCommentsInitialized, this.routeGradesInitialized].some(
+        (childInitialized) => childInitialized === false
+      )
+    ) {
+      this.heightChangeEvent.emit(
+        (this.container.nativeElement as HTMLDivElement).clientHeight
+      );
     }
   }
 }

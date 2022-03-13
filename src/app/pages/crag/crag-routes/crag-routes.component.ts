@@ -27,12 +27,9 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   selectedRoutes: Route[] = [];
   selectedRoutesIds: string[] = [];
   ascents: any = {};
-  difficultyVotesLoading: boolean;
-  difficultyVotes: Record<string, string | any>[];
   loading = false;
   expandedRowId: string;
   previousExpandedRowId: string;
-  gradeDistribution: IDistribution[];
   expandedRowHeight: number;
 
   section: string;
@@ -70,6 +67,10 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.snackBar.dismiss();
+  }
+
+  onCheckBoxClick(event: Event) {
+    event.stopPropagation();
   }
 
   changeSelection(route: Route): void {
@@ -200,14 +201,25 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       this.previousExpandedRowId = this.expandedRowId;
       this.expandedRowId = null;
     } else {
-      // TODO move saved comments and votes to previous comments and votes
       this.previousExpandedRowId = this.expandedRowId;
       this.expandedRowId = routeId;
     }
+
+    setTimeout(() => {
+      /**
+       * After the animation is finished, the previous row ID should be nulled.
+       * This ensures that, if the user will click on the same (previous) row again, it will be rendered again and not just reused.
+       * This should set the height for the animation properly.
+       */
+      this.previousExpandedRowId = null;
+    }, 300);
   }
 
   onPreviewHeightEvent(height: number): void {
-    height += 20; // for the 20px padding above the content
+    if (height !== 0) {
+      height += 20; // for the 20px padding above the content
+    }
+
     this.expandedRowHeight = height;
     this.changeDetection.detectChanges();
   }

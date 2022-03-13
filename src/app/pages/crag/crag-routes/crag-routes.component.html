@@ -28,6 +28,7 @@
           <div class="route-checkbox">
             <mat-checkbox
               (change)="changeSelection(route)"
+              (click)="onCheckBoxClick($event)"
               [checked]="selectedRoutesIds.indexOf(route.id) > -1"
             >
             </mat-checkbox>
@@ -60,49 +61,6 @@
                     [modifier]="true"
                     [gradingSystemId]="route.defaultGradingSystem.id"
                   ></app-grade>
-                  <div
-                    class="popover"
-                    *ngIf="
-                      false &&
-                      activeDifficultyVotesPopupId === route.id &&
-                      !difficultyVotesLoading
-                    "
-                  >
-                    <div class="popover-title">
-                      Ocene smeri {{ route.name }}
-                    </div>
-                    <table>
-                      <tbody>
-                        <tr
-                          *ngFor="let vote of difficultyVotes"
-                          [ngClass]="
-                            vote.includedInCalculation
-                              ? 'difficulty-vote-included'
-                              : ''
-                          "
-                        >
-                          <td>
-                            <app-grade
-                              class="grade"
-                              [difficulty]="vote.difficulty"
-                            ></app-grade>
-                          </td>
-                          <td class="difficulty-vote-author">
-                            <ng-container *ngIf="vote.isBase"
-                              >Bazna ocena</ng-container
-                            >
-                            <ng-container *ngIf="!vote.isBase && vote.user">{{
-                              vote.user.firstname + " " + vote.user.lastname
-                            }}</ng-container>
-                          </td>
-                          <td class="difficulty-vote-date">
-                            {{ vote.created | amDateFormat: "D. M. Y" }}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <div class="popover-arrow"></div>
-                  </div>
                 </div>
               </div>
             </div>

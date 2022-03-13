@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Grade } from '../../../common/grade';
 import { IDistribution } from '../../../common/distribution-chart/distribution-chart.component';
-import { getGradeDistribution } from 'src/app/common/grade-distribution';
+import { GradeDistributionService } from 'src/app/shared/services/grade-distribution.service';
 
 @Component({
   selector: 'app-route-info',
@@ -15,14 +14,18 @@ export class RouteInfoComponent implements OnInit {
   author: string;
   firstAscent: string;
 
-  constructor() {}
+  constructor(private gradeDistributionService: GradeDistributionService) {}
 
   ngOnInit(): void {
     if (this.route) {
       this.grades = this.route.difficultyVotes.slice();
       this.grades.sort((a, b) => a.grade - b.grade);
 
-      this.gradesDistribution = getGradeDistribution(this.grades);
+      this.gradeDistributionService
+        .getDistribution(this.grades, this.route.defaultGradingSystem.id)
+        .then((dist: IDistribution[]) => {
+          this.gradesDistribution = dist;
+        });
 
       if (this.route.author) {
         if (this.route.author.indexOf('/') > -1) {
