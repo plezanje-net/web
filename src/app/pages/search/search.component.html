@@ -20,44 +20,41 @@
         [displayWith]="displayFn"
         (optionSelected)="onOptionSelected($event.option.value)"
       >
-        <mat-optgroup *ngIf="searchResults?.crags.length" label="Plezališča">
-          <mat-option *ngFor="let crag of searchResults.crags" [value]="crag">
-            {{ crag.name }}
-          </mat-option>
-        </mat-optgroup>
+        <mat-option disabled *ngIf="error"
+          >Prišlo je do nepričakovane napake</mat-option
+        >
 
-        <mat-optgroup *ngIf="searchResults?.routes.length" label="Smeri">
-          <mat-option
-            *ngFor="let route of searchResults.routes"
-            [value]="route"
-          >
-            {{ route.name }}
-          </mat-option>
-        </mat-optgroup>
+        <ng-container *ngIf="!error">
+          <mat-optgroup *ngIf="searchResults?.crags.length" label="Plezališča">
+            <mat-option *ngFor="let crag of searchResults.crags" [value]="crag">
+              {{ crag.name }}
+            </mat-option>
+          </mat-optgroup>
 
-        <mat-optgroup *ngIf="searchResults?.sectors.length" label="Sektorji">
-          <mat-option
-            *ngFor="let sector of searchResults.sectors"
-            [value]="sector"
-          >
-            {{ sector.name }}
-          </mat-option>
-        </mat-optgroup>
+          <mat-optgroup *ngIf="searchResults?.routes.length" label="Smeri">
+            <mat-option
+              *ngFor="let route of searchResults.routes"
+              [value]="route"
+            >
+              {{ route.name }}
+            </mat-option>
+          </mat-optgroup>
 
-        <mat-optgroup *ngIf="searchResults?.users.length" label="Uporabniki">
-          <mat-option *ngFor="let user of searchResults.users" [value]="user">
-            {{ user.fullName }}
-          </mat-option>
-        </mat-optgroup>
+          <mat-optgroup *ngIf="searchResults?.sectors.length" label="Sektorji">
+            <mat-option
+              *ngFor="let sector of searchResults.sectors"
+              [value]="sector"
+            >
+              {{ sector.name }}
+            </mat-option>
+          </mat-optgroup>
 
-        <mat-optgroup *ngIf="searchResults?.comments.length" label="Komentarji">
-          <mat-option
-            *ngFor="let comment of searchResults.comments"
-            [value]="comment"
-          >
-            {{ truncateComment(comment.content) }}
-          </mat-option>
-        </mat-optgroup>
+          <mat-optgroup *ngIf="searchResults?.users.length" label="Uporabniki">
+            <mat-option *ngFor="let user of searchResults.users" [value]="user">
+              {{ user.fullName }}
+            </mat-option>
+          </mat-optgroup>
+        </ng-container>
       </mat-autocomplete>
       <button
         type="button"

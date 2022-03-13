@@ -20,7 +20,7 @@ export class CragAdminBreadcrumbs {
       },
       {
         name: this.crag.name,
-        path: `/plezalisca/${this.crag.country.slug}/${this.crag.slug}`,
+        path: `/plezalisce/${this.crag.slug}`,
       },
       {
         name: 'Urejanje plezališča',

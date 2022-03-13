@@ -38,16 +38,19 @@ h2 {
 }
 
 .carousel-outer-wrap {
-  margin: -8px;
+  margin-left: -8px;
+  margin-right: -8px;
   .slide {
     cursor: pointer;
   }
   .slide-inner-wrap {
-    margin: 8px;
+    margin-left: 8px;
+    margin-right: 8px;
   }
 }
 
 .swiper-pagination {
   position: relative;
   top: 0;
+  margin-top: 8px;
 }

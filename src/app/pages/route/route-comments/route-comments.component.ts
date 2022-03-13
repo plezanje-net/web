@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
+import { Subject } from 'rxjs';
 
 interface IComment {
   content: string;
@@ -22,6 +29,7 @@ export class RouteCommentsComponent implements AfterViewInit {
   descriptions: IComment[];
 
   @Output() onViewInit = new EventEmitter<void>();
+  @Input() action$: Subject<string>;
   @Input() previewMode: boolean = false;
   @Input() set comments(comments: IComment[]) {
     this.allComments = comments;
@@ -46,6 +54,10 @@ export class RouteCommentsComponent implements AfterViewInit {
   }
 
   constructor() {}
+
+  addComment(actionType: string) {
+    this.action$.next(actionType);
+  }
 
   ngAfterViewInit(): void {
     // this is used when this component is a child of CragRoutePreviewComponent which measures the height after view init

@@ -59,18 +59,23 @@ export class CommentFormComponent implements OnInit {
       }
     }
 
-    if (this.data.type == 'warning') {
-      this.title = 'Dodaj opozorilo';
-
-      this.addExposedUntilField();
-    }
-
-    if (this.data.type == 'condition') {
-      this.title = 'Dodaj informacijo o razmerah';
-    }
-
-    if (this.data.type == 'comment') {
-      this.title = 'Dodaj komentar';
+    switch (this.data.type) {
+      case 'warning':
+        this.title = 'Dodaj opozorilo';
+        this.addExposedUntilField();
+        break;
+      case 'condition':
+        this.title = 'Dodaj informacijo o razmerah';
+        break;
+      case 'comment':
+        this.title = 'Dodaj komentar';
+        break;
+      case 'description':
+        // TODO: it seems that only peaks and routes can have comments of type description. Might want to include entity type in the title and generalize this. Should discuss.
+        this.title = 'Dodaj opis';
+        break;
+      default:
+        this.title = '';
     }
   }
 
@@ -110,8 +115,10 @@ export class CommentFormComponent implements OnInit {
         { input: value },
         {
           refetchQueries: [
+            //TODO: some of these queries might not be active and trying to refetch them causes apollo warnings
             namedOperations.Query.CragBySlug,
             namedOperations.Query.IceFallBySlug,
+            namedOperations.Query.RouteBySlug,
           ],
         }
       )

@@ -1,26 +1,41 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataError } from '../../types/data-error';
 import { LayoutService } from '../../services/layout.service';
-import { RouteBySlugGQL, RouteBySlugQuery } from 'src/generated/graphql';
+import {
+  Comment,
+  Route,
+  RouteBySlugGQL,
+  RouteBySlugQuery,
+} from 'src/generated/graphql';
+import { Subject, Subscription, switchMap } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { CommentFormComponent } from 'src/app/shared/components/comment-form/comment-form.component';
 
 @Component({
   selector: 'app-route',
   templateUrl: './route.component.html',
   styleUrls: ['./route.component.scss'],
 })
-export class RouteComponent implements OnInit {
+export class RouteComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   error: DataError = null;
-  route: RouteBySlugQuery['routeBySlug'];
-  warnings: RouteBySlugQuery['routeBySlug']['comments'];
+  route: Route;
+  warnings: Comment[];
 
   section: string;
+
+  action$ = new Subject<string>();
+  actionSubscription: Subscription;
+  routeQuerySubscription: Subscription;
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
+    private authService: AuthService,
+    private dialog: MatDialog,
     private routeBySlugGQL: RouteBySlugGQL
   ) {}
 
@@ -29,30 +44,60 @@ export class RouteComponent implements OnInit {
       ? 'alpinism'
       : 'sport';
 
-    this.activatedRoute.params.subscribe((params: Params) => {
-      this.routeBySlugGQL
-        .watch({
-          cragSlug: params.crag,
-          routeSlug: params.route,
+    this.routeQuerySubscription = this.activatedRoute.params
+      .pipe(
+        switchMap((params) => {
+          return this.routeBySlugGQL.watch({
+            cragSlug: params.crag,
+            routeSlug: params.route,
+          }).valueChanges;
         })
-        .valueChanges.subscribe((result) => {
+      )
+      .subscribe({
+        next: (result) => {
           this.loading = false;
+          this.querySuccess(result.data);
+        },
+        error: (error) => {
+          this.loading = false;
+          this.queryError(error);
+        },
+      });
 
-          if (result.errors != null) {
-            this.queryError(result.errors);
-          } else {
-            this.querySuccess(result.data);
-          }
-        });
+    this.actionSubscription = this.action$.subscribe((action) => {
+      switch (action) {
+        case 'add-comment':
+          this.addComment('comment');
+          break;
+        case 'add-condition':
+          this.addComment('condition');
+          break;
+        case 'add-description':
+          this.addComment('description');
+          break;
+      }
     });
   }
 
-  queryError(errors: any): void {
-    if (errors.length > 0 && errors[0].message === 'entity_not_found') {
+  addComment(type: string) {
+    this.authService.guardedAction({}).then((success) => {
+      if (success) {
+        this.dialog.open(CommentFormComponent, {
+          data: {
+            route: this.route,
+            type,
+          },
+          autoFocus: false,
+        });
+      }
+    });
+  }
+
+  queryError(error: Error): void {
+    if (error.message === 'entity_not_found') {
       this.error = {
         message: 'Smer ne obstaja v bazi.',
       };
-
       return;
     }
 
@@ -62,7 +107,7 @@ export class RouteComponent implements OnInit {
   }
 
   querySuccess(data: RouteBySlugQuery): void {
-    this.route = data.routeBySlug;
+    this.route = <Route>data.routeBySlug;
     this.warnings = this.route?.comments.filter(
       (comment) => comment.type === 'warning'
     );
@@ -83,7 +128,7 @@ export class RouteComponent implements OnInit {
         },
         {
           name: this.route.sector.crag.peak.name,
-          path: `/alpinizem/vrh/${this.route.sector.crag.peak.slug}`,
+          path: `/alpinizem/vrhovi/vrh/${this.route.sector.crag.peak.slug}`,
         },
         {
           name: this.route.sector.crag.name,
@@ -105,12 +150,17 @@ export class RouteComponent implements OnInit {
         },
         {
           name: this.route.sector.crag.name,
-          path: `/plezalisca/${this.route.sector.crag.country.slug}/${this.route.sector.crag.slug}`,
+          path: `/plezalisce/${this.route.sector.crag.slug}`,
         },
         {
           name: this.route.name,
         },
       ]);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.routeQuerySubscription.unsubscribe();
+    this.actionSubscription.unsubscribe();
   }
 }

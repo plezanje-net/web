@@ -39,12 +39,7 @@
                   [routerLink]="
                     section === 'alpinism'
                       ? ['/alpinizem', 'stena', crag.slug, 'smer', route.slug]
-                      : [
-                          '/plezalisca/',
-                          crag.country.slug,
-                          crag.slug,
-                          route.slug
-                        ]
+                      : ['/plezalisce', crag.slug, 'smer', route.slug]
                   "
                   (click)="$event.stopPropagation()"
                   >{{ route.name }}</a
@@ -52,7 +47,8 @@
               </div>
               <div class="route-numbers">
                 <div *ngIf="!sector.bouldersOnly" class="route-length">
-                  <ng-container *ngIf="route.routeType.id !== 'boulder'"
+                  <ng-container
+                    *ngIf="route.routeType.id !== 'boulder' && route.length"
                     >{{ route.length }} m</ng-container
                   >
                 </div>

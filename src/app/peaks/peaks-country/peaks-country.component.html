@@ -24,6 +24,20 @@
         fxHide.gt-sm
       >
         <mat-form-field fxFlex class="no-hint">
+          <mat-label>Država</mat-label>
+          <mat-select
+            [value]="countrySlug"
+            (selectionChange)="changeCountry($event.value)"
+          >
+            <mat-option
+              *ngFor="let country of countries"
+              [value]="country.slug"
+              >{{ country.name }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field fxFlex class="no-hint">
           <mat-label>Območje</mat-label>
           <mat-select
             [value]="areaSlug"
@@ -40,20 +54,6 @@
                 >{{ area.name }}</mat-option
               >
             </ng-container>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field fxFlex class="no-hint">
-          <mat-label>Država</mat-label>
-          <mat-select
-            [value]="countrySlug"
-            (selectionChange)="changeCountry($event.value)"
-          >
-            <mat-option
-              *ngFor="let country of countries"
-              [value]="country.slug"
-              >{{ country.name }}</mat-option
-            >
           </mat-select>
         </mat-form-field>
       </div>
@@ -81,7 +81,7 @@
                         ? [
                             '/alpinizem/vrhovi/drzava',
                             countrySlug,
-                            { area: area.slug }
+                            { obmocje: area.slug }
                           ]
                         : []
                     "
@@ -138,7 +138,7 @@
               <tbody>
                 <tr
                   *ngFor="let peak of peaks"
-                  [routerLink]="['/alpinizem/vrh', peak.slug]"
+                  [routerLink]="['/alpinizem/vrhovi/vrh', peak.slug]"
                   class="is-link"
                 >
                   <td>{{ peak.name }}</td>

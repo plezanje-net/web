@@ -4,8 +4,7 @@ query RouteComments($routeId: String!) {
       id
       type
       user {
-        firstname
-        lastname
+        fullName
       }
       content
       updated

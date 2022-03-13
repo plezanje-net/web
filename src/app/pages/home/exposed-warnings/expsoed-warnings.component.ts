@@ -1,4 +1,12 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { take } from 'rxjs';
 import {
   ExposedWarningsGQL,
@@ -8,6 +16,7 @@ import { DataError } from '../../../types/data-error';
 import { LoadingSpinnerService } from '../loading-spinner.service';
 
 import SwiperCore, { Autoplay, Pagination } from 'swiper';
+import { SwiperComponent } from 'swiper/angular';
 
 SwiperCore.use([Pagination, Autoplay]);
 
@@ -16,15 +25,40 @@ SwiperCore.use([Pagination, Autoplay]);
   templateUrl: './exposed-warnings.component.html',
   styleUrls: ['./exposed-warnings.component.scss'],
 })
-export class ExposedWarningsComponent implements OnInit {
+export class ExposedWarningsComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   @Output() errorEvent = new EventEmitter<DataError>();
 
   warnings: ExposedWarningsQuery['exposedWarnings'];
+
+  @ViewChild('swiper', { static: false }) swiper: SwiperComponent;
+  swiperObserver: IntersectionObserver;
 
   constructor(
     private exposedWarnings: ExposedWarningsGQL,
     private loadingSpinnerService: LoadingSpinnerService
   ) {}
+
+  ngAfterViewInit(): void {
+    // add observer so that the slider is stopped when out of view (to prevent flickering of content)
+    this.swiperObserver = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          this.swiper.swiperRef.autoplay.start();
+        } else {
+          this.swiper.swiperRef.autoplay.stop();
+        }
+      },
+      {
+        root: null,
+        threshold: 1,
+      }
+    );
+    const swiperEl = document.querySelector('swiper');
+    this.swiperObserver.observe(swiperEl);
+  }
 
   ngOnInit(): void {
     this.loadingSpinnerService.pushLoader();
@@ -52,5 +86,9 @@ export class ExposedWarningsComponent implements OnInit {
     this.errorEvent.emit({
       message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
     });
+  }
+
+  ngOnDestroy(): void {
+    this.swiperObserver.disconnect();
   }
 }

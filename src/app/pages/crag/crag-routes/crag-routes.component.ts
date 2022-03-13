@@ -154,7 +154,10 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
 
           this.addRoutesToLocalStorage(selectedRoutesWTouch);
 
-          this.router.navigate(['/plezalni-dnevnik/vpis']);
+          this.router.navigate([
+            '/plezalni-dnevnik/vpis',
+            { crag: this.crag.id },
+          ]);
         } else {
           this.openSnackBar();
         }

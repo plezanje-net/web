@@ -1,0 +1,50 @@
+<td>
+  {{ activity.date | amDateFormat: "DD.MM.YYYY" }}
+</td>
+<td>
+  <a [routerLink]="['/plezalni-dnevnik', activity.id]">{{ type }}</a>
+</td>
+<td>
+  <a
+    *ngIf="activity.crag != null"
+    [routerLink]="['/plezalisce', activity.crag.slug]"
+    >{{ activity.crag.name }}</a
+  >
+  <span *ngIf="!(activity.crag != null)">{{ activity.name }}</span>
+</td>
+<td>
+  <ng-container *ngIf="activity.type == 'crag' && activity.crag != null">{{
+    activity.routes.length | pluralizeNoun: "smer"
+  }}</ng-container>
+  <ng-container *ngIf="activity.duration"
+    >{{ activity.duration }} min</ng-container
+  >
+</td>
+
+<td class="tools">
+  <button mat-icon-button [mat-menu-trigger-for]="menu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item [routerLink]="['/plezalni-dnevnik', activity.id]">
+      <span>Odpri vnos</span>
+    </button>
+    <button
+      mat-menu-item
+      *ngIf="activity.crag != null"
+      (click)="rowAction.next({ item: activity, action: 'filterByCrag' })"
+    >
+      <span>Vsi vnosi za to plezališče</span>
+    </button>
+    <!-- <button mat-menu-item>
+      <span>Uredi vnos</span>
+    </button> -->
+    <button
+      mat-menu-item
+      (click)="rowAction.next({ item: activity, action: 'delete' })"
+    >
+      <span>Odstrani vnos</span>
+    </button>
+  </mat-menu>
+</td>

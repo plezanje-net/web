@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GraphQLError } from 'graphql';
 import { ClubMemberFormComponent } from 'src/app/forms/club-member-form/club-member-form.component';
 import { ClubFormComponent } from 'src/app/forms/club-form/club-form.component';
 import { LayoutService } from 'src/app/services/layout.service';
@@ -27,6 +26,7 @@ export class ClubComponent implements OnInit, OnDestroy {
   club: Club;
 
   clubSubscription: Subscription;
+  errorSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -48,22 +48,24 @@ export class ClubComponent implements OnInit, OnDestroy {
         this.club = club;
         this.setBreadcrumbs();
       },
-      error: (errors) => {
+      error: (error) => {
         this.loading = false;
-        this.queryError(errors);
+        this.queryError(error);
       },
+    });
+
+    // subscribe to errors that might come from child components, so that all errors are displayed on the top level component
+    this.errorSubscription = this.clubService.error$.subscribe((error) => {
+      this.queryError(error);
     });
   }
 
-  queryError(errors: readonly GraphQLError[] = []) {
-    if (
-      errors.length > 0 &&
-      errors[0].message.startsWith('Could not find any entity of type')
-    ) {
+  queryError(error: Error) {
+    if (error?.message.startsWith('Could not find any entity of type')) {
       this.error = {
         message: 'Klub ne obstaja.',
       };
-    } else if (errors.length > 0 && errors[0].message === 'Forbidden') {
+    } else if (error?.message === 'Forbidden') {
       this.error = {
         message:
           'Nisi član kluba, zato nimaš pravic za prikaz podatkov o klubu.',
@@ -136,7 +138,6 @@ export class ClubComponent implements OnInit, OnDestroy {
             { id: this.club.id },
             {
               update: (cache) => {
-                console.log(cache);
                 cache.evict({
                   id: 'ROOT_QUERY',
                   fieldName: 'myClubs',
@@ -148,15 +149,11 @@ export class ClubComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (data) => {
-          if (data.errors != null) {
-            this.queryError(data.errors);
-          } else {
-            this.displaySuccess();
-            this.router.navigate(['/moj-profil/moji-klubi']);
-          }
+          this.displaySuccess();
+          this.router.navigate(['/moj-profil/moji-klubi']);
         },
-        error: () => {
-          this.queryError();
+        error: (error) => {
+          this.queryError(error);
         },
       });
   }
@@ -180,5 +177,6 @@ export class ClubComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.clubSubscription.unsubscribe();
+    this.errorSubscription.unsubscribe();
   }
 }

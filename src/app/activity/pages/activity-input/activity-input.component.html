@@ -1,0 +1,29 @@
+<div class="white-back mt-16">
+  <div class="container py-8">
+    <h1>Vpis v plezalni dnevnik</h1>
+  </div>
+</div>
+
+<ng-container>
+  <div class="container mt-16">
+    <app-activity-form
+      [crag]="crag"
+      [peak]="peak"
+      [iceFall]="iceFall"
+      [selectedRoutes]="routes"
+      [type]="type"
+    ></app-activity-form>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="type == 'crag' && !routes.length">
+  <div class="container mt-16">
+    Izgleda, da nimaš izbranih smeri za vpis v dnevnik.
+    <br />
+    <br />
+    Vrni se <a [routerLink]="['/']">domov</a>, na
+    <a [routerLink]="['/plezalni-dnevnik']">plezalni dnevnik</a> ali na
+    <a [routerLink]="['/plezalisca/slovenija', { type: 'sport' }]">plezališča</a
+    >.
+  </div>
+</ng-container>

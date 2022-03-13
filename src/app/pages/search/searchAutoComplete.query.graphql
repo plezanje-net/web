@@ -1,0 +1,37 @@
+query SearchAutoComplete($searchString: String) {
+  search(input: $searchString) {
+    crags {
+      __typename
+      id
+      name
+      slug
+    }
+
+    routes {
+      __typename
+      id
+      slug
+      name
+      crag {
+        id
+        slug
+      }
+    }
+
+    sectors {
+      __typename
+      id
+      name
+      crag {
+        id
+        slug
+      }
+    }
+
+    users {
+      __typename
+      id
+      fullName
+    }
+  }
+}

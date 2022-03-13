@@ -45,7 +45,7 @@ export class PeaksCountryComponent implements OnInit, OnDestroy {
         switchMap((params) => {
           this.loading = true;
           this.countrySlug = params.country;
-          this.areaSlug = params.area;
+          this.areaSlug = params.obmocje;
 
           return this.peaksCountryGQL.fetch(
             {
@@ -79,7 +79,7 @@ export class PeaksCountryComponent implements OnInit, OnDestroy {
     this.router.navigate([
       '/alpinizem/vrhovi/drzava',
       this.countrySlug,
-      areaSlug ? { area: areaSlug } : {},
+      areaSlug ? { obmocje: areaSlug } : {},
     ]);
   }
 

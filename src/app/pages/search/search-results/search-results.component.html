@@ -1,4 +1,6 @@
-<div class="container mt-16">
+<app-data-error *ngIf="error" [error]="error"></app-data-error>
+
+<div *ngIf="!error" class="container mt-16">
   <app-search></app-search>
 
   <app-loader *ngIf="loading"></app-loader>
@@ -35,7 +37,7 @@
             </div>
             <div
               *ngFor="let crag of searchResults.crags"
-              [routerLink]="['/plezalisca', crag.country.slug, crag.slug]"
+              [routerLink]="['/plezalisce', crag.slug]"
               fxLayout="row"
               fxLayoutAlign="start center"
               fxLayoutGap="5px"
@@ -45,12 +47,15 @@
                 <a [innerHtml]="highlight(crag.name, searchString)"></a>
               </div>
 
-              <div fxFlex="25%">{{ crag.nrRoutes }} smeri</div>
+              <div fxFlex="25%">
+                {{ crag.nrRoutes | pluralizeNoun: "smer" }}
+              </div>
               <div fxFlex="20px">
                 {{ crag.orientation }}
               </div>
               <div fxFlex class="lastColumn">
                 <app-grade
+                  *ngIf="crag.minDifficulty"
                   [difficulty]="crag.minDifficulty"
                   [gradingSystemId]="crag.defaultGradingSystem.id"
                 ></app-grade>
@@ -60,6 +65,7 @@
                     : ""
                 }}
                 <app-grade
+                  *ngIf="crag.maxDifficulty"
                   [difficulty]="crag.maxDifficulty"
                   [gradingSystemId]="crag.defaultGradingSystem.id"
                 ></app-grade>
@@ -91,9 +97,9 @@
               fxLayoutGap="5px"
               class="row"
               [routerLink]="[
-                '/plezalisca',
-                route.crag.country.slug,
+                '/plezalisce',
                 route.crag.slug,
+                'smer',
                 route.slug
               ]"
             >
@@ -133,11 +139,7 @@
               fxLayout="row"
               fxLayoutAlign="start center"
               class="row"
-              [routerLink]="[
-                '/plezalisca',
-                sector.crag.country.slug,
-                sector.crag.slug
-              ]"
+              [routerLink]="['/plezalisce', sector.crag.slug]"
             >
               <div fxFlex>
                 <a [innerHtml]="highlight(sector.name, searchString)"></a>
@@ -203,16 +205,12 @@
               [routerLink]="
                 comment?.route
                   ? [
-                      '/plezalisca',
-                      comment.route.crag.country.slug,
+                      '/plezalisce',
                       comment.route.crag.slug,
+                      'smer',
                       comment.route.slug
                     ]
-                  : [
-                      '/plezalisca',
-                      comment.crag.country.slug,
-                      comment.crag.slug
-                    ]
+                  : ['/plezalisce', comment.crag.slug]
               "
             >
               <div

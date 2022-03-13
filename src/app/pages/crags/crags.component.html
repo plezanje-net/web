@@ -82,16 +82,14 @@
         </div>
         <div
           *ngFor="let crag of filteredCrags"
-          [routerLink]="['/plezalisca/', country.slug, crag.slug]"
+          [routerLink]="['/plezalisce/', crag.slug]"
           fxLayout="row"
           fxLayoutAlign="start center"
           fxLayoutGap="8px"
           class="row"
         >
           <div fxFlex="40" fxFlex.lt-md="100">
-            <a [routerLink]="['/plezalisca/', country.slug, crag.slug]">{{
-              crag.name
-            }}</a>
+            <a [routerLink]="['/plezalisce/', crag.slug]">{{ crag.name }}</a>
           </div>
           <div fxFlex="20" fxFlex.lt-md fxHide.lt-md>{{ crag.nrRoutes }}</div>
           <div fxFlex="20" fxFlex.lt-md fxHide.lt-md>
