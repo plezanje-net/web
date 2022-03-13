@@ -8,13 +8,13 @@ import {
   ViewChild,
 } from '@angular/core';
 import { IDistribution } from 'src/app/common/distribution-chart/distribution-chart.component';
-import { getGradeDistribution } from 'src/app/common/grade-distribution';
 import {
   RouteCommentsGQL,
   RouteCommentsQuery,
   RouteDifficultyVotesGQL,
   RouteDifficultyVotesQuery,
 } from 'src/generated/graphql';
+import { GradeDistributionService } from 'src/app/shared/services/grade-distribution.service';
 
 @Component({
   selector: 'app-crag-route-preview',
@@ -37,7 +37,8 @@ export class CragRoutePreviewComponent implements OnChanges {
 
   constructor(
     private routeCommentsGQL: RouteCommentsGQL,
-    private routeDifficultyVotesGQL: RouteDifficultyVotesGQL
+    private routeDifficultyVotesGQL: RouteDifficultyVotesGQL,
+    private gradeDistributionService: GradeDistributionService
   ) {}
 
   ngOnChanges(): void {
@@ -64,9 +65,14 @@ export class CragRoutePreviewComponent implements OnChanges {
   }
 
   routeDiffVotesQuerySuccess(queryData: RouteDifficultyVotesQuery): void {
-    this.gradeDistribution = getGradeDistribution(
-      queryData.route.difficultyVotes.filter((vote) => !vote.isBase)
-    );
+    this.gradeDistributionService
+      .getDistribution(
+        queryData.route.difficultyVotes,
+        queryData.route.defaultGradingSystem.id
+      )
+      .then((dist: IDistribution[]) => {
+        this.gradeDistribution = dist;
+      });
 
     if (this.gradeDistribution.length) {
       this.routeGradesInitialized = false;
