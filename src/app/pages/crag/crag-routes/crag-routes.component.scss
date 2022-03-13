@@ -5,8 +5,8 @@
 .route-row {
   display: flex;
   flex-direction: row;
-  padding: 6px 2px 6px 10px;
-  // TODO gap
+  padding: 6px 2px 6px 16px;
+  min-height: 40px;
 
   &.header {
     cursor: default;
