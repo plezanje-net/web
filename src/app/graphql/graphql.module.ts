@@ -52,6 +52,7 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
       },
       mutate: {
         errorPolicy: 'none',
+        update: (cache) => cache.evict({}),
       },
     },
   };

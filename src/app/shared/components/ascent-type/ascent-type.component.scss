@@ -1,0 +1,15 @@
+@import "../../../../styles/colors.scss";
+
+.color-green {
+  color: $text-green;
+}
+.color-yellow {
+  color: $text-yellow;
+}
+.color-red {
+  color: $text-red;
+}
+.mat-button {
+  padding: 0;
+  min-width: 36px;
+}

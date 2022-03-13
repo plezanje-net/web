@@ -1,0 +1,26 @@
+@import "../../../../styles/colors.scss";
+
+.only-routes-checkbox {
+  padding: 14px 16px;
+}
+
+.route {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  padding-bottom: 16px;
+  margin-bottom: 8px;
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+button {
+  margin-left: 8px;
+}
+.mat-radio-group {
+  span {
+    display: block;
+    color: $text-gray;
+    font-size: 13px;
+    margin: 8px 28px;
+  }
+}

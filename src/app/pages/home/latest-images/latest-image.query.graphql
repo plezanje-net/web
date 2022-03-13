@@ -1,14 +1,18 @@
 query LatestImages($latest: Int!) {
   latestImages(latest: $latest) {
+    id
     path
     title
     user {
+      id
       fullName
     }
     crag {
+      id
       name
       slug
       country {
+        id
         slug
       }
     }
@@ -17,9 +21,11 @@ query LatestImages($latest: Int!) {
       name
       slug
       crag {
+        id
         name
         slug
         country {
+          id
           slug
         }
       }

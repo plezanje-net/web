@@ -14,8 +14,8 @@ import {
   Comment,
   Crag,
   Route,
-  SearchGQL,
-  SearchQuery,
+  SearchAutoCompleteGQL,
+  SearchResults,
   Sector,
   User,
 } from 'src/generated/graphql';
@@ -29,7 +29,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private searchGQL: SearchGQL
+    private searchAutoCompleteGQL: SearchAutoCompleteGQL
   ) {}
 
   searchForm = new FormGroup({
@@ -39,7 +39,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   autocompleteTrigger: MatAutocompleteTrigger;
 
   searchString = '';
-  searchResults: SearchQuery['search'];
+  searchResults: SearchResults;
   error = false;
 
   subscription: Subscription;
@@ -57,9 +57,9 @@ export class SearchComponent implements OnInit, OnDestroy {
         switchMap((searchString: string) => {
           this.searchString = searchString;
           this.error = false;
-          return this.searchGQL
+          return this.searchAutoCompleteGQL
             .fetch({
-              query: searchString,
+              searchString,
             })
             .pipe(
               catchError(() => {
@@ -71,7 +71,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (result) => {
-          this.searchResults = result.data.search;
+          this.searchResults = <SearchResults>result.data.search;
         },
       });
   }
@@ -103,7 +103,6 @@ export class SearchComponent implements OnInit, OnDestroy {
         return optionValue.name;
       case 'User':
         return optionValue.fullName;
-      case 'Comment':
       default:
         return this.searchForm.controls.searchControl.value; // just keep what is already typed in the input
     }
@@ -136,46 +135,7 @@ export class SearchComponent implements OnInit, OnDestroy {
         const user = optionValue;
         this.router.navigate(['/uporabniki', user.fullName]);
         break;
-
-      case 'Comment':
-        const comment = optionValue;
-        if (comment?.route) {
-          this.router.navigate([
-            '/plezalisce',
-            comment.route.crag.slug,
-            'smer',
-            comment.route.slug,
-          ]);
-        } else {
-          this.router.navigate(['/plezalisce', comment.crag.slug]);
-        }
     }
-  }
-
-  // truncate to part of comment that contains at least first search term
-  truncateComment(text: string) {
-    // get rid of html in comment
-    const plainText = text.replace(/<[^>]*>/g, '');
-
-    // keep only first word/term
-    let searchTerm = this.searchString.split(' ')[0];
-
-    // // replace csz in searchString with character sets so that all accents are matched
-    searchTerm = searchTerm.replace(/[cčć]/gi, '[cčć]');
-    searchTerm = searchTerm.replace(/[sš]/gi, '[sš]');
-    searchTerm = searchTerm.replace(/[zž]/gi, '[zž]');
-
-    // a match should be at the start of a word
-    searchTerm = '\\b' + searchTerm;
-
-    const regExp = new RegExp(searchTerm, 'gi');
-
-    // cut begining of comment if first matched term more than 5 chars 'deep'
-    const match = regExp.exec(plainText);
-    if (match && match.index > 5) {
-      return '...' + plainText.substring(match.index - 5);
-    }
-    return plainText;
   }
 
   ngOnDestroy() {

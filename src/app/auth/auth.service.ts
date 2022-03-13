@@ -5,6 +5,7 @@ import { Apollo } from 'apollo-angular';
 import { GuardedActionOptions } from '../types/guarded-action-options';
 import { LoginResponse, User } from 'src/generated/graphql';
 import { LocalStorageService } from '../services/local-storage.service';
+import moment from 'moment';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +34,11 @@ export class AuthService {
   }
 
   login(loginResponse: LoginResponse): Promise<any> {
-    this.localStorageService.setItem('auth', loginResponse);
+    this.localStorageService.setItem(
+      'auth',
+      loginResponse,
+      moment(new Date()).add(365, 'day').toISOString()
+    );
 
     this.currentUser.next(loginResponse.user);
 

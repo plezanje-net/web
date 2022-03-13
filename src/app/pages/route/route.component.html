@@ -29,8 +29,8 @@
     >
       <app-crag-gallery [images]="route.images"></app-crag-gallery>
       <app-route-comments
-        *ngIf="route.comments.length"
         [comments]="route.comments"
+        [action$]="action$"
       ></app-route-comments>
     </div>
   </div>

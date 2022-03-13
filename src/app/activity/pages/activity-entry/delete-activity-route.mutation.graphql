@@ -1,0 +1,3 @@
+mutation DeleteActivityRoute($id: String!) {
+  deleteActivityRoute(id: $id)
+}
