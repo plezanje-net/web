@@ -28,6 +28,7 @@
           <div class="route-checkbox">
             <mat-checkbox
               (change)="changeSelection(route)"
+              (click)="onCheckBoxClick($event)"
               [checked]="selectedRoutesIds.indexOf(route.id) > -1"
             >
             </mat-checkbox>

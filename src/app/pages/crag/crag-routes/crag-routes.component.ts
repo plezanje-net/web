@@ -69,6 +69,10 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     this.snackBar.dismiss();
   }
 
+  onCheckBoxClick(event: Event) {
+    event.stopPropagation();
+  }
+
   changeSelection(route: Route): void {
     const i = this.selectedRoutes.findIndex((r) => r.id === route.id);
     if (i > -1) {
