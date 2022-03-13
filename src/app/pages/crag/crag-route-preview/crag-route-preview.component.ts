@@ -26,7 +26,10 @@ export class CragRoutePreviewComponent implements OnChanges {
   gradeDistributionLoading: boolean;
   routeComments: Record<string, string | any>[];
   routeCommentsLoading: boolean;
+
   childViewsInitialized = {};
+  _routeCommentsInitialized: boolean | null;
+  _routeGradesInitialized: boolean | null;
 
   @Input() routeId: string;
   @Output() heightChangeEvent = new EventEmitter<number>();
@@ -55,7 +58,7 @@ export class CragRoutePreviewComponent implements OnChanges {
         if (!result.errors) {
           this.routeDiffVotesQuerySuccess(result.data);
         } else {
-          this.routeDiffVotesQueryError();
+          console.error('Error fetching route difficulty votes');
         }
       });
   }
@@ -64,13 +67,12 @@ export class CragRoutePreviewComponent implements OnChanges {
     this.gradeDistribution = getGradeDistribution(
       queryData.route.difficultyVotes.filter((vote) => !vote.isBase)
     );
-    if (this.gradeDistribution.length) {
-      this.childViewsInitialized['grades'] = false;
-    }
-  }
 
-  routeDiffVotesQueryError(): void {
-    console.error('TODO');
+    if (this.gradeDistribution.length) {
+      this.routeGradesInitialized = false;
+    } else {
+      this.routeGradesInitialized = null;
+    }
   }
 
   fetchRouteComments(routeId: string): void {
@@ -84,29 +86,44 @@ export class CragRoutePreviewComponent implements OnChanges {
         if (!result.errors) {
           this.routeCommentsQuerySuccess(result.data);
         } else {
-          this.routeCommentsQueryError();
+          console.error('Error fetching route comments');
         }
       });
   }
 
   routeCommentsQuerySuccess(queryData: RouteCommentsQuery): void {
     this.routeComments = queryData.route.comments;
+
     if (this.routeComments.length) {
-      this.childViewsInitialized['comments'] = false;
+      this.routeCommentsInitialized = false;
+    } else {
+      this.routeCommentsInitialized = null;
     }
-    // TODO filter out conditions and warnings? ask in slack
   }
 
-  routeCommentsQueryError(): void {
-    console.error('TODO');
+  get routeGradesInitialized() {
+    return this._routeGradesInitialized;
   }
 
-  onChildViewInit(child: string): void {
-    this.childViewsInitialized[child] = true;
+  get routeCommentsInitialized() {
+    return this._routeCommentsInitialized;
+  }
 
+  set routeGradesInitialized(value: boolean | null) {
+    this._routeGradesInitialized = value;
+    this.afterChildInitialized();
+  }
+
+  set routeCommentsInitialized(value: boolean | null) {
+    this._routeCommentsInitialized = value;
+    this.afterChildInitialized();
+  }
+
+  afterChildInitialized() {
     if (
-      Object.keys(this.childViewsInitialized).length &&
-      !Object.values(this.childViewsInitialized).includes(false)
+      ![this.routeCommentsInitialized, this.routeGradesInitialized].some(
+        (childInitialized) => childInitialized === false
+      )
     ) {
       this.heightChangeEvent.emit(
         (this.container.nativeElement as HTMLDivElement).clientHeight

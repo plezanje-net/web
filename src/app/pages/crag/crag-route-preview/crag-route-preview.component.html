@@ -3,13 +3,13 @@
     <h3>Ocene uporabnikov</h3>
     <app-distribution-chart
       [distribution]="gradeDistribution"
-      (onViewInit)="onChildViewInit('grades')"
+      (onViewInit)="routeGradesInitialized = true"
     ></app-distribution-chart>
   </container>
   <app-route-comments
     *ngIf="!routeCommentsLoading && routeComments.length"
     [comments]="routeComments"
     [previewMode]="true"
-    (onViewInit)="onChildViewInit('comments')"
+    (onViewInit)="routeCommentsInitialized = true"
   ></app-route-comments>
 </div>

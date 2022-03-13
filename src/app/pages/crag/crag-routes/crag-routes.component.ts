@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -21,12 +27,9 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   selectedRoutes: Route[] = [];
   selectedRoutesIds: string[] = [];
   ascents: any = {};
-  difficultyVotesLoading: boolean;
-  difficultyVotes: Record<string, string | any>[];
   loading = false;
   expandedRowId: string;
   previousExpandedRowId: string;
-  gradeDistribution: IDistribution[];
   expandedRowHeight: number;
 
   section: string;
@@ -49,8 +52,13 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       this.loadActivity(user != null)
     );
 
-    const activitySelection: ActivitySelection = this.localStorageService.getItem('activity-selection');
-    if (activitySelection && activitySelection.routes.length && activitySelection.crag.id === this.crag.id) {
+    const activitySelection: ActivitySelection =
+      this.localStorageService.getItem('activity-selection');
+    if (
+      activitySelection &&
+      activitySelection.routes.length &&
+      activitySelection.crag.id === this.crag.id
+    ) {
       this.selectedRoutes = activitySelection.routes;
       this.selectedRoutesIds = this.selectedRoutes.map((route) => route.id);
       this.openSnackBar();
@@ -72,13 +80,18 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     if (this.selectedRoutes.length > 0) {
       this.openSnackBar();
 
-      this.selectedRoutesIds = this.selectedRoutes.map((selectedRoute) => selectedRoute.id);
+      this.selectedRoutesIds = this.selectedRoutes.map(
+        (selectedRoute) => selectedRoute.id
+      );
 
       // Append users previous activity (summary) to the routes that are being logged
       const selectedRoutesWTouch = this.selectedRoutes.map((route) => ({
         ...route,
         tried: !!this.ascents[route.id],
-        ticked: ASCENT_TYPES.some((ascentType) => this.ascents[route.id] == ascentType.value && ascentType.tick),
+        ticked: ASCENT_TYPES.some(
+          (ascentType) =>
+            this.ascents[route.id] == ascentType.value && ascentType.tick
+        ),
       }));
 
       this.localStorageService.setItem(
@@ -154,12 +167,14 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.myCragSummaryGQL.watch({ input: { cragId: this.crag.id } }).valueChanges.subscribe((result) => {
-      this.loading = false;
-      result.data?.myCragSummary.forEach((ascent) => {
-        this.ascents[ascent.route.id] = ascent.ascentType;
+    this.myCragSummaryGQL
+      .watch({ input: { cragId: this.crag.id } })
+      .valueChanges.subscribe((result) => {
+        this.loading = false;
+        result.data?.myCragSummary.forEach((ascent) => {
+          this.ascents[ascent.route.id] = ascent.ascentType;
+        });
       });
-    });
   }
 
   expandRow(routeId: string): void {
@@ -167,14 +182,25 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       this.previousExpandedRowId = this.expandedRowId;
       this.expandedRowId = null;
     } else {
-      // TODO move saved comments and votes to previous comments and votes
       this.previousExpandedRowId = this.expandedRowId;
       this.expandedRowId = routeId;
     }
+
+    setTimeout(() => {
+      /**
+       * After the animation is finished, the previous row ID should be nulled.
+       * This ensures that, if the user will click on the same (previous) row again, it will be rendered again and not just reused.
+       * This should set the height for the animation properly.
+       */
+      this.previousExpandedRowId = null;
+    }, 300);
   }
 
   onPreviewHeightEvent(height: number): void {
-    height += 20; // for the 20px padding above the content
+    if (height !== 0) {
+      height += 20; // for the 20px padding above the content
+    }
+
     this.expandedRowHeight = height;
     this.changeDetection.detectChanges();
   }
