@@ -129,7 +129,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         partner: new FormControl(),
         publish: new FormControl('public'),
         notes: new FormControl(),
-        // stars: new FormControl(),
+        stars: new FormControl(),
         votedDifficulty: new FormControl(),
         ticked: new FormControl(route.ticked),
         tried: new FormControl(route.tried),
@@ -200,7 +200,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         notes: route.notes,
         routeId: route.routeId,
         ascentType: route.ascentType,
-        // stars: route.stars,
+        stars: route.stars,
         publish: route.publish,
         votedDifficulty: route.votedDifficulty,
         position: i, // position of the route within the same activity of ones log

@@ -64,6 +64,14 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
 
     // Should disable possibility to vote on route if ascent type not a tick.
     const ascentTypeSelected = this.route.get('ascentType').value;
+    this.setAscentTypeTriggerValue(ascentTypeSelected);
+
+    this.route
+      .get('ascentType')
+      .valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe((at) => {
+        this.setAscentTypeTriggerValue(at);
+      });
 
     // If a route is a project then a vote on diff should always be cast.
     if (this.route.get('isProject').value) {
