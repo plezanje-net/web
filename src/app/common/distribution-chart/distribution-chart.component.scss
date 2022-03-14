@@ -1,24 +1,16 @@
 .distribution-container {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
-}
-
-.distribution-bar-wrapper {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-gap: 0 8px;
   align-items: center;
 }
 
 .distribution-bar-label {
-  flex: 0 0 44px;
-  margin-right: 10px;
   text-align: right;
 }
 
 .distribution-bar {
   height: 8px;
-  flex: 1 1 100%;
   background-color: white;
 }
 

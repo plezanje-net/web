@@ -1,12 +1,13 @@
 <div class="distribution-container">
-  <div class="distribution-bar-wrapper"
-       *ngFor="let element of distribution">
+  <ng-container *ngFor="let element of distribution">
     <div class="distribution-bar-label">
       {{ element.label }}
     </div>
     <div class="distribution-bar">
-      <div class="distribution-bar-inner"
-           [style.width.%]="(element.value / maxValue) * 100"></div>
+      <div
+        class="distribution-bar-inner"
+        [style.width.%]="(element.value / maxValue) * 100"
+      ></div>
     </div>
-  </div>
+  </ng-container>
 </div>
