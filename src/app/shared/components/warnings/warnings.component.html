@@ -13,7 +13,7 @@
     </div>
     <div fxLayout="row" fxLayoutAlign="end center" class="author">
       {{ warning.user?.fullName }},
-      {{ warning.created | amDateFormat: "D.M.Y H:mm" }}
+      {{ warning.created | date: "d. M. yyyy HH:mm" }}
       <app-comment-options
         *ngIf="
           user != null && warning.user != null && warning.user.id == user.id

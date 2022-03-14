@@ -6,7 +6,7 @@
 
 <div *ngIf="!error && !loading">
   <div class="container mt-16">
-    <div>{{ activity.date | amDateFormat: "DD.MM.YYYY" }}</div>
+    <div>{{ activity.date | date: "d. M. yyyy" }}</div>
     <h2>{{ activityType.label }} - {{ activity.name }}</h2>
     <div
       class="card padding no-border description"

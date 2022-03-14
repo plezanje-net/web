@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { DataError } from 'src/app/types/data-error';
 
 @Component({
@@ -16,15 +16,8 @@ export class PopularCragsComponent implements OnInit {
   oneMonthAgo: string;
 
   ngOnInit(): void {
-    this.oneWeekAgo = moment()
-      .subtract(1, 'week')
-      // .subtract({ years: 1, months: 3 }) // TEST: test it
-      .format('YYYY-MM-DD');
-
-    this.oneMonthAgo = moment()
-      .subtract(1, 'month')
-      // .subtract({ years: 1, months: 3 }) // TEST: test it
-      .format('YYYY-MM-DD');
+    this.oneWeekAgo = dayjs().subtract(1, 'week').format('YYYY-MM-DD');
+    this.oneMonthAgo = dayjs().subtract(1, 'month').format('YYYY-MM-DD');
   }
 
   handleError(error: DataError) {

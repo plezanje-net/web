@@ -45,9 +45,11 @@ import { MapComponent } from './common/map/map.component';
 import { CragRoutesComponent } from './pages/crag/crag-routes/crag-routes.component';
 import { CragInfoComponent } from './pages/crag/crag-info/crag-info.component';
 import { CragCommentsComponent } from './pages/crag/crag-comments/crag-comments.component';
-import { MomentModule } from 'ngx-moment';
-import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import {
+  MatNativeDateModule,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
 import { CragGalleryComponent } from './pages/crag/crag-gallery/crag-gallery.component';
 import { RouteComponent } from './pages/route/route.component';
 import { RouteInfoComponent } from './pages/route/route-info/route-info.component';
@@ -136,6 +138,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ReactiveFormsModule,
     FlexLayoutModule,
     MatButtonModule,
+    MatNativeDateModule,
     MatDialogModule,
     MatTabsModule,
     MatMenuModule,
@@ -150,9 +153,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MatSelectModule,
     GraphQLModule,
     HttpClientModule,
-    MatMomentDateModule,
     MatAutocompleteModule,
-    MomentModule,
     MatCardModule,
     MatListModule,
     NgxMatSelectSearchModule,
@@ -186,7 +187,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
         },
       },
     },
-    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    { provide: MAT_DATE_LOCALE, useValue: 'sl-SI' },
   ],
   bootstrap: [AppComponent],
 })

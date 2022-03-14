@@ -227,7 +227,7 @@
                 {{ comment.user ? comment.user.fullName : "anonimnež" }}
               </div>
               <div fxFlex class="lastColumn">
-                {{ comment.created | amDateFormat: "D.M.Y H:mm" }}
+                {{ comment.created | date: "d. M. yyyy HH:mm" }}
               </div>
             </div>
           </div>
