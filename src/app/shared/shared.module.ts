@@ -21,8 +21,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommentComponent } from './components/comment/comment.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
-import { MomentModule } from 'ngx-moment';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { CommentFormComponent } from './components/comment-form/comment-form.component';
 import { CommentOptionsComponent } from './components/comment/comment-options/comment-options.component';
@@ -70,8 +68,6 @@ import { AscentPublishOptionComponent } from './components/ascent-publish-option
     MatFormFieldModule,
     MatProgressSpinnerModule,
     NgxMatSelectSearchModule,
-    MatMomentDateModule,
-    MomentModule,
     MatDatepickerModule,
     MatInputModule,
   ],

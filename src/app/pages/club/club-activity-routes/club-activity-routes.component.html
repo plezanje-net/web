@@ -126,7 +126,7 @@
 
           <tr *ngFor="let route of activityRoutes" class="row">
             <td>{{ route.user.fullName }}</td>
-            <td>{{ route.date | amDateFormat: "DD.MM.YYYY" }}</td>
+            <td>{{ route.date | date: "d. M. yyyy" }}</td>
             <td>
               <a [routerLink]="['/plezalisce', route.route.crag.slug]">{{
                 route.route.crag.name

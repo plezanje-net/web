@@ -18,6 +18,6 @@
         >{{ grade.user.firstname + " " + grade.user.lastname }}
       </ng-container>
     </div>
-    <div class="grade-date">{{ grade.created | amDateFormat: "D. M. Y" }}</div>
+    <div class="grade-date">{{ grade.created | date: "d. M. yyyy" }}</div>
   </div>
 </div>

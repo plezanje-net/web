@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SnackBarButtonsComponent } from 'src/app/shared/snack-bar-buttons/snack-bar-buttons.component';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import ActivitySelection from 'src/app/types/activity-selection.interface';
 import { Crag, MyCragSummaryGQL, Route } from 'src/generated/graphql';
 import { ASCENT_TYPES } from 'src/app/common/activity.constants';
@@ -108,7 +108,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
           crag: this.crag,
           routes: selectedRoutesWTouch,
         },
-        moment(new Date()).add(1, 'day').toISOString()
+        dayjs().add(1, 'day').toISOString()
       );
     } else {
       this.snackBar.dismiss();
@@ -139,7 +139,8 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
         crag: this.crag,
         routes: routes,
       },
-      moment(new Date()).add(1, 'day').toISOString()
+
+      dayjs().add(1, 'day').toISOString()
     );
   }
 

@@ -58,7 +58,7 @@
                 <div [innerHTML]="warning.content" fxFlex="100"></div>
                 <div class="author" fxFlex="100">
                   {{ warning.user.fullName }},
-                  {{ warning.updated | amDateFormat: "D.M.Y H:mm" }}
+                  {{ warning.updated | date: "d. M. yyyy HH:mm" }}
                 </div>
               </div>
             </mat-card-content>

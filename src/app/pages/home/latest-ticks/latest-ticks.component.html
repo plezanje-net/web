@@ -2,9 +2,7 @@
 
 <div *ngIf="!loading" fxLayout="column" fxLayoutGap="16px">
   <mat-card *ngFor="let tickGroup of latestTicks">
-    <mat-card-title>{{
-      tickGroup.date | amDateFormat: "DD.MM.YYYY"
-    }}</mat-card-title>
+    <mat-card-title>{{ tickGroup.date | date: "d. M. yyyy" }}</mat-card-title>
     <mat-card-content>
       <div class="table-wrapper">
         <table class="stats-card-table">

@@ -8,7 +8,7 @@ import {
   Peak,
   Route,
 } from 'src/generated/graphql';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { ActivityFormService } from './activity-form.service';
@@ -44,7 +44,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     peakId: new FormControl(null),
     iceFallId: new FormControl(null),
     duration: new FormControl(null),
-    date: new FormControl(moment()),
+    date: new FormControl('2021-01-01'),
     partners: new FormControl(),
     notes: new FormControl(),
     onlyRoutes: new FormControl(false),
@@ -84,7 +84,10 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.activityForm.patchValue({ date: moment(), type: this.type });
+    this.activityForm.patchValue({
+      date: dayjs().format('YYYY-MM-DD'),
+      type: this.type,
+    });
 
     if (this.crag != null) {
       this.activityForm.patchValue({
@@ -107,7 +110,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
-  patchRouteDates(value: moment.Moment): void {
+  patchRouteDates(value: dayjs.Dayjs): void {
     this.routes.controls.forEach((control) =>
       control.patchValue({ date: value })
     );
@@ -182,7 +185,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     this.activityForm.disable({ emitEvent: false });
 
     const activity = {
-      date: moment(data.date).format('YYYY-MM-DD'),
+      date: dayjs(data.date).format('YYYY-MM-DD'),
       name: data.name,
       duration: data.duration,
       type: data.type,
@@ -195,7 +198,9 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
     const routes = this.routes.value.map((route: any, i: number) => {
       return {
-        date: route.date || activity.date,
+        date: route.date
+          ? dayjs(route.date).format('YYYY-MM-DD')
+          : activity.date,
         partner: route.partner || activity.partners,
         notes: route.notes,
         routeId: route.routeId,

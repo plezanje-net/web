@@ -1,5 +1,5 @@
 <td *ngIf="displayType != 'activity'">
-  {{ route.date | amDateFormat: "DD.MM.YYYY" }}
+  {{ route.date | date: "d. M. yyyy" }}
 </td>
 <td *ngIf="displayType != 'activity'">
   <a [routerLink]="['/plezalisce', route.route.crag.slug]">{{
