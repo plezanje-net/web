@@ -62,11 +62,10 @@
 <div class="card padding">
   <h4>Ocene uporabnikov</h4>
   <app-distribution-chart
+    class="difficulty-votes-chart"
     [distribution]="gradesDistribution"
-    fxFlexAlign="stretch"
   ></app-distribution-chart>
   <app-route-grades
-    fxFlexAlign="stretch"
     [grades]="grades"
     [difficulty]="route.difficulty"
     [gradingSystemId]="route.defaultGradingSystem.id"
