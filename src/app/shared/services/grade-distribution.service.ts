@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IDistribution } from 'src/app/common/distribution-chart/distribution-chart.component';
-import { GradingSystemsService } from './grading-systems.service';
+import { GradingSystemsService, IGrade } from './grading-systems.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,23 +22,29 @@ export class GradeDistributionService {
       }
     });
 
-    const gradesDistribution: IDistribution[] = [];
+    return new Promise((resolve) => {
+      const diffToGradePromises: Promise<IGrade>[] = [];
 
-    Object.entries(difficultyCounts).forEach(
-      async ([grade, count]: [string, number]) => {
-        const label = await this.gradingSystemsService.diffToGrade(
-          Number(grade),
-          gradingSystemId,
-          true
+      Object.keys(difficultyCounts).forEach((grade: string): void => {
+        diffToGradePromises.push(
+          this.gradingSystemsService.diffToGrade(
+            Number(grade),
+            gradingSystemId,
+            true
+          )
+        );
+      });
+
+      Promise.all(diffToGradePromises).then((distributions) => {
+        const gradesDistribution: IDistribution[] = distributions.map(
+          (distribution, i) => ({
+            label: distribution.name,
+            value: Object.values(difficultyCounts)[i],
+          })
         );
 
-        gradesDistribution.push({
-          label: label.name,
-          value: count,
-        });
-      }
-    );
-
-    return gradesDistribution;
+        resolve(gradesDistribution);
+      });
+    });
   }
 }
