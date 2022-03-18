@@ -7,7 +7,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { take } from 'rxjs';
+import { Subscription, switchMap, take } from 'rxjs';
 import {
   ExposedWarningsGQL,
   ExposedWarningsQuery,
@@ -17,6 +17,7 @@ import { LoadingSpinnerService } from '../loading-spinner.service';
 
 import SwiperCore, { Autoplay, Pagination } from 'swiper';
 import { SwiperComponent } from 'swiper/angular';
+import { AuthService } from 'src/app/auth/auth.service';
 
 SwiperCore.use([Pagination, Autoplay]);
 
@@ -30,6 +31,8 @@ export class ExposedWarningsComponent
 {
   @Output() errorEvent = new EventEmitter<DataError>();
 
+  subscription: Subscription;
+
   warnings: ExposedWarningsQuery['exposedWarnings'];
 
   @ViewChild('swiper', { static: false }) swiper: SwiperComponent;
@@ -37,7 +40,8 @@ export class ExposedWarningsComponent
 
   constructor(
     private exposedWarnings: ExposedWarningsGQL,
-    private loadingSpinnerService: LoadingSpinnerService
+    private loadingSpinnerService: LoadingSpinnerService,
+    private authService: AuthService
   ) {}
 
   ngAfterViewInit(): void {
@@ -62,22 +66,21 @@ export class ExposedWarningsComponent
 
   ngOnInit(): void {
     this.loadingSpinnerService.pushLoader();
-    this.exposedWarnings
-      .fetch()
-      .pipe(take(1))
+
+    this.subscription = this.authService.currentUser
+      .pipe(
+        switchMap((user) => {
+          return this.exposedWarnings.fetch();
+        })
+      )
       .subscribe({
         next: (result) => {
-          if (!result.errors) {
-            this.warnings = result.data.exposedWarnings;
-          } else {
-            this.queryError();
-          }
+          this.loadingSpinnerService.popLoader();
+          this.warnings = result.data.exposedWarnings;
         },
         error: () => {
-          this.queryError();
-        },
-        complete: () => {
           this.loadingSpinnerService.popLoader();
+          this.queryError();
         },
       });
   }
