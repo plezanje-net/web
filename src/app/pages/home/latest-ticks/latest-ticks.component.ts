@@ -8,12 +8,12 @@ import {
 import { Subscription, switchMap } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { DataError } from 'src/app/types/data-error';
-import { LatestTicksGQL, LatestTicksQuery } from 'src/generated/graphql';
+import { ActivityRoute, LatestTicksGQL } from 'src/generated/graphql';
 import { LoadingSpinnerService } from '../loading-spinner.service';
 
 interface ILatestTicks {
   date: string;
-  ticks: LatestTicksQuery['latestTicks'];
+  ticks: ActivityRoute[];
 }
 
 @Component({
@@ -36,10 +36,9 @@ export class LatestTicksComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    
     this.subscription = this.authService.currentUser
-    .pipe(
-      switchMap((user) => {
+      .pipe(
+        switchMap((user) => {
           this.loadingSpinnerService.pushLoader();
           return this.latestTicksGQL.fetch({ latest: 10 });
         })
@@ -60,7 +59,9 @@ export class LatestTicksComponent implements OnInit, OnDestroy {
                 ticks: [],
               });
             }
-            this.latestTicks[this.latestTicks.length - 1].ticks.push(tick);
+            this.latestTicks[this.latestTicks.length - 1].ticks.push(
+              <ActivityRoute>tick
+            );
           });
         },
         error: () => {

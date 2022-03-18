@@ -8,13 +8,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Subscription, switchMap, take } from 'rxjs';
-import {
-  ExposedWarningsGQL,
-  ExposedWarningsQuery,
-} from '../../../../generated/graphql';
+import { Comment, ExposedWarningsGQL } from '../../../../generated/graphql';
 import { DataError } from '../../../types/data-error';
 import { LoadingSpinnerService } from '../loading-spinner.service';
-
 import SwiperCore, { Autoplay, Pagination } from 'swiper';
 import { SwiperComponent } from 'swiper/angular';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -33,7 +29,7 @@ export class ExposedWarningsComponent
 
   subscription: Subscription;
 
-  warnings: ExposedWarningsQuery['exposedWarnings'];
+  warnings: Comment[];
 
   @ViewChild('swiper', { static: false }) swiper: SwiperComponent;
   swiperObserver: IntersectionObserver;
@@ -75,7 +71,7 @@ export class ExposedWarningsComponent
       .subscribe({
         next: (result) => {
           this.loadingSpinnerService.popLoader();
-          this.warnings = result.data.exposedWarnings;
+          this.warnings = <Comment[]>result.data.exposedWarnings;
         },
         error: () => {
           this.loadingSpinnerService.popLoader();

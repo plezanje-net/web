@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { DataError } from 'src/app/types/data-error';
-import { PopularCragsGQL, PopularCragsQuery } from 'src/generated/graphql';
+import { PopularCrag, PopularCragsGQL } from 'src/generated/graphql';
 import { LoadingSpinnerService } from '../../loading-spinner.service';
 
 @Component({
@@ -28,7 +28,8 @@ export class PopularCragsCardComponent implements OnInit, OnDestroy {
   loading = true;
   subscription: Subscription;
 
-  popularCrags: PopularCragsQuery['popularCrags'];
+  popularCrags: PopularCrag[];
+
   expand = false;
 
   @Input() dateFrom: string;
@@ -52,7 +53,7 @@ export class PopularCragsCardComponent implements OnInit, OnDestroy {
         next: (result) => {
           this.loading = false;
           this.loadingSpinnerService.popLoader();
-          this.popularCrags = result.data.popularCrags;
+          this.popularCrags = <PopularCrag[]>result.data.popularCrags;
         },
         error: (error) => {
           this.loadingSpinnerService.popLoader();
