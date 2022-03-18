@@ -65,11 +65,10 @@ export class ExposedWarningsComponent
   }
 
   ngOnInit(): void {
-    this.loadingSpinnerService.pushLoader();
-
     this.subscription = this.authService.currentUser
       .pipe(
         switchMap((user) => {
+          this.loadingSpinnerService.pushLoader();
           return this.exposedWarnings.fetch();
         })
       )

@@ -36,11 +36,11 @@ export class LatestTicksComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loadingSpinnerService.pushLoader();
-
+    
     this.subscription = this.authService.currentUser
-      .pipe(
-        switchMap((user) => {
+    .pipe(
+      switchMap((user) => {
+          this.loadingSpinnerService.pushLoader();
           return this.latestTicksGQL.fetch({ latest: 10 });
         })
       )

@@ -38,11 +38,10 @@ export class PopularCragsCardComponent implements OnInit, OnDestroy {
   @Output() errorEvent = new EventEmitter<DataError>();
 
   ngOnInit(): void {
-    this.loadingSpinnerService.pushLoader();
-
     this.subscription = this.authService.currentUser
       .pipe(
         switchMap((user) => {
+          this.loadingSpinnerService.pushLoader();
           return this.popularCragsGQL.fetch({
             dateFrom: this.dateFrom,
             top: this.top,
