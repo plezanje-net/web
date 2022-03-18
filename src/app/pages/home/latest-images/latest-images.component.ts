@@ -1,11 +1,18 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { MediaObserver } from '@angular/flex-layout';
 import { MatDialog } from '@angular/material/dialog';
-import { take } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 import { ImageFullComponent } from 'src/app/common/image-full/image-full.component';
 import { DataError } from 'src/app/types/data-error';
 import { environment } from 'src/environments/environment';
-import { LatestImagesGQL, LatestImagesQuery } from 'src/generated/graphql';
+import { Image, LatestImagesGQL } from 'src/generated/graphql';
 import { LoadingSpinnerService } from '../loading-spinner.service';
 
 @Component({
@@ -13,11 +20,13 @@ import { LoadingSpinnerService } from '../loading-spinner.service';
   templateUrl: './latest-images.component.html',
   styleUrls: ['./latest-images.component.scss'],
 })
-export class LatestImagesComponent implements OnInit {
+export class LatestImagesComponent implements OnInit, OnDestroy {
   @Output() errorEvent = new EventEmitter<DataError>();
-  loading = true;
 
-  latestImages: LatestImagesQuery['latestImages'];
+  loading = true;
+  subscription: Subscription;
+
+  latestImages: Image[];
 
   ncols = 4;
   storageUrl = environment.storageUrl;
@@ -26,7 +35,8 @@ export class LatestImagesComponent implements OnInit {
     private mediaObserver: MediaObserver,
     private latestImagesGQL: LatestImagesGQL,
     private dialog: MatDialog,
-    private loadingSpinnerService: LoadingSpinnerService
+    private loadingSpinnerService: LoadingSpinnerService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -48,18 +58,18 @@ export class LatestImagesComponent implements OnInit {
     });
 
     this.loadingSpinnerService.pushLoader();
-    this.latestImagesGQL
-      .fetch({ latest: 12 })
-      .pipe(take(1))
+
+    this.subscription = this.authService.currentUser
+      .pipe(
+        switchMap((user) => {
+          return this.latestImagesGQL.fetch({ latest: 12 });
+        })
+      )
       .subscribe({
         next: (result) => {
           this.loading = false;
           this.loadingSpinnerService.popLoader();
-          if (result.errors == null) {
-            this.latestImages = result.data.latestImages;
-          } else {
-            this.queryError();
-          }
+          this.latestImages = <Image[]>result.data.latestImages;
         },
         error: () => {
           this.loadingSpinnerService.popLoader();
@@ -68,7 +78,7 @@ export class LatestImagesComponent implements OnInit {
       });
   }
 
-  onImageClick(image: LatestImagesQuery['latestImages'][0]) {
+  onImageClick(image: Image) {
     this.dialog.open(ImageFullComponent, {
       width: '100vw',
       height: '100vh',
@@ -83,5 +93,9 @@ export class LatestImagesComponent implements OnInit {
     this.errorEvent.emit({
       message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }
