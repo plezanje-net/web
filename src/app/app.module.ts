@@ -75,7 +75,7 @@ import { LatestTicksComponent } from './pages/home/latest-ticks/latest-ticks.com
 import { LatestImagesComponent } from './pages/home/latest-images/latest-images.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ImageFullComponent } from './common/image-full/image-full.component';
-import { ExposedWarningsComponent } from './pages/home/exposed-warnings/expsoed-warnings.component';
+import { ExposedWarningsComponent } from './pages/home/exposed-warnings/exposed-warnings.component';
 import { CragRoutePreviewComponent } from './pages/crag/crag-route-preview/crag-route-preview.component';
 import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
 import { SwiperModule } from 'swiper/angular';
