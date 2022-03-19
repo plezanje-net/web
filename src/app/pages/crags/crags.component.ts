@@ -60,6 +60,7 @@ export class CragsComponent implements OnInit, OnDestroy {
           input: {
             areaSlug: params['obmocje'],
             routeTypeId: rotueType?.id,
+            type: 'sport',
           },
         })
         .pipe(take(1))
