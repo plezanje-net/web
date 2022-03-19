@@ -7,6 +7,8 @@ import { DataError } from 'src/app/types/data-error';
 import { environment } from 'src/environments/environment';
 import { LatestImagesGQL, LatestImagesQuery } from 'src/generated/graphql';
 import { LoadingSpinnerService } from '../loading-spinner.service';
+import { Cloudinary } from '@cloudinary/url-gen';
+import { Resize } from '@cloudinary/url-gen/actions/resize';
 
 @Component({
   selector: 'app-latest-images',
@@ -21,6 +23,15 @@ export class LatestImagesComponent implements OnInit {
 
   ncols = 4;
   storageUrl = environment.storageUrl;
+
+  cld = new Cloudinary({
+    cloud: {
+      cloudName: 'plezanjenet',
+    },
+    url: {
+      secure: true,
+    },
+  });
 
   constructor(
     private mediaObserver: MediaObserver,
@@ -56,7 +67,13 @@ export class LatestImagesComponent implements OnInit {
           this.loading = false;
           this.loadingSpinnerService.popLoader();
           if (result.errors == null) {
-            this.latestImages = result.data.latestImages;
+            this.latestImages = result.data.latestImages.map((image) => ({
+              ...image,
+              url: this.cld
+                .image(`../${image.path}`)
+                .resize(Resize.crop(500, 500).width(500).height(500))
+                .toURL(),
+            }));
           } else {
             this.queryError();
           }

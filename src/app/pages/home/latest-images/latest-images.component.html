@@ -2,7 +2,7 @@
 <mat-grid-list [cols]="ncols" rowHeight="1:1" gutterSize="4px" *ngIf="!loading">
   <mat-grid-tile *ngFor="let image of latestImages">
     <div class="wrap" (click)="onImageClick(image)">
-      <img [src]="storageUrl + '/images/' + image.path" />
+      <img [src]="image.url" />
       <div class="info" fxLayout="row" fxLayoutAlign="center center">
         <div>{{ image.title }}</div>
       </div>
