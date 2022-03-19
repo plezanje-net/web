@@ -24,7 +24,10 @@
     }"
   >
     <ng-template swiperSlide *ngFor="let warning of warnings">
-      <div [class.slide]="warnings.length > 1">
+      <div
+        [ngClass]="{ slide: warnings.length > 2 }"
+        [ngClass.lt-md]="{ slide: warnings.length > 1 }"
+      >
         <div class="slide-inner-wrap">
           <mat-card class="warning">
             <mat-card-title>
@@ -43,8 +46,7 @@
               <ng-container *ngIf="warning.crag">
                 <a
                   [routerLink]="[
-                    '/plezalisca',
-                    warning.crag.country.slug,
+                    '/plezalisce',
                     warning.crag.slug,
                     { tab: 'komentarji' }
                   ]"

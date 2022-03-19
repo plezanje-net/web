@@ -1,7 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { take } from 'rxjs/operators';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { AuthService } from 'src/app/auth/auth.service';
 import { DataError } from 'src/app/types/data-error';
-import { PopularCragsGQL, PopularCragsQuery } from 'src/generated/graphql';
+import { PopularCrag, PopularCragsGQL } from 'src/generated/graphql';
 import { LoadingSpinnerService } from '../../loading-spinner.service';
 
 @Component({
@@ -9,15 +18,18 @@ import { LoadingSpinnerService } from '../../loading-spinner.service';
   templateUrl: './popular-crags-card.component.html',
   styleUrls: ['./popular-crags-card.component.scss'],
 })
-export class PopularCragsCardComponent implements OnInit {
+export class PopularCragsCardComponent implements OnInit, OnDestroy {
   constructor(
     private popularCragsGQL: PopularCragsGQL,
-    private loadingSpinnerService: LoadingSpinnerService
+    private loadingSpinnerService: LoadingSpinnerService,
+    private authService: AuthService
   ) {}
 
   loading = true;
+  subscription: Subscription;
 
-  popularCrags: PopularCragsQuery['popularCrags'];
+  popularCrags: PopularCrag[];
+
   expand = false;
 
   @Input() dateFrom: string;
@@ -27,24 +39,23 @@ export class PopularCragsCardComponent implements OnInit {
   @Output() errorEvent = new EventEmitter<DataError>();
 
   ngOnInit(): void {
-    this.loadingSpinnerService.pushLoader();
-    this.popularCragsGQL
-      .fetch({
-        dateFrom: this.dateFrom,
-        top: this.top,
-      })
-      .pipe(take(1))
+    this.subscription = this.authService.currentUser
+      .pipe(
+        switchMap((user) => {
+          this.loadingSpinnerService.pushLoader();
+          return this.popularCragsGQL.fetch({
+            dateFrom: this.dateFrom,
+            top: this.top,
+          });
+        })
+      )
       .subscribe({
         next: (result) => {
           this.loading = false;
           this.loadingSpinnerService.popLoader();
-          if (result.errors != null) {
-            this.queryError();
-          } else {
-            this.popularCrags = result.data.popularCrags;
-          }
+          this.popularCrags = <PopularCrag[]>result.data.popularCrags;
         },
-        error: () => {
+        error: (error) => {
           this.loadingSpinnerService.popLoader();
           this.queryError();
         },
@@ -55,5 +66,9 @@ export class PopularCragsCardComponent implements OnInit {
     this.errorEvent.emit({
       message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

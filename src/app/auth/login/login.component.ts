@@ -47,10 +47,9 @@ export class LoginComponent implements OnInit {
     const value = this.loginForm.value;
 
     this.loginGQL.mutate(value).subscribe({
-      next: (result) => {
-        this.authService
-          .login(<LoginResponse>result.data.login)
-          .then(() => this.dialogRef.close(true));
+      next: async (result) => {
+        await this.authService.login(<LoginResponse>result.data.login);
+        this.dialogRef.close(true);
       },
       error: () => {
         this.loading = false;

@@ -7,16 +7,13 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { take } from 'rxjs';
-import {
-  ExposedWarningsGQL,
-  ExposedWarningsQuery,
-} from '../../../../generated/graphql';
+import { Subscription, switchMap, take } from 'rxjs';
+import { Comment, ExposedWarningsGQL } from '../../../../generated/graphql';
 import { DataError } from '../../../types/data-error';
 import { LoadingSpinnerService } from '../loading-spinner.service';
-
 import SwiperCore, { Autoplay, Pagination } from 'swiper';
 import { SwiperComponent } from 'swiper/angular';
+import { AuthService } from 'src/app/auth/auth.service';
 
 SwiperCore.use([Pagination, Autoplay]);
 
@@ -30,14 +27,17 @@ export class ExposedWarningsComponent
 {
   @Output() errorEvent = new EventEmitter<DataError>();
 
-  warnings: ExposedWarningsQuery['exposedWarnings'];
+  subscription: Subscription;
+
+  warnings: Comment[];
 
   @ViewChild('swiper', { static: false }) swiper: SwiperComponent;
   swiperObserver: IntersectionObserver;
 
   constructor(
     private exposedWarnings: ExposedWarningsGQL,
-    private loadingSpinnerService: LoadingSpinnerService
+    private loadingSpinnerService: LoadingSpinnerService,
+    private authService: AuthService
   ) {}
 
   ngAfterViewInit(): void {
@@ -61,23 +61,21 @@ export class ExposedWarningsComponent
   }
 
   ngOnInit(): void {
-    this.loadingSpinnerService.pushLoader();
-    this.exposedWarnings
-      .fetch()
-      .pipe(take(1))
+    this.subscription = this.authService.currentUser
+      .pipe(
+        switchMap((user) => {
+          this.loadingSpinnerService.pushLoader();
+          return this.exposedWarnings.fetch();
+        })
+      )
       .subscribe({
         next: (result) => {
-          if (!result.errors) {
-            this.warnings = result.data.exposedWarnings;
-          } else {
-            this.queryError();
-          }
+          this.loadingSpinnerService.popLoader();
+          this.warnings = <Comment[]>result.data.exposedWarnings;
         },
         error: () => {
-          this.queryError();
-        },
-        complete: () => {
           this.loadingSpinnerService.popLoader();
+          this.queryError();
         },
       });
   }

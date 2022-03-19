@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from '../../../generated/graphql';
-import { AuthGuard } from '../../auth/auth.guard';
 
 @Component({
   selector: 'app-header',
@@ -41,11 +40,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.naviOpen = !this.naviOpen;
   }
 
-  logout() {
-    this.authService.logout().then(() => {
-      this.snackbar.open('Uspešno si se odjavil', null, { duration: 3000 });
-      this.router.navigate(['/']);
-    });
+  async logout() {
+    await this.authService.logout();
+    this.snackbar.open('Uspešno si se odjavil', null, { duration: 3000 });
+    this.router.navigate(['/']);
   }
 
   login() {
