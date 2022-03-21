@@ -57,10 +57,9 @@ export class LatestImagesComponent implements OnInit, OnDestroy {
       }
     });
 
-    
     this.subscription = this.authService.currentUser
-    .pipe(
-      switchMap((user) => {
+      .pipe(
+        switchMap((user) => {
           this.loadingSpinnerService.pushLoader();
           return this.latestImagesGQL.fetch({ latest: 12 });
         })

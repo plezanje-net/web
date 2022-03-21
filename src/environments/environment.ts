@@ -7,6 +7,7 @@ export const environment = {
   apiUrl: 'http://localhost:3000/graphql',
   webUrl: 'http://localhost:4200/',
   storageUrl: 'https://plezanje.info/storage',
+  // storageUrl: 'assets', // TODO: this is a test
   storageKeyPrefix: 'plezanje-local-1',
 };
 
