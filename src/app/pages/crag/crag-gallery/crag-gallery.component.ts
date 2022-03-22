@@ -1,21 +1,22 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'src/environments/environment';
 import { ImageFullComponent } from 'src/app/common/image-full/image-full.component';
+import { AuthService } from 'src/app/auth/auth.service';
+import { ImageUploadComponent } from 'src/app/shared/components/image-upload/image-upload.component';
 
 @Component({
   selector: 'app-crag-gallery',
   templateUrl: './crag-gallery.component.html',
   styleUrls: ['./crag-gallery.component.scss'],
 })
-export class CragGalleryComponent implements OnInit {
+export class CragGalleryComponent {
   @Input() images: string;
+  @Input() cragId: string;
 
   storageUrl = environment.storageUrl;
 
-  constructor(private dialog: MatDialog) {}
-
-  ngOnInit(): void {}
+  constructor(private dialog: MatDialog, private authService: AuthService) {}
 
   onImageClick(image): void {
     this.dialog.open(ImageFullComponent, {
@@ -26,5 +27,19 @@ export class CragGalleryComponent implements OnInit {
       data: { image },
       autoFocus: false,
     });
+  }
+
+  async onAddImagesClick(): Promise<void> {
+    const allowed = await this.authService.guardedAction({});
+
+    if (allowed) {
+      this.dialog.open(ImageUploadComponent, {
+        data: {
+          type: 'crag',
+          entityId: this.cragId,
+        },
+        autoFocus: false,
+      });
+    }
   }
 }

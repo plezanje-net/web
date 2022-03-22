@@ -32,6 +32,7 @@ import { PluralizeNoun } from './pipes/pluralize-noun.pipe';
 import { DataErrorComponent } from './components/data-error/data-error.component';
 import { AscentTypeComponent } from './components/ascent-type/ascent-type.component';
 import { AscentPublishOptionComponent } from './components/ascent-publish-option/ascent-publish-option.component';
+import { ImageUploadComponent } from './components/image-upload/image-upload.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { AscentPublishOptionComponent } from './components/ascent-publish-option
     PluralizeNoun,
     AscentTypeComponent,
     AscentPublishOptionComponent,
+    ImageUploadComponent,
   ],
   imports: [
     CommonModule,

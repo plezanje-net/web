@@ -101,6 +101,7 @@
       ></app-crag-comments>
 
       <app-crag-gallery
+        [cragId]="crag.id"
         [images]="crag.images"
         *ngIf="activeTab == 'galerija'"
       ></app-crag-gallery>
