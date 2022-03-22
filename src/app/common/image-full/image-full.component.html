@@ -13,7 +13,22 @@
   >
     <div fxLayout="column" class="image-w-caption-wrap">
       <img
-        [src]="storageUrl + '/images/' + data.image.path"
+        [srcset]="
+          storageUrl +
+          '/images/300/' +
+          data.image.path +
+          ' 300w, ' +
+          storageUrl +
+          '/images/600/' +
+          data.image.path +
+          ' 600w, ' +
+          storageUrl +
+          '/images/1040/' +
+          data.image.path +
+          ' 1040w'
+        "
+        sizes="100vw"
+        [src]="storageUrl + '/images/1040/' + data.image.path"
         [alt]="data.image.title"
         fxFlex="90%"
         fxLayoutAlign="center center"
