@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EditorModule } from '@tinymce/tinymce-angular';
+import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { EditorComponent } from './editor/editor.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AscentTypePipe } from './pipes/ascent-type.pipe';
@@ -71,7 +71,11 @@ import { AscentPublishOptionComponent } from './components/ascent-publish-option
     MatDatepickerModule,
     MatInputModule,
   ],
-  providers: [CustomBreakpointsProvider, GenderizeVerbPipe],
+  providers: [
+    CustomBreakpointsProvider,
+    GenderizeVerbPipe,
+    { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
+  ],
   exports: [
     EditorComponent,
     SnackBarButtonsComponent,
