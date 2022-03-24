@@ -143,6 +143,8 @@ export class CragsComponent implements OnInit, OnDestroy {
         name: this.country.name,
       },
     ]);
+
+    this.layoutService.setTitle(['Seznam plezališč', this.country.name]);
   }
 
   ngOnDestroy(): void {
