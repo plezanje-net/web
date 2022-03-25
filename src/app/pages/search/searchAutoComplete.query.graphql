@@ -28,10 +28,11 @@ query SearchAutoComplete($searchString: String) {
       }
     }
 
-    users {
-      __typename
-      id
-      fullName
-    }
+    # Searching for users is temporarily disabled.
+    # users {
+    #   __typename
+    #   id
+    #   fullName
+    # }
   }
 }

@@ -11,7 +11,7 @@
         type="text"
         matInput
         type="text"
-        placeholder="Poišči plezališče, smer, sektor, uporabnika ali komentar"
+        placeholder="Poišči plezališče, smer, sektor ali komentar"
         formControlName="searchControl"
         [matAutocomplete]="auto"
       />
@@ -49,7 +49,7 @@
             </mat-option>
           </mat-optgroup>
 
-          <mat-optgroup *ngIf="searchResults?.users.length" label="Uporabniki">
+          <mat-optgroup *ngIf="searchResults?.users?.length" label="Uporabniki">
             <mat-option *ngFor="let user of searchResults.users" [value]="user">
               {{ user.fullName }}
             </mat-option>
