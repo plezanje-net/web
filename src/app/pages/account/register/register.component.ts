@@ -22,7 +22,7 @@ export class RegisterComponent implements OnInit {
     firstname: new FormControl('', [Validators.required]),
     lastname: new FormControl('', [Validators.required]),
     gender: new FormControl(''),
-    conditions: new FormControl(false, [Validators.requiredTrue]),
+    // conditions: new FormControl(false, [Validators.requiredTrue]),
   });
 
   constructor(
