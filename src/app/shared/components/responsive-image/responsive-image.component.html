@@ -1,0 +1,9 @@
+<picture>
+  <source type="image/avif" [srcset]="avifSrcset" [sizes]="renderSizes" />
+  <source type="image/webp" [srcset]="webpSrcset" [sizes]="renderSizes" />
+  <source type="image/jpg" [srcset]="jpgSrcset" [sizes]="renderSizes" />
+  <img
+    [src]="storageUrl + '/images/' + fallbackWidth + '/' + imagePath + '.jpg'"
+    [alt]="imageAlt"
+  />
+</picture>
