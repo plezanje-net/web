@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Apollo, gql } from 'apollo-angular';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { LayoutService } from 'src/app/services/layout.service';
+import { SetPasswordGQL } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-select-password',
@@ -29,11 +29,11 @@ export class SelectPasswordComponent implements OnInit, OnDestroy {
 
   constructor(
     private layoutService: LayoutService,
-    private apollo: Apollo,
     private snackbar: MatSnackBar,
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private setPasswordGQL: SetPasswordGQL
   ) {}
 
   ngOnInit(): void {
@@ -60,23 +60,15 @@ export class SelectPasswordComponent implements OnInit, OnDestroy {
 
     const value = this.form.value;
 
-    this.apollo
+    this.setPasswordGQL
       .mutate({
-        mutation: gql`
-        mutation {
-          setPassword(input: {
-            id: "${value.id}", 
-            token: "${value.token}", 
-            password: "${value.password}"
-          })
-        }
-      `,
+        input: { id: value.id, token: value.token, password: value.password },
       })
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.success = true;
         },
-        (error) => {
+        error: () => {
           this.loading = false;
 
           let message =
@@ -85,8 +77,8 @@ export class SelectPasswordComponent implements OnInit, OnDestroy {
             panelClass: 'error',
             duration: 3000,
           });
-        }
-      );
+        },
+      });
   }
 
   ngOnDestroy(): void {
