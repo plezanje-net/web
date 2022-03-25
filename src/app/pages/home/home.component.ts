@@ -32,6 +32,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         name: 'Prva stran',
       },
     ]);
+
+    this.layoutService.setTitle();
   }
 
   login() {

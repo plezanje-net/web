@@ -3,13 +3,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../app/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { LoginComponent } from './auth/login/login.component';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { LayoutService } from './services/layout.service';
-import { Title } from '@angular/platform-browser';
 
 import { filter } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { Subscription, take } from 'rxjs';
+
+declare let gtag: Function;
 
 @Component({
   selector: 'app-root',
@@ -26,8 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private dialog: MatDialog,
     private router: Router,
-    private layoutService: LayoutService,
-    private titleService: Title
+    private layoutService: LayoutService
   ) {}
 
   ngOnInit(): void {
@@ -66,16 +66,19 @@ export class AppComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(loginSub);
 
-    const breadcrumbsSub = this.layoutService.$breadcrumbs.subscribe(
-      (value) => {
-        let title = 'Plezanje.net';
-        if (value.length > 0) {
-          title = value[value.length - 1].name + ' · ' + title;
-        }
-        this.titleService.setTitle(title);
-      }
+    // Fallback page title - if title should differentiate from breadcrumbs, the setTitle has to be called in corresponding component
+    const breadcrumbsSub = this.layoutService.$breadcrumbs.subscribe((list) =>
+      this.layoutService.setTitle(
+        list.length > 0 ? list.slice(-1)[0].name : undefined
+      )
     );
     this.subscriptions.push(breadcrumbsSub);
+
+    const routerSub = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => gtag('event', 'page_view'));
+
+    this.subscriptions.push(routerSub);
   }
 
   ngOnDestroy(): void {
