@@ -3,12 +3,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../app/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { LoginComponent } from './auth/login/login.component';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { LayoutService } from './services/layout.service';
 
 import { filter } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { Subscription, take } from 'rxjs';
+
+declare let gtag: Function;
 
 @Component({
   selector: 'app-root',
@@ -71,6 +73,12 @@ export class AppComponent implements OnInit, OnDestroy {
       )
     );
     this.subscriptions.push(breadcrumbsSub);
+
+    const routerSub = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => gtag('event', 'page_view'));
+
+    this.subscriptions.push(routerSub);
   }
 
   ngOnDestroy(): void {
