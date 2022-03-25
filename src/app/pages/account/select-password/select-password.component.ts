@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo, gql } from 'apollo-angular';
+import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 import { LayoutService } from 'src/app/services/layout.service';
 
 @Component({
@@ -10,7 +12,7 @@ import { LayoutService } from 'src/app/services/layout.service';
   templateUrl: './select-password.component.html',
   styleUrls: ['./select-password.component.scss'],
 })
-export class SelectPasswordComponent implements OnInit {
+export class SelectPasswordComponent implements OnInit, OnDestroy {
   loading = false;
   success = false;
 
@@ -23,11 +25,15 @@ export class SelectPasswordComponent implements OnInit {
     token: new FormControl(''),
   });
 
+  subscription: Subscription;
+
   constructor(
     private layoutService: LayoutService,
     private apollo: Apollo,
     private snackbar: MatSnackBar,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -39,6 +45,13 @@ export class SelectPasswordComponent implements OnInit {
 
     this.activatedRoute.params.subscribe((params) => {
       this.form.patchValue(params);
+    });
+
+    this.subscription = this.authService.currentUser.subscribe((user) => {
+      // user just logged in, navigate to home
+      if (user !== null) {
+        this.router.navigate(['/']);
+      }
     });
   }
 
@@ -74,5 +87,9 @@ export class SelectPasswordComponent implements OnInit {
           });
         }
       );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

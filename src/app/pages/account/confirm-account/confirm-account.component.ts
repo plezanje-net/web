@@ -1,17 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo, gql } from 'apollo-angular';
+import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-confirm-account',
   templateUrl: './confirm-account.component.html',
   styleUrls: ['./confirm-account.component.scss'],
 })
-export class ConfirmAccountComponent implements OnInit {
+export class ConfirmAccountComponent implements OnInit, OnDestroy {
   loading = true;
   success = false;
 
-  constructor(private activatedRoute: ActivatedRoute, private apollo: Apollo) {}
+  subscription: Subscription;
+
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private apollo: Apollo,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => {
@@ -37,5 +46,16 @@ export class ConfirmAccountComponent implements OnInit {
           }
         );
     });
+
+    this.subscription = this.authService.currentUser.subscribe((user) => {
+      // user just logged in, navigate to home
+      if (user !== null) {
+        this.router.navigate(['/']);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }
