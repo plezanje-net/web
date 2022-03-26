@@ -16,11 +16,13 @@ export class LayoutService {
   setTitle(list?: string[] | string): void {
     const siteName = 'Plezanje.net';
 
-    this.title.setTitle(
+    const title =
       list != null
         ? `${Array.isArray(list) ? list.join(' · ') : list} · ${siteName}`
-        : `${siteName} · Slovenska plezalna platforma`
-    );
+        : `${siteName} · Slovenska plezalna platforma`;
+
+    this.title.setTitle(title);
+    this.meta.updateTag({ name: 'og:title', content: title });
   }
 
   setDescription(description: string): void {
