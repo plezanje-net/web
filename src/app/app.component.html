@@ -10,7 +10,14 @@
 
   <footer>
     <div class="container text-center py-16">
-      © www.plezanje.net, 2004-{{ nowYear }}
+      <a [routerLink]="['/o-plezanje-net']">O plezanje.net</a> |
+      <a
+        href="mailto:info@plezanje.net"
+        target="_blank"
+        rel="noopener noreferrer"
+        >info@plezanje.net</a
+      >
+      <div class="mt-4">© www.plezanje.net, 2004-{{ nowYear }}</div>
     </div>
   </footer>
 </div>

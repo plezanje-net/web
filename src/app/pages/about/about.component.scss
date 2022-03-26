@@ -3,6 +3,8 @@
 .grade-modifier {
   position: relative;
   top: 7px;
+  height: 20px;
+  line-height: 5px;
 
   &.hard {
     color: $colors-red;
@@ -16,6 +18,11 @@
 .about-card {
   border-radius: 0;
 }
+
 h3 {
   padding-left: 0;
+}
+
+.first-paragraph {
+  margin-top: 32px;
 }
