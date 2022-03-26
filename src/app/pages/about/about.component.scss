@@ -1,0 +1,18 @@
+@import "../../../styles/colors.scss";
+
+.grade-modifier {
+  position: relative;
+  top: 7px;
+
+  &.hard {
+    color: $colors-red;
+  }
+
+  &.soft {
+    color: $colors-green;
+  }
+}
+
+.about-card {
+  border-radius: 0;
+}
