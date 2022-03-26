@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../app/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { LoginComponent } from './auth/login/login.component';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { LayoutService } from './services/layout.service';
 
 import { filter } from 'rxjs/operators';
