@@ -3,6 +3,8 @@
 .grade-modifier {
   position: relative;
   top: 7px;
+  height: 20px;
+  line-height: 5px;
 
   &.hard {
     color: $colors-red;
