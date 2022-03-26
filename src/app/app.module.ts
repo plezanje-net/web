@@ -80,6 +80,7 @@ import { CragRoutePreviewComponent } from './pages/crag/crag-route-preview/crag-
 import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
 import { SwiperModule } from 'swiper/angular';
 import { AlpinismComponent } from './pages/alpinism/alpinism.component';
+import { AboutComponent } from './pages/about/about.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -130,6 +131,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     CragRoutePreviewComponent,
     ConfirmClubMembershipComponent,
     AlpinismComponent,
+    AboutComponent,
   ],
   imports: [
     BrowserModule,
