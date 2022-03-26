@@ -114,7 +114,7 @@ const routes: Routes = [
       import('./ice-falls/ice-falls.module').then((m) => m.IceFallsModule),
   },
   {
-    path: 'o-strani',
+    path: 'o-plezanje-net',
     component: AboutComponent,
     data: {
       hideBreadcrumbs: true,
