@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://plezanje.info/graphql',
-  webUrl: 'https://plezanje.info/',
-  storageUrl: 'https://plezanje.info/storage',
-  storageKeyPrefix: 'plezanje-1',
+  apiUrl: 'https://plezanje.net/graphql',
+  webUrl: 'https://plezanje.net/',
+  storageUrl: 'https://plezanje.net/storage',
+  storageKeyPrefix: 'plezanje-2',
 };
