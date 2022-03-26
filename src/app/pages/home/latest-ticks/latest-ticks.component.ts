@@ -40,7 +40,7 @@ export class LatestTicksComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap((user) => {
           this.loadingSpinnerService.pushLoader();
-          return this.latestTicksGQL.fetch({ inLastNDays: 10 });
+          return this.latestTicksGQL.fetch({ latestN: 10 });
         })
       )
       .subscribe({
