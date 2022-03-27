@@ -39,22 +39,13 @@
     class="row"
     fxLayout="row"
     fxLayoutAlign="space-between center"
-    *ngIf="author"
+    *ngFor="let event of route.routeEvents"
   >
-    <div class="label">Avtor</div>
-    <span class="text-right">
-      {{ author }}
-    </span>
-  </div>
-  <div
-    class="row"
-    fxLayout="row"
-    fxLayoutAlign="space-between center"
-    *ngIf="firstAscent"
-  >
-    <div class="label">Prvi vzpon</div>
-    <span class="text-right">
-      {{ firstAscent }}
+    <div class="label">{{ eventTypeMap[event.eventType] }}</div>
+    <span class="text-right"
+      >{{ event.author }} ({{
+        event.eventDate | date: (event.showFullDate ? "d. M. Y" : "Y")
+      }})
     </span>
   </div>
 </div>
