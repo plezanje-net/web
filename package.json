@@ -23,6 +23,8 @@
     "@angular/platform-browser-dynamic": "~13.2.2",
     "@angular/router": "~13.2.2",
     "@apollo/client": "^3.5.9",
+    "@sentry/angular": "^6.19.2",
+    "@sentry/tracing": "^6.19.2",
     "@tinymce/tinymce-angular": "^4.2.4",
     "apollo-angular": "^3.0.0-alpha.2",
     "apollo-link-error": "^1.1.13",

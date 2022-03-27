@@ -6,7 +6,6 @@ import { BehaviorSubject, Subscription, take } from 'rxjs';
 import { CragsQuery, CragsGQL } from '../../../generated/graphql';
 import { GraphQLError } from 'graphql';
 import { FormControl } from '@angular/forms';
-import { Tab } from 'src/app/types/tab';
 import { ROUTE_TYPES } from 'src/app/common/route-types.constants';
 
 @Component({
