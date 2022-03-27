@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -81,6 +81,8 @@ import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-member
 import { SwiperModule } from 'swiper/angular';
 import { AlpinismComponent } from './pages/alpinism/alpinism.component';
 import { AboutComponent } from './pages/about/about.component';
+import * as Sentry from '@sentry/angular';
+import { Router } from '@angular/router';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -165,6 +167,20 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     SwiperModule,
   ],
   providers: [
+    {
+      provide: ErrorHandler,
+      useValue: Sentry.createErrorHandler(),
+    },
+    {
+      provide: Sentry.TraceService,
+      deps: [Router],
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => () => {},
+      deps: [Sentry.TraceService],
+      multi: true,
+    },
     AuthGuard,
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
