@@ -75,11 +75,25 @@
     <!-- <button mat-menu-item>
       <span>Uredi vzpon</span>
     </button> -->
+    <button mat-menu-item [mat-menu-trigger-for]="publishMenu">
+      <span>Spremeni vidnost</span>
+    </button>
     <button
       mat-menu-item
       (click)="rowAction.next({ item: route, action: 'delete' })"
     >
       <span>Odstrani vzpon</span>
+    </button>
+  </mat-menu>
+
+  <mat-menu #publishMenu="matMenu">
+    <button
+      mat-menu-item
+      *ngFor="let publishOption of publishOptions"
+      [disabled]="publishOption.value == route.publish"
+      (click)="changePublish(publishOption.value)"
+    >
+      <span>{{ publishOption.label }}</span>
     </button>
   </mat-menu>
 </td>
