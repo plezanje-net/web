@@ -9,6 +9,9 @@ export const environment = {
   storageUrl: 'https://plezanje.net/storage',
   // storageUrl: 'assets', // TODO: this is a test
   storageKeyPrefix: 'plezanje-local-1',
+  sentryDsn:
+    'https://a6bd493f5c044c419cadb227cfe067f6@o1179288.ingest.sentry.io/6291581',
+  sentryTracingUrl: 'https://plezanje.net/graphql',
 };
 
 /*

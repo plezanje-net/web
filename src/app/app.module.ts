@@ -1,5 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { Inject, NgModule, Optional } from '@angular/core';
+import {
+  APP_INITIALIZER,
+  ErrorHandler,
+  NgModule,
+  Inject,
+  Optional,
+} from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -84,9 +90,11 @@ import { SwiperModule } from 'swiper/angular';
 import { AlpinismComponent } from './pages/alpinism/alpinism.component';
 import { AboutComponent } from './pages/about/about.component';
 import { Platform } from '@angular/cdk/platform';
-import { DatePipe, registerLocaleData } from '@angular/common';
+import { registerLocaleData } from '@angular/common';
 import localeSl from '@angular/common/locales/sl';
 registerLocaleData(localeSl);
+import * as Sentry from '@sentry/angular';
+import { Router } from '@angular/router';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -191,6 +199,20 @@ class CustomDateAdapter extends NativeDateAdapter {
     SwiperModule,
   ],
   providers: [
+    {
+      provide: ErrorHandler,
+      useValue: Sentry.createErrorHandler(),
+    },
+    {
+      provide: Sentry.TraceService,
+      deps: [Router],
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => () => {},
+      deps: [Sentry.TraceService],
+      multi: true,
+    },
     AuthGuard,
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,

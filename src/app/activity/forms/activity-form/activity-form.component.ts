@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   Crag,
   CreateActivityGQL,
+  CreateActivityRoutesGQL,
   IceFall,
   Peak,
   Route,
@@ -58,6 +59,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   constructor(
     private snackBar: MatSnackBar,
     private createActivityGQL: CreateActivityGQL,
+    private createActivityRoutesGQL: CreateActivityRoutesGQL,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     public location: Location,
@@ -212,7 +214,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       };
     });
 
-    this.createActivityGQL.mutate({ input: activity, routes }).subscribe({
+    const options = {
       next: () => {
         if (this.crag) {
           this.successCragWithRoutes();
@@ -232,7 +234,15 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
           { panelClass: 'error', duration: 3000 }
         );
       },
-    });
+    };
+
+    if (data.onlyRoutes) {
+      this.createActivityRoutesGQL.mutate({ routes }).subscribe(options);
+    } else {
+      this.createActivityGQL
+        .mutate({ input: activity, routes })
+        .subscribe(options);
+    }
   }
 
   successCragWithRoutes() {
