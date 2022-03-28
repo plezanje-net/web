@@ -23,13 +23,10 @@ import {
   Activity,
   ActivityFiltersCragGQL,
   ActivityFiltersCragQuery,
-  ActivityRoute,
   DeleteActivityGQL,
-  DeleteActivityRouteGQL,
   FindActivitiesInput,
   MyActivitiesGQL,
   MyActivitiesQuery,
-  MyActivitiesQueryVariables,
   namedOperations,
 } from 'src/generated/graphql';
 
