@@ -60,7 +60,7 @@ export class FilteredTable {
 
     this.filters.forEach((filter) => {
       if (filter.type == 'date' && values[filter.name] != null) {
-        fp[filter.name] = dayjs(values[filter.name]);
+        fp[filter.name] = dayjs(values[filter.name]).format('YYYY-MM-DD');
         qp[filter.name] = values[filter.name];
         return;
       }
