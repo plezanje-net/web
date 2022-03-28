@@ -6,6 +6,7 @@ import {
   InMemoryCache,
 } from '@apollo/client/core';
 import { onError } from '@apollo/client/link/error';
+import { RetryLink } from '@apollo/client/link/retry';
 import { HttpLink } from 'apollo-angular/http';
 import { environment } from 'src/environments/environment';
 import * as Sentry from '@sentry/angular';
@@ -26,9 +27,15 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   }
 });
 
+const retryLink = new RetryLink({
+  delay: {
+    initial: 500,
+  },
+});
+
 export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
   return {
-    link: ApolloLink.from([errorLink, httpLink.create({ uri })]),
+    link: ApolloLink.from([errorLink, retryLink, httpLink.create({ uri })]),
     cache: new InMemoryCache({
       typePolicies: {
         Crag: {
