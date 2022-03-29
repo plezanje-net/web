@@ -149,7 +149,7 @@
           </div>
         </mat-tab>
 
-        <mat-tab label="Uporabniki ({{ searchResults.users.length }})">
+        <!-- <mat-tab label="Uporabniki ({{ searchResults.users.length }})">
           <div *ngIf="!searchResults.users.length" class="results-tab">
             Za iskalni niz "{{ searchString }}" med uporabniki ni rezultatov :(
           </div>
@@ -177,7 +177,7 @@
               </div>
             </div>
           </div>
-        </mat-tab>
+        </mat-tab> -->
 
         <mat-tab label="Komentarji ({{ searchResults.comments.length }})">
           <div *ngIf="!searchResults.comments.length" class="results-tab">
@@ -227,7 +227,7 @@
                 {{ comment.user ? comment.user.fullName : "anonimnež" }}
               </div>
               <div fxFlex class="lastColumn">
-                {{ comment.created | amDateFormat: "D.M.Y H:mm" }}
+                {{ comment.created | date: "d. M. yyyy HH:mm" }}
               </div>
             </div>
           </div>

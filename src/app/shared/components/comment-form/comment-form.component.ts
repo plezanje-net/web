@@ -2,6 +2,7 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import dayjs from 'dayjs';
 import {
   Comment,
   Crag,
@@ -106,7 +107,7 @@ export class CommentFormComponent implements OnInit {
       peakId: this.data.peak ? this.data.peak.id : null,
       exposedUntil:
         this.data.type === 'warning'
-          ? this.commentForm.value.exposedUntil
+          ? dayjs(this.commentForm.value.exposedUntil).format('YYYY-MM-DD')
           : null,
     };
 

@@ -6,7 +6,6 @@ import { BehaviorSubject, Subscription, take } from 'rxjs';
 import { CragsQuery, CragsGQL } from '../../../generated/graphql';
 import { GraphQLError } from 'graphql';
 import { FormControl } from '@angular/forms';
-import { Tab } from 'src/app/types/tab';
 import { ROUTE_TYPES } from 'src/app/common/route-types.constants';
 
 @Component({
@@ -60,6 +59,7 @@ export class CragsComponent implements OnInit, OnDestroy {
           input: {
             areaSlug: params['obmocje'],
             routeTypeId: rotueType?.id,
+            type: 'sport',
           },
         })
         .pipe(take(1))
@@ -142,6 +142,8 @@ export class CragsComponent implements OnInit, OnDestroy {
         name: this.country.name,
       },
     ]);
+
+    this.layoutService.setTitle(['Seznam plezališč', this.country.name]);
   }
 
   ngOnDestroy(): void {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -18,10 +18,7 @@ export class LocalStorageService {
     }
 
     // Check that the item is not expired, but only if expiration date is set. Otherwise assume that the item never expires.
-    if (
-      item.expirationDate &&
-      moment(item.expirationDate).isBefore(moment(new Date()))
-    ) {
+    if (item.expirationDate && dayjs(item.expirationDate).isBefore(dayjs())) {
       this.removeItem(key);
       return;
     } else {

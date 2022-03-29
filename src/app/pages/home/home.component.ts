@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { LayoutService } from 'src/app/services/layout.service';
@@ -10,9 +11,10 @@ import { LoadingSpinnerService } from './loading-spinner.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   error: DataError;
   loading = true;
+  subscription: Subscription;
 
   constructor(
     private layoutService: LayoutService,
@@ -21,7 +23,7 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadingSpinnerService.showLoader$
+    this.subscription = this.loadingSpinnerService.showLoader$
       .pipe(delay(0))
       .subscribe((isLoading) => (this.loading = isLoading));
 
@@ -30,6 +32,8 @@ export class HomeComponent implements OnInit {
         name: 'Prva stran',
       },
     ]);
+
+    this.layoutService.setTitle();
   }
 
   login() {
@@ -41,5 +45,9 @@ export class HomeComponent implements OnInit {
 
   handleError(error: DataError) {
     this.error = error;
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

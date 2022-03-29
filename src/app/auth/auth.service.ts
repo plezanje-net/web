@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject, take } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { LoginRequest } from '../types/login-request';
 import { Apollo } from 'apollo-angular';
 import { GuardedActionOptions } from '../types/guarded-action-options';
 import { LoginResponse, User } from 'src/generated/graphql';
 import { LocalStorageService } from '../services/local-storage.service';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 @Injectable({
   providedIn: 'root',
@@ -27,22 +27,21 @@ export class AuthService {
     }
   }
 
-  logout(): Promise<any> {
-    this.currentUser.next(null);
+  async logout() {
+    await this.apollo.client.clearStore(); // need to clear the cache first, because some queries get fetched right after logout completes
     this.localStorageService.removeItem('auth');
-    return this.apollo.client.clearStore();
+    this.currentUser.next(null); // only after cache is finished clearing can we emmit new user (because it might trigger some refetches)
   }
 
-  login(loginResponse: LoginResponse): Promise<any> {
+  async login(loginResponse: LoginResponse): Promise<any> {
+    await this.apollo.client.clearStore();
     this.localStorageService.setItem(
       'auth',
       loginResponse,
-      moment(new Date()).add(365, 'day').toISOString()
+      dayjs().add(1, 'year').toISOString()
     );
 
     this.currentUser.next(loginResponse.user);
-
-    return this.apollo.client.resetStore();
   }
 
   getToken(): string {

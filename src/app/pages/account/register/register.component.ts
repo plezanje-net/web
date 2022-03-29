@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LayoutService } from 'src/app/services/layout.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RegisterGQL } from 'src/generated/graphql';
+import { AuthService } from 'src/app/auth/auth.service';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   loading = false;
   success = false;
 
@@ -22,13 +25,17 @@ export class RegisterComponent implements OnInit {
     firstname: new FormControl('', [Validators.required]),
     lastname: new FormControl('', [Validators.required]),
     gender: new FormControl(''),
-    conditions: new FormControl(false, [Validators.requiredTrue]),
+    // conditions: new FormControl(false, [Validators.requiredTrue]),
   });
+
+  subscription: Subscription;
 
   constructor(
     private layoutService: LayoutService,
     private snackbar: MatSnackBar,
-    private registerGQL: RegisterGQL
+    private registerGQL: RegisterGQL,
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +44,13 @@ export class RegisterComponent implements OnInit {
         name: 'Registracija',
       },
     ]);
+
+    this.subscription = this.authService.currentUser.subscribe((user) => {
+      // user just logged in, navigate to home
+      if (user !== null) {
+        this.router.navigate(['/']);
+      }
+    });
   }
 
   register() {
@@ -76,5 +90,9 @@ export class RegisterComponent implements OnInit {
           });
         },
       });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

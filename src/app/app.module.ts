@@ -1,5 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {
+  APP_INITIALIZER,
+  ErrorHandler,
+  NgModule,
+  Inject,
+  Optional,
+} from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -45,9 +51,13 @@ import { MapComponent } from './common/map/map.component';
 import { CragRoutesComponent } from './pages/crag/crag-routes/crag-routes.component';
 import { CragInfoComponent } from './pages/crag/crag-info/crag-info.component';
 import { CragCommentsComponent } from './pages/crag/crag-comments/crag-comments.component';
-import { MomentModule } from 'ngx-moment';
-import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import {
+  DateAdapter,
+  MatNativeDateModule,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+  NativeDateAdapter,
+} from '@angular/material/core';
 import { CragGalleryComponent } from './pages/crag/crag-gallery/crag-gallery.component';
 import { RouteComponent } from './pages/route/route.component';
 import { RouteInfoComponent } from './pages/route/route-info/route-info.component';
@@ -73,15 +83,42 @@ import { LatestTicksComponent } from './pages/home/latest-ticks/latest-ticks.com
 import { LatestImagesComponent } from './pages/home/latest-images/latest-images.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ImageFullComponent } from './common/image-full/image-full.component';
-import { ExposedWarningsComponent } from './pages/home/exposed-warnings/expsoed-warnings.component';
+import { ExposedWarningsComponent } from './pages/home/exposed-warnings/exposed-warnings.component';
 import { CragRoutePreviewComponent } from './pages/crag/crag-route-preview/crag-route-preview.component';
 import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
 import { SwiperModule } from 'swiper/angular';
 import { AlpinismComponent } from './pages/alpinism/alpinism.component';
+import { AboutComponent } from './pages/about/about.component';
+import { Platform } from '@angular/cdk/platform';
+import { registerLocaleData } from '@angular/common';
+import localeSl from '@angular/common/locales/sl';
+registerLocaleData(localeSl);
+import * as Sentry from '@sentry/angular';
+import { Router } from '@angular/router';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
 };
+
+class CustomDateAdapter extends NativeDateAdapter {
+  constructor(
+    @Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: string,
+    platform: Platform
+  ) {
+    super(matDateLocale, platform);
+  }
+
+  getFirstDayOfWeek = () => 1;
+
+  parse(value: any): Date {
+    const arr = value.split('.');
+    if (arr.length == 3) {
+      return new Date(`${arr[1]}. ${arr[0]}. ${arr[2]}`);
+    }
+
+    return super.parse(value);
+  }
+}
 
 @NgModule({
   declarations: [
@@ -128,6 +165,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     CragRoutePreviewComponent,
     ConfirmClubMembershipComponent,
     AlpinismComponent,
+    AboutComponent,
   ],
   imports: [
     BrowserModule,
@@ -136,6 +174,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     ReactiveFormsModule,
     FlexLayoutModule,
     MatButtonModule,
+    MatNativeDateModule,
     MatDialogModule,
     MatTabsModule,
     MatMenuModule,
@@ -150,9 +189,7 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     MatSelectModule,
     GraphQLModule,
     HttpClientModule,
-    MatMomentDateModule,
     MatAutocompleteModule,
-    MomentModule,
     MatCardModule,
     MatListModule,
     NgxMatSelectSearchModule,
@@ -162,6 +199,20 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     SwiperModule,
   ],
   providers: [
+    {
+      provide: ErrorHandler,
+      useValue: Sentry.createErrorHandler(),
+    },
+    {
+      provide: Sentry.TraceService,
+      deps: [Router],
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => () => {},
+      deps: [Sentry.TraceService],
+      multi: true,
+    },
     AuthGuard,
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
@@ -172,21 +223,12 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
       useClass: AuthInterceptor,
       multi: true,
     },
+    { provide: MAT_DATE_LOCALE, useValue: 'sl-SI' },
     {
-      provide: MAT_DATE_FORMATS,
-      useValue: {
-        parse: {
-          dateInput: 'DD.MM.YYYY',
-        },
-        display: {
-          dateInput: 'DD.MM.YYYY',
-          monthYearLabel: 'MMM YYYY',
-          dateA11yLabel: 'LL',
-          monthYearA11yLabel: 'MMMM YYYY',
-        },
-      },
+      provide: DateAdapter,
+      useClass: CustomDateAdapter,
+      deps: [MAT_DATE_LOCALE, Platform],
     },
-    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
   ],
   bootstrap: [AppComponent],
 })

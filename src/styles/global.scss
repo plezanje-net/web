@@ -45,12 +45,22 @@ body {
     width: 1040px;
   }
 }
+
+// TODO replace margin/padding util classes with a for loop that generates all these classes
+.mt-4 {
+  margin-top: 4px;
+}
+
 .mt-8 {
   margin-top: 8px;
 }
 
 .mt-16 {
   margin-top: 16px;
+}
+
+.mb-32 {
+  margin-bottom: 32px;
 }
 
 .py-8 {
@@ -66,6 +76,8 @@ body {
 .p-16 {
   padding: 16px;
 }
+
+// TODO END margin/spacing util classes
 
 .white-back {
   background: #fff;

@@ -16,9 +16,9 @@
           <input
             matStartDate
             formControlName="dateFrom"
-            placeholder="Start date"
+            placeholder="Datum od"
           />
-          <input matEndDate formControlName="dateTo" placeholder="End date" />
+          <input matEndDate formControlName="dateTo" placeholder="do" />
         </mat-date-range-input>
         <div matSuffix fxLayout="row">
           <button
@@ -58,7 +58,7 @@
       </mat-form-field>
 
       <mat-form-field>
-        <mat-label>Objava</mat-label>
+        <mat-label>Vidnost</mat-label>
         <mat-select formControlName="publish" multiple>
           <mat-option
             *ngFor="let option of publishOptions"

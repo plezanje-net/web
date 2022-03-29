@@ -1,19 +1,18 @@
 <h2>Novi vzponi</h2>
 
 <div *ngIf="!loading" fxLayout="column" fxLayoutGap="16px">
+  <ng-container *ngIf="!latestTicks.length">
+    <div>V zadnjih 10 dneh ni bilo zabeleženih novih vzponov.</div>
+  </ng-container>
   <mat-card *ngFor="let tickGroup of latestTicks">
-    <mat-card-title>{{
-      tickGroup.date | amDateFormat: "DD.MM.YYYY"
-    }}</mat-card-title>
+    <mat-card-title>{{ tickGroup.date | date: "d. M. yyyy" }}</mat-card-title>
     <mat-card-content>
       <div class="table-wrapper">
         <table class="stats-card-table">
           <tbody>
             <tr *ngFor="let tick of tickGroup.ticks">
               <td>
-                <a [routerLink]="['/uporabniki', tick.user.fullName]">
-                  {{ tick.user.fullName }}
-                </a>
+                {{ tick.user.fullName }}
                 je
                 {{ tick.ascentType | ascentType }}
                 {{ "preplezal" | genderizeVerb: tick.user.gender }}

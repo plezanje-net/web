@@ -218,6 +218,11 @@ export class CragComponent implements OnInit, OnDestroy {
           name: this.crag.name,
         },
       ]);
+
+      this.layoutService.setTitle([
+        `Plezališče ${this.crag.name}`,
+        this.crag.country.name,
+      ]);
     }
   }
 

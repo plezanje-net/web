@@ -55,7 +55,7 @@ export class SearchResultsComponent implements OnInit {
             this.searchResults.crags,
             this.searchResults.routes,
             this.searchResults.sectors,
-            this.searchResults.users,
+            // this.searchResults.users,  // Searching for users is temporarily disabled
             this.searchResults.comments,
           ].findIndex((val) => val.length > 0);
 

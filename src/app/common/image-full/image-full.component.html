@@ -1,4 +1,4 @@
-<div fxFlexFill fxLayout="column" (click)="onClick()">
+<div class="container" (click)="onClick()">
   <div class="button-row">
     <button mat-icon-button>
       <mat-icon>close</mat-icon>
@@ -12,12 +12,15 @@
     fxLayoutAlign="center center"
   >
     <div fxLayout="column" class="image-w-caption-wrap">
-      <img
-        [src]="storageUrl + '/images/' + data.image.path"
-        [alt]="data.image.title"
+      <app-responsive-image
         fxFlex="90%"
         fxLayoutAlign="center center"
-      />
+        [imageWidths]="[300, 600, 1040]"
+        [fallbackWidth]="1040"
+        [imagePath]="data.image.path"
+        [renderSizes]="'100vw'"
+        [imageAlt]="data.image.title"
+      ></app-responsive-image>
 
       <div class="caption">
         <div>

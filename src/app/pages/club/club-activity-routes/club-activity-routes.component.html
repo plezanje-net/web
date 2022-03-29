@@ -8,9 +8,9 @@
             <input
               matStartDate
               formControlName="dateFrom"
-              placeholder="Start date"
+              placeholder="Datum od"
             />
-            <input matEndDate formControlName="dateTo" placeholder="End date" />
+            <input matEndDate formControlName="dateTo" placeholder="do" />
           </mat-date-range-input>
           <div matSuffix fxLayout="row">
             <button
@@ -126,7 +126,7 @@
 
           <tr *ngFor="let route of activityRoutes" class="row">
             <td>{{ route.user.fullName }}</td>
-            <td>{{ route.date | amDateFormat: "DD.MM.YYYY" }}</td>
+            <td>{{ route.date | date: "d. M. yyyy" }}</td>
             <td>
               <a [routerLink]="['/plezalisce', route.route.crag.slug]">{{
                 route.route.crag.name

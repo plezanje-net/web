@@ -1,5 +1,5 @@
 <td>
-  {{ activity.date | amDateFormat: "DD.MM.YYYY" }}
+  {{ activity.date | date: "d. M. yyyy" }}
 </td>
 <td>
   <a [routerLink]="['/plezalni-dnevnik', activity.id]">{{ type }}</a>

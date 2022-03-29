@@ -17,6 +17,7 @@ import { ClubComponent } from './pages/club/club.component';
 import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
 import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
 import { AlpinismComponent } from './pages/alpinism/alpinism.component';
+import { AboutComponent } from './pages/about/about.component';
 
 const routes: Routes = [
   {
@@ -113,6 +114,13 @@ const routes: Routes = [
       import('./ice-falls/ice-falls.module').then((m) => m.IceFallsModule),
   },
   {
+    path: 'o-plezanje-net',
+    component: AboutComponent,
+    data: {
+      hideBreadcrumbs: true,
+    },
+  },
+  {
     path: '**',
     component: NotFoundComponent,
   },
@@ -122,7 +130,7 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoot(routes, {
       scrollPositionRestoration: 'top',
-      preloadingStrategy: PreloadAllModules,
+      // preloadingStrategy: PreloadAllModules,
     }),
   ],
   exports: [RouterModule],

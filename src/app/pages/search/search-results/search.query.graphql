@@ -86,10 +86,12 @@ query Search($query: String) {
       }
       created
     }
-    users {
-      __typename
-      id
-      fullName
-    }
+
+    # Searching for users is temporarily disabled.
+    # users {
+    #   __typename
+    #   id
+    #   fullName
+    # }
   }
 }

@@ -11,9 +11,12 @@ query RouteBySlug($cragSlug: String!, $routeSlug: String!) {
     length
     author
     status
-    sector {
+    routeEvents {
       id
-      name
+      eventDate
+      author
+      showFullDate
+      eventType
     }
     pitches {
       difficulty
@@ -45,6 +48,7 @@ query RouteBySlug($cragSlug: String!, $routeSlug: String!) {
       path
     }
     sector {
+      id
       name
       crag {
         name

@@ -1,4 +1,14 @@
 <div *ngIf="crag.images.length > 0" class="card no-border">
-  <img [src]="storageUrl + '/images/' + crag.images[0].path" [alt]="crag.images[0].title" />
+  <app-responsive-image
+    [imageWidths]="[300, 600]"
+    [fallbackWidth]="600"
+    [imagePath]="crag.images[0].path"
+    renderSizes="
+      (max-width: 1239px) 276.97px,
+      (max-width: 1439px) calc(33.33vw - 145.32px),
+      334.63px"
+    [imageAlt]="crag.images[0].title"
+  ></app-responsive-image>
+
   <!-- TODO: Should have crag-cover-image field on crag instead of simply displaying first image? -->
 </div>

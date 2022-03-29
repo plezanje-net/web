@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EditorModule } from '@tinymce/tinymce-angular';
+import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { EditorComponent } from './editor/editor.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AscentTypePipe } from './pipes/ascent-type.pipe';
@@ -21,8 +21,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommentComponent } from './components/comment/comment.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
-import { MomentModule } from 'ngx-moment';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { CommentFormComponent } from './components/comment-form/comment-form.component';
 import { CommentOptionsComponent } from './components/comment/comment-options/comment-options.component';
@@ -34,6 +32,7 @@ import { PluralizeNoun } from './pipes/pluralize-noun.pipe';
 import { DataErrorComponent } from './components/data-error/data-error.component';
 import { AscentTypeComponent } from './components/ascent-type/ascent-type.component';
 import { AscentPublishOptionComponent } from './components/ascent-publish-option/ascent-publish-option.component';
+import { ResponsiveImageComponent } from './components/responsive-image/responsive-image.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +54,7 @@ import { AscentPublishOptionComponent } from './components/ascent-publish-option
     PluralizeNoun,
     AscentTypeComponent,
     AscentPublishOptionComponent,
+    ResponsiveImageComponent,
   ],
   imports: [
     CommonModule,
@@ -70,12 +70,14 @@ import { AscentPublishOptionComponent } from './components/ascent-publish-option
     MatFormFieldModule,
     MatProgressSpinnerModule,
     NgxMatSelectSearchModule,
-    MatMomentDateModule,
-    MomentModule,
     MatDatepickerModule,
     MatInputModule,
   ],
-  providers: [CustomBreakpointsProvider, GenderizeVerbPipe],
+  providers: [
+    CustomBreakpointsProvider,
+    GenderizeVerbPipe,
+    { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
+  ],
   exports: [
     EditorComponent,
     SnackBarButtonsComponent,
@@ -96,6 +98,7 @@ import { AscentPublishOptionComponent } from './components/ascent-publish-option
     MatInputModule,
     GradeComponent,
     PluralizeNoun,
+    ResponsiveImageComponent,
   ],
 })
 export class SharedModule {}

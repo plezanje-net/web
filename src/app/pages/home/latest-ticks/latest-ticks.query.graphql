@@ -1,5 +1,5 @@
-query LatestTicks($latest: Int!) {
-  latestTicks(latest: $latest) {
+query LatestTicks($latestN: Int, $inLastNDays: Int) {
+  latestTicks(latestN: $latestN, inLastNDays: $inLastNDays) {
     activity {
       date
       type

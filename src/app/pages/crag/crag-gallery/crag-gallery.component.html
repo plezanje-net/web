@@ -1,11 +1,27 @@
 <div fxLayout="row wrap">
-  <div fxFlex="50"
-       *ngFor="let image of images"
-       class="image-container"
-       fxLayout="row"
-       fxLayoutAlign="center center">
+  <div
+    fxFlex="50"
+    *ngFor="let image of images"
+    class="image-container"
+    fxLayout="row"
+    fxLayoutAlign="center center"
+  >
     <div class="card">
-      <img [src]="storageUrl + '/images/' + image.path" (click)="onImageClick(image)" />
+      <app-responsive-image
+        [imageWidths]="[300, 600]"
+        [imagePath]="image.path"
+        renderSizes="
+          (max-width: 599px) calc(50vw - 56.5px),
+          (max-width: 904px) calc(50vw - 72.5px),
+          (max-width: 1239px) 231.5px,
+          (max-width: 1439px) calc(33.33vw - 182px),
+          298px
+        "
+        [fallbackWidth]="600"
+        [imageAlt]="image.title"
+        (click)="onImageClick(image)"
+      ></app-responsive-image>
+
       <div class="title">{{ image.title }}</div>
     </div>
   </div>

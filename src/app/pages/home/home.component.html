@@ -3,6 +3,38 @@
 
 <div *ngIf="!error" [class.not-visible]="loading">
   <div class="container mt-16">
+    <mat-card class="welcome-card mt-16 mb-32">
+      <h3>Vesela novica! Prenovili smo plezanje.net!</h3>
+      <p>
+        Zaradi nevarnosti po izgubi našega najljubšega portala, je v zadnjih
+        letih naša skromna ekipa združila moči in zagrizla v prenos na novejšo
+        tehnologijo in strežnike. Poskrbeli smo, da so naši plezalni dnevniki,
+        predlagane ocene in komentarji ostali nedotaknjeni, uredili smo možnost
+        registracije in prijave ter dodali nekaj dodatnih funkcionalnosti, ki
+        bodo pripomogle k boljši uporabniški izkušnji.
+      </p>
+      <p>
+        Za prihodnost imamo še velike načrte, zato bomo kakršnegakoli odziva ali
+        pomoči zelo veseli.
+        <br />
+        Več o spletnem mestu, naši ekipi in o tem, kako lahko postaneš del nje,
+        si preberi na strani
+        <a [routerLink]="['/o-plezanje-net']">o plezanje.net</a>.
+      </p>
+      <p>
+        Želimo ti veliko preplezanih smeri in vnesenih vzponov! 🙂
+        <br />
+        Ekipa plezanje.net
+      </p>
+      <p>
+        p.s. Če se morda želite v miru posloviti od stare plezanje.net, bo ta še
+        nekaj časa dostopna na
+        <a href="https://star.plezanje.net" target="_blank" rel="nofollow"
+          >star.plezanje.net</a
+        >
+        (v načinu <i>samo za branje</i>).
+      </p>
+    </mat-card>
     <app-search></app-search>
 
     <app-exposed-warnings

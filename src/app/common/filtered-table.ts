@@ -1,6 +1,6 @@
 import { PageEvent } from '@angular/material/paginator';
 import { Params } from '@angular/router';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Subject } from 'rxjs';
 
 export interface ColumnDefinition {
@@ -60,7 +60,7 @@ export class FilteredTable {
 
     this.filters.forEach((filter) => {
       if (filter.type == 'date' && values[filter.name] != null) {
-        fp[filter.name] = moment(values[filter.name]);
+        fp[filter.name] = dayjs(values[filter.name]).format('YYYY-MM-DD');
         qp[filter.name] = values[filter.name];
         return;
       }
@@ -116,7 +116,7 @@ export class FilteredTable {
 
     this.filters.forEach((filter) => {
       if (filter.type == 'date' && values[filter.name] != null) {
-        rp[filter.name] = moment(values[filter.name]).format('YYYY-MM-DD');
+        rp[filter.name] = dayjs(values[filter.name]).format('YYYY-MM-DD');
         fp[filter.name] = values[filter.name];
         return;
       }
