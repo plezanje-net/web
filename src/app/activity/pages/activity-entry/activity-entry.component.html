@@ -22,25 +22,8 @@
     </div>
   </div>
   <div class="container mt-16" *ngIf="activity.routes.length > 0">
-    <div class="card scrollable-table">
-      <table class="card-table">
-        <tr class="row header">
-          <td>Smer</td>
-          <td>Ocena</td>
-          <td>Vrsta vzpona</td>
-          <td>Vidnost</td>
-          <td></td>
-        </tr>
-
-        <tr
-          class="row"
-          *ngFor="let route of activity.routes"
-          app-activity-route-row
-          [route]="route"
-          [rowAction]="rowAction$"
-          displayType="activity"
-        ></tr>
-      </table>
-    </div>
+    <app-activity-entry-routes
+      [routes]="activity.routes"
+    ></app-activity-entry-routes>
   </div>
 </div>

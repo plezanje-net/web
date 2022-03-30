@@ -1,11 +1,20 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AsyncValidatorFn,
+  FormArray,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
+  Activity,
+  ActivityEntryGQL,
   Crag,
   CreateActivityGQL,
   CreateActivityRoutesGQL,
   IceFall,
+  MyActivitiesGQL,
   Peak,
   Route,
 } from 'src/generated/graphql';
@@ -13,7 +22,7 @@ import dayjs from 'dayjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { ActivityFormService } from './activity-form.service';
-import { filter } from 'rxjs';
+import { filter, map, of, switchMap } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { ACTIVITY_TYPES } from 'src/app/common/activity.constants';
 import { Location } from '@angular/common';
@@ -30,7 +39,12 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   @Input() peak: Peak;
   @Input() iceFall: IceFall;
 
+  // new - no activity yet, edit - edit activity fields but add no routes, add - add routes to existing activity
+  formType: 'new' | 'edit' | 'add' = 'new';
+
   loading: boolean = false;
+  loadingActivity: boolean = false;
+  activity: Activity = null;
 
   routes = new FormArray([]);
 
@@ -64,7 +78,9 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     public location: Location,
     private localStorageService: LocalStorageService,
-    private activityFormService: ActivityFormService
+    private activityFormService: ActivityFormService,
+    private myActivitiesGQL: MyActivitiesGQL,
+    private activityEntryGQL: ActivityEntryGQL
   ) {}
 
   ngOnInit(): void {
@@ -85,6 +101,10 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         this.patchRouteDates(this.activityForm.value.date);
       }
     });
+
+    if (this.crag != null) {
+      this.watchForOverlappingActivity();
+    }
 
     this.activityForm.patchValue({
       date: dayjs().format('YYYY-MM-DD'),
@@ -110,6 +130,52 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
+  watchForOverlappingActivity() {
+    this.activityForm.controls.date.valueChanges
+      .pipe(
+        switchMap((date) => {
+          this.loadingActivity = true;
+          return this.myActivitiesGQL.watch({
+            input: {
+              dateFrom: dayjs(date).format('YYYY-MM-DD'),
+              dateTo: dayjs(date).format('YYYY-MM-DD'),
+              cragId: this.crag.id,
+            },
+          }).valueChanges;
+        }),
+        map((response) => response.data.myActivities.items[0] ?? null),
+        switchMap((activity) =>
+          activity != null
+            ? this.activityEntryGQL.watch({ id: activity.id }).valueChanges
+            : of(null)
+        ),
+        map((response) => (response ? response.data.activity : null))
+      )
+      .subscribe((activity) => {
+        this.loadingActivity = false;
+
+        if (activity == null && this.activity != null) {
+          this.activityForm.patchValue({
+            notes: null,
+            partners: null,
+          });
+        }
+        if (activity == null) {
+          this.activity = null;
+          this.formType = 'new';
+          return;
+        }
+
+        this.activity = <Activity>activity;
+        this.activityForm.patchValue({
+          notes: activity.notes,
+          partners: activity.partners,
+        });
+
+        this.formType = this.routes.length == 0 ? 'edit' : 'add';
+      });
   }
 
   patchRouteDates(value: dayjs.Dayjs): void {
@@ -153,7 +219,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       case 2:
         // add a copy of the same route
         const routeFormGroupOriginal = <FormGroup>this.routes.at(routeIndex);
-        const routeFormGroupCopy = this.copyFormFroup(routeFormGroupOriginal);
+        const routeFormGroupCopy = this.copyFormGroup(routeFormGroupOriginal);
         this.routes.insert(routeIndex + 1, routeFormGroupCopy);
         break;
       default:
@@ -165,7 +231,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  private copyFormFroup(formGroupOriginal: FormGroup) {
+  private copyFormGroup(formGroupOriginal: FormGroup) {
     const formGroupData = Object.keys(formGroupOriginal.controls).reduce(
       (fgData, key) => {
         fgData[key] = new FormControl(
@@ -180,6 +246,13 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
+    if (this.formType == 'add' || this.formType == 'edit') {
+      alert(
+        'not implemented yet, also need to resolve edit activity from router'
+      );
+      return;
+    }
+
     const data = this.activityForm.value;
 
     this.loading = true;

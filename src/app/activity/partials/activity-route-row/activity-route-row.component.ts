@@ -16,7 +16,7 @@ import { RowAction } from '../../pages/activity-log/activity-log.component';
 export class ActivityRouteRowComponent implements OnInit {
   @Input() route: ActivityRoute;
   @Input() rowAction: Subject<RowAction>;
-  @Input() displayType: 'activity' | 'routes' = 'routes';
+  @Input() displayType: 'activity' | 'activityForm' | 'routes' = 'routes';
   publishOptions = PUBLISH_OPTIONS;
 
   constructor(

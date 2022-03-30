@@ -1,5 +1,6 @@
 <form [formGroup]="activityForm" (submit)="save()">
-  <div style="display: none" class="mt-16" *ngIf="type == 'crag'">
+  <div class="mt-16" *ngIf="false && type == 'crag'">
+    <!-- Disabled until we decide if we like activity routes without activities -->
     <mat-radio-group
       fxLayout="row"
       fxLayoutAlign="start start"
@@ -24,9 +25,10 @@
       </label>
     </mat-radio-group>
   </div>
-
-  <div *ngIf="!activityForm.value.onlyRoutes" class="card mt-16">
-    <h3 *ngIf="type === 'crag'">Plezalni dan</h3>
+  <h3 *ngIf="type === 'crag'">
+    {{ formType == "new" ? "Dodaj" : "Uredi" }} plezalni dan
+  </h3>
+  <div *ngIf="!activityForm.value.onlyRoutes" class="card">
     <div
       fxLayout="row"
       fxLayout.lt-md="column"
@@ -37,6 +39,17 @@
     ></div>
 
     <div fxLayout="column" fxLayoutGap="16px" class="p-16">
+      <div
+        fxLayout="row"
+        fxLayout.lt-md="column"
+        fxLayoutGap="16px"
+        *ngIf="type == 'crag'"
+      >
+        <mat-form-field fxFlex="50" class="no-hint">
+          <mat-label>Plezališče</mat-label>
+          <input matInput type="text" disabled [value]="crag.name" />
+        </mat-form-field>
+      </div>
       <div
         fxLayout="row"
         fxLayout.lt-md="column"
@@ -101,28 +114,41 @@
     </div>
   </div>
 
-  <div class="card mt-16" *ngIf="type == 'crag'">
+  <div class="mt-16" *ngIf="activity && activity.routes.length > 0">
     <h3>Preplezane smeri</h3>
+    <app-activity-entry-routes
+      [routes]="activity.routes"
+      type="form"
+    ></app-activity-entry-routes>
+  </div>
 
-    <div class="p-16">
-      <div
-        *ngFor="
-          let route of routes.controls;
-          let first = first;
-          let last = last;
-          let index = index
-        "
-        class="route"
-      >
-        <app-activity-form-route
-          [myIndex]="index"
-          [route]="route"
-          [crag]="crag"
-          [activity]="!activityForm.value.onlyRoutes"
-          [first]="first"
-          [last]="last"
-          (move)="moveRoute(index, $event)"
-        ></app-activity-form-route>
+  <div class="mt-16" *ngIf="type == 'crag'">
+    <h3>
+      {{
+        formType == "add" ? "Dodaj nove preplezane smeri" : "Preplezane smeri"
+      }}
+    </h3>
+    <div class="card">
+      <div class="p-16">
+        <div
+          *ngFor="
+            let route of routes.controls;
+            let first = first;
+            let last = last;
+            let index = index
+          "
+          class="route"
+        >
+          <app-activity-form-route
+            [myIndex]="index"
+            [route]="route"
+            [crag]="crag"
+            [activity]="!activityForm.value.onlyRoutes"
+            [first]="first"
+            [last]="last"
+            (move)="moveRoute(index, $event)"
+          ></app-activity-form-route>
+        </div>
       </div>
     </div>
   </div>
@@ -132,7 +158,11 @@
       <button type="button" mat-button (click)="location.back()">
         Prekliči
       </button>
-      <button mat-button color="primary" [disabled]="!activityForm.valid">
+      <button
+        mat-button
+        color="primary"
+        [disabled]="!activityForm.valid || loadingActivity"
+      >
         SHRANI
       </button>
     </div>
