@@ -28,7 +28,6 @@ export class ActivityInputComponent implements OnInit {
       if (crag != null) {
         this.initCrag(crag);
       }
-
       // TODO: init peak, init icefall
     });
 

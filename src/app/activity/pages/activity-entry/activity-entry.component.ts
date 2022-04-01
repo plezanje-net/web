@@ -1,7 +1,7 @@
 import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from 'src/app/types/data-error';
 import { Registry } from 'src/app/types/registry';
@@ -15,7 +15,7 @@ import { ACTIVITY_TYPES } from '../../../common/activity.constants';
 })
 export class ActivityEntryComponent implements OnInit, OnDestroy {
   loading = false;
-
+  type: 'view' | 'edit';
   error: DataError = null;
 
   activity: ActivityEntryQuery['activity'];
@@ -31,45 +31,51 @@ export class ActivityEntryComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    const routeSub = this.activatedRoute.params.subscribe((params) => {
-      this.loading = true;
+    const typeSub = this.activatedRoute.data.subscribe(
+      ({ type }) => (this.type = type)
+    );
+    this.subscriptions.push(typeSub);
 
-      this.activityEntryGQL
-        .watch({
-          id: params.id,
+    const routeSub = this.activatedRoute.params
+      .pipe(
+        switchMap((params) => {
+          this.loading = true;
+          return this.activityEntryGQL.watch({
+            id: params.id,
+          }).valueChanges;
         })
-        .valueChanges.subscribe({
-          next: (result) => {
-            this.loading = false;
-            this.activity = result.data.activity;
+      )
+      .subscribe({
+        next: (result) => {
+          this.loading = false;
+          this.activity = result.data.activity;
 
-            this.activityType = ACTIVITY_TYPES.find(
-              (t) => t.value == result.data.activity.type
-            );
+          this.activityType = ACTIVITY_TYPES.find(
+            (t) => t.value == result.data.activity.type
+          );
 
-            this.layoutService.$breadcrumbs.next([
-              {
-                name: 'Plezalni dnevnik',
-                path: 'plezalni-dnevnik',
-              },
-              {
-                name:
-                  formatDate(this.activity.date, 'dd.MM.YYYY', this.locale) +
-                  ', ' +
-                  this.activityType.label +
-                  ': ' +
-                  this.activity.name,
-              },
-            ]);
-          },
-          error: () => {
-            this.loading = false;
-            this.error = {
-              message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
-            };
-          },
-        });
-    });
+          this.layoutService.$breadcrumbs.next([
+            {
+              name: 'Plezalni dnevnik',
+              path: 'plezalni-dnevnik',
+            },
+            {
+              name:
+                formatDate(this.activity.date, 'dd.MM.YYYY', this.locale) +
+                ', ' +
+                this.activityType.label +
+                ': ' +
+                this.activity.name,
+            },
+          ]);
+        },
+        error: () => {
+          this.loading = false;
+          this.error = {
+            message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
+          };
+        },
+      });
 
     this.subscriptions.push(routeSub);
   }

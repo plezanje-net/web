@@ -29,9 +29,20 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'uredi/:id',
+    component: ActivityEntryComponent,
+    canActivate: [AuthGuard],
+    data: {
+      type: 'edit',
+    },
+  },
+  {
     path: ':id',
     component: ActivityEntryComponent,
     canActivate: [AuthGuard],
+    data: {
+      type: 'view',
+    },
   },
 ];
 

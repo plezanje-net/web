@@ -4,26 +4,39 @@
 
 <app-loader *ngIf="loading"></app-loader>
 
-<div *ngIf="!error && !loading">
-  <div class="container mt-16">
-    <div>{{ activity.date | date: "d. M. yyyy" }}</div>
-    <h2>{{ activityType.label }} - {{ activity.name }}</h2>
-    <div
-      class="card padding no-border description"
-      *ngIf="activity.partners || activity.duration || activity.notes"
-    >
-      <p *ngIf="activity.partners">
-        <b>Soplezalci:</b> {{ activity.partners }}
-      </p>
-      <p *ngIf="activity.duration">
-        <b>Trajanje:</b> {{ activity.duration }}min
-      </p>
-      <p>{{ activity.notes }}</p>
+<ng-container *ngIf="!error && !loading">
+  <ng-container *ngIf="type == 'view'">
+    <div class="container mt-16">
+      <div>{{ activity.date | date: "d. M. yyyy" }}</div>
+      <h2>{{ activityType.label }} - {{ activity.name }}</h2>
+      <div
+        class="card padding no-border description"
+        *ngIf="activity.partners || activity.duration || activity.notes"
+      >
+        <p *ngIf="activity.partners">
+          <b>Soplezalci:</b> {{ activity.partners }}
+        </p>
+        <p *ngIf="activity.duration">
+          <b>Trajanje:</b> {{ activity.duration }}min
+        </p>
+        <p>{{ activity.notes }}</p>
+      </div>
     </div>
+    <div class="container mt-16" *ngIf="activity.routes.length > 0">
+      <app-activity-entry-routes
+        [routes]="activity.routes"
+      ></app-activity-entry-routes>
+    </div>
+  </ng-container>
+
+  <div class="container mt-16" *ngIf="type == 'edit'">
+    <app-activity-form
+      [activity]="activity"
+      [crag]="activity.crag"
+      [iceFall]="activity.iceFall"
+      [peak]="activity.peak"
+      formType="edit"
+      [type]="activity.type"
+    ></app-activity-form>
   </div>
-  <div class="container mt-16" *ngIf="activity.routes.length > 0">
-    <app-activity-entry-routes
-      [routes]="activity.routes"
-    ></app-activity-entry-routes>
-  </div>
-</div>
+</ng-container>

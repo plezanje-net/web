@@ -39,12 +39,13 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   @Input() peak: Peak;
   @Input() iceFall: IceFall;
 
+  @Input() activity: Activity;
+  @Input() formType: 'new' | 'edit' | 'add' = 'new';
+
   // new - no activity yet, edit - edit activity fields but add no routes, add - add routes to existing activity
-  formType: 'new' | 'edit' | 'add' = 'new';
 
   loading: boolean = false;
   loadingActivity: boolean = false;
-  activity: Activity = null;
 
   routes = new FormArray([]);
 
@@ -59,7 +60,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     peakId: new FormControl(null),
     iceFallId: new FormControl(null),
     duration: new FormControl(null),
-    date: new FormControl('2021-01-01'),
+    date: new FormControl(),
     partners: new FormControl(),
     notes: new FormControl(),
     onlyRoutes: new FormControl(false),
@@ -84,7 +85,11 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if (this.selectedRoutes.length) {
+    if (this.formType == 'edit' && this.type == 'crag') {
+      this.activityForm.controls.date.disable();
+    }
+
+    if (this.selectedRoutes != null) {
       this.selectedRoutes.forEach((route) => {
         this.addRoute(route);
       });
@@ -102,7 +107,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       }
     });
 
-    if (this.crag != null) {
+    if (this.crag != null && this.formType != 'edit') {
       this.watchForOverlappingActivity();
     }
 
