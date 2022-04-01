@@ -12,6 +12,7 @@ import {
   ActivityEntryGQL,
   Crag,
   CreateActivityGQL,
+  UpdateActivityGQL,
   CreateActivityRoutesGQL,
   IceFall,
   MyActivitiesGQL,
@@ -74,6 +75,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   constructor(
     private snackBar: MatSnackBar,
     private createActivityGQL: CreateActivityGQL,
+    private updateActivityGQL: UpdateActivityGQL,
     private createActivityRoutesGQL: CreateActivityRoutesGQL,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -87,6 +89,16 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.formType == 'edit' && this.type == 'crag') {
       this.activityForm.controls.date.disable();
+    }
+
+    if (this.activity) {
+      this.activityForm.patchValue({
+        date: this.activity.date,
+        notes: this.activity.notes,
+        partners: this.activity.partners,
+        duration: this.activity.duration,
+        name: this.activity.name,
+      });
     }
 
     if (this.selectedRoutes != null) {
@@ -251,13 +263,6 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    if (this.formType == 'add' || this.formType == 'edit') {
-      alert(
-        'not implemented yet, also need to resolve edit activity from router'
-      );
-      return;
-    }
-
     const data = this.activityForm.value;
 
     this.loading = true;
@@ -274,6 +279,15 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       cragId: data.cragId,
       peakId: data.peakId,
       iceFallId: data.iceFallId,
+    };
+    // this is just horrible
+    const updateActivity = {
+      id: this.activity.id,
+      date: dayjs(data.date).format('YYYY-MM-DD'),
+      name: data.name,
+      duration: data.duration,
+      notes: data.notes,
+      partners: data.partners,
     };
 
     const routes = this.routes.value.map((route: any, i: number) => {
@@ -294,7 +308,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
     const options = {
       next: () => {
-        if (this.crag) {
+        if (this.crag && this.formType == 'new') {
           this.successCragWithRoutes();
           return;
         }
@@ -314,12 +328,18 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       },
     };
 
-    if (data.onlyRoutes) {
-      this.createActivityRoutesGQL.mutate({ routes }).subscribe(options);
-    } else {
-      this.createActivityGQL
-        .mutate({ input: activity, routes })
+    if (this.formType == 'add' || this.formType == 'edit') {
+      this.updateActivityGQL
+        .mutate({ input: updateActivity, routes })
         .subscribe(options);
+    } else {
+      if (data.onlyRoutes) {
+        this.createActivityRoutesGQL.mutate({ routes }).subscribe(options);
+      } else {
+        this.createActivityGQL
+          .mutate({ input: activity, routes })
+          .subscribe(options);
+      }
     }
   }
 
