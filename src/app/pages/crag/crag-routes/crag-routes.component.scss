@@ -16,6 +16,13 @@
       display: none;
     }
   }
+
+  .mat-checkbox ::ng-deep {
+    .mat-checkbox-ripple {
+      height: 39px;
+      width: 39px;
+    }
+  }
 }
 
 .route-details-container {
