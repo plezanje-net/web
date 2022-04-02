@@ -1,5 +1,5 @@
 <form [formGroup]="activityForm" (submit)="save()">
-  <div class="mt-16" *ngIf="false && type == 'crag'">
+  <div class="mt-16" *ngIf="false">
     <!-- Disabled until we decide if we like activity routes without activities -->
     <mat-radio-group
       fxLayout="row"
@@ -25,7 +25,7 @@
       </label>
     </mat-radio-group>
   </div>
-  <h3 *ngIf="type === 'crag'">
+  <h3 *ngIf="activityForm.value.type == 'crag'">
     {{ formType == "new" ? "Dodaj" : "Uredi" }} plezalni dan
   </h3>
   <div *ngIf="!activityForm.value.onlyRoutes" class="card">
@@ -50,30 +50,33 @@
           <input matInput type="text" disabled [value]="crag.name" />
         </mat-form-field>
       </div>
-      <div
-        fxLayout="row"
-        fxLayout.lt-md="column"
-        fxLayoutGap="16px"
-        *ngIf="type != 'crag'"
-      >
-        <mat-form-field
-          fxFlex="50"
-          class.no-hint="activityForm.value.type != 'crag' || type != 'crag'"
-        >
+      <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="16px">
+        <mat-form-field fxFlex="50" *ngIf="type == null && formType == 'new'">
           <mat-label>Vrsta aktivnosti</mat-label>
           <mat-select formControlName="type">
             <mat-option
               *ngFor="let option of typeOptions"
               [value]="option.value"
-              >{{ option.label }}
+              >{{
+                option.label +
+                  (["crag", "peak", "iceFall"].includes(option.value)
+                    ? " *"
+                    : "")
+              }}
             </mat-option>
           </mat-select>
-          <mat-hint *ngIf="activityForm.value.type == 'crag' && type != 'crag'"
-            >Za vnos smeri iz baze jih najprej obkljukaj na strani
-            plezališča</mat-hint
+          <mat-hint *ngIf="activityForm.value.type == 'crag'"
+            >* Uporabi le za vnos plezališča, ki ne obstaja v naši
+            bazi</mat-hint
+          >
+          <mat-hint *ngIf="activityForm.value.type == 'peak'"
+            >* Uporabi le za vnos vrha, ki ne obstaja v naši bazi</mat-hint
+          >
+          <mat-hint *ngIf="activityForm.value.type == 'iceFall'"
+            >* Uporabi le za vnos slapu, ki ne obstaja v naši bazi</mat-hint
           >
         </mat-form-field>
-        <mat-form-field fxFlex="50" class="no-hint">
+        <mat-form-field fxFlex="50" class="no-hint" *ngIf="type == null">
           <mat-label>Lokacija</mat-label>
           <input matInput type="text" formControlName="name" />
         </mat-form-field>
@@ -122,7 +125,7 @@
     ></app-activity-entry-routes>
   </div>
 
-  <div class="mt-16" *ngIf="type == 'crag' && routes.controls.length">
+  <div class="mt-16" *ngIf="routes.controls.length">
     <h3>
       {{
         formType == "add" ? "Dodaj nove preplezane smeri" : "Preplezane smeri"

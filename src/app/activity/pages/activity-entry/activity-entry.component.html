@@ -1,4 +1,8 @@
-<app-activity-header active="dnevnik" [hideTabs]="true"></app-activity-header>
+<div class="white-back mt-16">
+  <div class="container py-8">
+    <h1>{{ title }}</h1>
+  </div>
+</div>
 
 <app-data-error *ngIf="error" [error]="error"></app-data-error>
 
@@ -7,8 +11,6 @@
 <ng-container *ngIf="!error && !loading">
   <ng-container *ngIf="type == 'view'">
     <div class="container mt-16">
-      <div>{{ activity.date | date: "d. M. yyyy" }}</div>
-      <h2>{{ activityType.label }} - {{ activity.name }}</h2>
       <div
         class="card padding no-border description"
         *ngIf="activity.partners || activity.duration || activity.notes"
@@ -36,7 +38,6 @@
       [iceFall]="activity.iceFall"
       [peak]="activity.peak"
       formType="edit"
-      [type]="activity.type"
     ></app-activity-form>
   </div>
 </ng-container>

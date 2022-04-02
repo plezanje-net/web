@@ -1,6 +1,7 @@
 import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import dayjs from 'dayjs';
 import { Subscription, switchMap } from 'rxjs';
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from 'src/app/types/data-error';
@@ -17,6 +18,7 @@ export class ActivityEntryComponent implements OnInit, OnDestroy {
   loading = false;
   type: 'view' | 'edit';
   error: DataError = null;
+  title: string;
 
   activity: ActivityEntryQuery['activity'];
   activityType: Registry;
@@ -54,18 +56,18 @@ export class ActivityEntryComponent implements OnInit, OnDestroy {
             (t) => t.value == result.data.activity.type
           );
 
+          this.title =
+            dayjs(this.activity.date).format('d. M. YYYY') +
+            ' - ' +
+            (this.activity.name || this.activityType.label);
+
           this.layoutService.$breadcrumbs.next([
             {
               name: 'Plezalni dnevnik',
               path: 'plezalni-dnevnik',
             },
             {
-              name:
-                formatDate(this.activity.date, 'dd.MM.YYYY', this.locale) +
-                ', ' +
-                this.activityType.label +
-                ': ' +
-                this.activity.name,
+              name: this.title,
             },
           ]);
         },

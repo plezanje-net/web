@@ -34,24 +34,23 @@ import { Location } from '@angular/common';
   styleUrls: ['./activity-form.component.scss'],
 })
 export class ActivityFormComponent implements OnInit, OnDestroy {
-  @Input() type: string;
-  @Input() crag: Crag;
   @Input() selectedRoutes: Route[];
+  @Input() crag: Crag;
   @Input() peak: Peak;
   @Input() iceFall: IceFall;
 
   @Input() activity: Activity;
-  @Input() formType: 'new' | 'edit' | 'add' = 'new';
 
   // new - no activity yet, edit - edit activity fields but add no routes, add - add routes to existing activity
+  @Input() formType: 'new' | 'edit' | 'add' = 'new';
 
   loading: boolean = false;
   loadingActivity: boolean = false;
 
   routes = new FormArray([]);
 
-  typeOptions = ACTIVITY_TYPES.filter(
-    (type) => type.value != 'iceFall' && type.value != 'peak'
+  typeOptions = ACTIVITY_TYPES.sort((a, b) =>
+    ['crag', 'peak', 'iceFall'].includes(a.value) ? 0 : -1
   );
 
   activityForm = new FormGroup({
@@ -87,7 +86,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if (this.formType == 'edit' && this.type == 'crag') {
+    if (this.formType == 'edit' && this.crag != null) {
       this.activityForm.controls.date.disable();
     }
 
@@ -113,11 +112,11 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       this.patchRouteDates(value);
     });
 
-    this.activityForm.controls.onlyRoutes.valueChanges.subscribe((value) => {
-      if (!value) {
-        this.patchRouteDates(this.activityForm.value.date);
-      }
-    });
+    // this.activityForm.controls.onlyRoutes.valueChanges.subscribe((value) => {
+    //   if (!value) {
+    //     this.patchRouteDates(this.activityForm.value.date);
+    //   }
+    // });
 
     if (this.crag != null && this.formType != 'edit') {
       this.watchForOverlappingActivity();
@@ -125,7 +124,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
     this.activityForm.patchValue({
       date: dayjs().format('YYYY-MM-DD'),
-      type: this.type,
+      type: this.getInitialType(),
     });
 
     if (this.crag != null) {
@@ -147,6 +146,13 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
+  getInitialType() {
+    if (this.crag != null) return 'crag';
+    if (this.peak != null) return 'peak';
+    if (this.iceFall != null) return 'iceFall';
+    return null;
   }
 
   watchForOverlappingActivity() {
@@ -269,33 +275,13 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
     this.activityForm.disable({ emitEvent: false });
 
-    const activity = {
-      date: dayjs(data.date).format('YYYY-MM-DD'),
-      name: data.name,
-      duration: data.duration,
-      type: data.type,
-      notes: data.notes,
-      partners: data.partners,
-      cragId: data.cragId,
-      peakId: data.peakId,
-      iceFallId: data.iceFallId,
-    };
-    // this is just horrible
-    const updateActivity = {
-      id: this.activity.id,
-      date: dayjs(data.date).format('YYYY-MM-DD'),
-      name: data.name,
-      duration: data.duration,
-      notes: data.notes,
-      partners: data.partners,
-    };
-
     const routes = this.routes.value.map((route: any, i: number) => {
       return {
-        date: route.date
-          ? dayjs(route.date).format('YYYY-MM-DD')
-          : activity.date,
-        partner: route.partner || activity.partners,
+        // date: route.date
+        //   ? dayjs(route.date).format('YYYY-MM-DD')
+        //   : activity.date,
+        date: dayjs(data.date).format('YYYY-MM-DD'), // TODO enforce this on backend
+        partner: route.partner || data.partners,
         notes: route.notes,
         routeId: route.routeId,
         ascentType: route.ascentType,
@@ -308,38 +294,68 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
     const options = {
       next: () => {
-        if (this.crag && this.formType == 'new') {
-          this.successCragWithRoutes();
-          return;
+        if (this.crag) {
+          this.localStorageService.removeItem('activity-selection');
+
+          if (this.formType == 'new') {
+            this.successCragWithRoutes();
+            return;
+          }
         }
-        this.snackBar.open('Vnos je bil shranjen v plezalni dnevnik', null, {
-          duration: 3000,
-        });
+        this.snackBar.open(
+          this.formType == 'edit'
+            ? 'Vnos v plezalnem dnevniku je bil posodobljen'
+            : 'Vnos je bil shranjen v plezalni dnevnik',
+          null,
+          {
+            duration: 3000,
+          }
+        );
         this.router.navigate(['/plezalni-dnevnik']);
       },
       error: () => {
         this.loading = false;
         this.activityForm.enable();
-        this.snackBar.open(
-          'Vnosa ni bilo mogoče shraniti v plezalni dnevnik',
-          null,
-          { panelClass: 'error', duration: 3000 }
-        );
+        this.snackBar.open('Vnosa ni bilo mogoče shraniti', null, {
+          panelClass: 'error',
+          duration: 3000,
+        });
       },
     };
 
     if (this.formType == 'add' || this.formType == 'edit') {
+      const updateActivity = {
+        id: this.activity.id,
+        date: dayjs(data.date).format('YYYY-MM-DD'), // TODO backend make sure that this did not change in case it has logged routes
+        name: data.name,
+        duration: data.duration,
+        notes: data.notes,
+        partners: data.partners,
+      };
+
       this.updateActivityGQL
         .mutate({ input: updateActivity, routes })
         .subscribe(options);
     } else {
-      if (data.onlyRoutes) {
-        this.createActivityRoutesGQL.mutate({ routes }).subscribe(options);
-      } else {
-        this.createActivityGQL
-          .mutate({ input: activity, routes })
-          .subscribe(options);
-      }
+      // if (data.onlyRoutes) {
+      //   this.createActivityRoutesGQL.mutate({ routes }).subscribe(options);
+      // } else {
+      const activity = {
+        date: dayjs(data.date).format('YYYY-MM-DD'),
+        name: data.name,
+        duration: data.duration,
+        type: data.type,
+        notes: data.notes,
+        partners: data.partners,
+        cragId: data.cragId,
+        peakId: data.peakId,
+        iceFallId: data.iceFallId,
+      };
+
+      this.createActivityGQL
+        .mutate({ input: activity, routes })
+        .subscribe(options);
+      // }
     }
   }
 
