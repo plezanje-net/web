@@ -10,8 +10,13 @@
     <mat-form-field class="no-hint infix-width-auto" fxFlex>
       <mat-label>Časovno obdobje</mat-label>
       <mat-date-range-input [rangePicker]="picker">
-        <input matStartDate formControlName="dateFrom" placeholder="Datum od" />
-        <input matEndDate formControlName="dateTo" placeholder="do" />
+        <input
+          matStartDate
+          readonly
+          formControlName="dateFrom"
+          placeholder="Datum od"
+        />
+        <input matEndDate readonly formControlName="dateTo" placeholder="do" />
       </mat-date-range-input>
       <div matSuffix fxLayout="row">
         <button
