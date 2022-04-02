@@ -43,15 +43,20 @@
         fxLayout="row"
         fxLayout.lt-md="column"
         fxLayoutGap="16px"
-        *ngIf="type == 'crag'"
+        *ngIf="crag != null"
       >
         <mat-form-field fxFlex="50" class="no-hint">
           <mat-label>Plezališče</mat-label>
           <input matInput type="text" disabled [value]="crag.name" />
         </mat-form-field>
       </div>
-      <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="16px">
-        <mat-form-field fxFlex="50" *ngIf="type == null && formType == 'new'">
+      <div
+        fxLayout="row"
+        fxLayout.lt-md="column"
+        fxLayoutGap="16px"
+        *ngIf="crag == null && peak == null && iceFall == null"
+      >
+        <mat-form-field fxFlex="50" *ngIf="formType == 'new'">
           <mat-label>Vrsta aktivnosti</mat-label>
           <mat-select formControlName="type">
             <mat-option
@@ -76,7 +81,7 @@
             >* Uporabi le za vnos slapu, ki ne obstaja v naši bazi</mat-hint
           >
         </mat-form-field>
-        <mat-form-field fxFlex="50" class="no-hint" *ngIf="type == null">
+        <mat-form-field fxFlex="50" class="no-hint">
           <mat-label>Lokacija</mat-label>
           <input matInput type="text" formControlName="name" />
         </mat-form-field>
