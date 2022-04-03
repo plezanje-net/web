@@ -295,7 +295,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       };
     });
 
-    const options = {
+    const observer = {
       next: () => {
         if (this.crag) {
           this.localStorageService.removeItem('activity-selection');
@@ -338,7 +338,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
       this.updateActivityGQL
         .mutate({ input: updateActivity, routes })
-        .subscribe(options);
+        .subscribe(observer);
     } else {
       // if (data.onlyRoutes) {
       //   this.createActivityRoutesGQL.mutate({ routes }).subscribe(options);
@@ -357,7 +357,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
       this.createActivityGQL
         .mutate({ input: activity, routes })
-        .subscribe(options);
+        .subscribe(observer);
       // }
     }
   }
