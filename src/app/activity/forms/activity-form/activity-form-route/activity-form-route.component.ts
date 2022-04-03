@@ -25,7 +25,7 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   @Input() myIndex: number;
-  @Input() activity = true;
+  activity = true;
   @Input() route: FormGroup;
   @Input() first: boolean;
   @Input() last: boolean;

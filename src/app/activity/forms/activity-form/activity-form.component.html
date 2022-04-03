@@ -1,34 +1,8 @@
 <form [formGroup]="activityForm" (submit)="save()">
-  <div class="mt-16" *ngIf="false">
-    <!-- Disabled until we decide if we like activity routes without activities -->
-    <mat-radio-group
-      fxLayout="row"
-      fxLayoutAlign="start start"
-      formControlName="onlyRoutes"
-    >
-      <label fxFlex="50"
-        ><mat-radio-button [value]="false">Vnesi plezalni dan</mat-radio-button
-        ><span
-          >V tvojem dnevniku se bo pojavil <b>Plezalni dan</b> s preplezanmi
-          smermi. Datum in soplezalec bosta skupna vsem vzponom.<br />
-          (Priporočamo za sprotno vnašanje.)</span
-        ></label
-      >
-      <label fxFlex="50">
-        <mat-radio-button [value]="true"
-          >Vnesi samo preplezane smeri </mat-radio-button
-        ><span
-          >Označene smeri bodo zavedene v tvojem plezalnem dnevniku vsaka
-          posebej. Datum lahko nastaviš na vsakem posameznem vzponu.<br />
-          (Priporočamo pri vnašanju za nazaj.)
-        </span>
-      </label>
-    </mat-radio-group>
-  </div>
   <h3 *ngIf="activityForm.value.type == 'crag'">
     {{ formType == "new" ? "Dodaj" : "Uredi" }} plezalni dan
   </h3>
-  <div *ngIf="!activityForm.value.onlyRoutes" class="card">
+  <div class="card">
     <div
       fxLayout="row"
       fxLayout.lt-md="column"
@@ -151,7 +125,6 @@
             [myIndex]="index"
             [route]="route"
             [crag]="crag"
-            [activity]="!activityForm.value.onlyRoutes"
             [first]="first"
             [last]="last"
             (move)="moveRoute(index, $event)"

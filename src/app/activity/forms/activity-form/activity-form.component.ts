@@ -49,9 +49,9 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
   routes = new FormArray([]);
 
-  typeOptions = ACTIVITY_TYPES.sort((a, b) =>
-    ['crag', 'peak', 'iceFall'].includes(a.value) ? 0 : -1
-  );
+  typeOptions = ACTIVITY_TYPES.filter(
+    (a) => a.value != 'peak' && a.value != 'iceFall'
+  ).sort((a, b) => (['crag', 'peak', 'iceFall'].includes(a.value) ? 0 : -1));
 
   activityForm = new FormGroup({
     type: new FormControl(null, Validators.required),
@@ -63,7 +63,6 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     date: new FormControl(),
     partners: new FormControl(),
     notes: new FormControl(),
-    onlyRoutes: new FormControl(false),
     routes: this.routes,
   });
 
@@ -75,9 +74,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private createActivityGQL: CreateActivityGQL,
     private updateActivityGQL: UpdateActivityGQL,
-    private createActivityRoutesGQL: CreateActivityRoutesGQL,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
     public location: Location,
     private localStorageService: LocalStorageService,
     private activityFormService: ActivityFormService,
@@ -107,17 +104,9 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       });
     }
 
-    // first time emmits, when activity form date is patched bellow
-    // ui prevents it, but should probably check the state of the onlyroutes checkbox first?
     this.activityForm.controls.date.valueChanges.subscribe((value) => {
       this.patchRouteDates(value);
     });
-
-    // this.activityForm.controls.onlyRoutes.valueChanges.subscribe((value) => {
-    //   if (!value) {
-    //     this.patchRouteDates(this.activityForm.value.date);
-    //   }
-    // });
 
     if (this.crag != null && this.formType != 'edit') {
       this.watchForOverlappingActivity();
@@ -280,9 +269,6 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
     const routes = this.routes.value.map((route: any, i: number) => {
       return {
-        // date: route.date
-        //   ? dayjs(route.date).format('YYYY-MM-DD')
-        //   : activity.date,
         date: dayjs(data.date).format('YYYY-MM-DD'), // TODO enforce this on backend
         partner: route.partner || data.partners,
         notes: route.notes,
@@ -340,9 +326,6 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         .mutate({ input: updateActivity, routes })
         .subscribe(observer);
     } else {
-      // if (data.onlyRoutes) {
-      //   this.createActivityRoutesGQL.mutate({ routes }).subscribe(options);
-      // } else {
       const activity = {
         date: dayjs(data.date).format('YYYY-MM-DD'),
         name: data.name,
@@ -358,7 +341,6 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       this.createActivityGQL
         .mutate({ input: activity, routes })
         .subscribe(observer);
-      // }
     }
   }
 
