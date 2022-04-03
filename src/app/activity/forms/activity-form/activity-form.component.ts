@@ -51,7 +51,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
   typeOptions = ACTIVITY_TYPES.filter(
     (a) => a.value != 'peak' && a.value != 'iceFall'
-  ).sort((a, b) => (['crag', 'peak', 'iceFall'].includes(a.value) ? 0 : -1));
+  );
 
   activityForm = new FormGroup({
     type: new FormControl(null, Validators.required),
@@ -85,6 +85,9 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.formType == 'edit' && this.crag != null) {
       this.activityForm.controls.date.disable();
+    }
+    if (this.formType != 'new') {
+      this.activityForm.controls.type.disable();
     }
 
     if (this.activity) {
