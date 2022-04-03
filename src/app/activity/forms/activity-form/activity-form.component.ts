@@ -97,6 +97,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         partners: this.activity.partners,
         duration: this.activity.duration,
         name: this.activity.name,
+        type: this.activity.type,
       });
     }
 
@@ -122,10 +123,12 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       this.watchForOverlappingActivity();
     }
 
-    this.activityForm.patchValue({
-      date: dayjs().format('YYYY-MM-DD'),
-      type: this.getInitialType(),
-    });
+    if (this.activity == null) {
+      this.activityForm.patchValue({
+        date: dayjs().format('YYYY-MM-DD'),
+        type: this.getInitialType(),
+      });
+    }
 
     if (this.crag != null) {
       this.activityForm.patchValue({

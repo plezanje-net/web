@@ -57,7 +57,7 @@ export class ActivityEntryComponent implements OnInit, OnDestroy {
           );
 
           this.title =
-            dayjs(this.activity.date).format('d. M. YYYY') +
+            dayjs(this.activity.date).format('D. M. YYYY') +
             ' - ' +
             (this.activity.name || this.activityType.label);
 
