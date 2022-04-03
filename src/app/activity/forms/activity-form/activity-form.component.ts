@@ -86,7 +86,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     if (this.formType == 'edit' && this.crag != null) {
       this.activityForm.controls.date.disable();
     }
-    if (this.formType != 'new') {
+    if (this.formType != 'new' || this.crag) {
       this.activityForm.controls.type.disable();
     }
 
@@ -155,18 +155,18 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap((date) => {
           this.loadingActivity = true;
-          return this.myActivitiesGQL.watch({
+          return this.myActivitiesGQL.fetch({
             input: {
               dateFrom: dayjs(date).format('YYYY-MM-DD'),
               dateTo: dayjs(date).format('YYYY-MM-DD'),
               cragId: this.crag.id,
             },
-          }).valueChanges;
+          });
         }),
         map((response) => response.data.myActivities.items[0] ?? null),
         switchMap((activity) =>
           activity != null
-            ? this.activityEntryGQL.watch({ id: activity.id }).valueChanges
+            ? this.activityEntryGQL.fetch({ id: activity.id })
             : of(null)
         ),
         map((response) => (response ? response.data.activity : null))
