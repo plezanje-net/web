@@ -1,5 +1,5 @@
 <form [formGroup]="activityForm" (submit)="save()">
-  <h3 *ngIf="activityForm.value.type == 'crag'">
+  <h3 *ngIf="activityForm.controls.type.value == 'crag'">
     {{ formType == "new" ? "Dodaj" : "Uredi" }} plezalni dan
   </h3>
   <div class="card">
@@ -17,7 +17,7 @@
         <mat-form-field
           fxFlex="50"
           [class.no-hint]="
-            activityForm.value.type != 'crag' || this.crag != null
+            activityForm.controls.type.value != 'crag' || this.crag != null
           "
         >
           <mat-label>Vrsta aktivnosti</mat-label>
@@ -29,7 +29,9 @@
             </mat-option>
           </mat-select>
           <mat-hint
-            *ngIf="activityForm.value.type == 'crag' && this.crag == null"
+            *ngIf="
+              activityForm.controls.type.value == 'crag' && this.crag == null
+            "
             >* Uporabi le, če plezališča ni v naši bazi. Če plezališče obstaja,
             najprej obkljukaj smeri na njegovi strani.</mat-hint
           >
@@ -60,7 +62,7 @@
         <mat-form-field
           class="no-hint"
           fxFlex="50"
-          *ngIf="activityForm.value.type != 'crag'"
+          *ngIf="activityForm.controls.type.value != 'crag'"
         >
           <mat-label>Trajanje (min)</mat-label>
           <input matInput type="number" formControlName="duration" />
@@ -68,7 +70,7 @@
         <mat-form-field
           class="no-hint"
           fxFlex="50"
-          *ngIf="activityForm.value.type == 'crag'"
+          *ngIf="activityForm.controls.type.value == 'crag'"
         >
           <mat-label>Soplezalci</mat-label>
           <input matInput type="text" formControlName="partners" />

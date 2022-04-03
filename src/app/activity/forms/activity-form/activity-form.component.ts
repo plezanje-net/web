@@ -86,9 +86,6 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     if (this.formType == 'edit' && this.crag != null) {
       this.activityForm.controls.date.disable();
     }
-    if (this.formType != 'new' || this.crag) {
-      this.activityForm.controls.type.disable();
-    }
 
     if (this.activity) {
       this.activityForm.patchValue({
@@ -137,6 +134,10 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         this.activityFormService.conditionallyDisableVotedDifficultyInputs();
         this.afMutex = false;
       });
+
+    if (this.formType != 'new' || this.crag) {
+      this.activityForm.controls.type.disable();
+    }
   }
 
   ngOnDestroy(): void {
@@ -264,7 +265,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    const data = this.activityForm.value;
+    const data = this.activityForm.getRawValue();
 
     this.loading = true;
 
