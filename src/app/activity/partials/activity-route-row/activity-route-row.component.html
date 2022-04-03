@@ -1,7 +1,7 @@
-<td *ngIf="displayType != 'activity'">
+<td *ngIf="displayType != 'activity' && displayType != 'activityForm'">
   {{ route.date | date: "d. M. yyyy" }}
 </td>
-<td *ngIf="displayType != 'activity'">
+<td *ngIf="displayType != 'activity' && displayType != 'activityForm'">
   <a [routerLink]="['/plezalisce', route.route.crag.slug]">{{
     route.route.crag.name
   }}</a>
@@ -14,6 +14,7 @@
       'smer',
       route.route.slug
     ]"
+    [target]="displayType == 'activityForm' ? '_blank' : '_self'"
     >{{ route.route.name
     }}{{ route.pitch ? " (R" + route.pitch.number + ")" : "" }}</a
   >
@@ -48,38 +49,45 @@
   ></app-ascent-publish-option>
 </td>
 <td *ngIf="rowAction" class="tools">
-  <button mat-icon-button [mat-menu-trigger-for]="menu">
+  <button mat-icon-button type="button" [mat-menu-trigger-for]="menu">
     <mat-icon>more_vert</mat-icon>
   </button>
 
   <mat-menu #menu="matMenu">
     <button
-      *ngIf="route.activity && displayType != 'activity'"
+      *ngIf="
+        route.activity &&
+        displayType != 'activity' &&
+        displayType != 'activityForm'
+      "
       mat-menu-item
+      type="button"
       [routerLink]="['/plezalni-dnevnik', route.activity.id]"
     >
       <span>Odpri plezalni dan</span>
     </button>
     <button
       mat-menu-item
+      type="button"
       (click)="rowAction.next({ item: route, action: 'filterByRoute' })"
+      *ngIf="displayType != 'activityForm'"
     >
       <span>Vsi vzponi za to smer</span>
     </button>
     <button
       mat-menu-item
+      type="button"
       (click)="rowAction.next({ item: route, action: 'filterByCrag' })"
+      *ngIf="displayType != 'activityForm'"
     >
       <span>Vsi vzponi v tem plezališču</span>
     </button>
-    <!-- <button mat-menu-item>
-      <span>Uredi vzpon</span>
-    </button> -->
-    <button mat-menu-item [mat-menu-trigger-for]="publishMenu">
+    <button mat-menu-item type="button" [mat-menu-trigger-for]="publishMenu">
       <span>Spremeni vidnost</span>
     </button>
     <button
       mat-menu-item
+      type="button"
       (click)="rowAction.next({ item: route, action: 'delete' })"
     >
       <span>Odstrani vzpon</span>
@@ -89,6 +97,7 @@
   <mat-menu #publishMenu="matMenu">
     <button
       mat-menu-item
+      type="button"
       *ngFor="let publishOption of publishOptions"
       [disabled]="publishOption.value == route.publish"
       (click)="changePublish(publishOption.value)"

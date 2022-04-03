@@ -30,6 +30,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { ActivityEntryRoutesComponent } from './partials/activity-entry-routes/activity-entry-routes.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     ActivityRowComponent,
     ActivityFormComponent,
     ActivityFormRouteComponent,
+    ActivityEntryRoutesComponent,
   ],
   imports: [
     CommonModule,

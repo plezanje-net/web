@@ -1,46 +1,43 @@
-<app-activity-header active="dnevnik" [hideTabs]="true"></app-activity-header>
+<div class="white-back mt-16">
+  <div class="container py-8">
+    <h1>{{ title }}</h1>
+  </div>
+</div>
 
 <app-data-error *ngIf="error" [error]="error"></app-data-error>
 
 <app-loader *ngIf="loading"></app-loader>
 
-<div *ngIf="!error && !loading">
-  <div class="container mt-16">
-    <div>{{ activity.date | date: "d. M. yyyy" }}</div>
-    <h2>{{ activityType.label }} - {{ activity.name }}</h2>
-    <div
-      class="card padding no-border description"
-      *ngIf="activity.partners || activity.duration || activity.notes"
-    >
-      <p *ngIf="activity.partners">
-        <b>Soplezalci:</b> {{ activity.partners }}
-      </p>
-      <p *ngIf="activity.duration">
-        <b>Trajanje:</b> {{ activity.duration }}min
-      </p>
-      <p>{{ activity.notes }}</p>
+<ng-container *ngIf="!error && !loading">
+  <ng-container *ngIf="type == 'view'">
+    <div class="container mt-16">
+      <div
+        class="card padding no-border description"
+        *ngIf="activity.partners || activity.duration || activity.notes"
+      >
+        <p *ngIf="activity.partners">
+          <b>Soplezalci:</b> {{ activity.partners }}
+        </p>
+        <p *ngIf="activity.duration">
+          <b>Trajanje:</b> {{ activity.duration }}min
+        </p>
+        <p>{{ activity.notes }}</p>
+      </div>
     </div>
-  </div>
-  <div class="container mt-16" *ngIf="activity.routes.length > 0">
-    <div class="card scrollable-table">
-      <table class="card-table">
-        <tr class="row header">
-          <td>Smer</td>
-          <td>Ocena</td>
-          <td>Vrsta vzpona</td>
-          <td>Vidnost</td>
-          <td></td>
-        </tr>
+    <div class="container mt-16" *ngIf="activity.routes.length > 0">
+      <app-activity-entry-routes
+        [routes]="activity.routes"
+      ></app-activity-entry-routes>
+    </div>
+  </ng-container>
 
-        <tr
-          class="row"
-          *ngFor="let route of activity.routes"
-          app-activity-route-row
-          [route]="route"
-          [rowAction]="rowAction$"
-          displayType="activity"
-        ></tr>
-      </table>
-    </div>
+  <div class="container mt-16" *ngIf="type == 'edit'">
+    <app-activity-form
+      [activity]="activity"
+      [crag]="activity.crag"
+      [iceFall]="activity.iceFall"
+      [peak]="activity.peak"
+      formType="edit"
+    ></app-activity-form>
   </div>
-</div>
+</ng-container>

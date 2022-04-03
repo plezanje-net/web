@@ -1,11 +1,21 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AsyncValidatorFn,
+  FormArray,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
+  Activity,
+  ActivityEntryGQL,
   Crag,
   CreateActivityGQL,
+  UpdateActivityGQL,
   CreateActivityRoutesGQL,
   IceFall,
+  MyActivitiesGQL,
   Peak,
   Route,
 } from 'src/generated/graphql';
@@ -13,7 +23,7 @@ import dayjs from 'dayjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { ActivityFormService } from './activity-form.service';
-import { filter } from 'rxjs';
+import { filter, map, of, switchMap } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { ACTIVITY_TYPES } from 'src/app/common/activity.constants';
 import { Location } from '@angular/common';
@@ -24,18 +34,23 @@ import { Location } from '@angular/common';
   styleUrls: ['./activity-form.component.scss'],
 })
 export class ActivityFormComponent implements OnInit, OnDestroy {
-  @Input() type: string;
-  @Input() crag: Crag;
   @Input() selectedRoutes: Route[];
+  @Input() crag: Crag;
   @Input() peak: Peak;
   @Input() iceFall: IceFall;
 
+  @Input() activity: Activity;
+
+  // new - no activity yet, edit - edit activity fields but add no routes, add - add routes to existing activity
+  @Input() formType: 'new' | 'edit' | 'add' = 'new';
+
   loading: boolean = false;
+  loadingActivity: boolean = false;
 
   routes = new FormArray([]);
 
   typeOptions = ACTIVITY_TYPES.filter(
-    (type) => type.value != 'iceFall' && type.value != 'peak'
+    (a) => a.value != 'peak' && a.value != 'iceFall'
   );
 
   activityForm = new FormGroup({
@@ -45,10 +60,9 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     peakId: new FormControl(null),
     iceFallId: new FormControl(null),
     duration: new FormControl(null),
-    date: new FormControl('2021-01-01'),
+    date: new FormControl(),
     partners: new FormControl(),
     notes: new FormControl(),
-    onlyRoutes: new FormControl(false),
     routes: this.routes,
   });
 
@@ -59,37 +73,51 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   constructor(
     private snackBar: MatSnackBar,
     private createActivityGQL: CreateActivityGQL,
-    private createActivityRoutesGQL: CreateActivityRoutesGQL,
+    private updateActivityGQL: UpdateActivityGQL,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
     public location: Location,
     private localStorageService: LocalStorageService,
-    private activityFormService: ActivityFormService
+    private activityFormService: ActivityFormService,
+    private myActivitiesGQL: MyActivitiesGQL,
+    private activityEntryGQL: ActivityEntryGQL
   ) {}
 
   ngOnInit(): void {
-    if (this.selectedRoutes.length) {
+    if (this.formType == 'edit' && this.crag != null) {
+      this.activityForm.controls.date.disable();
+    }
+
+    if (this.activity) {
+      this.activityForm.patchValue({
+        date: this.activity.date,
+        notes: this.activity.notes,
+        partners: this.activity.partners,
+        duration: this.activity.duration,
+        name: this.activity.name,
+        type: this.activity.type,
+      });
+    }
+
+    if (this.selectedRoutes != null) {
       this.selectedRoutes.forEach((route) => {
         this.addRoute(route);
       });
     }
 
-    // first time emmits, when activity form date is patched bellow
-    // ui prevents it, but should probably check the state of the onlyroutes checkbox first?
     this.activityForm.controls.date.valueChanges.subscribe((value) => {
       this.patchRouteDates(value);
     });
 
-    this.activityForm.controls.onlyRoutes.valueChanges.subscribe((value) => {
-      if (!value) {
-        this.patchRouteDates(this.activityForm.value.date);
-      }
-    });
+    if (this.crag != null && this.formType != 'edit') {
+      this.watchForOverlappingActivity();
+    }
 
-    this.activityForm.patchValue({
-      date: dayjs().format('YYYY-MM-DD'),
-      type: this.type,
-    });
+    if (this.activity == null) {
+      this.activityForm.patchValue({
+        date: dayjs().format('YYYY-MM-DD'),
+        type: this.getInitialType(),
+      });
+    }
 
     if (this.crag != null) {
       this.activityForm.patchValue({
@@ -106,10 +134,67 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         this.activityFormService.conditionallyDisableVotedDifficultyInputs();
         this.afMutex = false;
       });
+
+    if (this.formType != 'new' || this.crag) {
+      this.activityForm.controls.type.disable();
+    }
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
+  getInitialType() {
+    if (this.crag != null) return 'crag';
+    if (this.peak != null) return 'peak';
+    if (this.iceFall != null) return 'iceFall';
+    return null;
+  }
+
+  watchForOverlappingActivity() {
+    this.activityForm.controls.date.valueChanges
+      .pipe(
+        switchMap((date) => {
+          this.loadingActivity = true;
+          return this.myActivitiesGQL.fetch({
+            input: {
+              dateFrom: dayjs(date).format('YYYY-MM-DD'),
+              dateTo: dayjs(date).format('YYYY-MM-DD'),
+              cragId: this.crag.id,
+            },
+          });
+        }),
+        map((response) => response.data.myActivities.items[0] ?? null),
+        switchMap((activity) =>
+          activity != null
+            ? this.activityEntryGQL.fetch({ id: activity.id })
+            : of(null)
+        ),
+        map((response) => (response ? response.data.activity : null))
+      )
+      .subscribe((activity) => {
+        this.loadingActivity = false;
+
+        if (activity == null && this.activity != null) {
+          this.activityForm.patchValue({
+            notes: null,
+            partners: null,
+          });
+        }
+        if (activity == null) {
+          this.activity = null;
+          this.formType = 'new';
+          return;
+        }
+
+        this.activity = <Activity>activity;
+        this.activityForm.patchValue({
+          notes: activity.notes,
+          partners: activity.partners,
+        });
+
+        this.formType = this.routes.length == 0 ? 'edit' : 'add';
+      });
   }
 
   patchRouteDates(value: dayjs.Dayjs): void {
@@ -153,7 +238,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       case 2:
         // add a copy of the same route
         const routeFormGroupOriginal = <FormGroup>this.routes.at(routeIndex);
-        const routeFormGroupCopy = this.copyFormFroup(routeFormGroupOriginal);
+        const routeFormGroupCopy = this.copyFormGroup(routeFormGroupOriginal);
         this.routes.insert(routeIndex + 1, routeFormGroupCopy);
         break;
       default:
@@ -165,7 +250,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  private copyFormFroup(formGroupOriginal: FormGroup) {
+  private copyFormGroup(formGroupOriginal: FormGroup) {
     const formGroupData = Object.keys(formGroupOriginal.controls).reduce(
       (fgData, key) => {
         fgData[key] = new FormControl(
@@ -180,30 +265,16 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    const data = this.activityForm.value;
+    const data = this.activityForm.getRawValue();
 
     this.loading = true;
 
     this.activityForm.disable({ emitEvent: false });
 
-    const activity = {
-      date: dayjs(data.date).format('YYYY-MM-DD'),
-      name: data.name,
-      duration: data.duration,
-      type: data.type,
-      notes: data.notes,
-      partners: data.partners,
-      cragId: data.cragId,
-      peakId: data.peakId,
-      iceFallId: data.iceFallId,
-    };
-
     const routes = this.routes.value.map((route: any, i: number) => {
       return {
-        date: route.date
-          ? dayjs(route.date).format('YYYY-MM-DD')
-          : activity.date,
-        partner: route.partner || activity.partners,
+        date: dayjs(data.date).format('YYYY-MM-DD'), // TODO enforce this on backend
+        partner: route.partner || data.partners,
         notes: route.notes,
         routeId: route.routeId,
         ascentType: route.ascentType,
@@ -214,34 +285,66 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       };
     });
 
-    const options = {
+    const observer = {
       next: () => {
         if (this.crag) {
-          this.successCragWithRoutes();
-          return;
+          this.localStorageService.removeItem('activity-selection');
+
+          if (this.formType == 'new') {
+            this.successCragWithRoutes();
+            return;
+          }
         }
-        this.snackBar.open('Vnos je bil shranjen v plezalni dnevnik', null, {
-          duration: 3000,
-        });
+        this.snackBar.open(
+          this.formType == 'edit'
+            ? 'Vnos v plezalnem dnevniku je bil posodobljen'
+            : 'Vnos je bil shranjen v plezalni dnevnik',
+          null,
+          {
+            duration: 3000,
+          }
+        );
         this.router.navigate(['/plezalni-dnevnik']);
       },
       error: () => {
         this.loading = false;
         this.activityForm.enable();
-        this.snackBar.open(
-          'Vnosa ni bilo mogoče shraniti v plezalni dnevnik',
-          null,
-          { panelClass: 'error', duration: 3000 }
-        );
+        this.snackBar.open('Vnosa ni bilo mogoče shraniti', null, {
+          panelClass: 'error',
+          duration: 3000,
+        });
       },
     };
 
-    if (data.onlyRoutes) {
-      this.createActivityRoutesGQL.mutate({ routes }).subscribe(options);
+    if (this.formType == 'add' || this.formType == 'edit') {
+      const updateActivity = {
+        id: this.activity.id,
+        date: dayjs(data.date).format('YYYY-MM-DD'), // TODO backend make sure that this did not change in case it has logged routes
+        name: data.name,
+        duration: data.duration,
+        notes: data.notes,
+        partners: data.partners,
+      };
+
+      this.updateActivityGQL
+        .mutate({ input: updateActivity, routes })
+        .subscribe(observer);
     } else {
+      const activity = {
+        date: dayjs(data.date).format('YYYY-MM-DD'),
+        name: data.name,
+        duration: data.duration,
+        type: data.type,
+        notes: data.notes,
+        partners: data.partners,
+        cragId: data.cragId,
+        peakId: data.peakId,
+        iceFallId: data.iceFallId,
+      };
+
       this.createActivityGQL
         .mutate({ input: activity, routes })
-        .subscribe(options);
+        .subscribe(observer);
     }
   }
 
