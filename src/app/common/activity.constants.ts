@@ -15,6 +15,7 @@ export const ASCENT_TYPES: AscentType[] = [
     color: 'green',
     topRope: false,
     tick: true,
+    topRopeTick: false,
   },
   {
     value: 'flash',
@@ -22,6 +23,7 @@ export const ASCENT_TYPES: AscentType[] = [
     color: 'green',
     topRope: false,
     tick: true,
+    topRopeTick: false,
   },
   {
     value: 'redpoint',
@@ -29,6 +31,7 @@ export const ASCENT_TYPES: AscentType[] = [
     color: 'green',
     topRope: false,
     tick: true,
+    topRopeTick: false,
   },
   {
     value: 'repeat',
@@ -36,6 +39,7 @@ export const ASCENT_TYPES: AscentType[] = [
     color: 'green',
     topRope: false,
     tick: true,
+    topRopeTick: false,
   },
   {
     value: 'allfree',
@@ -43,6 +47,7 @@ export const ASCENT_TYPES: AscentType[] = [
     color: 'yellow',
     topRope: false,
     tick: false,
+    topRopeTick: false,
   },
   {
     value: 'aid',
@@ -50,6 +55,7 @@ export const ASCENT_TYPES: AscentType[] = [
     color: 'yellow',
     topRope: false,
     tick: false,
+    topRopeTick: false,
   },
   {
     value: 'attempt',
@@ -57,6 +63,7 @@ export const ASCENT_TYPES: AscentType[] = [
     color: 'yellow',
     topRope: false,
     tick: false,
+    topRopeTick: false,
   },
   {
     value: 't_onsight',
@@ -64,6 +71,7 @@ export const ASCENT_TYPES: AscentType[] = [
     color: 'green',
     topRope: true,
     tick: false,
+    topRopeTick: true,
   },
   {
     value: 't_flash',
@@ -71,6 +79,7 @@ export const ASCENT_TYPES: AscentType[] = [
     color: 'green',
     topRope: true,
     tick: false,
+    topRopeTick: true,
   },
   {
     value: 't_redpoint',
@@ -78,6 +87,7 @@ export const ASCENT_TYPES: AscentType[] = [
     color: 'green',
     topRope: true,
     tick: false,
+    topRopeTick: true,
   },
   {
     value: 't_repeat',
@@ -85,6 +95,7 @@ export const ASCENT_TYPES: AscentType[] = [
     color: 'green',
     topRope: true,
     tick: false,
+    topRopeTick: false,
   },
   {
     value: 't_allfree',
@@ -92,6 +103,7 @@ export const ASCENT_TYPES: AscentType[] = [
     color: 'yellow',
     topRope: true,
     tick: false,
+    topRopeTick: false,
   },
   {
     value: 't_aid',
@@ -99,6 +111,7 @@ export const ASCENT_TYPES: AscentType[] = [
     color: 'yellow',
     topRope: true,
     tick: false,
+    topRopeTick: false,
   },
   {
     value: 't_attempt',
@@ -106,6 +119,7 @@ export const ASCENT_TYPES: AscentType[] = [
     color: 'yellow',
     topRope: true,
     tick: false,
+    topRopeTick: false,
   },
 ];
 

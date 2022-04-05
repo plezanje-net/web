@@ -1,11 +1,5 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import {
-  AsyncValidatorFn,
-  FormArray,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   Activity,
@@ -13,14 +7,14 @@ import {
   Crag,
   CreateActivityGQL,
   UpdateActivityGQL,
-  CreateActivityRoutesGQL,
   IceFall,
   MyActivitiesGQL,
   Peak,
   Route,
+  RoutesTouchesGQL,
 } from 'src/generated/graphql';
 import dayjs from 'dayjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { ActivityFormService } from './activity-form.service';
 import { filter, map, of, switchMap } from 'rxjs';
@@ -79,7 +73,8 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     private localStorageService: LocalStorageService,
     private activityFormService: ActivityFormService,
     private myActivitiesGQL: MyActivitiesGQL,
-    private activityEntryGQL: ActivityEntryGQL
+    private activityEntryGQL: ActivityEntryGQL,
+    private routesTouchesGQL: RoutesTouchesGQL
   ) {}
 
   ngOnInit(): void {
@@ -104,9 +99,42 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       });
     }
 
-    this.activityForm.controls.date.valueChanges.subscribe((value) => {
-      this.patchRouteDates(value);
-    });
+    this.activityForm.controls.date.valueChanges
+      .pipe(
+        switchMap((date) => {
+          this.patchRouteDates(date); // TODO: do we need to do this? logging routes with different dates is not possible anymore, so we can have only one date now!
+          const routeIds = new Set(
+            this.routes.controls.map(
+              (routeFormGroup) => routeFormGroup.get('routeId').value
+            )
+          );
+          return this.routesTouchesGQL.fetch({
+            input: {
+              routeIds: [...routeIds],
+              before: date,
+            },
+          });
+        })
+      )
+      .subscribe((result) => {
+        const { ticked, tried, trTicked } = result.data.routesTouches;
+        const tickedRoutes = new Set(ticked.map((ar) => ar.routeId));
+        const triedRoutes = new Set(tried.map((ar) => ar.routeId));
+        const trTickedRoutes = new Set(trTicked.map((ar) => ar.routeId));
+
+        this.routes.controls.forEach((route) => {
+          const routeId = route.get('routeId').value;
+
+          const routeTicked = tickedRoutes.has(routeId);
+          route.get('ticked').setValue(routeTicked);
+
+          const routeTried = triedRoutes.has(routeId);
+          route.get('tried').setValue(routeTried);
+
+          const routeTrTicked = trTickedRoutes.has(routeId);
+          route.get('trTicked').setValue(routeTrTicked);
+        });
+      });
 
     if (this.crag != null && this.formType != 'edit') {
       this.watchForOverlappingActivity();

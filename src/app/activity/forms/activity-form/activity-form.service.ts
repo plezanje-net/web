@@ -15,13 +15,9 @@ export class ActivityFormService {
     ASCENT_TYPES.filter((at) => at.tick).map((at) => at.value)
   );
 
-  // TODO: expand ASCENT_TYPES constants to hold this as a flag
-  trTickAscentTypes = new Set([
-    't_onsight',
-    't_flash',
-    't_repeat',
-    't_redpoint',
-  ]);
+  trTickAscentTypes = new Set(
+    ASCENT_TYPES.filter((at) => at.topRopeTick).map((at) => at.value)
+  );
 
   constructor() {}
 
@@ -62,7 +58,7 @@ export class ActivityFormService {
         continue; // bellow conditions actually dismiss this case just as well...
       }
 
-      // if the id is the same as current route that means that the route is being logged more than once in a single log entry, so adjust the possibleAscentTypes set, then continue
+      // if the id is the same as current route (and index is not the same) that means that the route is being logged more than once in a single log entry, so adjust the possibleAscentTypes set, then continue
       if (routeFormGroup.value.routeId === routeId && index !== routeIndex) {
         // add or remove from possibleAscentTypes
 
@@ -74,39 +70,47 @@ export class ActivityFormService {
 
         // add repeat to possible ascent types when we find previous ascent that is considered a tick and remove redpoint
         if (this.tickAscentTypes.has(routeFormGroup.value.ascentType)) {
-          possibleAscentTypes.delete('redpoint');
-          possibleAscentTypes.delete('t_redpoint');
           possibleAscentTypes.add('repeat');
           possibleAscentTypes.add('t_repeat');
+          possibleAscentTypes.delete('redpoint');
+          possibleAscentTypes.delete('t_redpoint');
         }
 
+        // if this is (only) a toprope tick, then toprope redpoint is not possible anymore, and toprope repeat becomes possible
         if (this.trTickAscentTypes.has(routeFormGroup.value.ascentType)) {
           possibleAscentTypes.delete('t_redpoint');
           possibleAscentTypes.add('t_repeat');
         }
       }
 
-      // if the passed in route index is the same as the routesFormArray index then we are at the route for which we are deciding if a log is possible. check if the type is in the set and return the answer
+      // if the passed in route index is the same as the routesFormArray index then we arrived to the route for which we are deciding if a log is possible.
+      // check if the passed in ascent type is still possible and return the answer
       if (index === routeIndex) {
-        // but first remove/add ascent types as dictated by user's log history
+        // but first also remove/add ascent types as is dictated by the user's log history
+
+        // if the user has tried this route, remove onsight and flash
         if (routeFormGroup.value.tried) {
           possibleAscentTypes.delete('onsight');
           possibleAscentTypes.delete('t_onsight');
           possibleAscentTypes.delete('flash');
           possibleAscentTypes.delete('t_flash');
         }
+
+        // if the user has already ticked the route, remove redpoint and add repeat
         if (routeFormGroup.value.ticked) {
           possibleAscentTypes.delete('redpoint');
           possibleAscentTypes.delete('t_redpoint');
           possibleAscentTypes.add('repeat');
           possibleAscentTypes.add('t_repeat');
         }
+
+        // if the user already (only) toprope ticked the route she cannot toprope redpoint it again but she can toprope repeat it
         if (routeFormGroup.value.trTicked) {
           possibleAscentTypes.delete('t_redpoint');
           possibleAscentTypes.add('t_repeat');
         }
 
-        // if this is the currently selected value and this ascentType is not possible, deselect ascent type
+        // if the passed in ascentType is not possible but route has it currently selected we need to deselect it
         if (
           !possibleAscentTypes.has(ascentType) &&
           routeFormGroup.value.ascentType === ascentType

@@ -4,4 +4,5 @@ export interface AscentType {
   color?: string;
   topRope: boolean;
   tick: boolean; // is an ascent of type that counts as a tick. ie. redpoint, flash and onsight
+  topRopeTick: boolean;
 }
