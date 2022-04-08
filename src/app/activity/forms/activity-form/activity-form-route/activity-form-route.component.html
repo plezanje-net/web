@@ -29,7 +29,7 @@
       <button
         type="button"
         mat-icon-button
-        (click)="move.emit(2)"
+        (click)="activityFormService.duplicateRoute(myIndex)"
         [disabled]="route.disabled"
         matTooltip="Dodaj ponovitev"
       >
@@ -39,7 +39,7 @@
         type="button"
         mat-icon-button
         *ngIf="!first"
-        (click)="move.emit(-1)"
+        (click)="activityFormService.moveRoute(myIndex, -1)"
         [disabled]="route.disabled"
         matTooltip="Premakni navzgor"
       >
@@ -49,7 +49,7 @@
         type="button"
         mat-icon-button
         *ngIf="!last"
-        (click)="move.emit(1)"
+        (click)="activityFormService.moveRoute(myIndex, 1)"
         [disabled]="route.disabled"
         matTooltip="Premakni navzdol"
       >
@@ -59,7 +59,7 @@
         *ngIf="this.activityFormService.numOfRoutes > 1"
         type="button"
         mat-icon-button
-        (click)="move.emit(0)"
+        (click)="activityFormService.removeRouteAt(myIndex)"
         [disabled]="route.disabled"
         matTooltip="Odstrani"
       >
@@ -78,13 +78,7 @@
             <mat-option
               *ngIf="logPossibleEver(type.value)"
               [value]="type.value"
-              [disabled]="
-                !activityFormService.logPossible(
-                  type.value,
-                  myIndex,
-                  route.value.routeId
-                )
-              "
+              [disabled]="!activityFormService.logPossible(myIndex, type.value)"
               >{{ type.label }}
             </mat-option>
           </ng-container>
@@ -94,11 +88,7 @@
                 *ngIf="logPossibleEver(type.value)"
                 [value]="type.value"
                 [disabled]="
-                  !activityFormService.logPossible(
-                    type.value,
-                    myIndex,
-                    route.value.routeId
-                  )
+                  !activityFormService.logPossible(myIndex, type.value)
                 "
                 >{{ type.label }}
               </mat-option>

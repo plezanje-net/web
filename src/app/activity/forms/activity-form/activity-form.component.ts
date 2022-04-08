@@ -17,7 +17,7 @@ import dayjs from 'dayjs';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { ActivityFormService } from './activity-form.service';
-import { filter, map, of, switchMap } from 'rxjs';
+import { map, of, switchMap } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { ACTIVITY_TYPES } from 'src/app/common/activity.constants';
 import { Location } from '@angular/common';
@@ -60,8 +60,6 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     routes: this.routes,
   });
 
-  afMutex = false;
-
   subscriptions: Subscription[] = [];
 
   constructor(
@@ -102,7 +100,13 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     this.activityForm.controls.date.valueChanges
       .pipe(
         switchMap((date) => {
+          // Disable all ascentType inputs, until we get users route touches before the newly selected date
+          this.routes.controls.forEach((routeFormGroup) =>
+            routeFormGroup.get('ascentType').disable({ emitEvent: false })
+          );
+
           this.patchRouteDates(date); // TODO: do we need to do this? logging routes with different dates is not possible anymore, so we can have only one date now!
+
           const routeIds = new Set(
             this.routes.controls.map(
               (routeFormGroup) => routeFormGroup.get('routeId').value
@@ -133,6 +137,24 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
           const routeTrTicked = trTickedRoutes.has(routeId);
           route.get('trTicked').setValue(routeTrTicked);
+
+          // Set default value for ascentType based on user's log history (might get changed rihgt away with revalidateAT, but it's a good first guess anyway)
+          route.patchValue(
+            {
+              ascentType: routeTicked ? 'repeat' : 'redpoint',
+            },
+            { emitEvent: false }
+          );
+        });
+
+        this.activityFormService.revalidateAscentTypes();
+        this.activityFormService.conditionallyDisableVotedDifficultyInputs();
+        this.activityFormService.conditionallyDisableVotedStarRatingInputs();
+
+        // Now that user's ascent history has been fetched and ascentTypes revalidated, we can reenable ascentType controls
+        this.routes.controls.forEach((routeFormGroup) => {
+          routeFormGroup.get('ascentType').enable();
+          // routeFormGroup.get('ascentType').enable({ emitEvent: false }); // TODO: this would be the better way, but seems that material needs event emitted in order to update the display of the field (does work if no material)
         });
       });
 
@@ -154,18 +176,11 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       });
     }
 
-    this.activityFormService.initialize(this.routes);
-    this.activityForm.valueChanges
-      .pipe(filter(() => !this.afMutex))
-      .subscribe(() => {
-        this.afMutex = true;
-        this.activityFormService.conditionallyDisableVotedDifficultyInputs();
-        this.afMutex = false;
-      });
-
     if (this.formType != 'new' || this.crag) {
       this.activityForm.controls.type.disable();
     }
+
+    this.activityFormService.initialize(this.routes);
   }
 
   ngOnDestroy(): void {
@@ -240,7 +255,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         difficulty: new FormControl(route.difficulty),
         defaultGradingSystemId: new FormControl(route.defaultGradingSystem.id),
         isProject: new FormControl(route.isProject),
-        ascentType: new FormControl(!route?.ticked ? 'redpoint' : 'repeat', [
+        ascentType: new FormControl({ value: null, disabled: true }, [
           Validators.required,
         ]),
         date: new FormControl(),
@@ -255,41 +270,6 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         type: new FormControl(route.routeType.id),
       })
     );
-  }
-
-  moveRoute(routeIndex: number, direction: number): void {
-    switch (direction) {
-      case 0:
-        // delete the route at routeIndex
-        this.routes.removeAt(routeIndex);
-        break;
-      case 2:
-        // add a copy of the same route
-        const routeFormGroupOriginal = <FormGroup>this.routes.at(routeIndex);
-        const routeFormGroupCopy = this.copyFormGroup(routeFormGroupOriginal);
-        this.routes.insert(routeIndex + 1, routeFormGroupCopy);
-        break;
-      default:
-        // switch position of adjacent routes
-        const temp = this.routes.controls[routeIndex + direction];
-        this.routes.controls[routeIndex + direction] =
-          this.routes.controls[routeIndex];
-        this.routes.controls[routeIndex] = temp;
-    }
-  }
-
-  private copyFormGroup(formGroupOriginal: FormGroup) {
-    const formGroupData = Object.keys(formGroupOriginal.controls).reduce(
-      (fgData, key) => {
-        fgData[key] = new FormControl(
-          formGroupOriginal.get(key).value,
-          formGroupOriginal.get(key).validator
-        );
-        return fgData;
-      },
-      {}
-    );
-    return new FormGroup(formGroupData);
   }
 
   save(): void {

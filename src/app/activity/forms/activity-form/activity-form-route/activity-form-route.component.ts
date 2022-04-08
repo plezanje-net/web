@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import {
   ASCENT_TYPES,
@@ -30,7 +23,6 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
   @Input() first: boolean;
   @Input() last: boolean;
   @Input() crag: Crag;
-  @Output() move = new EventEmitter<number>();
 
   topRopeAscentTypes = ASCENT_TYPES.filter((ascentType) => ascentType.topRope);
   nonTopRopeAscentTypes = ASCENT_TYPES.filter(
@@ -66,29 +58,31 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
     const ascentTypeSelected = this.route.get('ascentType').value;
     this.setAscentTypeTriggerValue(ascentTypeSelected);
 
+    // If a route is a project then a vote on difficulty should always be cast (we need to get the base grade from the user ticking the proj)
+    if (this.route.get('isProject').value) {
+      this.conditionallyRequireVotedDifficulty(ascentTypeSelected);
+    }
+    // TODO: above few lines (from atSelected) actually do nothing, because atSel is null when route is initialized. And when ascentType field is first populated, the bellow observer gets called
+
+    // Revalidate stuff when ascentType is changed
     this.route
       .get('ascentType')
       .valueChanges.pipe(takeUntil(this.destroy$))
-      .subscribe((at) => {
-        this.setAscentTypeTriggerValue(at);
+      .subscribe((ascentType) => {
+        this.activityFormService.revalidateAscentTypes();
+        this.activityFormService.conditionallyDisableVotedDifficultyInputs();
+        this.activityFormService.conditionallyDisableVotedStarRatingInputs();
+
+        this.setAscentTypeTriggerValue(ascentType);
+
+        if (this.route.get('isProject').value) {
+          this.conditionallyRequireVotedDifficulty(ascentType);
+        }
       });
-
-    // If a route is a project then a vote on diff should always be cast.
-    if (this.route.get('isProject').value) {
-      this.conditionallyRequireVotedDifficulty(ascentTypeSelected);
-
-      this.route
-        .get('ascentType')
-        .valueChanges.pipe(takeUntil(this.destroy$))
-        .subscribe((at) => this.conditionallyRequireVotedDifficulty(at));
-    }
   }
 
   /**
-   *
-   * @param ascentTypeSelected
-   *
-   * If a route is a project and selected ascent type means that the route has been ticked, then a vote on grade is mandatory.
+   * If a route is a project and selected ascent type is a tick, then a vote on grade is mandatory.
    */
   conditionallyRequireVotedDifficulty(ascentTypeSelected: string) {
     const isTick = ASCENT_TYPES.some(
@@ -104,9 +98,6 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
 
   /**
    * determines if a log could ever be possible based on route type and some ascent type
-   *
-   * @param ascentType
-   * @returns boolean
    */
   logPossibleEver(ascentType: string) {
     if (
@@ -115,13 +106,10 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
     ) {
       return false;
     }
-
     return true;
   }
 
   /**
-   * @param ascentTypeSelected
-   *
    * Set trigger value for ascent type select (so it includes toprope so there can be no confusion)
    */
   setAscentTypeTriggerValue(ascentTypeSelected: string) {
