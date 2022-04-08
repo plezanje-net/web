@@ -12,15 +12,19 @@ import {
   Peak,
   Route,
   RoutesTouchesGQL,
+  DryRunCreateActivityGQL,
+  DryRunUpdateActivityGQL,
 } from 'src/generated/graphql';
 import dayjs from 'dayjs';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { ActivityFormService } from './activity-form.service';
-import { map, of, switchMap } from 'rxjs';
+import { concatMap, EMPTY, empty, map, Observable, of, switchMap } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { ACTIVITY_TYPES } from 'src/app/common/activity.constants';
 import { Location } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { DryRunActivityDialogComponent } from './dry-run-activity-dialog/dry-run-activity-dialog.component';
 
 @Component({
   selector: 'app-activity-form',
@@ -64,8 +68,11 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private snackBar: MatSnackBar,
+    private dialog: MatDialog,
     private createActivityGQL: CreateActivityGQL,
     private updateActivityGQL: UpdateActivityGQL,
+    private dryRunCreateActivityGQL: DryRunCreateActivityGQL,
+    private dryRunUpdateActivityGQL: DryRunUpdateActivityGQL,
     private router: Router,
     public location: Location,
     private localStorageService: LocalStorageService,
@@ -276,7 +283,6 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     const data = this.activityForm.getRawValue();
 
     this.loading = true;
-
     this.activityForm.disable({ emitEvent: false });
 
     const routes = this.routes.value.map((route: any, i: number) => {
@@ -293,7 +299,111 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       };
     });
 
-    const observer = {
+    const activityInput: any = {
+      // TODO: type?
+      date: dayjs(data.date).format('YYYY-MM-DD'), // TODO backend make sure that this did not change in case it has logged routes
+      duration: data.duration,
+      name: data.name,
+      notes: data.notes,
+      partners: data.partners,
+    };
+
+    // We have 3 possible cases here:
+    // 1: edit  -> we are updating the activity data only (no routes changes) -> no dry run is needed
+    // 2: add   -> we are adding routes to existing activity -> do dry run
+    // 3: new   -> we are creating a new activity -> do dry run
+
+    // Before actually saving (mutating) the log, do a dry run and get back the ascent type changes that the log might trigger
+    // If any, show them to the user, and only after another confirmation, do the actual mutation
+    switch (this.formType) {
+      case 'edit':
+        activityInput.id = this.activity.id;
+
+        this.updateActivityGQL
+          .mutate({ input: activityInput, routes: [] })
+          .subscribe(this.getObserver());
+        break;
+
+      case 'add':
+        activityInput.id = this.activity.id;
+
+        this.dryRunUpdateActivityGQL
+          .fetch({ input: activityInput, routes })
+          .pipe(
+            concatMap((result) => {
+              if (result.data.dryRunUpdateActivity.length) {
+                // If we got back some data, there will be changes in 'future' logs, so user needs to preview and confirm them
+                const dryRunSideEffects = result.data.dryRunUpdateActivity;
+                return this.dialog
+                  .open(DryRunActivityDialogComponent, {
+                    data: { dryRunSideEffects },
+                  })
+                  .afterClosed();
+              } else {
+                return of(true); // If no data from dryRun, theb emit true and complete as if the dialog was opened and confirmed
+              }
+            }),
+            concatMap((confirmed) => {
+              if (confirmed) {
+                // User confirmed autocorrect changes, so do the actual mutation now
+                return this.updateActivityGQL.mutate({
+                  input: activityInput,
+                  routes,
+                });
+              } else {
+                // User declined. Nothing to do. Make form active again and complete.
+                this.activityForm.enable({ emitEvent: false });
+                this.loading = false;
+                return EMPTY; // just completes
+              }
+            })
+          )
+          .subscribe(this.getObserver());
+        break;
+
+      case 'new':
+        activityInput.type = data.type;
+        activityInput.cragId = data.cragId;
+        activityInput.peakId = data.peakId;
+        activityInput.iceFallId = data.iceFallId;
+
+        this.dryRunCreateActivityGQL
+          .fetch({ input: activityInput, routes })
+          .pipe(
+            concatMap((result) => {
+              if (result.data.dryRunCreateActivity.length) {
+                // If we got back some data, there will be changes in 'future' logs, so user needs to preview and confirm them
+                const dryRunSideEffects = result.data.dryRunCreateActivity;
+                return this.dialog
+                  .open(DryRunActivityDialogComponent, {
+                    data: { dryRunSideEffects },
+                  })
+                  .afterClosed();
+              } else {
+                return of(true); // If no data from dryRun, theb emit true and complete as if the dialog was opened and confirmed
+              }
+            }),
+            concatMap((confirmed) => {
+              if (confirmed) {
+                // User confirmed autocorrect changes, so do the actual mutation now
+                return this.createActivityGQL.mutate({
+                  input: activityInput,
+                  routes,
+                });
+              } else {
+                // User declined. Nothing to do. Make form active again and complete.
+                this.activityForm.enable({ emitEvent: false });
+                this.loading = false;
+                return EMPTY; // just completes
+              }
+            })
+          )
+          .subscribe(this.getObserver());
+    }
+  }
+
+  private getObserver() {
+    return {
       next: () => {
         if (this.crag) {
           this.localStorageService.removeItem('activity-selection');
@@ -323,37 +433,6 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         });
       },
     };
-
-    if (this.formType == 'add' || this.formType == 'edit') {
-      const updateActivity = {
-        id: this.activity.id,
-        date: dayjs(data.date).format('YYYY-MM-DD'), // TODO backend make sure that this did not change in case it has logged routes
-        name: data.name,
-        duration: data.duration,
-        notes: data.notes,
-        partners: data.partners,
-      };
-
-      this.updateActivityGQL
-        .mutate({ input: updateActivity, routes })
-        .subscribe(observer);
-    } else {
-      const activity = {
-        date: dayjs(data.date).format('YYYY-MM-DD'),
-        name: data.name,
-        duration: data.duration,
-        type: data.type,
-        notes: data.notes,
-        partners: data.partners,
-        cragId: data.cragId,
-        peakId: data.peakId,
-        iceFallId: data.iceFallId,
-      };
-
-      this.createActivityGQL
-        .mutate({ input: activity, routes })
-        .subscribe(observer);
-    }
   }
 
   successCragWithRoutes() {

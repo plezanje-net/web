@@ -1,0 +1,46 @@
+<div mat-dialog-title>Potrditev avtomatske spremembe tipa vzponov</div>
+<mat-dialog-content>
+  <p>
+    Nekatere smeri, ki jih želiš vnesti v dnevnik, imaš v dnevniku že zabeležene
+    s kasnejšimi datumi vzpona in s tipi vzpona, ki so glede na trenutni vnos
+    nemogoči.
+  </p>
+  <p>Tipi vzponov pri teh vnosih bodo zato avtomatsko spremenjeni kot sledi:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Datum</th>
+        <th>Smer</th>
+        <th>Sprememba tipa vzpona</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let sideEffect of data.dryRunSideEffects">
+        <td>
+          {{ sideEffect.before.date | date: "d. M. yyyy" }}
+        </td>
+        <td>
+          {{ sideEffect.before.route.name }}
+        </td>
+        <td>
+          <app-ascent-type
+            [value]="sideEffect.before.ascentType"
+          ></app-ascent-type>
+          <span> --> </span>
+          <app-ascent-type
+            [value]="sideEffect.after.ascentType"
+          ></app-ascent-type>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Ali želiš kljub temu potrditi vnos?</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button type="button" mat-button [mat-dialog-close]="false">Prekliči</button>
+  <button mat-button color="primary" cdkFocusInitial [mat-dialog-close]="true">
+    Potrdi
+  </button>
+</mat-dialog-actions>
