@@ -19,7 +19,7 @@ import dayjs from 'dayjs';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { ActivityFormService } from './activity-form.service';
-import { concatMap, EMPTY, empty, map, Observable, of, switchMap } from 'rxjs';
+import { concatMap, EMPTY, map, of, switchMap } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { ACTIVITY_TYPES } from 'src/app/common/activity.constants';
 import { Location } from '@angular/common';
@@ -299,8 +299,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       };
     });
 
-    const activityInput: any = {
-      // TODO: type?
+    const activityInput = {
       date: dayjs(data.date).format('YYYY-MM-DD'), // TODO backend make sure that this did not change in case it has logged routes
       duration: data.duration,
       name: data.name,
@@ -317,18 +316,24 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     // If any, show them to the user, and only after another confirmation, do the actual mutation
     switch (this.formType) {
       case 'edit':
-        activityInput.id = this.activity.id;
+        const editActivityInput = {
+          ...activityInput,
+          id: this.activity.id,
+        };
 
         this.updateActivityGQL
-          .mutate({ input: activityInput, routes: [] })
+          .mutate({ input: editActivityInput, routes: [] })
           .subscribe(this.getObserver());
         break;
 
       case 'add':
-        activityInput.id = this.activity.id;
+        const addToActivityInput = {
+          ...activityInput,
+          id: this.activity.id,
+        };
 
         this.dryRunUpdateActivityGQL
-          .fetch({ input: activityInput, routes })
+          .fetch({ input: addToActivityInput, routes })
           .pipe(
             concatMap((result) => {
               if (result.data.dryRunUpdateActivity.length) {
@@ -347,7 +352,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
               if (confirmed) {
                 // User confirmed autocorrect changes, so do the actual mutation now
                 return this.updateActivityGQL.mutate({
-                  input: activityInput,
+                  input: addToActivityInput,
                   routes,
                 });
               } else {
@@ -362,13 +367,16 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         break;
 
       case 'new':
-        activityInput.type = data.type;
-        activityInput.cragId = data.cragId;
-        activityInput.peakId = data.peakId;
-        activityInput.iceFallId = data.iceFallId;
+        const createActivityInput = {
+          ...activityInput,
+          type: data.type,
+          cragId: data.cragId,
+          peakId: data.peakId,
+          iceFallId: data.iceFallId,
+        };
 
         this.dryRunCreateActivityGQL
-          .fetch({ input: activityInput, routes })
+          .fetch({ input: createActivityInput, routes })
           .pipe(
             concatMap((result) => {
               if (result.data.dryRunCreateActivity.length) {
@@ -387,7 +395,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
               if (confirmed) {
                 // User confirmed autocorrect changes, so do the actual mutation now
                 return this.createActivityGQL.mutate({
-                  input: activityInput,
+                  input: createActivityInput,
                   routes,
                 });
               } else {
