@@ -282,7 +282,6 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   save(): void {
     const data = this.activityForm.getRawValue();
 
-    this.loading = true;
     this.activityForm.disable({ emitEvent: false });
 
     const routes = this.routes.value.map((route: any, i: number) => {
@@ -323,7 +322,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
 
         this.updateActivityGQL
           .mutate({ input: editActivityInput, routes: [] })
-          .subscribe(this.getObserver());
+          .subscribe(this.getActivityMutationObserver());
         break;
 
       case 'add':
@@ -351,6 +350,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
             concatMap((confirmed) => {
               if (confirmed) {
                 // User confirmed autocorrect changes, so do the actual mutation now
+                this.loading = true;
                 return this.updateActivityGQL.mutate({
                   input: addToActivityInput,
                   routes,
@@ -363,7 +363,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
               }
             })
           )
-          .subscribe(this.getObserver());
+          .subscribe(this.getActivityMutationObserver());
         break;
 
       case 'new':
@@ -394,6 +394,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
             concatMap((confirmed) => {
               if (confirmed) {
                 // User confirmed autocorrect changes, so do the actual mutation now
+                this.loading = true;
                 return this.createActivityGQL.mutate({
                   input: createActivityInput,
                   routes,
@@ -406,11 +407,11 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
               }
             })
           )
-          .subscribe(this.getObserver());
+          .subscribe(this.getActivityMutationObserver());
     }
   }
 
-  private getObserver() {
+  private getActivityMutationObserver() {
     return {
       next: () => {
         if (this.crag) {
