@@ -5,8 +5,8 @@
 .route-row {
   display: flex;
   flex-direction: row;
-  padding: 6px 2px 6px 10px;
-  // TODO gap
+  padding: 6px 2px 6px 16px;
+  min-height: 43px;
 
   &.header {
     cursor: default;
@@ -15,6 +15,10 @@
     @media (max-width: 959px) {
       display: none;
     }
+  }
+
+  .mat-checkbox {
+    margin-top: -2px;
   }
 }
 
