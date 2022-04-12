@@ -13,8 +13,6 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 import dayjs from 'dayjs';
 import ActivitySelection from 'src/app/types/activity-selection.interface';
 import { Crag, MyCragSummaryGQL, Route } from 'src/generated/graphql';
-import { ASCENT_TYPES } from 'src/app/common/activity.constants';
-import { IDistribution } from 'src/app/common/distribution-chart/distribution-chart.component';
 
 @Component({
   selector: 'app-crag-routes',
@@ -88,25 +86,11 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
         (selectedRoute) => selectedRoute.id
       );
 
-      // Append users previous activity (summary) to the routes that are being logged
-      const selectedRoutesWTouch = this.selectedRoutes.map((route) => ({
-        ...route,
-        tried: !!this.ascents[route.id],
-        ticked: ASCENT_TYPES.some(
-          (ascentType) =>
-            this.ascents[route.id] == ascentType.value && ascentType.tick
-        ),
-        // TODO: add this info to ASCENT_TYPES constant
-        trTicked: ['t_flash', 't_onsight', 't_redpoint', 't_repeat'].includes(
-          this.ascents[route.id]
-        ),
-      }));
-
       this.localStorageService.setItem(
         'activity-selection',
         {
           crag: this.crag,
-          routes: selectedRoutesWTouch,
+          routes: this.selectedRoutes,
         },
         dayjs().add(1, 'day').toISOString()
       );
@@ -151,25 +135,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       })
       .then((success) => {
         if (success) {
-          // TODO: some dry refactor?
-
-          // Append users previous activity (summary) to the routes that are being logged
-          const selectedRoutesWTouch = this.selectedRoutes.map((route) => ({
-            ...route,
-            tried: !!this.ascents[route.id],
-            ticked: ASCENT_TYPES.some(
-              (ascentType) =>
-                this.ascents[route.id] == ascentType.value && ascentType.tick
-            ),
-            trTicked: [
-              't_flash',
-              't_onsight',
-              't_redpoint',
-              't_repeat',
-            ].includes(this.ascents[route.id]),
-          }));
-
-          this.addRoutesToLocalStorage(selectedRoutesWTouch);
+          this.addRoutesToLocalStorage(this.selectedRoutes);
 
           this.router.navigate([
             '/plezalni-dnevnik/vpis',

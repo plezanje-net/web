@@ -1,0 +1,13 @@
+query RoutesTouches($input: FindRoutesTouchesInput!) {
+  routesTouches(input: $input) {
+    tried {
+      routeId
+    }
+    ticked {
+      routeId
+    }
+    trTicked {
+      routeId
+    }
+  }
+}

@@ -1,0 +1,20 @@
+query DryRunUpdateActivity(
+  $input: UpdateActivityInput!
+  $routes: [CreateActivityRouteInput!]!
+) {
+  dryRunUpdateActivity(input: $input, routes: $routes) {
+    before {
+      date
+      ascentType
+      routeId
+      route {
+        name
+      }
+    }
+    after {
+      date
+      ascentType
+      routeId
+    }
+  }
+}
