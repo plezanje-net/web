@@ -17,6 +17,7 @@
           (max-width: 1439px) calc(33.33vw - 182px),
           298px
         "
+        [maxIntrinsicWidth]="image.maxIntrinsicWidth"
         [fallbackWidth]="600"
         [imageAlt]="image.title"
         (click)="onImageClick(image)"

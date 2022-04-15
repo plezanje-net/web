@@ -39,6 +39,7 @@ export class LatestImagesComponent implements OnInit, OnDestroy {
     private authService: AuthService
   ) {}
 
+  // TODO: very small images get upsized because of object-fit: cover. but since this will probably be changed by redesign leave as is for now...
   ngOnInit(): void {
     this.mediaObserver.asObservable().subscribe((change) => {
       switch (change[0].mqAlias) {
