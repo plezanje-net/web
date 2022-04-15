@@ -1,28 +1,28 @@
-<div class="container" (click)="onClick()">
-  <div class="button-row">
+<div class="full-container">
+  <div class="close-button-row" (click)="onCloseClick()">
     <button mat-icon-button>
       <mat-icon>close</mat-icon>
     </button>
   </div>
 
-  <div
-    class="image-row"
-    fxFlex="1 1 0%"
-    fxLayout="column"
-    fxLayoutAlign="center center"
-  >
-    <div fxLayout="column" class="image-w-caption-wrap">
+  <div class="navi-image-caption-row">
+    <div class="navi-col">
+      <button mat-icon-button (click)="onPreviousImageClick()">
+        <mat-icon>navigate_before</mat-icon>
+      </button>
+    </div>
+
+    <div class="image-w-caption-wrap" (click)="onCloseClick()">
       <app-responsive-image
-        fxFlex="90%"
-        fxLayoutAlign="center center"
         [imageWidths]="[300, 600, 1040]"
         [fallbackWidth]="1040"
         [imagePath]="data.image.path"
-        [renderSizes]="'100vw'"
+        [renderSizes]="renderSizes"
+        [maxIntrinsicWidth]="data.image.maxIntrinsicWidth"
         [imageAlt]="data.image.title"
       ></app-responsive-image>
 
-      <div class="caption">
+      <div class="caption-wrap">
         <div>
           <span *ngIf="data.image.title">
             <span>{{ data.image.title }}</span>
@@ -53,18 +53,18 @@
             >{{ data.image.crag.name }}</a
           >
         </div>
-        <div
-          *ngIf="data.image.user"
-          class="author"
-          fxLayout="row"
-          fxLayoutAlign="center center"
-        >
+        <div *ngIf="data.image.user" class="author">
           <mat-icon>photo_camera</mat-icon>
           <span>
             {{ data.image.user.fullName }}
           </span>
         </div>
       </div>
+    </div>
+    <div class="navi-col">
+      <button mat-icon-button (click)="onNextImageClick()">
+        <mat-icon>navigate_next</mat-icon>
+      </button>
     </div>
   </div>
 </div>

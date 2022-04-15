@@ -3,6 +3,8 @@ query LatestImages($latest: Int!) {
     id
     path
     title
+    aspectRatio
+    maxIntrinsicWidth
     user {
       id
       fullName

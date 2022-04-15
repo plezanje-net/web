@@ -12,6 +12,7 @@ export class ResponsiveImageComponent implements OnInit {
   @Input() imagePath: string;
   @Input() renderSizes: string;
   @Input() imageAlt: string;
+  @Input() maxIntrinsicWidth: number;
 
   storageUrl = environment.storageUrl;
 
@@ -28,12 +29,20 @@ export class ResponsiveImageComponent implements OnInit {
   }
 
   private generateSrcset(imageWidths: number[], format: string) {
-    return imageWidths
-      .reduce(
-        (prev: string, size: number) =>
-          `${prev}${this.storageUrl}/images/${size}/${this.imagePath}.${format} ${size}w, `,
-        ''
-      )
-      .slice(0, -2);
+    let srcset = '';
+    imageWidths.every((width) => {
+      // If the 'requested' image size is not available
+      if (width > this.maxIntrinsicWidth) {
+        srcset += `${this.storageUrl}/images/${width}/${this.imagePath}.${format} ${this.maxIntrinsicWidth}w, `; // this is best of what we have to offer
+        return false; // break loop, because larger sizes are then also unavailable
+      }
+
+      srcset += `${this.storageUrl}/images/${width}/${this.imagePath}.${format} ${width}w, `;
+      return true;
+    });
+
+    srcset = srcset.slice(0, -2); // remove last space and comma
+
+    return srcset;
   }
 }
