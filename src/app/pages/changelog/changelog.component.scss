@@ -23,6 +23,10 @@ mat-card {
   color: $light-gray;
 }
 
+img {
+  max-width: 100%;
+}
+
 .grade-modifier {
   position: relative;
   top: 7px;
