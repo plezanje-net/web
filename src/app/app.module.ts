@@ -95,6 +95,7 @@ import localeSl from '@angular/common/locales/sl';
 registerLocaleData(localeSl);
 import * as Sentry from '@sentry/angular';
 import { Router } from '@angular/router';
+import { ChangelogComponent } from './pages/changelog/changelog.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -166,6 +167,7 @@ class CustomDateAdapter extends NativeDateAdapter {
     ConfirmClubMembershipComponent,
     AlpinismComponent,
     AboutComponent,
+    ChangelogComponent,
   ],
   imports: [
     BrowserModule,
