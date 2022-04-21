@@ -64,6 +64,18 @@ query CragBySlug($crag: String!) {
         fullName
       }
     }
+    properties {
+      id
+      propertyType {
+        id
+        name
+        valueType
+      }
+      stringValue
+      textValue
+      numValue
+      author
+    }
     images {
       id
       title

@@ -48,6 +48,9 @@
       }})
     </span>
   </div>
+  <div *ngFor="let property of route.properties" class="row">
+    <app-info-property [property]="property"></app-info-property>
+  </div>
 </div>
 
 <div class="card padding">

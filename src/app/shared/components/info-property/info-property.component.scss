@@ -1,0 +1,20 @@
+@import "../../../../styles/colors.scss";
+.label {
+  color: $text-gray;
+}
+.content {
+  font-weight: normal;
+  padding: 10px 0;
+}
+.property-author {
+  text-align: right;
+  color: $text-gray;
+  font-size: 12px;
+}
+.property {
+  min-height: 29px;
+}
+.property-text {
+  margin-top: 8px;
+  font-weight: normal;
+}

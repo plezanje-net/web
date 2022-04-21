@@ -1,0 +1,21 @@
+<div
+  *ngIf="!htmlValue"
+  class="property"
+  fxLayout="row"
+  fxLayoutAlign="space-between center"
+>
+  <div class="label">{{ property.propertyType.name }}</div>
+  <span class="text-right"
+    >{{ displayValue }}
+    <a [href]="url" target="_blank" *ngIf="url">
+      <mat-icon>link</mat-icon>
+    </a>
+  </span>
+</div>
+<div *ngIf="htmlValue" fxLayout="column">
+  <div class="label">{{ property.propertyType.name }}</div>
+  <div class="content" [innerHTML]="htmlValue"></div>
+</div>
+<div *ngIf="property.author != null" class="property-author">
+  Avtor_ica: {{ property.author }}
+</div>
