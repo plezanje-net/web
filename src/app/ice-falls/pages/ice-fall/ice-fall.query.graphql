@@ -6,7 +6,6 @@ query IceFallBySlug($slug: String!) {
     height
     id
     description
-    access
     country {
       name
       slug
