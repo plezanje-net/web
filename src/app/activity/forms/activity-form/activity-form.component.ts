@@ -145,13 +145,15 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
           const routeTrTicked = trTickedRoutes.has(routeId);
           route.get('trTicked').setValue(routeTrTicked);
 
-          // Set default value for ascentType based on user's log history (might get changed rihgt away with revalidateAT, but it's a good first guess anyway)
-          route.patchValue(
-            {
-              ascentType: routeTicked ? 'repeat' : 'redpoint',
-            },
-            { emitEvent: false }
-          );
+          // If not already set, set default value for ascentType based on user's log history (might get changed rihgt away with revalidateAT, but it's a good first guess anyway)
+          if (!route.get('ascentType').value) {
+            route.patchValue(
+              {
+                ascentType: routeTicked ? 'repeat' : 'redpoint',
+              },
+              { emitEvent: false }
+            );
+          }
         });
 
         this.activityFormService.revalidateAscentTypes();
