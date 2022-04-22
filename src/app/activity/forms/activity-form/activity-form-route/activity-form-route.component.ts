@@ -68,11 +68,14 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
       (at) => at.value === ascentTypeSelected && at.tick
     );
     if (isTick) {
-      this.route.get('votedDifficulty').addValidators(Validators.required);
+      // votedDifficulty might be didabled, and disabled fields are skipped from validation. Thus need to add validation function to formGroup level instead
+      this.route.setValidators((formGroup) =>
+        Validators.required(formGroup.get('votedDifficulty'))
+      );
     } else {
-      this.route.get('votedDifficulty').clearValidators();
+      this.route.clearValidators();
     }
-    this.route.get('votedDifficulty').updateValueAndValidity();
+    this.route.updateValueAndValidity();
   }
 
   /**
