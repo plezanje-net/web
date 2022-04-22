@@ -36,25 +36,13 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
   constructor(public activityFormService: ActivityFormService) {}
 
   ngOnInit(): void {
+    // Should disable possibility to vote on route difficulty if ascent type not a tick and if ascent visibility publish type is not public (public, log)
     this.route.controls.publish.valueChanges
       .pipe(takeUntil(this.destroy$))
-      .subscribe((publish: PublishOptionsEnum) => {
-        const votedDifficultyControl = this.route.controls.votedDifficulty;
-
-        if (
-          publish === PublishOptionsEnum.private &&
-          !votedDifficultyControl.disabled
-        ) {
-          votedDifficultyControl.reset();
-          votedDifficultyControl.disable();
-        } else {
-          if (votedDifficultyControl.disabled) {
-            votedDifficultyControl.enable();
-          }
-        }
+      .subscribe(() => {
+        this.activityFormService.conditionallyDisableVotedDifficultyInputs();
       });
 
-    // Should disable possibility to vote on route if ascent type not a tick.
     const ascentTypeSelected = this.route.get('ascentType').value;
     this.setAscentTypeTriggerValue(ascentTypeSelected);
 
