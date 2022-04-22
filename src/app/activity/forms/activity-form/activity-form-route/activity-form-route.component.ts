@@ -43,16 +43,7 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
         this.activityFormService.conditionallyDisableVotedDifficultyInputs();
       });
 
-    const ascentTypeSelected = this.route.get('ascentType').value;
-    this.setAscentTypeTriggerValue(ascentTypeSelected);
-
-    // If a route is a project then a vote on difficulty should always be cast (we need to get the base grade from the user ticking the proj)
-    if (this.route.get('isProject').value) {
-      this.conditionallyRequireVotedDifficulty(ascentTypeSelected);
-    }
-    // TODO: above few lines (from atSelected) actually do nothing, because atSel is null when route is initialized. And when ascentType field is first populated, the bellow observer gets called
-
-    // Revalidate stuff when ascentType is changed
+    // Revalidate stuff when ascentType is changed  (also triggered on load when ascentType fields are populated)
     this.route
       .get('ascentType')
       .valueChanges.pipe(takeUntil(this.destroy$))
