@@ -21,6 +21,7 @@ export class GradeSelectComponent implements OnInit, OnChanges {
   @Input() control: FormControl;
   @Input() gradingSystemId: string;
   @Input() noHint = false;
+  @Input() focusDifficulty = null;
 
   allGrades: GradingSystemsQuery['gradingSystems'][0]['grades'];
   filteredGrades: GradingSystemsQuery['gradingSystems'][0]['grades'];
@@ -41,6 +42,26 @@ export class GradeSelectComponent implements OnInit, OnChanges {
 
       this.init();
     }
+  }
+
+  /**
+   * When select is opened, scroll to the grade that might be passed in as a focus difficulty - that is the route's current grade for example
+   */
+  onOpened() {
+    if (!this.focusDifficulty) return; // e.g. if project, there is no focus difficulty
+
+    this.gradingSystemService
+      .diffToGrade(this.focusDifficulty, this.gradingSystemId, false)
+      .then((grade) => {
+        const allOptions = document.querySelectorAll('mat-option');
+        for (let i = 0; i < allOptions.length; i++) {
+          const goBack = Math.min(i, 3); // deduct 3 to get the target in the center (5 are displayed)
+          if ((<HTMLElement>allOptions[i]).innerText === grade.name) {
+            allOptions[i - goBack].scrollIntoView();
+            break;
+          }
+        }
+      });
   }
 
   init() {
