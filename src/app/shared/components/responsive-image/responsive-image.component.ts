@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './responsive-image.component.html',
   styleUrls: ['./responsive-image.component.scss'],
 })
-export class ResponsiveImageComponent implements OnInit {
+export class ResponsiveImageComponent implements OnChanges {
   @Input() imageWidths: number[];
   @Input() fallbackWidth: number;
   @Input() imagePath: string;
@@ -22,7 +22,7 @@ export class ResponsiveImageComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     this.avifSrcset = this.generateSrcset(this.imageWidths, 'avif');
     this.webpSrcset = this.generateSrcset(this.imageWidths, 'webp');
     this.jpgSrcset = this.generateSrcset(this.imageWidths, 'jpg');

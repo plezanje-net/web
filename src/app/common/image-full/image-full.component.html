@@ -7,7 +7,11 @@
 
   <div class="navi-image-caption-row">
     <div class="navi-col">
-      <button mat-icon-button (click)="onPreviousImageClick()">
+      <button
+        mat-icon-button
+        (click)="onPreviousImageClick()"
+        [disabled]="currentImageIndex < 1"
+      >
         <mat-icon>navigate_before</mat-icon>
       </button>
     </div>
@@ -16,53 +20,57 @@
       <app-responsive-image
         [imageWidths]="[300, 600, 1040]"
         [fallbackWidth]="1040"
-        [imagePath]="data.image.path"
+        [imagePath]="image.path"
         [renderSizes]="renderSizes"
-        [maxIntrinsicWidth]="data.image.maxIntrinsicWidth"
-        [imageAlt]="data.image.title"
+        [maxIntrinsicWidth]="image.maxIntrinsicWidth"
+        [imageAlt]="image.title"
       ></app-responsive-image>
 
       <div class="caption-wrap">
         <div>
-          <span *ngIf="data.image.title">
-            <span>{{ data.image.title }}</span>
-            <span *ngIf="data.image.route || data.image.crag">, </span>
+          <span *ngIf="image.title">
+            <span>{{ image.title }}</span>
+            <span *ngIf="image.route || image.crag">, </span>
           </span>
 
-          <span *ngIf="data.image.route">
+          <span *ngIf="image.route">
             <span>smer </span>
             <a
-              *ngIf="data.image.route"
+              *ngIf="image.route"
               [routerLink]="[
                 '/plezalisce',
-                data.image.route.crag.slug,
+                image.route.crag.slug,
                 'smer',
-                data.image.route.slug
+                image.route.slug
               ]"
-              >{{ data.image.route.name }}</a
+              >{{ image.route.name }}</a
             >, plezališče
-            <a [routerLink]="['/plezalisce', data.image.route.crag.slug]">{{
-              data.image.route.crag.name
+            <a [routerLink]="['/plezalisce', image.route.crag.slug]">{{
+              image.route.crag.name
             }}</a>
           </span>
 
-          <span *ngIf="data.image.crag && !data.image.route">plezališče </span>
+          <span *ngIf="image.crag && !image.route">plezališče </span>
           <a
-            *ngIf="data.image.crag"
-            [routerLink]="['/plezalisce', data.image.crag.slug]"
-            >{{ data.image.crag.name }}</a
+            *ngIf="image.crag"
+            [routerLink]="['/plezalisce', image.crag.slug]"
+            >{{ image.crag.name }}</a
           >
         </div>
-        <div *ngIf="data.image.user" class="author">
+        <div *ngIf="image.user" class="author">
           <mat-icon>photo_camera</mat-icon>
           <span>
-            {{ data.image.user.fullName }}
+            {{ image.user.fullName }}
           </span>
         </div>
       </div>
     </div>
     <div class="navi-col">
-      <button mat-icon-button (click)="onNextImageClick()">
+      <button
+        mat-icon-button
+        (click)="onNextImageClick()"
+        [disabled]="currentImageIndex > images.length - 2"
+      >
         <mat-icon>navigate_next</mat-icon>
       </button>
     </div>
