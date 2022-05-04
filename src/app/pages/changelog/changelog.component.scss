@@ -1,6 +1,31 @@
 @import "../../../styles/colors.scss";
 
+$light-gray: #0000008a;
 $almost-black: rgba(0, 0, 0, 0.87);
+
+h2,
+h3 {
+  color: $almost-black;
+  padding: 0;
+}
+
+h3 {
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+
+mat-card {
+  margin-top: 16px;
+  border-radius: 0;
+}
+
+.date {
+  color: $light-gray;
+}
+
+img {
+  max-width: 100%;
+}
 
 .grade-modifier {
   position: relative;
@@ -15,10 +40,4 @@ $almost-black: rgba(0, 0, 0, 0.87);
   &.soft {
     color: $colors-green;
   }
-}
-
-h2,
-h3 {
-  color: $almost-black;
-  padding: 0;
 }

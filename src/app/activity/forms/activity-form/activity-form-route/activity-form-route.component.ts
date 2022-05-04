@@ -36,35 +36,14 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
   constructor(public activityFormService: ActivityFormService) {}
 
   ngOnInit(): void {
+    // Should disable possibility to vote on route difficulty if ascent type not a tick and if ascent visibility publish type is not public (public, log)
     this.route.controls.publish.valueChanges
       .pipe(takeUntil(this.destroy$))
-      .subscribe((publish: PublishOptionsEnum) => {
-        const votedDifficultyControl = this.route.controls.votedDifficulty;
-
-        if (
-          publish === PublishOptionsEnum.private &&
-          !votedDifficultyControl.disabled
-        ) {
-          votedDifficultyControl.reset();
-          votedDifficultyControl.disable();
-        } else {
-          if (votedDifficultyControl.disabled) {
-            votedDifficultyControl.enable();
-          }
-        }
+      .subscribe(() => {
+        this.activityFormService.conditionallyDisableVotedDifficultyInputs();
       });
 
-    // Should disable possibility to vote on route if ascent type not a tick.
-    const ascentTypeSelected = this.route.get('ascentType').value;
-    this.setAscentTypeTriggerValue(ascentTypeSelected);
-
-    // If a route is a project then a vote on difficulty should always be cast (we need to get the base grade from the user ticking the proj)
-    if (this.route.get('isProject').value) {
-      this.conditionallyRequireVotedDifficulty(ascentTypeSelected);
-    }
-    // TODO: above few lines (from atSelected) actually do nothing, because atSel is null when route is initialized. And when ascentType field is first populated, the bellow observer gets called
-
-    // Revalidate stuff when ascentType is changed
+    // Revalidate stuff when ascentType is changed  (also triggered on load when ascentType fields are populated)
     this.route
       .get('ascentType')
       .valueChanges.pipe(takeUntil(this.destroy$))
@@ -89,11 +68,14 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
       (at) => at.value === ascentTypeSelected && at.tick
     );
     if (isTick) {
-      this.route.get('votedDifficulty').addValidators(Validators.required);
+      // votedDifficulty might be didabled, and disabled fields are skipped from validation. Thus need to add validation function to formGroup level instead
+      this.route.setValidators((formGroup) =>
+        Validators.required(formGroup.get('votedDifficulty'))
+      );
     } else {
-      this.route.get('votedDifficulty').clearValidators();
+      this.route.clearValidators();
     }
-    this.route.get('votedDifficulty').updateValueAndValidity();
+    this.route.updateValueAndValidity();
   }
 
   /**

@@ -1,6 +1,6 @@
 <mat-form-field class="w-100" [class.no-hint]="noHint">
   <mat-label>{{ label }}</mat-label>
-  <mat-select [formControl]="control">
+  <mat-select [formControl]="control" (opened)="onOpened()">
     <mat-option>
       <ngx-mat-select-search
         [formControl]="gradeFilterControl"

@@ -18,6 +18,7 @@ import { SearchResultsComponent } from './pages/search/search-results/search-res
 import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
 import { AlpinismComponent } from './pages/alpinism/alpinism.component';
 import { AboutComponent } from './pages/about/about.component';
+import { ChangelogComponent } from './pages/changelog/changelog.component';
 
 const routes: Routes = [
   {
@@ -119,6 +120,10 @@ const routes: Routes = [
     data: {
       hideBreadcrumbs: true,
     },
+  },
+  {
+    path: 'dnevnik-sprememb',
+    component: ChangelogComponent,
   },
   {
     path: '**',

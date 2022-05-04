@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import { ASCENT_TYPES } from 'src/app/common/activity.constants';
+import {
+  ASCENT_TYPES,
+  PublishOptionsEnum,
+} from 'src/app/common/activity.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -190,8 +193,14 @@ export class ActivityFormService {
     return new FormGroup(formGroupData);
   }
 
+  /**
+   * Go through all distinct routes being logged.
+   * For each of them enable voted difficulty input if:
+   *  - it is the first instance with ascent type that is a tick AND
+   *  - ascent publish visibility is set to one of the public types (log, public)
+   * Disable it in all other cases.
+   */
   conditionallyDisableVotedDifficultyInputs() {
-    // Go through all distinct routes being logged. For each of them enable voted difficulty input if it is the first instance with ascent type that is a tick and disable it in all other cases.
     this.distinctRouteIds.forEach((routeId) => {
       let someVDIEnabled = false;
       this.routesBeingLoggedFormArray.controls
@@ -199,9 +208,12 @@ export class ActivityFormService {
           (routeFormGroup) => routeFormGroup.get('routeId').value === routeId
         )
         .forEach((routeFormGroup) => {
+          // One can vote on difficulty only if this is a tick and a public log. And only on one ascent if multiple of same route being logged at once.
           if (
             this.tickAscentTypes.has(routeFormGroup.get('ascentType').value) &&
-            !someVDIEnabled
+            !someVDIEnabled &&
+            (routeFormGroup.get('publish').value === PublishOptionsEnum.log ||
+              routeFormGroup.get('publish').value === PublishOptionsEnum.public)
           ) {
             someVDIEnabled = true;
             routeFormGroup.get('votedDifficulty').enable({ emitEvent: false });
