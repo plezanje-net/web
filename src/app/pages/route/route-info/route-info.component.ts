@@ -11,6 +11,7 @@ import { Route } from 'src/generated/graphql';
 export class RouteInfoComponent implements OnInit {
   @Input() route: Route;
   grades: any[];
+  hideGrade = false;
   gradesDistribution: IDistribution[] = [];
 
   eventTypeMap = {
@@ -37,5 +38,10 @@ export class RouteInfoComponent implements OnInit {
           this.gradesDistribution = dist;
         });
     }
+
+    this.hideGrade =
+      this.route.properties.find(
+        (property) => property.propertyType.id == 'extGrade'
+      ) != null;
   }
 }
