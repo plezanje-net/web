@@ -39,6 +39,10 @@
     <div class="label">Opis plezališča</div>
     <div class="content" [innerHTML]="crag.description"></div>
   </div>
+
+  <div *ngFor="let property of crag.properties" class="row">
+    <app-info-property [property]="property"></app-info-property>
+  </div>
 </div>
 
 <div class="card no-border padding">

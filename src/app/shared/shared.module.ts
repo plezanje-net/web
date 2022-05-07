@@ -33,6 +33,7 @@ import { DataErrorComponent } from './components/data-error/data-error.component
 import { AscentTypeComponent } from './components/ascent-type/ascent-type.component';
 import { AscentPublishOptionComponent } from './components/ascent-publish-option/ascent-publish-option.component';
 import { ResponsiveImageComponent } from './components/responsive-image/responsive-image.component';
+import { InfoPropertyComponent } from './components/info-property/info-property.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { ResponsiveImageComponent } from './components/responsive-image/responsi
     AscentTypeComponent,
     AscentPublishOptionComponent,
     ResponsiveImageComponent,
+    InfoPropertyComponent,
   ],
   imports: [
     CommonModule,
@@ -99,6 +101,7 @@ import { ResponsiveImageComponent } from './components/responsive-image/responsi
     GradeComponent,
     PluralizeNoun,
     ResponsiveImageComponent,
+    InfoPropertyComponent,
   ],
 })
 export class SharedModule {}

@@ -35,6 +35,18 @@ query RouteBySlug($cragSlug: String!, $routeSlug: String!) {
       isBase
       includedInCalculation
     }
+    properties {
+      id
+      propertyType {
+        id
+        name
+        valueType
+      }
+      stringValue
+      textValue
+      numValue
+      author
+    }
     comments {
       type
       user {

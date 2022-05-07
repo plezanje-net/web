@@ -1,5 +1,10 @@
 <div class="card no-border">
-  <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
+  <div
+    class="row"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+    *ngIf="!hideGrade"
+  >
     <div class="label">Težavnost</div>
     <span class="text-right">
       <span *ngIf="route.isProject">P</span>
@@ -47,6 +52,9 @@
         event.eventDate | date: (event.showFullDate ? "d. M. Y" : "Y")
       }})
     </span>
+  </div>
+  <div *ngFor="let property of route.properties" class="row">
+    <app-info-property [property]="property"></app-info-property>
   </div>
 </div>
 

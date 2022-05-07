@@ -10,8 +10,7 @@
     <span class="text-right"> {{ iceFall.height }}m </span>
   </div>
 
-  <div class="row" *ngIf="iceFall.access">
-    <div class="label">Dostop</div>
-    <div class="content access" [innerHTML]="iceFall.access"></div>
+  <div *ngFor="let property of iceFall.properties" class="row">
+    <app-info-property [property]="property"></app-info-property>
   </div>
 </div>
