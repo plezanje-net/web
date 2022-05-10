@@ -208,12 +208,10 @@ export class ActivityFormService {
           (routeFormGroup) => routeFormGroup.get('routeId').value === routeId
         )
         .forEach((routeFormGroup) => {
-          // One can vote on difficulty only if this is a tick and a public log. And only on one ascent if multiple of same route being logged at once.
+          // One can vote on difficulty only if this is a tick. And only on one ascent if multiple of same route being logged at once.
           if (
             this.tickAscentTypes.has(routeFormGroup.get('ascentType').value) &&
-            !someVDIEnabled &&
-            (routeFormGroup.get('publish').value === PublishOptionsEnum.log ||
-              routeFormGroup.get('publish').value === PublishOptionsEnum.public)
+            !someVDIEnabled
           ) {
             someVDIEnabled = true;
             routeFormGroup.get('votedDifficulty').enable({ emitEvent: false });
