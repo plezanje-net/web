@@ -2,7 +2,6 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import {
   ASCENT_TYPES,
-  PublishOptionsEnum,
   PUBLISH_OPTIONS,
 } from '../../../../common/activity.constants';
 import { Crag } from 'src/generated/graphql';
@@ -29,8 +28,6 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
     (ascentType) => !ascentType.topRope
   );
 
-  ascentTypeTrigger: string;
-
   publishOptions = PUBLISH_OPTIONS;
 
   constructor(public activityFormService: ActivityFormService) {}
@@ -43,7 +40,7 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
         this.activityFormService.conditionallyDisableVotedDifficultyInputs();
       });
 
-    // Revalidate stuff when ascentType is changed  (also triggered on load when ascentType fields are populated)
+    // Revalidate stuff when ascentType is changed (also triggered on load when ascentType fields are populated)
     this.route
       .get('ascentType')
       .valueChanges.pipe(takeUntil(this.destroy$))
@@ -51,8 +48,6 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
         this.activityFormService.revalidateAscentTypes();
         this.activityFormService.conditionallyDisableVotedDifficultyInputs();
         this.activityFormService.conditionallyDisableVotedStarRatingInputs();
-
-        this.setAscentTypeTriggerValue(ascentType);
 
         if (this.route.get('isProject').value) {
           this.conditionallyRequireVotedDifficulty(ascentType);
@@ -92,17 +87,18 @@ export class ActivityFormRouteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Set trigger value for ascent type select (so it includes toprope so there can be no confusion)
+   * Map trigger value for ascent type select (so it includes toprope so there can be no confusion)
    */
-  setAscentTypeTriggerValue(ascentTypeSelected: string) {
+  mapAscentTypeValueToFullLabel(ascentTypeSelected: string) {
     const ascentType = ASCENT_TYPES.find(
-      (at) => at.value == ascentTypeSelected
+      (at) => at.value === ascentTypeSelected
     );
 
     if (ascentType != null) {
-      this.ascentTypeTrigger =
-        ascentType.label + (ascentType.topRope ? ' (top rope)' : '');
+      return ascentType.label + (ascentType.topRope ? ' (top rope)' : '');
     }
+
+    return ascentType;
   }
 
   ngOnDestroy(): void {
