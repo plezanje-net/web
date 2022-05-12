@@ -195,9 +195,7 @@ export class ActivityFormService {
 
   /**
    * Go through all distinct routes being logged.
-   * For each of them enable voted difficulty input if:
-   *  - it is the first instance with ascent type that is a tick AND
-   *  - ascent publish visibility is set to one of the public types (log, public)
+   * For each of them enable voted difficulty input if it is the first instance with ascent type that is a tick.
    * Disable it in all other cases.
    */
   conditionallyDisableVotedDifficultyInputs() {
@@ -226,7 +224,7 @@ export class ActivityFormService {
   }
 
   conditionallyDisableVotedStarRatingInputs() {
-    // Go through all distinct routes being logged. For each of them enable voted star rating input if it is the first instance with ascent type that is a tick and disable it in all other cases.
+    // Go through all distinct routes being logged. For each of them enable voted star rating input if it is the first instance of the route being logged and disable it in all other cases.
     this.distinctRouteIds.forEach((routeId) => {
       let someVSRIEnabled = false;
       this.routesBeingLoggedFormArray.controls
@@ -234,10 +232,7 @@ export class ActivityFormService {
           (routeFormGroup) => routeFormGroup.get('routeId').value === routeId
         )
         .forEach((routeFormGroup) => {
-          if (
-            this.tickAscentTypes.has(routeFormGroup.get('ascentType').value) &&
-            !someVSRIEnabled
-          ) {
+          if (!someVSRIEnabled) {
             someVSRIEnabled = true;
             routeFormGroup.get('votedStarRating').enable({ emitEvent: false });
           } else {
