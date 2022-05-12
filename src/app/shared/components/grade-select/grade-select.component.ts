@@ -50,6 +50,8 @@ export class GradeSelectComponent implements OnInit, OnChanges {
   onOpened() {
     if (!this.focusDifficulty) return; // e.g. if project, there is no focus difficulty
 
+    if (this.control.value) return;
+
     this.gradingSystemService
       .diffToGrade(this.focusDifficulty, this.gradingSystemId, false)
       .then((grade) => {
