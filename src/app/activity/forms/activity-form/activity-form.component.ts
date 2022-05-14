@@ -42,6 +42,8 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
   // new - no activity yet, edit - edit activity fields but add no routes, add - add routes to existing activity
   @Input() formType: 'new' | 'edit' | 'add' = 'new';
 
+  maxDate = new Date();
+
   loading: boolean = false;
   loadingActivity: boolean = false;
 
