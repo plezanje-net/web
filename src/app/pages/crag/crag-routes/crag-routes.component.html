@@ -1,59 +1,232 @@
 <ng-container *ngIf="!loading">
-  <div *ngFor="let sector of crag.sectors">
-    <h3>
+  <div>
+    <mat-form-field class="mt-16 no-hint">
+      <mat-label>Prikazani stolpci</mat-label>
+      <mat-select [(value)]="shownColumns" multiple>
+        <mat-select-trigger>
+          <span *ngFor="let shownColumn of shownColumns; let last = last"
+            >{{ allColumns[shownColumn].selectLabel
+            }}<span *ngIf="!last">, </span>
+          </span>
+        </mat-select-trigger>
+        <mat-option
+          *ngFor="let column of allColumns | keyvalue: originalOrder"
+          [value]="column.value.field"
+          ><span *ngIf="column.value.field === 'starRating'"
+            ><mat-icon>star</mat-icon>{{ column.value.selectLabel }}</span
+          ><span *ngIf="column.value.field === 'multipitch'"
+            ><mat-icon svgIcon="multipitch"></mat-icon
+            >{{ column.value.selectLabel }}</span
+          ><span *ngIf="column.value.field === 'comments'"
+            ><mat-icon>comment</mat-icon>{{ column.value.selectLabel }}</span
+          ><span *ngIf="column.value.field === 'myAscents'"
+            ><mat-icon>check</mat-icon>{{ column.value.selectLabel }}</span
+          ><span
+            *ngIf="
+              column.value.field !== 'starRating' &&
+              column.value.field !== 'multipitch' &&
+              column.value.field !== 'comments' &&
+              column.value.field !== 'myAscents'
+            "
+            >{{ column.value.selectLabel }}</span
+          ></mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div *ngFor="let sector of sectors; let sectorIndex = index">
+    <h3 *ngIf="sector.label || sector.name" class="sector-heading">
       {{ sector.label }}
       <span>{{ sector.name != "" ? " - " + sector.name : "" }}</span>
     </h3>
-    <div class="card">
-      <div class="row header route-row" fxLayoutGap="14px">
-        <div class="route-checkbox"></div>
-        <div class="route-details-container">
-          <div class="route-details left" fxLayoutGap="14px">
-            <div class="route-name">Ime</div>
-            <div *ngIf="!sector.bouldersOnly" class="route-length">Dolžina</div>
-            <div class="route-grade">Težavnost</div>
-          </div>
-          <div class="route-details right" fxLayoutGap="14px">
-            <div class="route-icons"></div>
-          </div>
-        </div>
-      </div>
 
-      <div *ngFor="let route of sector.routes">
-        <div
-          class="row route-row"
-          fxLayoutGap="14px"
-          (click)="expandRow(route.id)"
-        >
-          <div class="route-checkbox">
-            <mat-checkbox
-              (change)="changeSelection(route)"
-              (click)="onCheckBoxClick($event)"
-              [checked]="selectedRoutesIds.indexOf(route.id) > -1"
-            >
-            </mat-checkbox>
-          </div>
-          <div class="route-details-container">
-            <div class="route-details left" fxLayoutGap="14px">
-              <div class="route-name">
-                <a
-                  [routerLink]="
-                    section === 'alpinism'
-                      ? ['/alpinizem', 'stena', crag.slug, 'smer', route.slug]
-                      : ['/plezalisce', crag.slug, 'smer', route.slug]
+    <div class="scroll-shadows-table-wrap mt-16">
+      <div
+        class="left-scroll-shadow"
+        [ngClass]="{ show: sector.showLeftShadow ? true : false }"
+      ></div>
+      <div
+        class="right-scroll-shadow"
+        [ngClass]="{ show: sector.showRightShadow ? true : false }"
+      ></div>
+
+      <div class="table-wrap" id="{{ 'sectorTableWrap' + sector.id }}">
+        <div id="{{ 'leftEdge' + sector.id }}"></div>
+        <table>
+          <thead>
+            <tr>
+              <th class="checkbox">
+                <app-sortable-header-field
+                  field="position"
+                  label="#"
+                  [currentlySortedField]="sector.sortedField"
+                  sortIndication="highlight"
+                  [centered]="true"
+                  (click)="sortRoutes(sectorIndex, 'position')"
+                ></app-sortable-header-field>
+              </th>
+
+              <th class="name" *ngIf="shownColumns.includes('name')">
+                <app-sortable-header-field
+                  field="name"
+                  [label]="allColumns.name.tableLabel"
+                  [currentlySortedField]="sector.sortedField"
+                  [currentSortDirection]="sector.sortedDirection"
+                  sortIndication="arrows"
+                  (click)="sortRoutes(sectorIndex, 'name')"
+                ></app-sortable-header-field>
+              </th>
+
+              <th
+                *ngIf="!sector.bouldersOnly && shownColumns.includes('length')"
+                class="length"
+              >
+                <app-sortable-header-field
+                  field="length"
+                  [label]="allColumns.length.tableLabel"
+                  [currentlySortedField]="sector.sortedField"
+                  [currentSortDirection]="sector.sortedDirection"
+                  sortIndication="arrows"
+                  (click)="sortRoutes(sectorIndex, 'length')"
+                ></app-sortable-header-field>
+              </th>
+
+              <th *ngIf="shownColumns.includes('difficulty')" class="grade">
+                <app-sortable-header-field
+                  field="difficulty"
+                  [label]="allColumns.difficulty.tableLabel"
+                  [currentlySortedField]="sector.sortedField"
+                  [currentSortDirection]="sector.sortedDirection"
+                  sortIndication="arrows"
+                  (click)="sortRoutes(sectorIndex, 'difficulty')"
+                ></app-sortable-header-field>
+              </th>
+
+              <th *ngIf="shownColumns.includes('nrTicks')" class="nr-ticks">
+                <app-sortable-header-field
+                  field="nrTicks"
+                  [label]="allColumns.nrTicks.tableLabel"
+                  [currentlySortedField]="sector.sortedField"
+                  [currentSortDirection]="sector.sortedDirection"
+                  sortIndication="arrows"
+                  (click)="sortRoutes(sectorIndex, 'nrTicks')"
+                ></app-sortable-header-field>
+              </th>
+
+              <th *ngIf="shownColumns.includes('nrTries')" class="nr-tries">
+                <app-sortable-header-field
+                  field="nrTries"
+                  [label]="allColumns.nrTries.tableLabel"
+                  [currentlySortedField]="sector.sortedField"
+                  [currentSortDirection]="sector.sortedDirection"
+                  sortIndication="arrows"
+                  (click)="sortRoutes(sectorIndex, 'nrTries')"
+                ></app-sortable-header-field>
+              </th>
+
+              <th
+                *ngIf="shownColumns.includes('nrClimbers')"
+                class="nr-climbers"
+              >
+                <app-sortable-header-field
+                  field="nrClimbers"
+                  [label]="allColumns.nrClimbers.tableLabel"
+                  [currentlySortedField]="sector.sortedField"
+                  [currentSortDirection]="sector.sortedDirection"
+                  sortIndication="arrows"
+                  (click)="sortRoutes(sectorIndex, 'nrClimbers')"
+                ></app-sortable-header-field>
+              </th>
+
+              <th *ngIf="shownColumns.includes('starRating')" class="icon">
+                <app-sortable-header-field
+                  field="starRating"
+                  icon="star"
+                  [currentlySortedField]="sector.sortedField"
+                  [currentSortDirection]="sector.sortedDirection"
+                  sortIndication="highlight"
+                  [centered]="true"
+                  (click)="sortRoutes(sectorIndex, 'starRating')"
+                ></app-sortable-header-field>
+              </th>
+
+              <th *ngIf="shownColumns.includes('multipitch')" class="icon">
+                <app-sortable-header-field
+                  field="multipitch"
+                  svgIcon="multipitch"
+                  [currentlySortedField]="sector.sortedField"
+                  [currentSortDirection]="sector.sortedDirection"
+                  sortIndication="highlight"
+                  [centered]="true"
+                  (click)="sortRoutes(sectorIndex, 'multipitch')"
+                ></app-sortable-header-field>
+              </th>
+
+              <th *ngIf="shownColumns.includes('comments')" class="icon">
+                <app-sortable-header-field
+                  field="comments"
+                  icon="comment"
+                  [currentlySortedField]="sector.sortedField"
+                  [currentSortDirection]="sector.sortedDirection"
+                  sortIndication="highlight"
+                  [centered]="true"
+                  (click)="sortRoutes(sectorIndex, 'comments')"
+                ></app-sortable-header-field>
+              </th>
+
+              <th *ngIf="shownColumns.includes('myAscents')" class="icon">
+                <app-sortable-header-field
+                  field="myAscents"
+                  icon="check"
+                  [currentlySortedField]="sector.sortedField"
+                  [currentSortDirection]="sector.sortedDirection"
+                  sortIndication="highlight"
+                  [centered]="true"
+                  (click)="sortRoutes(sectorIndex, 'myAscents')"
+                ></app-sortable-header-field>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <ng-container *ngFor="let route of sector.routes">
+              <tr (click)="expandRow(route.id)">
+                <td class="checkbox">
+                  <div class="route-checkbox">
+                    <mat-checkbox
+                      (change)="changeSelection(route)"
+                      (click)="onCheckBoxClick($event)"
+                      [checked]="selectedRoutesIds.indexOf(route.id) > -1"
+                    >
+                    </mat-checkbox>
+                  </div>
+                </td>
+
+                <td class="name" *ngIf="shownColumns.includes('name')">
+                  <a
+                    [routerLink]="
+                      section === 'alpinism'
+                        ? ['/alpinizem', 'stena', crag.slug, 'smer', route.slug]
+                        : ['/plezalisce', crag.slug, 'smer', route.slug]
+                    "
+                    (click)="$event.stopPropagation()"
+                    >{{ route.name }}</a
+                  >
+                </td>
+
+                <td
+                  *ngIf="
+                    !sector.bouldersOnly && shownColumns.includes('length')
                   "
-                  (click)="$event.stopPropagation()"
-                  >{{ route.name }}</a
                 >
-              </div>
-              <div class="route-numbers">
-                <div *ngIf="!sector.bouldersOnly" class="route-length">
                   <ng-container
                     *ngIf="route.routeType.id !== 'boulder' && route.length"
                     >{{ route.length }} m</ng-container
                   >
-                </div>
-                <div class="route-grade">
+                </td>
+
+                <td *ngIf="shownColumns.includes('difficulty')">
                   <span *ngIf="route.isProject">P</span>
                   <app-grade
                     *ngIf="!route.isProject"
@@ -61,49 +234,85 @@
                     [showModifier]="true"
                     [gradingSystemId]="route.defaultGradingSystem.id"
                   ></app-grade>
-                </div>
-              </div>
-            </div>
-            <div class="route-details right" fxLayoutGap="14px">
-              <div class="route-icons">
-                <button
-                  *ngIf="route.pitches.length > 0"
-                  mat-icon-button
-                  color="primary"
-                >
-                  MP
-                </button>
-                <button *ngIf="route.comments.length > 0" mat-icon-button>
-                  <mat-icon>comment</mat-icon>
-                </button>
-                <app-ascent-type
-                  *ngIf="ascents[route.id] != null"
-                  [value]="ascents[route.id]"
-                  displayType="icon"
-                >
-                </app-ascent-type>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="route-expanding-container"
-          [ngStyle]="{
-            'max-height.px': route.id === expandedRowId ? expandedRowHeight : 0
-          }"
-        >
-          <div
-            *ngIf="
-              expandedRowId === route.id || previousExpandedRowId === route.id
-            "
-            class="route-expanding-details"
-          >
-            <app-crag-route-preview
-              [routeId]="route.id"
-              (heightChangeEvent)="onPreviewHeightEvent($event)"
-            ></app-crag-route-preview>
-          </div>
-        </div>
+                </td>
+
+                <td *ngIf="shownColumns.includes('nrTicks')">
+                  {{ route.nrTicks }}
+                </td>
+
+                <td *ngIf="shownColumns.includes('nrTries')">
+                  {{ route.nrTries }}
+                </td>
+
+                <td *ngIf="shownColumns.includes('nrClimbers')">
+                  {{ route.nrClimbers }}
+                </td>
+
+                <td *ngIf="shownColumns.includes('starRating')" class="icon">
+                  <button
+                    *ngIf="math.round(route.starRating) == 1"
+                    mat-icon-button
+                  >
+                    <mat-icon>star_border</mat-icon>
+                  </button>
+                  <button
+                    *ngIf="math.round(route.starRating) == 2"
+                    mat-icon-button
+                  >
+                    <mat-icon>star</mat-icon>
+                  </button>
+                </td>
+
+                <td *ngIf="shownColumns.includes('multipitch')" class="icon">
+                  <button *ngIf="route.pitches.length > 0" mat-icon-button>
+                    <mat-icon svgIcon="multipitch"></mat-icon>
+                  </button>
+                </td>
+
+                <td *ngIf="shownColumns.includes('comments')" class="icon">
+                  <button *ngIf="route.comments.length > 0" mat-icon-button>
+                    <mat-icon>comment</mat-icon>
+                  </button>
+                </td>
+
+                <td *ngIf="shownColumns.includes('myAscents')" class="icon">
+                  <app-ascent-type
+                    *ngIf="ascents[route.id] != null"
+                    [value]="ascents[route.id]"
+                    displayType="icon"
+                  >
+                  </app-ascent-type>
+                </td>
+              </tr>
+
+              <tr class="details-row">
+                <td [attr.colspan]="shownColumns.length + 1">
+                  <div
+                    class="route-expanding-container"
+                    [ngStyle]="{
+                      'max-height.px':
+                        route.id === expandedRowId ? expandedRowHeight : 0
+                    }"
+                  >
+                    <div
+                      *ngIf="
+                        expandedRowId === route.id ||
+                        previousExpandedRowId === route.id
+                      "
+                      class="route-expanding-details"
+                    >
+                      <app-crag-route-preview
+                        [routeId]="route.id"
+                        (heightChangeEvent)="onPreviewHeightEvent($event)"
+                      ></app-crag-route-preview>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+        <div id="{{ 'rightEdge' + sector.id }}"></div>
       </div>
     </div>
   </div>

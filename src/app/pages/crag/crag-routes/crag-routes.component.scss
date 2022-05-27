@@ -2,163 +2,346 @@
 @import "../../../../styles/colors.scss";
 @import "../../../../styles/variables.scss";
 
-.route-row {
-  display: flex;
-  flex-direction: row;
-  padding: 6px 2px 6px 16px;
-  min-height: 43px;
+// TODO: define inside variables...
+$gray: #757575;
+$gray-light: #ebebeb;
+$blue-very-light: #f6f9ff;
 
-  &.header {
-    cursor: default;
-    padding-top: 12px;
+mat-form-field {
+  width: 100%;
+}
 
-    @media (max-width: 959px) {
-      display: none;
+// fix options panel overflowing viewport on 100% wide mat-form-field
+::ng-deep .mat-select-panel-wrap {
+  div {
+    min-width: calc(100% + 32px) !important;
+  }
+}
+
+@media (min-width: $breakpoint-sm) {
+  mat-form-field {
+    width: unset;
+  }
+
+  ::ng-deep .mat-select-panel-wrap {
+    div {
+      min-width: unset;
     }
   }
+}
 
-  .mat-checkbox {
-    margin-top: -2px;
+.mat-option {
+  .mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
   }
 }
 
-.route-details-container {
-  flex: 1 1 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  text-align: left;
+.sector-heading {
+  padding: 0;
+  margin-top: 24px;
+  margin-left: 16px;
 }
 
-.route-details {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-
-  &.left {
-    flex: 1 1 100%;
-
-    @media (max-width: $breakpoint-sm) {
-      // TODO use min-width instead
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: flex-start;
-    }
-  }
-
-  &.right {
-    flex: 0 0 110px;
-  }
-}
-
-.route-checkbox {
-  flex: 0 0 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.route-name {
-  flex: 1 1 100%;
-}
-
-.route-numbers {
-  // TODO take care of boulder places ... different width probably
-  display: flex;
-  flex: 0 0 160px;
-
-  @media (max-width: $breakpoint-sm) {
-    // TODO use min-width instead
-    flex-direction: row;
-    flex: 1 1 auto;
-  }
-}
-
-.route-length {
-  flex: 0 0 80px;
-  height: 20px;
-}
-
-.route-grade {
-  flex: 0 0 80px;
+.scroll-shadows-table-wrap {
   position: relative;
 }
 
-.route-pitches {
-  flex: 0 0 80px;
+.left-scroll-shadow,
+.right-scroll-shadow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background-color: black;
+  opacity: 0.1;
+  width: 0px;
+  transition: width 300ms;
+
+  &.show {
+    width: 10px;
+  }
+}
+.left-scroll-shadow {
+  left: 0;
+}
+.right-scroll-shadow {
+  right: 0;
 }
 
-.route-icons {
-  flex: 0 0 110px;
+.table-wrap {
+  overflow-x: auto;
+  max-width: 100%;
+  flex-grow: 1;
+  background-color: white;
   display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  white-space: nowrap;
-  text-align: right;
-  margin: -4px 0;
+}
 
-  .mat-button {
-    color: #0000008a;
+table {
+  width: 100%;
+
+  tr {
+    height: 53px;
   }
 
-  .mat-icon-button {
-    color: #0000008a;
-    height: 37px;
-    width: 37px;
+  tbody tr {
+    border-top: 1px solid $gray-light;
+    &:hover:not(.details-row) {
+      background-color: $blue-very-light;
+    }
   }
-}
 
-h3 {
-  padding-top: 28px;
-}
+  td,
+  th {
+    padding: 8px;
+    text-align: left;
+    font-weight: normal;
 
-.ascent-type-filler {
-  width: 36px;
-  display: inline-block;
-}
+    &.checkbox {
+      padding-left: 12px;
+      padding-right: 12px;
+      text-align: center;
+      span {
+        cursor: pointer;
+      }
+      mat-checkbox {
+        vertical-align: middle;
+        margin-top: -4px;
+      }
+    }
+    &.name {
+      padding-left: 0;
+    }
+    &.icon {
+      padding-left: 0;
+      padding-right: 0;
+      text-align: center;
+    }
+  }
 
-.difficulty-vote-included {
-  font-weight: bold;
-}
+  th {
+    color: $gray;
+    vertical-align: bottom;
+    white-space: nowrap;
 
-.difficulty-vote-author {
-  padding-right: 20px;
-}
+    &.checkbox {
+      width: 40px;
+      min-width: 40px;
+    }
 
-.grade {
-  width: 50px;
-  display: block;
-}
+    &.name {
+      min-width: 200px;
+    }
+    &.icon {
+      width: 40px;
+      min-width: 40px;
+    }
 
-.difficulty-vote-date {
-  text-align: right;
-}
+    &.length {
+      width: 85px;
+    }
+    &.grade {
+      width: 103px;
+    }
+    &.nr-ticks {
+      width: 118px;
+    }
+    &.nr-tries {
+      width: 100px;
+    }
+    &.nr-climbers {
+      width: 99px;
+    }
+  }
 
-.route-comment:not(.first) {
-  margin-top: 4px;
-  padding-top: 10px;
-}
+  td {
+    vertical-align: middle;
+    &.icon {
+      padding: 0;
+    }
+  }
 
-.route-comment-content {
-  white-space: normal;
-}
-
-.route-comment-author {
-  margin-top: 5px;
-  text-align: right;
-  color: $text-gray;
+  tbody tr.details-row {
+    height: 0;
+    border: none;
+    td {
+      height: 0;
+      padding: 0;
+    }
+  }
 }
 
 .route-expanding-container {
   max-height: 0;
-  transition: max-height 300ms ease-in-out;
+  transition: max-height 225ms cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
 
 .route-expanding-details {
   padding: 0 20px 20px 20px;
 }
+
+///
+// Keep old styles as a reference until mobile/narrow view is solved
+
+// .route-row {
+//   display: flex;
+//   flex-direction: row;
+//   padding: 6px 2px 6px 16px;
+//   min-height: 43px;
+
+//   &.header {
+//     cursor: default;
+//     padding-top: 12px;
+
+//     @media (max-width: 959px) {
+//       display: none;
+//     }
+//   }
+
+//   .mat-checkbox {
+//     margin-top: -2px;
+//   }
+// }
+
+// .route-details-container {
+//   flex: 1 1 100%;
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: flex-start;
+//   align-items: center;
+//   text-align: left;
+// }
+
+// .route-details {
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: flex-start;
+//   align-items: center;
+
+//   &.left {
+//     flex: 1 1 100%;
+
+//     @media (max-width: $breakpoint-sm) {
+//       // TODO use min-width instead
+//       display: flex;
+//       flex-direction: column;
+//       align-items: flex-start;
+//       justify-content: flex-start;
+//     }
+//   }
+
+//   &.right {
+//     flex: 0 0 110px;
+//   }
+// }
+
+// .route-checkbox {
+//   flex: 0 0 12px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// }
+
+// .route-name {
+//   flex: 1 1 100%;
+// }
+
+// .route-numbers {
+//   // TODO take care of boulder places ... different width probably
+//   display: flex;
+//   flex: 0 0 200px;
+
+//   @media (max-width: $breakpoint-sm) {
+//     // TODO use min-width instead
+//     flex-direction: row;
+//     flex: 1 1 auto;
+//   }
+// }
+
+// .route-length {
+//   flex: 0 0 80px;
+//   height: 20px;
+// }
+
+// .route-grade {
+//   flex: 0 0 120px;
+//   position: relative;
+// }
+
+// .route-pitches {
+//   flex: 0 0 80px;
+// }
+
+// .route-icons {
+//   flex: 0 0 110px;
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: flex-end;
+//   align-items: center;
+//   white-space: nowrap;
+//   text-align: right;
+//   margin: -4px 0;
+
+//   .mat-button {
+//     color: #0000008a;
+//   }
+
+//   .mat-icon-button {
+//     color: #0000008a;
+//     height: 37px;
+//     width: 37px;
+//   }
+// }
+
+// h3 {
+//   padding-top: 28px;
+// }
+
+// .ascent-type-filler {
+//   width: 36px;
+//   display: inline-block;
+// }
+
+// .difficulty-vote-included {
+//   font-weight: bold;
+// }
+
+// .difficulty-vote-author {
+//   padding-right: 20px;
+// }
+
+// .grade {
+//   width: 50px;
+//   display: block;
+// }
+
+// .difficulty-vote-date {
+//   text-align: right;
+// }
+
+// .route-comment:not(.first) {
+//   margin-top: 4px;
+//   padding-top: 10px;
+// }
+
+// .route-comment-content {
+//   white-space: normal;
+// }
+
+// .route-comment-author {
+//   margin-top: 5px;
+//   text-align: right;
+//   color: $text-gray;
+// }
+
+// .route-expanding-container {
+//   max-height: 0;
+//   transition: max-height 300ms ease-in-out;
+//   overflow: hidden;
+// }
+
+// .route-expanding-details {
+//   padding: 0 20px 20px 20px;
+// }

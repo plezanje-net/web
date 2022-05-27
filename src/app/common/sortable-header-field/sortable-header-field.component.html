@@ -1,0 +1,30 @@
+<div
+  [class.active]="
+    sortIndication === 'highlight' && currentlySortedField === field
+  "
+  [class.center]="centered"
+>
+  <ng-container *ngIf="label">
+    {{ label }}
+  </ng-container>
+  <mat-icon *ngIf="icon">
+    {{ icon }}
+  </mat-icon>
+  <mat-icon *ngIf="svgIcon" [svgIcon]="svgIcon"> </mat-icon>
+  <mat-icon
+    *ngIf="sortIndication === 'arrows'"
+    [class.active]="
+      currentlySortedField === field && currentSortDirection === 1
+    "
+    class="sort-arrow"
+    >north</mat-icon
+  >
+  <mat-icon
+    *ngIf="sortIndication === 'arrows'"
+    [class.active]="
+      currentlySortedField == field && currentSortDirection === -1
+    "
+    class="sort-arrow"
+    >south</mat-icon
+  >
+</div>
