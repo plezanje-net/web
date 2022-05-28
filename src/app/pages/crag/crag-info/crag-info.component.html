@@ -45,7 +45,7 @@
   </div>
 </div>
 
-<div class="card no-border padding">
+<div class="card no-border padding" *ngIf="attendanceDistribution.length > 0">
   <h4>Obiskanost po mesecih</h4>
   <app-distribution-chart
     [distribution]="attendanceDistribution"
