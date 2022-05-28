@@ -1,15 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
-import { subscribe } from 'graphql';
-import { filter, Subject, Subscription, switchMap, take } from 'rxjs';
-import { SnackBarButtonsComponent } from 'src/app/shared/snack-bar-buttons/snack-bar-buttons.component';
+import { combineLatest, filter, Subscription, switchMap, take } from 'rxjs';
 import {
   Crag,
   ManagementDeleteSectorGQL,
   ManagementGetCragSectorsGQL,
   ManagementSaveSectorPositionsGQL,
-  Route,
   Sector,
 } from 'src/generated/graphql';
 
@@ -21,6 +17,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { SectorFormComponent } from '../../forms/sector-form/sector-form.component';
 import { Apollo } from 'apollo-angular';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { AuthService } from 'src/app/auth/auth.service';
+import { User } from '@sentry/angular';
 
 interface TmpSector {
   id: string;
@@ -43,7 +41,11 @@ export class CragSectorsComponent implements OnInit {
 
   subscriptions: Subscription[] = [];
 
+  user: User;
+  fullAccess = false;
+
   constructor(
+    private authService: AuthService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
@@ -55,8 +57,8 @@ export class CragSectorsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.params
-      .pipe(
+    combineLatest([
+      this.activatedRoute.params.pipe(
         filter((params) => params.crag != null),
         switchMap(
           ({ crag }) =>
@@ -64,19 +66,24 @@ export class CragSectorsComponent implements OnInit {
               id: crag,
             }).valueChanges
         )
-      )
-      .subscribe((result) => {
-        this.loading = false;
+      ),
+      this.authService.currentUser.asObservable(),
+    ]).subscribe(([result, user]) => {
+      this.loading = false;
 
-        this.crag = <Crag>result.data.crag;
+      this.crag = <Crag>result.data.crag;
 
-        this.heading = `${this.crag.name}`;
-        this.layoutService.$breadcrumbs.next(
-          new CragAdminBreadcrumbs(this.crag).build()
-        );
+      this.user = user;
+      this.fullAccess =
+        user.roles.includes('admin') || user.id == this.crag.user?.id;
 
-        this.sectors = [...(<Sector[]>result.data.crag.sectors)];
-      });
+      this.heading = `${this.crag.name}`;
+      this.layoutService.$breadcrumbs.next(
+        new CragAdminBreadcrumbs(this.crag).build()
+      );
+
+      this.sectors = [...(<Sector[]>result.data.crag.sectors)];
+    });
   }
 
   drop(event: CdkDragDrop<string[]>) {
@@ -112,6 +119,13 @@ export class CragSectorsComponent implements OnInit {
           });
         });
       });
+  }
+
+  canEdit(sector: Sector): boolean {
+    return (
+      this.user.roles.includes('admin') ||
+      ['user', 'proposal'].includes(sector.status)
+    );
   }
 
   add(): void {

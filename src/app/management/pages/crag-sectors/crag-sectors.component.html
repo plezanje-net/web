@@ -14,7 +14,7 @@
         mat-button
         color="primary"
         [routerLink]="['/admin/uredi-plezalisce/' + crag.id]"
-        *ngIf="crag"
+        *ngIf="crag && fullAccess"
         >Uredi plezališče</a
       >
     </div>
@@ -44,7 +44,12 @@
               >Uredi smeri</a
             >
           </div>
-          <div class="tools" fxLayout="row" fxLayoutAlign="start center">
+          <div
+            *ngIf="canEdit(sector)"
+            class="tools"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+          >
             <button mat-icon-button (click)="edit(sector)">
               <mat-icon>edit</mat-icon>
             </button>

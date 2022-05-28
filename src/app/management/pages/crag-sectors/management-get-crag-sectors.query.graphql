@@ -9,6 +9,9 @@ query ManagementGetCragSectors($id: String!) {
       routes {
         id
       }
+      user {
+        id
+      }
     }
     slug
     name
@@ -17,6 +20,10 @@ query ManagementGetCragSectors($id: String!) {
       name
       id
       slug
+    }
+    status
+    user {
+      id
     }
   }
 }

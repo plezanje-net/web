@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Apollo } from 'apollo-angular';
 import { take } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 import { Registry } from 'src/app/types/registry';
 import {
   ManagementCreateSectorGQL,
@@ -26,6 +27,8 @@ export class SectorFormComponent implements OnInit {
   saving = false;
 
   statusOptions: Registry[] = [
+    { value: 'user', label: 'Samo zame' },
+    { value: 'proposal', label: 'Predlagaj uredništvu' },
     { value: 'public', label: 'Vidijo vsi' },
     { value: 'hidden', label: 'Samo za prijavljene' },
     { value: 'admin', label: 'Samo za admine' },
@@ -39,6 +42,7 @@ export class SectorFormComponent implements OnInit {
   });
 
   constructor(
+    private authService: AuthService,
     @Inject(MAT_DIALOG_DATA) private data: SectorFormComponentData,
     private createGQL: ManagementCreateSectorGQL,
     private updateGQL: ManagementUpdateSectorGQL,
@@ -51,6 +55,12 @@ export class SectorFormComponent implements OnInit {
     if (this.data?.sector != null) {
       this.form.patchValue(this.data.sector);
     }
+
+    this.statusOptions = this.statusOptions.filter(
+      (status) =>
+        this.authService.currentUser.value.roles.includes('admin') ||
+        ['user', 'proposal'].includes(status.value)
+    );
   }
 
   save() {
@@ -67,6 +77,7 @@ export class SectorFormComponent implements OnInit {
         panelClass: 'error',
         duration: 3000,
       });
+      this.saving = false;
     };
 
     if (this.data.sector != null) {
