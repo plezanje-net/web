@@ -2,6 +2,7 @@ query CragBySlug($crag: String!) {
   cragBySlug(slug: $crag) {
     id
     slug
+    status
     name
     type
     orientation
@@ -80,6 +81,9 @@ query CragBySlug($crag: String!) {
       id
       title
       path
+    }
+    user {
+      id
     }
   }
 }

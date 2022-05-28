@@ -1,20 +1,21 @@
-import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Apollo, gql, MutationResult } from 'apollo-angular';
-import { Observable, Subscription, switchMap, take } from 'rxjs';
+import { User } from '@sentry/angular';
+import { Apollo, MutationResult } from 'apollo-angular';
+import { filter, Observable, Subscription, switchMap, take, tap } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { Registry } from 'src/app/types/registry';
 import {
-  Country,
   Crag,
-  CreateActivityMutation,
   GradingSystem,
   ManagementCragFormGetCountriesGQL,
   ManagementCragFormGetCountriesQuery,
   ManagementCreateCragGQL,
-  ManagementCreateCragMutation,
+  ManagementDeleteCragGQL,
   ManagementUpdateCragGQL,
 } from 'src/generated/graphql';
 import { GradingSystemsService } from '../../../shared/services/grading-systems.service';
@@ -47,8 +48,9 @@ export class CragFormComponent implements OnInit, OnDestroy {
   areas: ManagementCragFormGetCountriesQuery['countries'][0]['areas'] = [];
 
   gradingSystems: GradingSystem[];
+  subscriptions: Subscription[] = [];
 
-  subsriptions: Subscription[] = [];
+  user: User;
 
   types: Registry[] = [
     {
@@ -62,14 +64,14 @@ export class CragFormComponent implements OnInit, OnDestroy {
   ];
 
   statuses: Registry[] = [
-    // {
-    //   value: 'user',
-    //   label: 'Začasno / zasebno',
-    // },
-    // {
-    //   value: 'proposal',
-    //   label: 'Predlagaj administratorju',
-    // },
+    {
+      value: 'user',
+      label: 'Samo zame',
+    },
+    {
+      value: 'proposal',
+      label: 'Predlagaj uredništvu',
+    },
     {
       value: 'admin',
       label: 'Vidno administratorjem',
@@ -124,17 +126,21 @@ export class CragFormComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
+    private authService: AuthService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog,
     private gradingSystemsService: GradingSystemsService,
     private countriesGQL: ManagementCragFormGetCountriesGQL,
     private updateCragGQL: ManagementUpdateCragGQL,
     private createCragGQL: ManagementCreateCragGQL,
+    private deleteCragGQL: ManagementDeleteCragGQL,
     private apollo: Apollo
   ) {}
 
   ngOnInit(): void {
+    this.authService.currentUser.subscribe((u) => (this.user = u));
     if (this.crag != null) {
       this.cragForm.patchValue({
         ...this.crag,
@@ -155,7 +161,7 @@ export class CragFormComponent implements OnInit, OnDestroy {
         });
       }
     });
-    this.subsriptions.push(routeSub);
+    this.subscriptions.push(routeSub);
 
     this.countriesGQL
       .fetch()
@@ -170,11 +176,17 @@ export class CragFormComponent implements OnInit, OnDestroy {
         this.countryChanged(v);
       }
     );
-    this.subsriptions.push(countrySub);
+    this.subscriptions.push(countrySub);
+
+    this.statuses = this.statuses.filter(
+      (status) =>
+        this.authService.currentUser.value.roles.includes('admin') ||
+        ['user', 'proposal'].includes(status.value)
+    );
   }
 
   ngOnDestroy(): void {
-    this.subsriptions.forEach((sub) => sub.unsubscribe());
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   countryChanged(value: string) {
@@ -244,5 +256,40 @@ export class CragFormComponent implements OnInit, OnDestroy {
         );
       },
     });
+  }
+
+  deleteCrag() {
+    this.dialog
+      .open(ConfirmationDialogComponent, {
+        data: {
+          title: 'Brisanje plezališča',
+          message: 'Si prepričan, da želiš izbrisati to plezališče',
+        },
+      })
+      .afterClosed()
+      .pipe(
+        take(1),
+        filter((value) => value != null),
+        tap(() => {
+          this.loading = true;
+        }),
+        switchMap(() => this.deleteCragGQL.mutate({ id: this.crag.id }))
+      )
+      .subscribe({
+        next: () => {
+          this.snackBar.open('Plezališče je bilo izbrisano', null, {
+            duration: 2000,
+          });
+          this.apollo.client.resetStore();
+          this.router.navigate(['/plezalisca']);
+        },
+        error: (error) => {
+          this.snackBar.open(error.message, null, {
+            panelClass: 'error',
+            duration: 3000,
+          });
+          this.loading = false;
+        },
+      });
   }
 }

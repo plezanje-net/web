@@ -14,6 +14,7 @@ import {
   Crag,
 } from 'src/generated/graphql';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { User } from '@sentry/angular';
 
 @Component({
   selector: 'app-crag',
@@ -24,8 +25,6 @@ export class CragComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   error: DataError = null;
 
-  canEdit: boolean = false;
-
   crag: CragBySlugQuery['cragBySlug'];
 
   warnings: CragBySlugQuery['cragBySlug']['comments'];
@@ -33,6 +32,9 @@ export class CragComponent implements OnInit, OnDestroy {
   map: any;
 
   action$ = new Subject<string>();
+
+  isPrivate = false;
+  user: User;
 
   tabs: Array<Tab> = [
     {
@@ -70,6 +72,7 @@ export class CragComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.authService.currentUser.subscribe((user) => (this.user = user));
     this.section = this.router.url.includes('/alpinizem/stena')
       ? 'alpinism'
       : 'sport';
@@ -142,11 +145,6 @@ export class CragComponent implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.push(actionsSub);
-
-    const authSub = this.authService.currentUser.subscribe(
-      (user) => (this.canEdit = user != null && user.roles.includes('admin'))
-    );
-    this.subscriptions.push(authSub);
 
     const breakpointSub = this.breakpointObserver
       .observe([Breakpoints.Small, Breakpoints.XSmall])

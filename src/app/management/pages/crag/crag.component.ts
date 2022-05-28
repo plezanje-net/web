@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { filter, of, Subscription, switchMap, take } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { combineLatest, of, Subscription, switchMap } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 import { LayoutService } from 'src/app/services/layout.service';
 import { Crag, ManagementGetCragGQL } from 'src/generated/graphql';
 import { CragAdminBreadcrumbs } from '../../utils/crag-admin-breadcrumbs';
@@ -21,47 +22,59 @@ export class CragComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private authService: AuthService,
     private layoutService: LayoutService,
     private managementGetCragGQL: ManagementGetCragGQL
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.params
-      .pipe(
-        switchMap((params) => {
-          if (params.crag != null) {
-            return this.managementGetCragGQL.watch({
-              id: params.crag,
-            }).valueChanges;
-          } else {
-            return of(null);
-          }
-        })
-      )
-      .subscribe({
-        next: (result) => {
-          if (result != null) {
-            this.crag = <Crag>result.data.crag;
-
-            this.layoutService.$breadcrumbs.next(
-              new CragAdminBreadcrumbs(this.crag).build()
-            );
-
-            this.heading = `${this.crag.name}`;
-          } else {
-            this.layoutService.$breadcrumbs.next([
-              {
-                name: 'Dodajanje plezališča',
-              },
-            ]);
-            this.heading = `Dodajanje plezališča`;
-          }
+    combineLatest([
+      this.activatedRoute.params.pipe(
+        switchMap((params) =>
+          params.crag != null
+            ? this.managementGetCragGQL.watch({
+                id: params.crag,
+              }).valueChanges
+            : of(null)
+        )
+      ),
+      this.authService.currentUser.asObservable(),
+    ]).subscribe({
+      next: ([result, user]) => {
+        if (result == null) {
+          this.layoutService.$breadcrumbs.next([
+            {
+              name: 'Dodajanje plezališča',
+            },
+          ]);
+          this.heading = `Dodajanje plezališča`;
           this.loading = false;
-        },
-        error: () => {
-          this.loading = false;
-          this.error = true;
-        },
-      });
+          return;
+        }
+
+        this.crag = <Crag>result.data.crag;
+
+        if (
+          !user.roles.includes('admin') &&
+          !['user', 'proposal'].includes(this.crag.status)
+        ) {
+          this.router.navigate([
+            `/admin/uredi-plezalisce/${this.crag.id}/sektorji`,
+          ]);
+          return;
+        }
+
+        this.layoutService.$breadcrumbs.next(
+          new CragAdminBreadcrumbs(this.crag).build()
+        );
+        this.heading = `${this.crag.name}`;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+        this.error = true;
+      },
+    });
   }
 }

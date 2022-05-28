@@ -22,5 +22,8 @@ query ManagementGetCrag($id: String!) {
       id
       slug
     }
+    user {
+      id
+    }
   }
 }
