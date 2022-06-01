@@ -1,7 +1,7 @@
 import {
-  AfterViewInit,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Input,
   OnDestroy,
   OnInit,
@@ -15,23 +15,20 @@ import dayjs from 'dayjs';
 import ActivitySelection from 'src/app/types/activity-selection.interface';
 import { Crag, MyCragSummaryGQL, Route, Sector } from 'src/generated/graphql';
 import { KeyValue } from '@angular/common';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-crag-routes',
   templateUrl: './crag-routes.component.html',
   styleUrls: ['./crag-routes.component.scss'],
 })
-export class CragRoutesComponent implements OnInit, OnDestroy, AfterViewInit {
+export class CragRoutesComponent implements OnInit, OnDestroy {
   @Input() crag: Crag;
 
   sectors: (Sector & {
     sortedDirection?: number;
     sortedField?: string;
-    showLeftShadow?: boolean;
-    showRightShadow?: boolean;
   })[] = [];
-
-  edgeObservers: IntersectionObserver[] = [];
 
   shownColumns = [
     'name',
@@ -40,69 +37,86 @@ export class CragRoutesComponent implements OnInit, OnDestroy, AfterViewInit {
     // 'nrTicks',
     // 'nrTries',
     // 'nrClimbers',
+    'starRating',
     'multipitch',
     'comments',
     'myAscents',
   ];
+
   allColumns = {
     name: {
       field: 'name',
       selectLabel: 'Ime',
       tableLabel: 'Ime',
       defaultSortDirection: 1,
+      width: 100,
     },
     length: {
       field: 'length',
       selectLabel: 'Dolžina',
       tableLabel: 'Dolžina',
       defaultSortDirection: 1,
+      width: 85,
     },
     difficulty: {
       field: 'difficulty',
       selectLabel: 'Težavnost',
       tableLabel: 'Težavnost',
       defaultSortDirection: 1,
+      width: 103,
     },
     nrTicks: {
       field: 'nrTicks',
       selectLabel: 'Število uspešnih vzponov',
       tableLabel: 'Uspešnih vzponov',
       defaultSortDirection: -1,
+      width: 160,
     },
     nrTries: {
       field: 'nrTries',
       selectLabel: 'Število poskusov',
       tableLabel: 'Poskusov',
       defaultSortDirection: -1,
+      width: 100,
     },
     nrClimbers: {
       field: 'nrClimbers',
       selectLabel: 'Število plezalcev',
       tableLabel: 'Plezalcev',
       defaultSortDirection: -1,
+      width: 99,
     },
     starRating: {
       field: 'starRating',
       selectLabel: 'Lepota smeri',
       defaultSortDirection: -1,
+      width: 36,
     },
     multipitch: {
       field: 'multipitch',
       selectLabel: 'Večraztežajna smer',
       defaultSortDirection: -1,
+      width: 36,
     },
     comments: {
       field: 'comments',
       selectLabel: 'Smer ima komentarje',
       defaultSortDirection: -1,
+      width: 36,
     },
     myAscents: {
       field: 'myAscents',
       selectLabel: 'Moji vzponi',
       defaultSortDirection: -1,
+      width: 36,
     },
   };
   math = Math;
+  hostResizeObserver: ResizeObserver;
+  routeListViewStyle: 'compact' | 'table';
+  tableWidth: number;
+  availableWidth: number;
+  sortAll = ['position', 1];
 
   selectedRoutes: Route[] = [];
   selectedRoutesIds: string[] = [];
@@ -120,46 +134,18 @@ export class CragRoutesComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     private myCragSummaryGQL: MyCragSummaryGQL,
     private localStorageService: LocalStorageService,
-    private changeDetection: ChangeDetectorRef
+    private changeDetection: ChangeDetectorRef,
+    private hostElement: ElementRef
   ) {}
 
-  ngAfterViewInit() {
-    // Show/hide scroll shadows
-    this.sectors.forEach((sector) => {
-      const leftEdgeTarget = document.querySelector('#leftEdge' + sector.id);
-      const rightEdgeTarget = document.querySelector('#rightEdge' + sector.id);
-      const rootScrollArea = document.querySelector(
-        '#sectorTableWrap' + sector.id
-      );
-      const observerOptions = {
-        root: rootScrollArea,
-        rootMargin: '1px', // if margin=0, right side sometimes fails to intersect. missing a pixel?
-        threshold: 1,
-      };
-      const leftEdgeObserver = new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting) {
-          sector.showLeftShadow = false;
-        } else {
-          sector.showLeftShadow = true;
-        }
-      }, observerOptions);
-      const rightEdgeObserver = new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting) {
-          sector.showRightShadow = false;
-        } else {
-          sector.showRightShadow = true;
-        }
-      }, observerOptions);
-
-      leftEdgeObserver.observe(leftEdgeTarget);
-      rightEdgeObserver.observe(rightEdgeTarget);
-
-      this.edgeObservers.push(leftEdgeObserver);
-      this.edgeObservers.push(rightEdgeObserver);
-    });
-  }
-
   ngOnInit(): void {
+    this.recalculateTableWidth();
+
+    this.hostResizeObserver = new ResizeObserver((entries) => {
+      this.availableWidth = entries[0].contentRect.width;
+    });
+    this.hostResizeObserver.observe(this.hostElement.nativeElement);
+
     // Make a copy (original is readonly and cannot be sorted)
     this.crag.sectors.forEach((sector) => {
       this.sectors.push({ ...sector, routes: [...sector.routes] });
@@ -188,19 +174,49 @@ export class CragRoutesComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     this.snackBar.dismiss();
-
-    this.edgeObservers.forEach((observer) => observer.disconnect());
+    this.hostResizeObserver.disconnect();
   }
 
-  sortRoutes(sectorIndex: number, sortField: string) {
-    if (sortField === 'position') {
-      // sorting by position is always asc (left to right), sorting by any other field inverts direction on each click
-      this.sectors[sectorIndex].sortedDirection = 1;
+  recalculateTableWidth() {
+    this.tableWidth = this.shownColumns.reduce(
+      (prev, curr) => prev + this.allColumns[curr].width,
+      40
+    );
+  }
+
+  /**
+   * sorts routes in all sectors by the same sort field and direction
+   * used when compact view is shown and sort can be selected only from select input
+   */
+  sortAllRoutes(event: MatSelectChange) {
+    const [field, direction] = event.value;
+    this.sectors.forEach((sector, index) => {
+      this.sortRoutes(index, field, direction);
+    });
+  }
+
+  onSortableHeaderClick(sectorIndex: number, sortField: string) {
+    this.sortAll = null; // unset dropdown sort select input
+    this.sortRoutes(sectorIndex, sortField);
+  }
+
+  /**
+   * sorts routes in one sector
+   * used when table view is shown and each sector can be sorted individually by clicking on fields in table header
+   */
+  sortRoutes(sectorIndex: number, sortField: string, sortDirection?: number) {
+    if (sortDirection) {
+      this.sectors[sectorIndex].sortedDirection = sortDirection;
     } else {
-      this.sectors[sectorIndex].sortedDirection =
-        this.sectors[sectorIndex].sortedField === sortField
-          ? this.sectors[sectorIndex].sortedDirection * -1
-          : this.allColumns[sortField].defaultSortDirection ?? 1;
+      if (sortField === 'position') {
+        // sorting by position is always asc (left to right), sorting by any other field inverts direction on each click
+        this.sectors[sectorIndex].sortedDirection = 1;
+      } else {
+        this.sectors[sectorIndex].sortedDirection =
+          this.sectors[sectorIndex].sortedField === sortField
+            ? this.sectors[sectorIndex].sortedDirection * -1
+            : this.allColumns[sortField].defaultSortDirection ?? 1;
+      }
     }
 
     this.sectors[sectorIndex].sortedField = sortField;

@@ -2,41 +2,62 @@
 @import "../../../../styles/colors.scss";
 @import "../../../../styles/variables.scss";
 
-// TODO: define inside variables...
-$gray: #757575;
-$gray-light: #ebebeb;
-$blue-very-light: #f6f9ff;
-
-mat-form-field {
-  width: 100%;
-}
-
 // fix options panel overflowing viewport on 100% wide mat-form-field
-::ng-deep .mat-select-panel-wrap {
-  div {
-    min-width: calc(100% + 32px) !important;
-  }
-}
+// TODO: check/test other occurences and move to global ?
+// TODO: check this again... maybe avoid losing time on this since we might be dropping material altogether...
+// ::ng-deep .mat-select-panel-wrap {
+//   div {
+//     min-width: calc(100% + 32px) !important;
+//   }
+// }
+// @media (min-width: $breakpoint-sm) {
+//   ::ng-deep .mat-select-panel-wrap {
+//     div {
+//       min-width: unset;
+//     }
+//   }
+// }
 
-@media (min-width: $breakpoint-sm) {
+.select-columns-and-sort-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  @media (min-width: $breakpoint-sm) {
+    flex-direction: row;
+    .max-half {
+      max-width: 50%;
+    }
+  }
+
   mat-form-field {
-    width: unset;
-  }
-
-  ::ng-deep .mat-select-panel-wrap {
-    div {
-      min-width: unset;
+    width: 100%;
+    &.hidden {
+      display: none;
     }
   }
 }
 
-.mat-option {
-  .mat-icon {
+mat-option {
+  // icon inside mat-select should be smaller
+  mat-icon {
     font-size: 16px;
     width: 16px;
     height: 16px;
     margin-right: 4px;
   }
+
+  // disable unselecting name column as it would make no sense
+  &#name {
+    pointer-events: none;
+  }
+}
+
+// icons should be same height as line height for nicer alignment
+::ng-deep mat-icon.mat-icon {
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+  vertical-align: middle;
 }
 
 .sector-heading {
@@ -45,48 +66,31 @@ mat-form-field {
   margin-left: 16px;
 }
 
-.scroll-shadows-table-wrap {
-  position: relative;
-}
-
-.left-scroll-shadow,
-.right-scroll-shadow {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  background-color: black;
-  opacity: 0.1;
-  width: 0px;
-  transition: width 300ms;
-
-  &.show {
-    width: 10px;
-  }
-}
-.left-scroll-shadow {
-  left: 0;
-}
-.right-scroll-shadow {
-  right: 0;
-}
-
-.table-wrap {
-  overflow-x: auto;
-  max-width: 100%;
-  flex-grow: 1;
-  background-color: white;
-  display: flex;
+.shadow {
+  box-shadow: $card-shadow;
 }
 
 table {
+  background-color: white;
   width: 100%;
+  border-collapse: separate;
 
   tr {
-    height: 53px;
+    height: 42px;
+  }
+
+  thead tr {
+    height: 48px;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 2;
   }
 
   tbody tr {
-    border-top: 1px solid $gray-light;
+    &:not(.details-row) {
+      cursor: pointer;
+    }
     &:hover:not(.details-row) {
       background-color: $blue-very-light;
     }
@@ -96,7 +100,7 @@ table {
   th {
     padding: 8px;
     text-align: left;
-    font-weight: normal;
+    font-weight: 400;
 
     &.checkbox {
       padding-left: 12px;
@@ -110,12 +114,12 @@ table {
         margin-top: -4px;
       }
     }
+
     &.name {
       padding-left: 0;
     }
+
     &.icon {
-      padding-left: 0;
-      padding-right: 0;
       text-align: center;
     }
   }
@@ -124,48 +128,29 @@ table {
     color: $gray;
     vertical-align: bottom;
     white-space: nowrap;
+    border-bottom: 1px solid $gray-light;
 
     &.checkbox {
       width: 40px;
       min-width: 40px;
     }
-
-    &.name {
-      min-width: 200px;
-    }
-    &.icon {
-      width: 40px;
-      min-width: 40px;
-    }
-
-    &.length {
-      width: 85px;
-    }
-    &.grade {
-      width: 103px;
-    }
-    &.nr-ticks {
-      width: 118px;
-    }
-    &.nr-tries {
-      width: 100px;
-    }
-    &.nr-climbers {
-      width: 99px;
-    }
   }
 
   td {
     vertical-align: middle;
-    &.icon {
-      padding: 0;
+    border-top: 1px solid $gray-light;
+  }
+
+  tbody tr:first-child {
+    td {
+      border: none;
     }
   }
 
   tbody tr.details-row {
     height: 0;
-    border: none;
     td {
+      border: none;
       height: 0;
       padding: 0;
     }
@@ -182,166 +167,84 @@ table {
   padding: 0 20px 20px 20px;
 }
 
-///
-// Keep old styles as a reference until mobile/narrow view is solved
+.compact {
+  background-color: white;
 
-// .route-row {
-//   display: flex;
-//   flex-direction: row;
-//   padding: 6px 2px 6px 16px;
-//   min-height: 43px;
+  .route {
+    display: flex;
+    align-items: center;
+    border-top: 1px solid $gray-light;
+    &:first-child {
+      border-top: none;
+    }
+    padding: 8px;
+    padding-left: 0;
 
-//   &.header {
-//     cursor: default;
-//     padding-top: 12px;
+    cursor: pointer;
+    &:hover {
+      background-color: $blue-very-light;
+    }
 
-//     @media (max-width: 959px) {
-//       display: none;
-//     }
-//   }
+    .checkbox {
+      flex: 0 0 40px;
+      text-align: center;
+    }
 
-//   .mat-checkbox {
-//     margin-top: -2px;
-//   }
-// }
+    .info-wrap {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
 
-// .route-details-container {
-//   flex: 1 1 100%;
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: flex-start;
-//   align-items: center;
-//   text-align: left;
-// }
+      .info-row-first {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
 
-// .route-details {
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: flex-start;
-//   align-items: center;
+        .name {
+          flex: 1;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
 
-//   &.left {
-//     flex: 1 1 100%;
+        .star {
+          margin-left: 4px;
+          display: flex;
+          align-items: center;
+        }
+      }
 
-//     @media (max-width: $breakpoint-sm) {
-//       // TODO use min-width instead
-//       display: flex;
-//       flex-direction: column;
-//       align-items: flex-start;
-//       justify-content: flex-start;
-//     }
-//   }
+      .info-row-second {
+        display: flex;
+        justify-content: space-between;
 
-//   &.right {
-//     flex: 0 0 110px;
-//   }
-// }
+        .grade-length-wrap {
+          display: flex;
 
-// .route-checkbox {
-//   flex: 0 0 12px;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-// }
+          .grade {
+            width: 40px;
+            margin-right: 4px;
+          }
+        }
 
-// .route-name {
-//   flex: 1 1 100%;
-// }
+        .multipitch-comments-my-ascents-wrap {
+          display: flex;
+        }
 
-// .route-numbers {
-//   // TODO take care of boulder places ... different width probably
-//   display: flex;
-//   flex: 0 0 200px;
+        .multipitch,
+        .comments,
+        .my-ascents {
+          flex: 0 0 20px;
+          width: 20px;
+          height: 20px;
+          margin-left: 4px;
+        }
+      }
 
-//   @media (max-width: $breakpoint-sm) {
-//     // TODO use min-width instead
-//     flex-direction: row;
-//     flex: 1 1 auto;
-//   }
-// }
-
-// .route-length {
-//   flex: 0 0 80px;
-//   height: 20px;
-// }
-
-// .route-grade {
-//   flex: 0 0 120px;
-//   position: relative;
-// }
-
-// .route-pitches {
-//   flex: 0 0 80px;
-// }
-
-// .route-icons {
-//   flex: 0 0 110px;
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: flex-end;
-//   align-items: center;
-//   white-space: nowrap;
-//   text-align: right;
-//   margin: -4px 0;
-
-//   .mat-button {
-//     color: #0000008a;
-//   }
-
-//   .mat-icon-button {
-//     color: #0000008a;
-//     height: 37px;
-//     width: 37px;
-//   }
-// }
-
-// h3 {
-//   padding-top: 28px;
-// }
-
-// .ascent-type-filler {
-//   width: 36px;
-//   display: inline-block;
-// }
-
-// .difficulty-vote-included {
-//   font-weight: bold;
-// }
-
-// .difficulty-vote-author {
-//   padding-right: 20px;
-// }
-
-// .grade {
-//   width: 50px;
-//   display: block;
-// }
-
-// .difficulty-vote-date {
-//   text-align: right;
-// }
-
-// .route-comment:not(.first) {
-//   margin-top: 4px;
-//   padding-top: 10px;
-// }
-
-// .route-comment-content {
-//   white-space: normal;
-// }
-
-// .route-comment-author {
-//   margin-top: 5px;
-//   text-align: right;
-//   color: $text-gray;
-// }
-
-// .route-expanding-container {
-//   max-height: 0;
-//   transition: max-height 300ms ease-in-out;
-//   overflow: hidden;
-// }
-
-// .route-expanding-details {
-//   padding: 0 20px 20px 20px;
-// }
+      .info-row-third {
+        font-size: 12px;
+      }
+    }
+  }
+}

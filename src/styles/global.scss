@@ -70,6 +70,9 @@ body {
 .mb-32 {
   margin-bottom: 32px;
 }
+.ml-16 {
+  margin-left: 16px;
+}
 
 .py-8 {
   padding-top: 8px;
@@ -261,10 +264,6 @@ body {
   .mat-paginator {
     background: none;
   }
-}
-
-.star {
-  color: #dd0;
 }
 
 span.highlight {
