@@ -73,7 +73,9 @@
       <mat-form-field class="no-hint" fxFlex="50">
         <mat-label>Vrsta vzpona</mat-label>
         <mat-select formControlName="ascentType">
-          <mat-select-trigger>{{ ascentTypeTrigger }}</mat-select-trigger>
+          <mat-select-trigger>{{
+            mapAscentTypeValueToFullLabel(route.value.ascentType)
+          }}</mat-select-trigger>
           <ng-container *ngFor="let type of nonTopRopeAscentTypes">
             <mat-option
               *ngIf="logPossibleEver(type.value)"
