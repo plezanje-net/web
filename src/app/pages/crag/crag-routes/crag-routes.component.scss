@@ -157,16 +157,6 @@ table {
   }
 }
 
-.route-expanding-container {
-  max-height: 0;
-  transition: max-height 225ms cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-}
-
-.route-expanding-details {
-  padding: 0 20px 20px 20px;
-}
-
 .compact {
   background-color: white;
 
@@ -247,4 +237,14 @@ table {
       }
     }
   }
+}
+
+.route-expanding-container {
+  max-height: 0;
+  transition: max-height 225ms cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.selected {
+  background-color: $blue-very-light;
 }

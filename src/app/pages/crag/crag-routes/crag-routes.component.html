@@ -255,7 +255,10 @@
 
       <tbody>
         <ng-container *ngFor="let route of sector.routes">
-          <tr (click)="expandRow(route.id)">
+          <tr
+            (click)="expandRow(route.id)"
+            [ngClass]="{ selected: route.id === expandedRowId }"
+          >
             <td class="checkbox">
               <div class="route-checkbox">
                 <mat-checkbox
@@ -344,7 +347,7 @@
             </td>
           </tr>
 
-          <tr class="details-row">
+          <tr class="details-row selected">
             <td [attr.colspan]="shownColumns.length + 1">
               <div
                 class="route-expanding-container"
@@ -375,7 +378,11 @@
     <!-- Compact view -->
     <div *ngIf="availableWidth < tableWidth" class="compact shadow mt-16">
       <ng-container *ngFor="let route of sector.routes">
-        <div (click)="expandRow(route.id)" class="route">
+        <div
+          (click)="expandRow(route.id)"
+          class="route"
+          [ngClass]="{ selected: route.id === expandedRowId }"
+        >
           <div class="checkbox">
             <mat-checkbox
               (change)="changeSelection(route)"
@@ -504,7 +511,7 @@
         </div>
 
         <div
-          class="route-expanding-container"
+          class="route-expanding-container selected"
           [ngStyle]="{
             'max-height.px': route.id === expandedRowId ? expandedRowHeight : 0
           }"

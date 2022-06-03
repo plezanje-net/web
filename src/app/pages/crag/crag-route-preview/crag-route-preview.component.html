@@ -1,11 +1,14 @@
-<div #container>
-  <container *ngIf="!gradeDistributionLoading && gradeDistribution.length">
-    <h3>Ocene uporabnikov</h3>
+<div #container class="preview-container">
+  <div
+    *ngIf="!gradeDistributionLoading && gradeDistribution.length"
+    class="pb-8"
+  >
+    <h4>Ocene uporabnikov</h4>
     <app-distribution-chart
       [distribution]="gradeDistribution"
       (onViewInit)="routeGradesInitialized = true"
     ></app-distribution-chart>
-  </container>
+  </div>
   <app-route-comments
     *ngIf="!routeCommentsLoading && routeComments.length"
     [comments]="routeComments"
