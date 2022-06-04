@@ -70,3 +70,19 @@
     [gradingSystemId]="route.defaultGradingSystem.id"
   ></app-route-grades>
 </div>
+
+<div class="card no-border">
+  <h2>Popularnost smeri</h2>
+  <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
+    <div class="label">Število uspešnih vzponov</div>
+    <span class="text-right">{{ route.nrTicks }}</span>
+  </div>
+  <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
+    <div class="label">Število poskusov v smeri</div>
+    <span class="text-right">{{ route.nrTries }}</span>
+  </div>
+  <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
+    <div class="label">Število plezalcev</div>
+    <span class="text-right">{{ route.nrClimbers }}</span>
+  </div>
+</div>

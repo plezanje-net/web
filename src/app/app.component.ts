@@ -9,6 +9,8 @@ import { LayoutService } from './services/layout.service';
 import { filter } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { Subscription, take } from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatIconRegistry } from '@angular/material/icon';
 
 declare let gtag: Function;
 
@@ -27,8 +29,17 @@ export class AppComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private dialog: MatDialog,
     private router: Router,
-    private layoutService: LayoutService
-  ) {}
+    private layoutService: LayoutService,
+    private matIconRegistry: MatIconRegistry,
+    private domSanitizer: DomSanitizer
+  ) {
+    this.matIconRegistry.addSvgIcon(
+      'multipitch',
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        '../assets/icons/multipitch.svg'
+      )
+    );
+  }
 
   ngOnInit(): void {
     this.authService.initialize();

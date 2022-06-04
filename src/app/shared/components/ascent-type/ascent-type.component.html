@@ -1,11 +1,20 @@
-<ng-container *ngIf="displayType=='text'">
-  <span *ngIf="ascentType" [ngClass]="'color-' + (topRope ? 'yellow' : ascentType.color)">{{ ascentType.label }}
-    <span class="toprope" *ngIf="topRope"> (top rope)</span></span>
-  <span *ngIf="ascentType == null"><i>{{ type }}</i></span>
+<ng-container *ngIf="displayType == 'text'">
+  <span
+    *ngIf="ascentType"
+    [ngClass]="'color-' + (topRope ? 'yellow' : ascentType.color)"
+    >{{ ascentType.label }}
+    <span class="toprope" *ngIf="topRope"> (top rope)</span></span
+  >
+  <span *ngIf="ascentType == null"
+    ><i>{{ type }}</i></span
+  >
 </ng-container>
-<ng-container *ngIf="displayType=='icon'">
-  <span *ngIf="ascentType" [ngClass]="'color-' + (topRope ? 'yellow' : ascentType.color)"
-    [matTooltip]="ascentType.label"><button mat-button>
-      <mat-icon>{{ icon }}</mat-icon>
-    </button></span>
+<ng-container *ngIf="displayType == 'icon'">
+  <mat-icon
+    *ngIf="ascentType"
+    [ngClass]="'color-' + (topRope ? 'yellow' : ascentType.color)"
+    [matTooltip]="ascentType.label"
+    [title]="ascentType.label"
+    >{{ icon }}</mat-icon
+  >
 </ng-container>

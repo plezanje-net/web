@@ -158,28 +158,22 @@
             Nič posebnega
           </span>
           <span *ngIf="route.controls.votedStarRating.value == 1"
-            ><mat-icon>star_border</mat-icon>
-            <span class="icon-text">Lepa</span>
-          </span>
+            ><mat-icon>star_border</mat-icon
+            ><span class="icon-text">Lepa</span></span
+          >
           <span *ngIf="route.controls.votedStarRating.value == 2"
             ><mat-icon>star</mat-icon>
             <span class="icon-text">Čudovita</span>
           </span>
         </mat-select-trigger>
         <mat-option [value]="null">Ne predlagaj lepote</mat-option>
-        <mat-option [value]="0"><span></span>Nič posebnega</mat-option>
-        <mat-option [value]="1"
-          ><span
-            ><mat-icon>star_border</mat-icon>
-            <span class="icon-text">Lepa</span>
-          </span></mat-option
-        >
-        <mat-option [value]="2"
-          ><span
-            ><mat-icon>star</mat-icon
-            ><span class="icon-text">Čudovita</span></span
-          ></mat-option
-        >
+        <mat-option [value]="0">Nič posebnega</mat-option>
+        <mat-option [value]="1">
+          <span><mat-icon>star_border</mat-icon>Lepa</span>
+        </mat-option>
+        <mat-option [value]="2">
+          <span><mat-icon>star</mat-icon>Čudovita</span>
+        </mat-option>
       </mat-select>
     </mat-form-field>
   </div>
