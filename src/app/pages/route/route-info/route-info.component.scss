@@ -2,6 +2,7 @@
 
 .card {
   margin-bottom: 16px;
+  overflow: auto;
 }
 
 .label {
@@ -19,4 +20,12 @@
 .difficulty-votes-chart {
   display: block;
   margin-bottom: 8px;
+}
+
+h2 {
+  font-size: 16px;
+  color: black;
+  margin-left: 14px;
+  font-weight: 400;
+  margin-top: 16px;
 }

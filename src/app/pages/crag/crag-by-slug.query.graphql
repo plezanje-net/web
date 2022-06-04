@@ -50,6 +50,11 @@ query CragBySlug($crag: String!) {
           number
           height
         }
+        nrTicks
+        nrTries
+        nrClimbers
+        position
+        starRating
       }
       bouldersOnly
     }

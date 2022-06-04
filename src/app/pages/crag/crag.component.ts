@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DataError } from 'src/app/types/data-error';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LayoutService } from 'src/app/services/layout.service';
-import { Subject, Subscription, take } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { Tab } from '../../types/tab';
 import { AuthService } from 'src/app/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';

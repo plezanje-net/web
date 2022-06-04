@@ -41,3 +41,13 @@ img {
     color: $colors-green;
   }
 }
+
+ul {
+  margin-bottom: 12px;
+  margin-top: -4px;
+  li {
+    list-style: circle;
+    list-style-position: inside;
+    padding-left: 16px;
+  }
+}

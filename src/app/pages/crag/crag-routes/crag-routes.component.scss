@@ -2,163 +2,251 @@
 @import "../../../../styles/colors.scss";
 @import "../../../../styles/variables.scss";
 
-.route-row {
+// fix options panel overflowing viewport on 100% wide mat-form-field
+// TODO: check/test other occurences and move to global ?
+// TODO: check this again... maybe avoid losing time on this since we might be dropping material altogether...
+// ::ng-deep .mat-select-panel-wrap {
+//   div {
+//     min-width: calc(100% + 32px) !important;
+//   }
+// }
+// @media (min-width: $breakpoint-sm) {
+//   ::ng-deep .mat-select-panel-wrap {
+//     div {
+//       min-width: unset;
+//     }
+//   }
+// }
+
+.select-columns-and-sort-wrap {
   display: flex;
-  flex-direction: row;
-  padding: 6px 2px 6px 16px;
-  min-height: 43px;
+  flex-direction: column;
+  gap: 16px;
+  @media (min-width: $breakpoint-sm) {
+    flex-direction: row;
+  }
 
-  &.header {
-    cursor: default;
-    padding-top: 12px;
-
-    @media (max-width: 959px) {
+  mat-form-field {
+    width: 100%;
+    min-width: 0;
+    &.hidden {
       display: none;
     }
   }
+}
 
-  .mat-checkbox {
-    margin-top: -2px;
+mat-option {
+  // icon inside mat-select should be smaller
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+
+  // disable unselecting name column as it would make no sense
+  &#name {
+    pointer-events: none;
   }
 }
 
-.route-details-container {
-  flex: 1 1 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  text-align: left;
+// icons should be same height as line height for nicer alignment
+::ng-deep mat-icon.mat-icon {
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+  vertical-align: middle;
 }
 
-.route-details {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
+.sector-heading {
+  padding: 0;
+  margin-top: 24px;
+  margin-left: 16px;
+}
 
-  &.left {
-    flex: 1 1 100%;
+.shadow {
+  box-shadow: $card-shadow;
+}
 
-    @media (max-width: $breakpoint-sm) {
-      // TODO use min-width instead
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: flex-start;
+table {
+  background-color: white;
+  width: 100%;
+  border-collapse: separate;
+
+  tr {
+    // +1 to accomodate top border on tds (except 1st row which 'uses' border of th)
+    height: 43px;
+    &:first-child {
+      height: 42px;
     }
   }
 
-  &.right {
-    flex: 0 0 110px;
+  thead tr {
+    height: 48px;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 2;
+  }
+
+  tbody tr {
+    &:not(.details-row) {
+      cursor: pointer;
+    }
+    &:hover:not(.details-row) {
+      background-color: $blue-very-light;
+    }
+  }
+
+  td,
+  th {
+    padding: 8px;
+    text-align: left;
+    font-weight: 400;
+
+    &.checkbox {
+      padding-left: 12px;
+      padding-right: 12px;
+      text-align: center;
+      span {
+        cursor: pointer;
+      }
+      mat-checkbox {
+        vertical-align: middle;
+        margin-top: -4px;
+      }
+    }
+
+    &.name {
+      padding-left: 0;
+    }
+
+    &.icon {
+      text-align: center;
+    }
+  }
+
+  th {
+    color: $gray;
+    vertical-align: bottom;
+    white-space: nowrap;
+    border-bottom: 1px solid $gray-light;
+
+    &.checkbox {
+      width: 40px;
+      min-width: 40px;
+    }
+  }
+
+  td {
+    vertical-align: middle;
+    border-top: 1px solid $gray-light;
+  }
+
+  tbody tr:first-child {
+    td {
+      border: none;
+    }
+  }
+
+  tbody tr.details-row {
+    height: 0;
+    td {
+      border: none;
+      height: 0;
+      padding: 0;
+    }
   }
 }
 
-.route-checkbox {
-  flex: 0 0 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.compact {
+  background-color: white;
 
-.route-name {
-  flex: 1 1 100%;
-}
+  .route {
+    display: flex;
+    align-items: center;
+    border-top: 1px solid $gray-light;
+    &:first-child {
+      border-top: none;
+    }
+    padding: 8px;
+    padding-left: 0;
 
-.route-numbers {
-  // TODO take care of boulder places ... different width probably
-  display: flex;
-  flex: 0 0 160px;
+    cursor: pointer;
+    &:hover {
+      background-color: $blue-very-light;
+    }
 
-  @media (max-width: $breakpoint-sm) {
-    // TODO use min-width instead
-    flex-direction: row;
-    flex: 1 1 auto;
+    .checkbox {
+      flex: 0 0 40px;
+      text-align: center;
+    }
+
+    .info-wrap {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+
+      .info-row-first {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        .name {
+          flex: 1;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+
+        .star {
+          margin-left: 4px;
+          display: flex;
+          align-items: center;
+        }
+      }
+
+      .info-row-second {
+        display: flex;
+        justify-content: space-between;
+
+        .grade-length-wrap {
+          display: flex;
+
+          .grade {
+            width: 40px;
+            margin-right: 4px;
+          }
+        }
+
+        .multipitch-comments-my-ascents-wrap {
+          display: flex;
+        }
+
+        .multipitch,
+        .comments,
+        .my-ascents {
+          flex: 0 0 20px;
+          width: 20px;
+          height: 20px;
+          margin-left: 4px;
+        }
+      }
+
+      .info-row-third {
+        font-size: 12px;
+      }
+    }
   }
-}
-
-.route-length {
-  flex: 0 0 80px;
-  height: 20px;
-}
-
-.route-grade {
-  flex: 0 0 80px;
-  position: relative;
-}
-
-.route-pitches {
-  flex: 0 0 80px;
-}
-
-.route-icons {
-  flex: 0 0 110px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  white-space: nowrap;
-  text-align: right;
-  margin: -4px 0;
-
-  .mat-button {
-    color: #0000008a;
-  }
-
-  .mat-icon-button {
-    color: #0000008a;
-    height: 37px;
-    width: 37px;
-  }
-}
-
-h3 {
-  padding-top: 28px;
-}
-
-.ascent-type-filler {
-  width: 36px;
-  display: inline-block;
-}
-
-.difficulty-vote-included {
-  font-weight: bold;
-}
-
-.difficulty-vote-author {
-  padding-right: 20px;
-}
-
-.grade {
-  width: 50px;
-  display: block;
-}
-
-.difficulty-vote-date {
-  text-align: right;
-}
-
-.route-comment:not(.first) {
-  margin-top: 4px;
-  padding-top: 10px;
-}
-
-.route-comment-content {
-  white-space: normal;
-}
-
-.route-comment-author {
-  margin-top: 5px;
-  text-align: right;
-  color: $text-gray;
 }
 
 .route-expanding-container {
   max-height: 0;
-  transition: max-height 300ms ease-in-out;
+  transition: max-height 225ms cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
 
-.route-expanding-details {
-  padding: 0 20px 20px 20px;
+.selected {
+  background-color: $blue-very-light;
 }

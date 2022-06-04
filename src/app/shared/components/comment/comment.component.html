@@ -1,6 +1,6 @@
 <div
-  class="card padding comment"
-  [ngClass]="commentType"
+  class="padding comment {{ commentType }}"
+  [ngClass]="{ card: !previewMode, preview: previewMode }"
   fxLayout="column"
   fxLayoutGap="8px"
 >

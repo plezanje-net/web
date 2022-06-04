@@ -9,26 +9,29 @@
   z-index: 1;
 }
 
+mat-option {
+  span {
+    display: flex;
+    align-items: center;
+  }
+
+  // icon inside mat-select should be smaller
+  mat-icon.mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+}
+
+// mat trigger label is handled differently because flex somehow increases row height...
 .mat-select.star-rating {
   .mat-icon {
     font-size: 16px;
     width: 16px;
-    width: 16px;
+    height: 16px;
     position: absolute;
-    bottom: -5px;
-  }
-  span.icon-text {
-    margin-left: 20px;
-  }
-}
-
-.mat-option {
-  .mat-icon {
-    font-size: 16px;
-    width: 16px;
-    width: 16px;
-    position: absolute;
-    bottom: 5px;
+    bottom: 3px;
   }
   span.icon-text {
     margin-left: 20px;
