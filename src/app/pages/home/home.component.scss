@@ -2,14 +2,47 @@
 //   padding: 12px 24px 12px 24px;
 // }
 
+$light-gray: #0000008a;
+
 .not-visible {
   visibility: hidden;
 }
 
-.welcome-card {
+.announcement-card {
   border-radius: 0;
 }
 h3 {
   color: #2196f3;
   padding: 0 0 16px 0;
+}
+
+ul {
+  margin-bottom: 12px;
+  margin-top: -4px;
+  li {
+    list-style: circle;
+    list-style-position: inside;
+    padding-left: 16px;
+  }
+}
+$almost-black: rgba(0, 0, 0, 0.87);
+
+h2 {
+  color: $almost-black;
+  padding: 0;
+}
+
+.date {
+  color: $light-gray;
+}
+
+.test {
+  display: inline-block;
+  background-color: #2196f3;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 9px;
+  /* margin-bottom: 8px; */
+  font-size: 12px;
+  font-weight: 500;
 }
