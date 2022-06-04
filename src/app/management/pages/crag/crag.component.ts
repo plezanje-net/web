@@ -57,7 +57,7 @@ export class CragComponent implements OnInit {
 
         if (
           !user.roles.includes('admin') &&
-          !['user', 'proposal'].includes(this.crag.status)
+          this.crag.publishStatus == 'published'
         ) {
           this.router.navigate([
             `/admin/uredi-plezalisce/${this.crag.id}/sektorji`,

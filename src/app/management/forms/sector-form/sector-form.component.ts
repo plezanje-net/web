@@ -26,19 +26,10 @@ export interface SectorFormComponentData {
 export class SectorFormComponent implements OnInit {
   saving = false;
 
-  statusOptions: Registry[] = [
-    { value: 'user', label: 'Samo zame' },
-    { value: 'proposal', label: 'Predlagaj uredništvu' },
-    { value: 'public', label: 'Vidijo vsi' },
-    { value: 'hidden', label: 'Samo za prijavljene' },
-    { value: 'admin', label: 'Samo za admine' },
-    { value: 'archive', label: 'Arhivirano' },
-  ];
-
   form = new FormGroup({
     label: new FormControl(''),
     name: new FormControl(''),
-    status: new FormControl('public', Validators.required),
+    publishStatus: new FormControl('draft'),
   });
 
   constructor(
@@ -55,12 +46,6 @@ export class SectorFormComponent implements OnInit {
     if (this.data?.sector != null) {
       this.form.patchValue(this.data.sector);
     }
-
-    this.statusOptions = this.statusOptions.filter(
-      (status) =>
-        this.authService.currentUser.value.roles.includes('admin') ||
-        ['user', 'proposal'].includes(status.value)
-    );
   }
 
   save() {

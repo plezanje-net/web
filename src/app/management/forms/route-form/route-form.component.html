@@ -21,17 +21,6 @@
       <mat-label>Dolžina smeri</mat-label>
       <input matInput formControlName="length" mask="9999" suffix=" m" />
     </mat-form-field>
-
-    <mat-form-field fxFlex>
-      <mat-label>Status</mat-label>
-      <mat-select formControlName="status">
-        <mat-option
-          *ngFor="let option of statusOptions"
-          [value]="option.value"
-          >{{ option.label }}</mat-option
-        >
-      </mat-select>
-    </mat-form-field>
   </div>
   <div
     fxLayout="row"

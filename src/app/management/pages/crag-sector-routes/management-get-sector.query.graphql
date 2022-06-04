@@ -23,7 +23,7 @@ query ManagementGetSector($id: String!) {
       slug
       length
       name
-      status
+      publishStatus
       isProject
       position
       routeType {

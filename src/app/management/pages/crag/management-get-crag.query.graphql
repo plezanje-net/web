@@ -2,7 +2,8 @@ query ManagementGetCrag($id: String!) {
   crag(id: $id) {
     slug
     type
-    status
+    publishStatus
+    isHidden
     orientation
     defaultGradingSystem {
       id

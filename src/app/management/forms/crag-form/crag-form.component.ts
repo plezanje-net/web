@@ -38,8 +38,9 @@ export class CragFormComponent implements OnInit, OnDestroy {
     description: new FormControl(),
     areaId: new FormControl(),
     countryId: new FormControl(null, Validators.required),
-    status: new FormControl(null, Validators.required),
+    isHidden: new FormControl(false),
     defaultGradingSystemId: new FormControl(null, Validators.required),
+    publishStatus: new FormControl('draft'),
   });
 
   loading: boolean = false;
@@ -60,33 +61,6 @@ export class CragFormComponent implements OnInit, OnDestroy {
     {
       value: 'alpine',
       label: 'Alpinizem',
-    },
-  ];
-
-  statuses: Registry[] = [
-    {
-      value: 'user',
-      label: 'Samo zame',
-    },
-    {
-      value: 'proposal',
-      label: 'Predlagaj uredništvu',
-    },
-    {
-      value: 'admin',
-      label: 'Vidno administratorjem',
-    },
-    {
-      value: 'archive',
-      label: 'Arhivirano',
-    },
-    {
-      value: 'hidden',
-      label: 'Vidno prijavljenim',
-    },
-    {
-      value: 'public',
-      label: 'Vidno vsem',
     },
   ];
 
@@ -141,6 +115,7 @@ export class CragFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.authService.currentUser.subscribe((u) => (this.user = u));
+
     if (this.crag != null) {
       this.cragForm.patchValue({
         ...this.crag,
@@ -177,12 +152,6 @@ export class CragFormComponent implements OnInit, OnDestroy {
       }
     );
     this.subscriptions.push(countrySub);
-
-    this.statuses = this.statuses.filter(
-      (status) =>
-        this.authService.currentUser.value.roles.includes('admin') ||
-        ['user', 'proposal'].includes(status.value)
-    );
   }
 
   ngOnDestroy(): void {

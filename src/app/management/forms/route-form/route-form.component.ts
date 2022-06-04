@@ -40,7 +40,7 @@ export interface RouteFormValues {
   defaultGradingSystemId?: string;
   routeTypeId?: string;
   addAnother?: boolean;
-  status?: string;
+  publishStatus?: string;
 }
 
 @Component({
@@ -64,7 +64,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
     position: new FormControl(),
     sectorId: new FormControl(),
     addAnother: new FormControl(false),
-    status: new FormControl('public', Validators.required),
+    publishStatus: new FormControl('draft'),
   });
 
   gradingSystems: GradingSystem[];
@@ -77,15 +77,6 @@ export class RouteFormComponent implements OnInit, OnDestroy {
     { value: 'boulder', label: 'Balvan' },
     { value: 'alpine', label: 'Alpinistična' },
     { value: 'combined', label: 'Kombinirana' },
-  ];
-
-  statusOptions: Registry[] = [
-    { value: 'user', label: 'Samo zame' },
-    { value: 'proposal', label: 'Predlagaj uredništvu' },
-    { value: 'public', label: 'Vidijo vsi' },
-    { value: 'hidden', label: 'Samo za prijavljene' },
-    { value: 'admin', label: 'Samo za admine' },
-    { value: 'archive', label: 'Arhivirano' },
   ];
 
   difficultyOptions: Grade[] = [];
@@ -109,12 +100,6 @@ export class RouteFormComponent implements OnInit, OnDestroy {
 
       this.gradingSystemsLoaded();
     });
-
-    this.statusOptions = this.statusOptions.filter(
-      (status) =>
-        this.authService.currentUser.value.roles.includes('admin') ||
-        ['user', 'proposal'].includes(status.value)
-    );
   }
 
   gradingSystemsLoaded() {
@@ -264,7 +249,6 @@ export class RouteFormComponent implements OnInit, OnDestroy {
             length: value.length,
             routeTypeId: value.routeTypeId,
             defaultGradingSystemId: value.defaultGradingSystemId,
-            publishStatus: value.status,
           },
         })
         .subscribe({
@@ -283,7 +267,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
             defaultGradingSystemId: value.defaultGradingSystemId,
             position: this.data.values.position,
             sectorId: this.data.values.sectorId,
-            publishStatus: value.status,
+            publishStatus: this.data.values.publishStatus,
           },
         })
         .subscribe({
