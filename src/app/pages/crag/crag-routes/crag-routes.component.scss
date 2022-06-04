@@ -74,7 +74,11 @@ table {
   border-collapse: separate;
 
   tr {
-    height: 42px;
+    // +1 to accomodate top border on tds (except 1st row which 'uses' border of th)
+    height: 43px;
+    &:first-child {
+      height: 42px;
+    }
   }
 
   thead tr {
