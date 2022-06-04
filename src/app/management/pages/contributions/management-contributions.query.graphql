@@ -1,0 +1,36 @@
+query ManagementContributions {
+  contributions {
+    user {
+      id
+    }
+    entity
+    crag {
+      id
+      name
+      slug
+    }
+    sector {
+      id
+      name
+      crag {
+        name
+        slug
+      }
+    }
+    route {
+      id
+      name
+      slug
+      crag {
+        name
+        slug
+      }
+      sector {
+        id
+        name
+      }
+    }
+    id
+    status
+  }
+}

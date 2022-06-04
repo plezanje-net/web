@@ -25,6 +25,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CragSectorRoutesComponent } from './pages/crag-sector-routes/crag-sector-routes.component';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { ContributionsComponent } from './pages/contributions/contributions.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { NgxMaskModule, IConfig } from 'ngx-mask';
     RouteFormComponent,
     CragSectorsComponent,
     CragSectorRoutesComponent,
+    ContributionsComponent,
   ],
   imports: [
     CommonModule,

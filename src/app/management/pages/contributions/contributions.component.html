@@ -1,0 +1,57 @@
+<div class="white-back mt-16">
+  <div
+    class="container py-8"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+    fxLayout.lt-sm="column"
+  >
+    <div>
+      <h1>Odprti prispevki</h1>
+    </div>
+  </div>
+</div>
+<div class="container mt-16">
+  <app-loader *ngIf="loading"></app-loader>
+  <div *ngIf="!loading && error">Pri nalaganju je prišlo do napake.</div>
+  <div class="card" *ngIf="!loading && !error">
+    <div
+      *ngFor="let contribution of contributions"
+      fxLayout="row"
+      fxLayoutAlign="stretch center"
+      fxLayoutGap="8px"
+      class="row"
+    >
+      <div fxFlex="100px">{{ entityNames[contribution.entity] }}</div>
+      <div fxFlex="100">
+        <ng-container *ngIf="contribution.crag">
+          <a
+            [routerLink]="['/plezalisce', contribution.crag.slug]"
+            fxFlex="200px"
+            >{{ contribution.crag.name }}</a
+          >
+        </ng-container>
+        <ng-container *ngIf="contribution.sector">
+          <a
+            [routerLink]="['/plezalisce', contribution.sector.crag.slug]"
+            fxFlex="200px"
+            >{{ contribution.sector.crag.name }}</a
+          >
+          <div>{{ contribution.sector.name }}</div>
+        </ng-container>
+        <ng-container *ngIf="contribution.route">
+          <a
+            [routerLink]="['/plezalisce', contribution.route.crag.slug]"
+            fxFlex="200px"
+            >{{ contribution.route.crag.name }}</a
+          >
+          <div>{{ contribution.route.name }}</div>
+        </ng-container>
+      </div>
+      <div>
+        <button mat-button>
+          {{ statusName(contribution.status) }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
