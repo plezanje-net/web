@@ -1,9 +1,6 @@
 <ng-container *ngIf="!loading">
   <div class="select-columns-and-sort-wrap mt-16">
-    <mat-form-field
-      class="no-hint"
-      [ngClass]="{ 'max-half': availableWidth >= tableWidth }"
-    >
+    <mat-form-field class="no-hint">
       <mat-label>Prikaži stolpce</mat-label>
       <mat-select
         [(value)]="shownColumns"
@@ -62,377 +59,245 @@
         </ng-container>
       </mat-select>
     </mat-form-field>
+
+    <mat-form-field class="no-hint">
+      <mat-label>Išči po seznamu</mat-label>
+      <input matInput autofocus [formControl]="search" autocomplete="off" />
+    </mat-form-field>
   </div>
 
   <div *ngFor="let sector of sectors; let sectorIndex = index">
-    <h3 *ngIf="sector.label || sector.name" class="sector-heading">
-      {{ sector.label }}
-      <span>{{ sector.name != "" ? " - " + sector.name : "" }}</span>
-    </h3>
+    <ng-container *ngIf="sector.someRoutesShown">
+      <h3 *ngIf="sector.label || sector.name" class="sector-heading">
+        {{ sector.label }}
+        <span>{{ sector.name != "" ? " - " + sector.name : "" }}</span>
+      </h3>
 
-    <!-- Table view -->
-    <table *ngIf="availableWidth >= tableWidth" class="shadow mt-16">
-      <thead>
-        <tr>
-          <th class="checkbox">
-            <app-sortable-header-field
-              field="position"
-              label="#"
-              [currentlySortedField]="sector.sortedField"
-              sortIndication="highlight"
-              [centered]="true"
-              (click)="onSortableHeaderClick(sectorIndex, 'position')"
-            ></app-sortable-header-field>
-          </th>
+      <!-- Table view -->
+      <table *ngIf="availableWidth >= tableWidth" class="shadow mt-16">
+        <thead>
+          <tr>
+            <th class="checkbox">
+              <app-sortable-header-field
+                field="position"
+                label="#"
+                [currentlySortedField]="sector.sortedField"
+                sortIndication="highlight"
+                [centered]="true"
+                (click)="onSortableHeaderClick(sectorIndex, 'position')"
+              ></app-sortable-header-field>
+            </th>
 
-          <th
-            class="name"
-            *ngIf="shownColumns.includes('name')"
-            [ngStyle]="{ 'min-width.px': allColumns.name.width }"
-          >
-            <app-sortable-header-field
-              field="name"
-              [label]="allColumns.name.tableLabel"
-              [currentlySortedField]="sector.sortedField"
-              [currentSortDirection]="sector.sortedDirection"
-              sortIndication="arrows"
-              (click)="onSortableHeaderClick(sectorIndex, 'name')"
-            ></app-sortable-header-field>
-          </th>
+            <th
+              class="name"
+              *ngIf="shownColumns.includes('name')"
+              [ngStyle]="{ 'min-width.px': allColumns.name.width }"
+            >
+              <app-sortable-header-field
+                field="name"
+                [label]="allColumns.name.tableLabel"
+                [currentlySortedField]="sector.sortedField"
+                [currentSortDirection]="sector.sortedDirection"
+                sortIndication="arrows"
+                (click)="onSortableHeaderClick(sectorIndex, 'name')"
+              ></app-sortable-header-field>
+            </th>
 
-          <th
-            class="length"
-            *ngIf="!sector.bouldersOnly && shownColumns.includes('length')"
-            [ngStyle]="{ 'width.px': allColumns.length.width }"
-          >
-            <app-sortable-header-field
-              field="length"
-              [label]="allColumns.length.tableLabel"
-              [currentlySortedField]="sector.sortedField"
-              [currentSortDirection]="sector.sortedDirection"
-              sortIndication="arrows"
-              (click)="onSortableHeaderClick(sectorIndex, 'length')"
-            ></app-sortable-header-field>
-          </th>
+            <th
+              class="length"
+              *ngIf="!sector.bouldersOnly && shownColumns.includes('length')"
+              [ngStyle]="{ 'width.px': allColumns.length.width }"
+            >
+              <app-sortable-header-field
+                field="length"
+                [label]="allColumns.length.tableLabel"
+                [currentlySortedField]="sector.sortedField"
+                [currentSortDirection]="sector.sortedDirection"
+                sortIndication="arrows"
+                (click)="onSortableHeaderClick(sectorIndex, 'length')"
+              ></app-sortable-header-field>
+            </th>
 
-          <th
-            class="grade"
-            *ngIf="shownColumns.includes('difficulty')"
-            [ngStyle]="{ 'width.px': allColumns.difficulty.width }"
-          >
-            <app-sortable-header-field
-              field="difficulty"
-              [label]="allColumns.difficulty.tableLabel"
-              [currentlySortedField]="sector.sortedField"
-              [currentSortDirection]="sector.sortedDirection"
-              sortIndication="arrows"
-              (click)="onSortableHeaderClick(sectorIndex, 'difficulty')"
-            ></app-sortable-header-field>
-          </th>
+            <th
+              class="grade"
+              *ngIf="shownColumns.includes('difficulty')"
+              [ngStyle]="{ 'width.px': allColumns.difficulty.width }"
+            >
+              <app-sortable-header-field
+                field="difficulty"
+                [label]="allColumns.difficulty.tableLabel"
+                [currentlySortedField]="sector.sortedField"
+                [currentSortDirection]="sector.sortedDirection"
+                sortIndication="arrows"
+                (click)="onSortableHeaderClick(sectorIndex, 'difficulty')"
+              ></app-sortable-header-field>
+            </th>
 
-          <th
-            class="nr-ticks"
-            *ngIf="shownColumns.includes('nrTicks')"
-            [ngStyle]="{ 'width.px': allColumns.nrTicks.width }"
-          >
-            <app-sortable-header-field
-              field="nrTicks"
-              [label]="allColumns.nrTicks.tableLabel"
-              [currentlySortedField]="sector.sortedField"
-              [currentSortDirection]="sector.sortedDirection"
-              sortIndication="arrows"
-              (click)="onSortableHeaderClick(sectorIndex, 'nrTicks')"
-            ></app-sortable-header-field>
-          </th>
+            <th
+              class="nr-ticks"
+              *ngIf="shownColumns.includes('nrTicks')"
+              [ngStyle]="{ 'width.px': allColumns.nrTicks.width }"
+            >
+              <app-sortable-header-field
+                field="nrTicks"
+                [label]="allColumns.nrTicks.tableLabel"
+                [currentlySortedField]="sector.sortedField"
+                [currentSortDirection]="sector.sortedDirection"
+                sortIndication="arrows"
+                (click)="onSortableHeaderClick(sectorIndex, 'nrTicks')"
+              ></app-sortable-header-field>
+            </th>
 
-          <th
-            class="nr-tries"
-            *ngIf="shownColumns.includes('nrTries')"
-            [ngStyle]="{ 'width.px': allColumns.nrTries.width }"
-          >
-            <app-sortable-header-field
-              field="nrTries"
-              [label]="allColumns.nrTries.tableLabel"
-              [currentlySortedField]="sector.sortedField"
-              [currentSortDirection]="sector.sortedDirection"
-              sortIndication="arrows"
-              (click)="onSortableHeaderClick(sectorIndex, 'nrTries')"
-            ></app-sortable-header-field>
-          </th>
+            <th
+              class="nr-tries"
+              *ngIf="shownColumns.includes('nrTries')"
+              [ngStyle]="{ 'width.px': allColumns.nrTries.width }"
+            >
+              <app-sortable-header-field
+                field="nrTries"
+                [label]="allColumns.nrTries.tableLabel"
+                [currentlySortedField]="sector.sortedField"
+                [currentSortDirection]="sector.sortedDirection"
+                sortIndication="arrows"
+                (click)="onSortableHeaderClick(sectorIndex, 'nrTries')"
+              ></app-sortable-header-field>
+            </th>
 
-          <th
-            class="nr-climbers"
-            *ngIf="shownColumns.includes('nrClimbers')"
-            [ngStyle]="{ 'width.px': allColumns.nrClimbers.width }"
-          >
-            <app-sortable-header-field
-              field="nrClimbers"
-              [label]="allColumns.nrClimbers.tableLabel"
-              [currentlySortedField]="sector.sortedField"
-              [currentSortDirection]="sector.sortedDirection"
-              sortIndication="arrows"
-              (click)="onSortableHeaderClick(sectorIndex, 'nrClimbers')"
-            ></app-sortable-header-field>
-          </th>
+            <th
+              class="nr-climbers"
+              *ngIf="shownColumns.includes('nrClimbers')"
+              [ngStyle]="{ 'width.px': allColumns.nrClimbers.width }"
+            >
+              <app-sortable-header-field
+                field="nrClimbers"
+                [label]="allColumns.nrClimbers.tableLabel"
+                [currentlySortedField]="sector.sortedField"
+                [currentSortDirection]="sector.sortedDirection"
+                sortIndication="arrows"
+                (click)="onSortableHeaderClick(sectorIndex, 'nrClimbers')"
+              ></app-sortable-header-field>
+            </th>
 
-          <th
-            class="icon"
-            *ngIf="shownColumns.includes('starRating')"
-            [ngStyle]="{
-              'width.px': allColumns.starRating.width,
-              'min-width.px': allColumns.starRating.width
-            }"
-          >
-            <app-sortable-header-field
-              field="starRating"
-              icon="star"
-              [currentlySortedField]="sector.sortedField"
-              [currentSortDirection]="sector.sortedDirection"
-              sortIndication="highlight"
-              [centered]="true"
-              (click)="onSortableHeaderClick(sectorIndex, 'starRating')"
-            ></app-sortable-header-field>
-          </th>
+            <th
+              class="icon"
+              *ngIf="shownColumns.includes('starRating')"
+              [ngStyle]="{
+                'width.px': allColumns.starRating.width,
+                'min-width.px': allColumns.starRating.width
+              }"
+            >
+              <app-sortable-header-field
+                field="starRating"
+                icon="star"
+                [currentlySortedField]="sector.sortedField"
+                [currentSortDirection]="sector.sortedDirection"
+                sortIndication="highlight"
+                [centered]="true"
+                (click)="onSortableHeaderClick(sectorIndex, 'starRating')"
+              ></app-sortable-header-field>
+            </th>
 
-          <th
-            class="icon"
-            *ngIf="shownColumns.includes('multipitch')"
-            [ngStyle]="{
-              'width.px': allColumns.multipitch.width,
-              'min-width.px': allColumns.multipitch.width
-            }"
-          >
-            <app-sortable-header-field
-              field="multipitch"
-              svgIcon="multipitch"
-              [currentlySortedField]="sector.sortedField"
-              [currentSortDirection]="sector.sortedDirection"
-              sortIndication="highlight"
-              [centered]="true"
-              (click)="onSortableHeaderClick(sectorIndex, 'multipitch')"
-            ></app-sortable-header-field>
-          </th>
-
-          <th
-            class="icon"
-            *ngIf="shownColumns.includes('comments')"
-            [ngStyle]="{
-              'width.px': allColumns.comments.width,
-              'min-width.px': allColumns.comments.width
-            }"
-          >
-            <app-sortable-header-field
-              field="comments"
-              icon="comment"
-              [currentlySortedField]="sector.sortedField"
-              [currentSortDirection]="sector.sortedDirection"
-              sortIndication="highlight"
-              [centered]="true"
-              (click)="onSortableHeaderClick(sectorIndex, 'comments')"
-            ></app-sortable-header-field>
-          </th>
-
-          <th
-            class="icon"
-            *ngIf="shownColumns.includes('myAscents')"
-            [ngStyle]="{
-              'width.px': allColumns.myAscents.width,
-              'min-width.px': allColumns.myAscents.width
-            }"
-          >
-            <app-sortable-header-field
-              field="myAscents"
-              icon="check"
-              [currentlySortedField]="sector.sortedField"
-              [currentSortDirection]="sector.sortedDirection"
-              sortIndication="highlight"
-              [centered]="true"
-              (click)="onSortableHeaderClick(sectorIndex, 'myAscents')"
-            ></app-sortable-header-field>
-          </th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <ng-container *ngFor="let route of sector.routes">
-          <tr
-            (click)="expandRow(route.id)"
-            [ngClass]="{ selected: route.id === expandedRowId }"
-          >
-            <td class="checkbox">
-              <div class="route-checkbox">
-                <mat-checkbox
-                  (change)="changeSelection(route)"
-                  (click)="onCheckBoxClick($event)"
-                  [checked]="selectedRoutesIds.indexOf(route.id) > -1"
-                >
-                </mat-checkbox>
-              </div>
-            </td>
-
-            <td class="name" *ngIf="shownColumns.includes('name')">
-              <a
-                [routerLink]="
-                  section === 'alpinism'
-                    ? ['/alpinizem', 'stena', crag.slug, 'smer', route.slug]
-                    : ['/plezalisce', crag.slug, 'smer', route.slug]
-                "
-                (click)="$event.stopPropagation()"
-                >{{ route.name }}</a
-              >
-            </td>
-
-            <td *ngIf="!sector.bouldersOnly && shownColumns.includes('length')">
-              <ng-container
-                *ngIf="route.routeType.id !== 'boulder' && route.length"
-                >{{ route.length }} m</ng-container
-              >
-            </td>
-
-            <td *ngIf="shownColumns.includes('difficulty')">
-              <span *ngIf="route.isProject">P</span>
-              <app-grade
-                *ngIf="!route.isProject"
-                [difficulty]="route.difficulty"
-                [showModifier]="true"
-                [gradingSystemId]="route.defaultGradingSystem.id"
-              ></app-grade>
-            </td>
-
-            <td *ngIf="shownColumns.includes('nrTicks')">
-              {{ route.nrTicks }}
-            </td>
-
-            <td *ngIf="shownColumns.includes('nrTries')">
-              {{ route.nrTries }}
-            </td>
-
-            <td *ngIf="shownColumns.includes('nrClimbers')">
-              {{ route.nrClimbers }}
-            </td>
-
-            <td *ngIf="shownColumns.includes('starRating')" class="icon">
-              <mat-icon *ngIf="math.round(route.starRating) == 1" title="Lepa">
-                star_border
-              </mat-icon>
-              <mat-icon
-                *ngIf="math.round(route.starRating) == 2"
-                title="Čudovita"
-              >
-                star
-              </mat-icon>
-            </td>
-
-            <td *ngIf="shownColumns.includes('multipitch')" class="icon">
-              <mat-icon
-                *ngIf="route.pitches.length > 0"
+            <th
+              class="icon"
+              *ngIf="shownColumns.includes('multipitch')"
+              [ngStyle]="{
+                'width.px': allColumns.multipitch.width,
+                'min-width.px': allColumns.multipitch.width
+              }"
+            >
+              <app-sortable-header-field
+                field="multipitch"
                 svgIcon="multipitch"
-                title="Večraztežajna"
-              ></mat-icon>
-            </td>
+                [currentlySortedField]="sector.sortedField"
+                [currentSortDirection]="sector.sortedDirection"
+                sortIndication="highlight"
+                [centered]="true"
+                (click)="onSortableHeaderClick(sectorIndex, 'multipitch')"
+              ></app-sortable-header-field>
+            </th>
 
-            <td *ngIf="shownColumns.includes('comments')" class="icon">
-              <mat-icon *ngIf="route.comments.length > 0" title="Ima komentarje"
-                >comment</mat-icon
-              >
-            </td>
+            <th
+              class="icon"
+              *ngIf="shownColumns.includes('comments')"
+              [ngStyle]="{
+                'width.px': allColumns.comments.width,
+                'min-width.px': allColumns.comments.width
+              }"
+            >
+              <app-sortable-header-field
+                field="comments"
+                icon="comment"
+                [currentlySortedField]="sector.sortedField"
+                [currentSortDirection]="sector.sortedDirection"
+                sortIndication="highlight"
+                [centered]="true"
+                (click)="onSortableHeaderClick(sectorIndex, 'comments')"
+              ></app-sortable-header-field>
+            </th>
 
-            <td *ngIf="shownColumns.includes('myAscents')" class="icon">
-              <app-ascent-type
-                *ngIf="ascents[route.id] != null"
-                [value]="ascents[route.id]"
-                displayType="icon"
-              >
-              </app-ascent-type>
-            </td>
+            <th
+              class="icon"
+              *ngIf="shownColumns.includes('myAscents')"
+              [ngStyle]="{
+                'width.px': allColumns.myAscents.width,
+                'min-width.px': allColumns.myAscents.width
+              }"
+            >
+              <app-sortable-header-field
+                field="myAscents"
+                icon="check"
+                [currentlySortedField]="sector.sortedField"
+                [currentSortDirection]="sector.sortedDirection"
+                sortIndication="highlight"
+                [centered]="true"
+                (click)="onSortableHeaderClick(sectorIndex, 'myAscents')"
+              ></app-sortable-header-field>
+            </th>
           </tr>
+        </thead>
 
-          <tr class="details-row selected">
-            <td [attr.colspan]="shownColumns.length + 1">
-              <div
-                class="route-expanding-container"
-                [ngStyle]="{
-                  'max-height.px':
-                    route.id === expandedRowId ? expandedRowHeight : 0
-                }"
+        <tbody>
+          <ng-container *ngFor="let route of sector.routes">
+            <ng-container *ngIf="route.show">
+              <tr
+                (click)="expandRow(route.id)"
+                [ngClass]="{ selected: route.id === expandedRowId }"
               >
-                <div
+                <td class="checkbox">
+                  <div class="route-checkbox">
+                    <mat-checkbox
+                      (change)="changeSelection(route)"
+                      (click)="onCheckBoxClick($event)"
+                      [checked]="selectedRoutesIds.indexOf(route.id) > -1"
+                    >
+                    </mat-checkbox>
+                  </div>
+                </td>
+
+                <td class="name" *ngIf="shownColumns.includes('name')">
+                  <a
+                    [routerLink]="
+                      section === 'alpinism'
+                        ? ['/alpinizem', 'stena', crag.slug, 'smer', route.slug]
+                        : ['/plezalisce', crag.slug, 'smer', route.slug]
+                    "
+                    (click)="$event.stopPropagation()"
+                    >{{ route.name }}</a
+                  >
+                </td>
+
+                <td
                   *ngIf="
-                    expandedRowId === route.id ||
-                    previousExpandedRowId === route.id
+                    !sector.bouldersOnly && shownColumns.includes('length')
                   "
-                  class="route-expanding-details"
                 >
-                  <app-crag-route-preview
-                    [routeId]="route.id"
-                    (heightChangeEvent)="onPreviewHeightEvent($event)"
-                  ></app-crag-route-preview>
-                </div>
-              </div>
-            </td>
-          </tr>
-        </ng-container>
-      </tbody>
-    </table>
+                  <ng-container
+                    *ngIf="route.routeType.id !== 'boulder' && route.length"
+                    >{{ route.length }} m</ng-container
+                  >
+                </td>
 
-    <!-- Compact view -->
-    <div *ngIf="availableWidth < tableWidth" class="compact shadow mt-16">
-      <ng-container *ngFor="let route of sector.routes">
-        <div
-          (click)="expandRow(route.id)"
-          class="route"
-          [ngClass]="{ selected: route.id === expandedRowId }"
-        >
-          <div class="checkbox">
-            <mat-checkbox
-              (change)="changeSelection(route)"
-              (click)="onCheckBoxClick($event)"
-              [checked]="selectedRoutesIds.indexOf(route.id) > -1"
-            >
-            </mat-checkbox>
-          </div>
-          <div class="info-wrap">
-            <div class="info-row-first">
-              <div *ngIf="shownColumns.includes('name')" class="name">
-                <a
-                  [routerLink]="
-                    section === 'alpinism'
-                      ? ['/alpinizem', 'stena', crag.slug, 'smer', route.slug]
-                      : ['/plezalisce', crag.slug, 'smer', route.slug]
-                  "
-                  (click)="$event.stopPropagation()"
-                  >{{ route.name }}</a
-                >
-              </div>
-
-              <div *ngIf="shownColumns.includes('starRating')" class="star">
-                <mat-icon
-                  *ngIf="math.round(route.starRating) == 1"
-                  title="Lepa"
-                >
-                  star_border
-                </mat-icon>
-                <mat-icon
-                  *ngIf="math.round(route.starRating) == 2"
-                  title="Čudovita"
-                >
-                  star
-                </mat-icon>
-              </div>
-            </div>
-            <div
-              *ngIf="
-                shownColumns.includes('difficulty') ||
-                shownColumns.includes('length') ||
-                shownColumns.includes('multipitch') ||
-                shownColumns.includes('comments') ||
-                shownColumns.includes('myAscents')
-              "
-              class="info-row-second"
-            >
-              <div class="grade-length-wrap">
-                <div *ngIf="shownColumns.includes('difficulty')" class="grade">
-                  <!-- 77 -->
+                <td *ngIf="shownColumns.includes('difficulty')">
                   <span *ngIf="route.isProject">P</span>
                   <app-grade
                     *ngIf="!route.isProject"
@@ -440,95 +305,261 @@
                     [showModifier]="true"
                     [gradingSystemId]="route.defaultGradingSystem.id"
                   ></app-grade>
-                </div>
+                </td>
 
-                <div class="length">
-                  <ng-container
-                    *ngIf="
-                      route.routeType.id !== 'boulder' &&
-                      route.length &&
-                      shownColumns.includes('length')
-                    "
-                    >{{ route.length }} m</ng-container
-                  >
-                </div>
-              </div>
+                <td *ngIf="shownColumns.includes('nrTicks')">
+                  {{ route.nrTicks }}
+                </td>
 
-              <div class="multipitch-comments-my-ascents-wrap">
-                <div
-                  *ngIf="shownColumns.includes('multipitch')"
-                  class="multipitch"
-                >
+                <td *ngIf="shownColumns.includes('nrTries')">
+                  {{ route.nrTries }}
+                </td>
+
+                <td *ngIf="shownColumns.includes('nrClimbers')">
+                  {{ route.nrClimbers }}
+                </td>
+
+                <td *ngIf="shownColumns.includes('starRating')" class="icon">
                   <mat-icon
-                    svgIcon="multipitch"
+                    *ngIf="math.round(route.starRating) == 1"
+                    title="Lepa"
+                  >
+                    star_border
+                  </mat-icon>
+                  <mat-icon
+                    *ngIf="math.round(route.starRating) == 2"
+                    title="Čudovita"
+                  >
+                    star
+                  </mat-icon>
+                </td>
+
+                <td *ngIf="shownColumns.includes('multipitch')" class="icon">
+                  <mat-icon
                     *ngIf="route.pitches.length > 0"
+                    svgIcon="multipitch"
                     title="Večraztežajna"
                   ></mat-icon>
-                </div>
-                <div *ngIf="shownColumns.includes('comments')" class="comments">
+                </td>
+
+                <td *ngIf="shownColumns.includes('comments')" class="icon">
                   <mat-icon
                     *ngIf="route.comments.length > 0"
                     title="Ima komentarje"
                     >comment</mat-icon
                   >
-                </div>
-                <div
-                  *ngIf="shownColumns.includes('myAscents')"
-                  class="my-ascents"
-                >
+                </td>
+
+                <td *ngIf="shownColumns.includes('myAscents')" class="icon">
                   <app-ascent-type
                     *ngIf="ascents[route.id] != null"
                     [value]="ascents[route.id]"
                     displayType="icon"
                   >
                   </app-ascent-type>
+                </td>
+              </tr>
+
+              <tr class="details-row selected">
+                <td [attr.colspan]="shownColumns.length + 1">
+                  <div
+                    class="route-expanding-container"
+                    [ngStyle]="{
+                      'max-height.px':
+                        route.id === expandedRowId ? expandedRowHeight : 0
+                    }"
+                  >
+                    <div
+                      *ngIf="
+                        expandedRowId === route.id ||
+                        previousExpandedRowId === route.id
+                      "
+                      class="route-expanding-details"
+                    >
+                      <app-crag-route-preview
+                        [routeId]="route.id"
+                        (heightChangeEvent)="onPreviewHeightEvent($event)"
+                      ></app-crag-route-preview>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
+        </tbody>
+      </table>
+
+      <!-- Compact view -->
+      <div *ngIf="availableWidth < tableWidth" class="compact shadow mt-16">
+        <ng-container *ngFor="let route of sector.routes">
+          <ng-container *ngIf="route.show">
+            <div
+              (click)="expandRow(route.id)"
+              class="route"
+              [ngClass]="{ selected: route.id === expandedRowId }"
+            >
+              <div class="checkbox">
+                <mat-checkbox
+                  (change)="changeSelection(route)"
+                  (click)="onCheckBoxClick($event)"
+                  [checked]="selectedRoutesIds.indexOf(route.id) > -1"
+                >
+                </mat-checkbox>
+              </div>
+              <div class="info-wrap">
+                <div class="info-row-first">
+                  <div *ngIf="shownColumns.includes('name')" class="name">
+                    <a
+                      [routerLink]="
+                        section === 'alpinism'
+                          ? [
+                              '/alpinizem',
+                              'stena',
+                              crag.slug,
+                              'smer',
+                              route.slug
+                            ]
+                          : ['/plezalisce', crag.slug, 'smer', route.slug]
+                      "
+                      (click)="$event.stopPropagation()"
+                      >{{ route.name }}</a
+                    >
+                  </div>
+
+                  <div *ngIf="shownColumns.includes('starRating')" class="star">
+                    <mat-icon
+                      *ngIf="math.round(route.starRating) == 1"
+                      title="Lepa"
+                    >
+                      star_border
+                    </mat-icon>
+                    <mat-icon
+                      *ngIf="math.round(route.starRating) == 2"
+                      title="Čudovita"
+                    >
+                      star
+                    </mat-icon>
+                  </div>
+                </div>
+                <div
+                  *ngIf="
+                    shownColumns.includes('difficulty') ||
+                    shownColumns.includes('length') ||
+                    shownColumns.includes('multipitch') ||
+                    shownColumns.includes('comments') ||
+                    shownColumns.includes('myAscents')
+                  "
+                  class="info-row-second"
+                >
+                  <div class="grade-length-wrap">
+                    <div
+                      *ngIf="shownColumns.includes('difficulty')"
+                      class="grade"
+                    >
+                      <!-- 77 -->
+                      <span *ngIf="route.isProject">P</span>
+                      <app-grade
+                        *ngIf="!route.isProject"
+                        [difficulty]="route.difficulty"
+                        [showModifier]="true"
+                        [gradingSystemId]="route.defaultGradingSystem.id"
+                      ></app-grade>
+                    </div>
+
+                    <div class="length">
+                      <ng-container
+                        *ngIf="
+                          route.routeType.id !== 'boulder' &&
+                          route.length &&
+                          shownColumns.includes('length')
+                        "
+                        >{{ route.length }} m</ng-container
+                      >
+                    </div>
+                  </div>
+
+                  <div class="multipitch-comments-my-ascents-wrap">
+                    <div
+                      *ngIf="shownColumns.includes('multipitch')"
+                      class="multipitch"
+                    >
+                      <mat-icon
+                        svgIcon="multipitch"
+                        *ngIf="route.pitches.length > 0"
+                        title="Večraztežajna"
+                      ></mat-icon>
+                    </div>
+                    <div
+                      *ngIf="shownColumns.includes('comments')"
+                      class="comments"
+                    >
+                      <mat-icon
+                        *ngIf="route.comments.length > 0"
+                        title="Ima komentarje"
+                        >comment</mat-icon
+                      >
+                    </div>
+                    <div
+                      *ngIf="shownColumns.includes('myAscents')"
+                      class="my-ascents"
+                    >
+                      <app-ascent-type
+                        *ngIf="ascents[route.id] != null"
+                        [value]="ascents[route.id]"
+                        displayType="icon"
+                      >
+                      </app-ascent-type>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="info-row-third">
+                  <span *ngIf="shownColumns.includes('nrTicks')"
+                    >{{ route.nrTicks | pluralizeNoun: "uspešen vzpon"
+                    }}<ng-container
+                      *ngIf="
+                        shownColumns.includes('nrTries') ||
+                        shownColumns.includes('nrClimbers')
+                      "
+                      >,
+                    </ng-container></span
+                  >
+                  <span *ngIf="shownColumns.includes('nrTries')"
+                    >{{ route.nrTries | pluralizeNoun: "poskus"
+                    }}<ng-container *ngIf="shownColumns.includes('nrClimbers')"
+                      >,
+                    </ng-container></span
+                  >
+                  <span *ngIf="shownColumns.includes('nrClimbers')">{{
+                    route.nrClimbers | pluralizeNoun: "plezalec"
+                  }}</span>
                 </div>
               </div>
             </div>
 
-            <div class="info-row-third">
-              <span *ngIf="shownColumns.includes('nrTicks')"
-                >{{ route.nrTicks | pluralizeNoun: "uspešen vzpon"
-                }}<ng-container
-                  *ngIf="
-                    shownColumns.includes('nrTries') ||
-                    shownColumns.includes('nrClimbers')
-                  "
-                  >,
-                </ng-container></span
+            <div
+              class="route-expanding-container selected"
+              [ngStyle]="{
+                'max-height.px':
+                  route.id === expandedRowId ? expandedRowHeight : 0
+              }"
+            >
+              <div
+                *ngIf="
+                  expandedRowId === route.id ||
+                  previousExpandedRowId === route.id
+                "
+                class="route-expanding-details"
               >
-              <span *ngIf="shownColumns.includes('nrTries')"
-                >{{ route.nrTries | pluralizeNoun: "poskus"
-                }}<ng-container *ngIf="shownColumns.includes('nrClimbers')"
-                  >,
-                </ng-container></span
-              >
-              <span *ngIf="shownColumns.includes('nrClimbers')">{{
-                route.nrClimbers | pluralizeNoun: "plezalec"
-              }}</span>
+                <app-crag-route-preview
+                  [routeId]="route.id"
+                  (heightChangeEvent)="onPreviewHeightEvent($event)"
+                ></app-crag-route-preview>
+              </div>
             </div>
-          </div>
-        </div>
-
-        <div
-          class="route-expanding-container selected"
-          [ngStyle]="{
-            'max-height.px': route.id === expandedRowId ? expandedRowHeight : 0
-          }"
-        >
-          <div
-            *ngIf="
-              expandedRowId === route.id || previousExpandedRowId === route.id
-            "
-            class="route-expanding-details"
-          >
-            <app-crag-route-preview
-              [routeId]="route.id"
-              (heightChangeEvent)="onPreviewHeightEvent($event)"
-            ></app-crag-route-preview>
-          </div>
-        </div>
-      </ng-container>
-    </div>
+          </ng-container>
+        </ng-container>
+      </div>
+    </ng-container>
   </div>
 </ng-container>

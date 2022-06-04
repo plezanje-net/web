@@ -24,13 +24,11 @@
   gap: 16px;
   @media (min-width: $breakpoint-sm) {
     flex-direction: row;
-    .max-half {
-      max-width: 50%;
-    }
   }
 
   mat-form-field {
     width: 100%;
+    min-width: 0;
     &.hidden {
       display: none;
     }

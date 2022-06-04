@@ -16,6 +16,8 @@ import ActivitySelection from 'src/app/types/activity-selection.interface';
 import { Crag, MyCragSummaryGQL, Route, Sector } from 'src/generated/graphql';
 import { KeyValue } from '@angular/common';
 import { MatSelectChange } from '@angular/material/select';
+import { FormControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-crag-routes',
@@ -28,6 +30,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   sectors: (Sector & {
     sortedDirection?: number;
     sortedField?: string;
+    someRoutesShown: boolean;
   })[] = [];
 
   shownColumns = [
@@ -117,6 +120,8 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   tableWidth: number;
   availableWidth: number;
   sortAll = ['position', 1];
+  search = new FormControl();
+  searchSub: Subscription;
 
   selectedRoutes: Route[] = [];
   selectedRoutesIds: string[] = [];
@@ -146,9 +151,14 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     });
     this.hostResizeObserver.observe(this.hostElement.nativeElement);
 
-    // Make a copy (original is readonly and cannot be sorted)
+    // Make a copy (original is readonly and cannot be sorted or extended with fields)
     this.crag.sectors.forEach((sector) => {
-      this.sectors.push({ ...sector, routes: [...sector.routes] });
+      const routes = [];
+      sector.routes.forEach((route) => routes.push({ ...route, show: true }));
+      this.sectors.push({ ...sector, someRoutesShown: true, routes: routes });
+    });
+    this.searchSub = this.search.valueChanges.subscribe(() => {
+      this.filterRoutes();
     });
 
     this.section = this.router.url.includes('/alpinizem/stena')
@@ -175,6 +185,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.snackBar.dismiss();
     this.hostResizeObserver.disconnect();
+    this.searchSub.unsubscribe();
   }
 
   recalculateTableWidth() {
@@ -260,6 +271,29 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
         ? this.sectors[sectorIndex].sortedDirection * -1
         : this.sectors[sectorIndex].sortedDirection;
     });
+  }
+
+  filterRoutes(): void {
+    let searchTerm = this.search.value;
+    searchTerm = searchTerm.toLowerCase();
+    searchTerm = searchTerm.replace(/[cčć]/gi, '[cčć]');
+    searchTerm = searchTerm.replace(/[sš]/gi, '[sš]');
+    searchTerm = searchTerm.replace(/[zž]/gi, '[zž]');
+    const regExp = new RegExp(searchTerm);
+
+    this.sectors.forEach((sector) =>
+      sector.routes.forEach(
+        (route: Route & { show: boolean }) =>
+          (route.show = regExp.test(route.name.toLowerCase()))
+      )
+    );
+
+    this.sectors.forEach(
+      (sector) =>
+        (sector.someRoutesShown = sector.routes.some(
+          (route: Route & { show: boolean }) => route.show
+        ))
+    );
   }
 
   onCheckBoxClick(event: Event) {
