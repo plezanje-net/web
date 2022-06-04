@@ -48,7 +48,13 @@
             <button mat-button *ngIf="route.isProject">Projekt</button>
           </div>
 
-          <div fxFlex class="tools" fxLayout="row" fxLayoutAlign="start center">
+          <div
+            fxFlex
+            class="tools"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            *ngIf="canEdit(route)"
+          >
             <button mat-icon-button (click)="edit(route)">
               <mat-icon>edit</mat-icon>
             </button>

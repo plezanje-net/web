@@ -45,6 +45,9 @@ query ManagementGetSector($id: String!) {
         id
         number
       }
+      user {
+        id
+      }
     }
   }
 }

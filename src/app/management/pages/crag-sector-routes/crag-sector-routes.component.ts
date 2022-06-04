@@ -3,8 +3,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Params } from '@angular/router';
+import { User } from '@sentry/angular';
 import { Apollo } from 'apollo-angular';
 import { filter, map, Subscription, switchMap, take, tap } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 import {
   Crag,
   ManagementDeleteRouteGQL,
@@ -43,9 +45,13 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
+  user: User;
+  fullAccess = false;
+
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
+    private authService: AuthService,
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
     private sectorGQL: ManagementGetSectorGQL,
@@ -84,11 +90,20 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
         );
       });
 
+    this.user = this.authService.currentUser.value;
+
     this.subscriptions.push(sectorSub);
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
+  canEdit(route: Route): boolean {
+    return (
+      this.user.roles.includes('admin') ||
+      ['user', 'proposal'].includes(route.status)
+    );
   }
 
   drop(event: CdkDragDrop<string[]>) {

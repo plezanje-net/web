@@ -15,8 +15,10 @@ import {
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { User } from '@sentry/angular';
 import { Apollo } from 'apollo-angular';
 import { filter, Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 import { Registry } from 'src/app/types/registry';
 import {
   Grade,
@@ -38,6 +40,7 @@ export interface RouteFormValues {
   defaultGradingSystemId?: string;
   routeTypeId?: string;
   addAnother?: boolean;
+  status?: string;
 }
 
 @Component({
@@ -61,6 +64,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
     position: new FormControl(),
     sectorId: new FormControl(),
     addAnother: new FormControl(false),
+    status: new FormControl('public', Validators.required),
   });
 
   gradingSystems: GradingSystem[];
@@ -75,6 +79,15 @@ export class RouteFormComponent implements OnInit, OnDestroy {
     { value: 'combined', label: 'Kombinirana' },
   ];
 
+  statusOptions: Registry[] = [
+    { value: 'user', label: 'Samo zame' },
+    { value: 'proposal', label: 'Predlagaj uredništvu' },
+    { value: 'public', label: 'Vidijo vsi' },
+    { value: 'hidden', label: 'Samo za prijavljene' },
+    { value: 'admin', label: 'Samo za admine' },
+    { value: 'archive', label: 'Arhivirano' },
+  ];
+
   difficultyOptions: Grade[] = [];
 
   subscriptions: Subscription[] = [];
@@ -83,6 +96,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) private data: RouteFormComponentData,
     private dialogRef: MatDialogRef<RouteFormComponent>,
     private gradingSystemsService: GradingSystemsService,
+    private authService: AuthService,
     private createGQL: ManagementCreateRouteGQL,
     private updateGQL: ManagementUpdateRouteGQL,
     private apollo: Apollo,
@@ -95,6 +109,12 @@ export class RouteFormComponent implements OnInit, OnDestroy {
 
       this.gradingSystemsLoaded();
     });
+
+    this.statusOptions = this.statusOptions.filter(
+      (status) =>
+        this.authService.currentUser.value.roles.includes('admin') ||
+        ['user', 'proposal'].includes(status.value)
+    );
   }
 
   gradingSystemsLoaded() {
@@ -214,7 +234,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
       this.apollo.client.resetStore().then(() => {
         this.saving = false;
 
-        const { routeTypeId, defaultGradingSystemId } = value;
+        const { routeTypeId, defaultGradingSystemId, status } = value;
 
         this.dialogRef.close(
           value.addAnother
@@ -222,6 +242,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
                 addAnother: true,
                 routeTypeId,
                 defaultGradingSystemId,
+                status,
               }
             : null
         );
@@ -243,6 +264,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
             length: value.length,
             routeTypeId: value.routeTypeId,
             defaultGradingSystemId: value.defaultGradingSystemId,
+            status: value.status,
           },
         })
         .subscribe({
@@ -261,7 +283,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
             defaultGradingSystemId: value.defaultGradingSystemId,
             position: this.data.values.position,
             sectorId: this.data.values.sectorId,
-            status: 'public',
+            status: value.status,
           },
         })
         .subscribe({
