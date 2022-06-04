@@ -145,6 +145,15 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     if (sessionStorage.getItem('shownColumns')) {
       this.shownColumns = JSON.parse(sessionStorage.getItem('shownColumns'));
     }
+
+    // Hide length column if crag has only boulders
+    if (this.crag.sectors.every((sector) => sector.bouldersOnly)) {
+      delete this.allColumns.length;
+      this.shownColumns = this.shownColumns.filter(
+        (column) => column != 'length'
+      );
+    }
+
     this.recalculateTableWidth();
 
     this.hostResizeObserver = new ResizeObserver((entries) => {
