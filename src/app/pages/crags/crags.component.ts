@@ -95,10 +95,10 @@ export class CragsComponent implements OnInit, OnDestroy {
       searchTerm = searchTerm.replace(/[cčć]/gi, '[cčć]');
       searchTerm = searchTerm.replace(/[sš]/gi, '[sš]');
       searchTerm = searchTerm.replace(/[zž]/gi, '[zž]');
-      const regExp = new RegExp(searchTerm, 'gi');
+      const regExp = new RegExp(searchTerm);
 
-      this.filteredCrags = this.country.crags.filter(
-        (crag) => !!regExp.exec(crag.name.toLowerCase())
+      this.filteredCrags = this.country.crags.filter((crag) =>
+        regExp.test(crag.name.toLowerCase())
       );
     }
 
