@@ -264,7 +264,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
             length: value.length,
             routeTypeId: value.routeTypeId,
             defaultGradingSystemId: value.defaultGradingSystemId,
-            status: value.status,
+            publishStatus: value.status,
           },
         })
         .subscribe({
@@ -283,7 +283,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
             defaultGradingSystemId: value.defaultGradingSystemId,
             position: this.data.values.position,
             sectorId: this.data.values.sectorId,
-            status: value.status,
+            publishStatus: value.status,
           },
         })
         .subscribe({
