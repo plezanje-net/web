@@ -33,13 +33,11 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     someRoutesShown: boolean;
   })[] = [];
 
+  // Provide some sensible default
   shownColumns = [
     'name',
     'length',
     'difficulty',
-    // 'nrTicks',
-    // 'nrTries',
-    // 'nrClimbers',
     'starRating',
     'multipitch',
     'comments',
@@ -144,6 +142,9 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    if (sessionStorage.getItem('shownColumns')) {
+      this.shownColumns = JSON.parse(sessionStorage.getItem('shownColumns'));
+    }
     this.recalculateTableWidth();
 
     this.hostResizeObserver = new ResizeObserver((entries) => {
@@ -186,6 +187,11 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     this.snackBar.dismiss();
     this.hostResizeObserver.disconnect();
     this.searchSub.unsubscribe();
+  }
+
+  onSelectedColumnsSelectionChange() {
+    sessionStorage.setItem('shownColumns', JSON.stringify(this.shownColumns));
+    this.recalculateTableWidth();
   }
 
   recalculateTableWidth() {

@@ -5,7 +5,7 @@
       <mat-select
         [(value)]="shownColumns"
         multiple
-        (selectionChange)="recalculateTableWidth($event)"
+        (selectionChange)="onSelectedColumnsSelectionChange($event)"
       >
         <mat-select-trigger>
           <span *ngFor="let shownColumn of shownColumns; let last = last"
