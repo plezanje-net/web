@@ -1,24 +1,9 @@
-import {
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { User } from '@sentry/angular';
 import { Apollo } from 'apollo-angular';
 import { filter, Subscription } from 'rxjs';
-import { AuthService } from 'src/app/auth/auth.service';
 import { Registry } from 'src/app/types/registry';
 import {
   Grade,
@@ -87,7 +72,6 @@ export class RouteFormComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) private data: RouteFormComponentData,
     private dialogRef: MatDialogRef<RouteFormComponent>,
     private gradingSystemsService: GradingSystemsService,
-    private authService: AuthService,
     private createGQL: ManagementCreateRouteGQL,
     private updateGQL: ManagementUpdateRouteGQL,
     private apollo: Apollo,
@@ -246,7 +230,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
           input: {
             id: value.id,
             name: value.name,
-            length: value.length,
+            length: +value.length,
             routeTypeId: value.routeTypeId,
             defaultGradingSystemId: value.defaultGradingSystemId,
           },
@@ -260,14 +244,14 @@ export class RouteFormComponent implements OnInit, OnDestroy {
         .mutate({
           input: {
             name: value.name,
-            length: value.length,
+            length: +value.length,
             isProject: value.isProject,
             routeTypeId: value.routeTypeId,
             baseDifficulty: value.baseDifficulty,
             defaultGradingSystemId: value.defaultGradingSystemId,
-            position: this.data.values.position,
-            sectorId: this.data.values.sectorId,
-            publishStatus: this.data.values.publishStatus,
+            position: value.position,
+            sectorId: value.sectorId,
+            publishStatus: value.publishStatus,
           },
         })
         .subscribe({
