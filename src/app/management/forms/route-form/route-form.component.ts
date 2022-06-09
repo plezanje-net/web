@@ -240,7 +240,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
           input: {
             id: value.id,
             name: value.name,
-            length: value.length,
+            length: +value.length,
             routeTypeId: value.routeTypeId,
             defaultGradingSystemId: value.defaultGradingSystemId,
           },
@@ -254,7 +254,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
         .mutate({
           input: {
             name: value.name,
-            length: value.length,
+            length: +value.length,
             isProject: value.isProject,
             routeTypeId: value.routeTypeId,
             baseDifficulty: value.baseDifficulty,
