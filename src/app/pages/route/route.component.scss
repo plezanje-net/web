@@ -1,0 +1,15 @@
+@import "../../../styles/variables.scss";
+
+.warn {
+  border-left: 1px solid $red;
+  color: $red;
+  a {
+    color: unset;
+    text-decoration: underline;
+  }
+}
+
+.notice {
+  border-left: 1px solid $amber;
+  color: $amber;
+}
