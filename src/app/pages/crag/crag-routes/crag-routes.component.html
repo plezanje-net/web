@@ -276,6 +276,10 @@
 
                 <td class="name" *ngIf="shownColumns.includes('name')">
                   <a
+                    [ngClass]="{
+                      warn: route.publishStatus === 'draft',
+                      notice: route.publishStatus === 'in_review'
+                    }"
                     [routerLink]="
                       section === 'alpinism'
                         ? ['/alpinizem', 'stena', crag.slug, 'smer', route.slug]
@@ -378,6 +382,7 @@
                     >
                       <app-crag-route-preview
                         [routeId]="route.id"
+                        [publishStatus]="route.publishStatus"
                         (heightChangeEvent)="onPreviewHeightEvent($event)"
                       ></app-crag-route-preview>
                     </div>
@@ -410,6 +415,10 @@
                 <div class="info-row-first">
                   <div *ngIf="shownColumns.includes('name')" class="name">
                     <a
+                      [ngClass]="{
+                        warn: route.publishStatus === 'draft',
+                        notice: route.publishStatus === 'in_review'
+                      }"
                       [routerLink]="
                         section === 'alpinism'
                           ? [
@@ -553,6 +562,7 @@
               >
                 <app-crag-route-preview
                   [routeId]="route.id"
+                  [publishStatus]="route.publishStatus"
                   (heightChangeEvent)="onPreviewHeightEvent($event)"
                 ></app-crag-route-preview>
               </div>

@@ -55,6 +55,7 @@ query CragBySlug($crag: String!) {
         nrClimbers
         position
         starRating
+        publishStatus
       }
       bouldersOnly
     }

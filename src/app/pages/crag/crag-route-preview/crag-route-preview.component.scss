@@ -14,3 +14,19 @@ h4 {
     overflow: auto;
   }
 }
+
+.status-hint {
+  font-size: 12px;
+  a {
+    color: unset;
+    text-decoration: underline;
+  }
+}
+
+.warn {
+  color: $red;
+}
+
+.notice {
+  color: $amber;
+}

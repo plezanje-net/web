@@ -250,3 +250,10 @@ table {
 .selected {
   background-color: $blue-very-light;
 }
+
+.warn {
+  color: $red;
+}
+.notice {
+  color: $amber;
+}
