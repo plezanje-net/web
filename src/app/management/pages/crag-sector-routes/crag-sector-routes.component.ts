@@ -99,10 +99,11 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
+  // A route can be edited by admin (always) or by a user if it's his contribution and still not published
   canEdit(route: Route): boolean {
     return (
       this.user.roles.includes('admin') ||
-      ['user', 'proposal'].includes(route.status)
+      ['draft', 'in_review'].includes(route.publishStatus)
     );
   }
 

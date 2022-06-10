@@ -2,7 +2,7 @@
   <div *ngIf="publishStatus === 'draft'" class="mt-16 status-hint warn">
     Smer je v statusu osnutek, zato je trenutno vidna samo tebi. Če si zaključil
     z urejanjem podatkov o smeri,
-    <a href="#">predlagaj administratorju objavo</a>.
+    <a [routerLink]="['/admin/prispevki']">predlagaj administratorju objavo</a>.
   </div>
   <div *ngIf="publishStatus === 'in_review'" class="mt-16 status-hint notice">
     Smer je v pregledu pri administratorju.

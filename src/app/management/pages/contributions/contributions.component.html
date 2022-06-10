@@ -10,48 +10,97 @@
     </div>
   </div>
 </div>
+
 <div class="container mt-16">
   <app-loader *ngIf="loading"></app-loader>
+
   <div *ngIf="!loading && error">Pri nalaganju je prišlo do napake.</div>
-  <div class="card" *ngIf="!loading && !error">
-    <div
-      *ngFor="let contribution of contributions"
-      fxLayout="row"
-      fxLayoutAlign="stretch center"
-      fxLayoutGap="8px"
-      class="row"
-    >
-      <div fxFlex="100px">{{ entityNames[contribution.entity] }}</div>
-      <div fxFlex="100">
-        <ng-container *ngIf="contribution.crag">
-          <a
-            [routerLink]="['/plezalisce', contribution.crag.slug]"
-            fxFlex="200px"
-            >{{ contribution.crag.name }}</a
+
+  <table *ngIf="!loading && !error">
+    <thead>
+      <tr>
+        <th>Tip prispevka</th>
+        <th>Ime</th>
+        <th>Plezališče</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let contribution of contributions">
+        <td>{{ entityNames[contribution.entity] }}</td>
+
+        <!-- Entity name and link -->
+        <td>
+          <ng-container *ngIf="contribution.crag">
+            <a [routerLink]="['/plezalisce', contribution.crag.slug]">{{
+              contribution.crag.name
+            }}</a>
+          </ng-container>
+          <ng-container *ngIf="contribution.sector">
+            <a [routerLink]="['/plezalisce', contribution.sector.crag.slug]">{{
+              contribution.sector.name
+            }}</a>
+          </ng-container>
+          <ng-container *ngIf="contribution.route">
+            <a
+              [routerLink]="[
+                '/plezalisce',
+                contribution.route.crag.slug,
+                'smer',
+                contribution.route.slug
+              ]"
+              >{{ contribution.route.name }}</a
+            >
+          </ng-container>
+        </td>
+
+        <!-- Crag to which the entity/contribution belongs to -->
+        <td>
+          <ng-container *ngIf="contribution.crag">
+            <a [routerLink]="['/plezalisce', contribution.crag.slug]">{{
+              contribution.crag.name
+            }}</a>
+          </ng-container>
+          <ng-container *ngIf="contribution.sector">
+            <a [routerLink]="['/plezalisce', contribution.sector.crag.slug]">{{
+              contribution.sector.crag.name
+            }}</a>
+          </ng-container>
+          <ng-container *ngIf="contribution.route">
+            <a [routerLink]="['/plezalisce', contribution.route.crag.slug]">{{
+              contribution.route.crag.name
+            }}</a>
+          </ng-container>
+        </td>
+
+        <!-- Current status of the contribution -->
+        <td
+          [ngClass]="{
+            warn: contribution.publishStatus === 'draft',
+            notice: contribution.publishStatus === 'in_review'
+          }"
+        >
+          {{ this.publishStatuses[contribution.publishStatus].statusLabel }}
+        </td>
+
+        <!-- Actions that can be performed on the contribution (status changes) -->
+        <td class="actions">
+          <button
+            mat-stroked-button
+            *ngFor="let nextStatus of nextPossibleStatuses(contribution)"
+            (click)="
+              updateStatus(
+                contribution.entity,
+                contribution[contribution.entity].id,
+                nextStatus
+              )
+            "
           >
-        </ng-container>
-        <ng-container *ngIf="contribution.sector">
-          <a
-            [routerLink]="['/plezalisce', contribution.sector.crag.slug]"
-            fxFlex="200px"
-            >{{ contribution.sector.crag.name }}</a
-          >
-          <div>{{ contribution.sector.name }}</div>
-        </ng-container>
-        <ng-container *ngIf="contribution.route">
-          <a
-            [routerLink]="['/plezalisce', contribution.route.crag.slug]"
-            fxFlex="200px"
-            >{{ contribution.route.crag.name }}</a
-          >
-          <div>{{ contribution.route.name }}</div>
-        </ng-container>
-      </div>
-      <div>
-        <button mat-button>
-          {{ statusName(contribution.status) }}
-        </button>
-      </div>
-    </div>
-  </div>
+            {{ publishStatuses[nextStatus].actionLabel }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
