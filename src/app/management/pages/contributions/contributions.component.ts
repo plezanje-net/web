@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { switchMap } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import {
   Contribution,
   ManagementContributionsGQL,
+  ManagementUpdateCragGQL,
   ManagementUpdateRouteGQL,
+  ManagementUpdateSectorGQL,
   User,
 } from 'src/generated/graphql';
 
@@ -30,16 +33,19 @@ export class ContributionsComponent implements OnInit {
       value: 'draft',
       statusLabel: 'osnutek',
       actionLabel: 'Zavrni',
+      successMessage: 'Predlog je bil zavrnjen.',
     },
     in_review: {
       value: 'in_review',
       statusLabel: 'v pregledu',
       actionLabel: 'Predlagaj objavo',
+      successMessage: 'Predlog za objavo je bil poslan administratorju.',
     },
     published: {
       value: 'published',
       statusLabel: 'objavljeno',
       actionLabel: 'Objavi',
+      successMessage: 'Prispevek je bil objavljen.',
     },
   };
   user: User;
@@ -47,7 +53,10 @@ export class ContributionsComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private managementContributionsGQL: ManagementContributionsGQL,
-    private managementUpdateRouteGQL: ManagementUpdateRouteGQL
+    private managementUpdateRouteGQL: ManagementUpdateRouteGQL,
+    private managementUpdateSectorGQL: ManagementUpdateSectorGQL,
+    private managementUpdateCragGQL: ManagementUpdateCragGQL,
+    private snackbar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -107,28 +116,47 @@ export class ContributionsComponent implements OnInit {
   }
 
   updateStatus(entity: string, entityId: string, newStatus: string) {
+    let updateEntityGQL = null;
     switch (entity) {
       case 'route':
-        this.managementUpdateRouteGQL
-          .mutate({ input: { id: entityId, publishStatus: newStatus } })
-          .subscribe({
-            next: (response) => {
-              console.log(response);
-            },
-            error: (error) => {
-              console.log(error);
-            },
-          });
+        updateEntityGQL = this.managementUpdateRouteGQL;
         break;
-
       case 'sector':
-        console.log('update sector');
-        // TODO:
+        updateEntityGQL = this.managementUpdateSectorGQL;
         break;
       case 'crag':
-        console.log('update crag');
-        // TODO:
+        updateEntityGQL = this.managementUpdateCragGQL;
         break;
     }
+
+    if (updateEntityGQL !== null) {
+      updateEntityGQL
+        .mutate({ input: { id: entityId, publishStatus: newStatus } })
+        .subscribe({
+          next: () => {
+            this.displaySuccess(this.publishStatuses[newStatus].successMessage);
+          },
+          error: () => {
+            this.displayError();
+          },
+        });
+    }
+  }
+
+  private displayError() {
+    this.snackbar.open(
+      'Pri obdelavi zahteve je prišlo do nepričakovane napake.',
+      null,
+      {
+        panelClass: 'error',
+        duration: 3000,
+      }
+    );
+  }
+
+  private displaySuccess(successMessage: string) {
+    this.snackbar.open(successMessage, null, {
+      duration: 3000,
+    });
   }
 }
