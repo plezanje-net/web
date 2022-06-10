@@ -26,7 +26,11 @@
       (cdkDropListDropped)="drop($event)"
       [class.saving]="savingPositions"
     >
-      <div *ngFor="let route of routes; let i = index" cdkDrag>
+      <div
+        *ngFor="let route of routes; let i = index"
+        cdkDrag
+        [cdkDragDisabled]="!canEdit(route)"
+      >
         <div
           fxLayout="row"
           fxLayoutAlign="start center"
