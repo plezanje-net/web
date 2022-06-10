@@ -2,6 +2,7 @@ query ManagementContributions {
   contributions {
     user {
       id
+      fullName
     }
     entity
     crag {

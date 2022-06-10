@@ -23,6 +23,7 @@
         <th>Ime</th>
         <th>Plezališče</th>
         <th>Status</th>
+        <th *ngIf="user.roles.includes('admin')">Predlagatelj</th>
         <th></th>
       </tr>
     </thead>
@@ -82,6 +83,10 @@
           }"
         >
           {{ this.publishStatuses[contribution.publishStatus].statusLabel }}
+        </td>
+
+        <td *ngIf="user.roles.includes('admin')">
+          {{ contribution.user.fullName }}
         </td>
 
         <!-- Actions that can be performed on the contribution (status changes) -->
