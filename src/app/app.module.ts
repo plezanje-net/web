@@ -96,6 +96,7 @@ import * as Sentry from '@sentry/angular';
 import { Router } from '@angular/router';
 import { ChangelogComponent } from './pages/changelog/changelog.component';
 import { SortableHeaderFieldComponent } from './common/sortable-header-field/sortable-header-field.component';
+import { PendingContributionsNoticeComponent } from './pages/home/pending-contributions-notice/pending-contributions-notice.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -169,6 +170,7 @@ class CustomDateAdapter extends NativeDateAdapter {
     AboutComponent,
     ChangelogComponent,
     SortableHeaderFieldComponent,
+    PendingContributionsNoticeComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,23 @@
+@import "../../../../styles/variables.scss";
+
+mat-card {
+  border-radius: 0;
+}
+
+.warn {
+  border-left: 1px solid $red;
+  color: $red;
+}
+
+.notice {
+  border-left: 1px solid $amber;
+  color: $amber;
+}
+
+.warn,
+.notice {
+  a {
+    color: unset;
+    text-decoration: underline;
+  }
+}

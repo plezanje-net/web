@@ -1,14 +1,9 @@
-// .card {
-//   padding: 12px 24px 12px 24px;
-// }
-
-$light-gray: #0000008a;
+@import "../../../styles/variables.scss";
 
 .not-visible {
   visibility: hidden;
 }
-
-.announcement-card {
+mat-card {
   border-radius: 0;
 }
 h3 {
@@ -25,6 +20,7 @@ ul {
     padding-left: 16px;
   }
 }
+
 $almost-black: rgba(0, 0, 0, 0.87);
 
 h2 {
@@ -33,16 +29,5 @@ h2 {
 }
 
 .date {
-  color: $light-gray;
-}
-
-.test {
-  display: inline-block;
-  background-color: #2196f3;
-  color: white;
-  padding: 2px 8px;
-  border-radius: 9px;
-  /* margin-bottom: 8px; */
-  font-size: 12px;
-  font-weight: 500;
+  color: $gray;
 }

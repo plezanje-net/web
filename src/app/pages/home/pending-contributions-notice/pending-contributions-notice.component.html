@@ -1,0 +1,22 @@
+<div class="container">
+  <mat-card *ngIf="pendingDrafts?.length" class="mt-16 warn">
+    V bazo si prispeval
+    {{ pendingDrafts.length | pluralizeNoun: "nov vnos" }}.
+    <a *ngIf="!isAdmin" [routerLink]="['/admin/prispevki']"
+      >Predlagaj administratorju objavo.</a
+    >
+    <a *ngIf="isAdmin" [routerLink]="['/admin/prispevki']"
+      >Objavi {{ pendingDrafts.length | pluralizeNoun: "ga" }}.</a
+    >
+  </mat-card>
+
+  <mat-card *ngIf="pendingInReviews?.length && isAdmin" class="mt-16 notice">
+    {{ pendingInReviews.length | pluralizeNoun: "uporabniški prispevek" }}
+    {{ pendingInReviews.length | pluralizeVerb: "čakati" }}
+    na objavo.
+    <a [routerLink]="['/admin/prispevki']"
+      >Preglej {{ pendingInReviews.length | pluralizeNoun: "ga" }} in
+      {{ pendingInReviews.length | pluralizeNoun: "ga" }} zavrni ali potrdi.</a
+    >
+  </mat-card>
+</div>

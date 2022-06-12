@@ -1,6 +1,8 @@
 <app-data-error *ngIf="error" [error]="error"></app-data-error>
 <app-loader *ngIf="loading && !error"></app-loader>
 
+<app-pending-contributions-notice></app-pending-contributions-notice>
+
 <div *ngIf="!error" [class.not-visible]="loading">
   <div class="container mt-16">
     <mat-card class="announcement-card mt-16 mb-32">

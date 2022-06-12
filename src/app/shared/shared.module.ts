@@ -29,6 +29,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { GradeComponent } from './components/grade/grade.component';
 import { PluralizeNoun } from './pipes/pluralize-noun.pipe';
+import { PluralizeVerb } from './pipes/pluralize-verb.pipe';
 import { DataErrorComponent } from './components/data-error/data-error.component';
 import { AscentTypeComponent } from './components/ascent-type/ascent-type.component';
 import { AscentPublishOptionComponent } from './components/ascent-publish-option/ascent-publish-option.component';
@@ -53,6 +54,7 @@ import { InfoPropertyComponent } from './components/info-property/info-property.
     OrientationPipe,
     GradeComponent,
     PluralizeNoun,
+    PluralizeVerb,
     AscentTypeComponent,
     AscentPublishOptionComponent,
     ResponsiveImageComponent,
@@ -100,6 +102,7 @@ import { InfoPropertyComponent } from './components/info-property/info-property.
     MatInputModule,
     GradeComponent,
     PluralizeNoun,
+    PluralizeVerb,
     ResponsiveImageComponent,
     InfoPropertyComponent,
   ],

@@ -48,6 +48,43 @@ export class PluralizeNoun implements PipeTransform {
             return `${count} plezalcev`;
         }
 
+      case 'nov vnos':
+        switch (count % 100) {
+          case 1:
+            return `${count} nov vnos`;
+          case 2:
+            return `${count} nova vnosa`;
+          case 3:
+          case 4:
+            return `${count} nove vnose`;
+          default:
+            return `${count} novih vnosov`;
+        }
+
+      case 'uporabniški prispevek':
+        switch (count % 100) {
+          case 1:
+            return `${count} uporabniški prispevek`;
+          case 2:
+            return `${count} uporabniška prispevka`;
+          case 3:
+          case 4:
+            return `${count} uporabniški prispevki`;
+          default:
+            return `${count} uporabniških prispevkov`;
+        }
+
+      // A pronoun is a subcategory of nouns
+      case 'ga':
+        switch (count) {
+          case 1:
+            return `ga`;
+          case 2:
+            return `ju`;
+          default:
+            return `jih`;
+        }
+
       // case 'xyz' // add nouns when needed...
       default:
         return count + ' ' + noun;
