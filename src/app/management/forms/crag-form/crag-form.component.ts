@@ -114,7 +114,18 @@ export class CragFormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.authService.currentUser.subscribe((u) => (this.user = u));
+    this.cragForm.disable();
+
+    const userSub = this.authService.currentUser.subscribe((user) => {
+      this.user = user;
+      if (
+        this.user.roles.includes('admin') ||
+        this.crag.publishStatus === 'draft'
+      ) {
+        this.cragForm.enable();
+      }
+    });
+    this.subscriptions.push(userSub);
 
     if (this.crag != null) {
       this.cragForm.patchValue({

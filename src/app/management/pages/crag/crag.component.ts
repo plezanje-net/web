@@ -55,16 +55,6 @@ export class CragComponent implements OnInit {
 
         this.crag = <Crag>result.data.crag;
 
-        if (
-          !user.roles.includes('admin') &&
-          this.crag.publishStatus == 'published'
-        ) {
-          this.router.navigate([
-            `/admin/uredi-plezalisce/${this.crag.id}/sektorji`,
-          ]);
-          return;
-        }
-
         this.layoutService.$breadcrumbs.next(
           new CragAdminBreadcrumbs(this.crag).build()
         );
