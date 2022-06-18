@@ -39,7 +39,7 @@ export class ContributionsComponent implements OnInit {
       value: 'in_review',
       statusLabel: 'v pregledu',
       actionLabel: 'Predlagaj objavo',
-      successMessage: 'Predlog za objavo je bil poslan administratorju.',
+      successMessage: 'Predlog za objavo je bil poslan uredništvu.',
     },
     published: {
       value: 'published',
