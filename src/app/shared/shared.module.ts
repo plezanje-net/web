@@ -35,6 +35,8 @@ import { AscentTypeComponent } from './components/ascent-type/ascent-type.compon
 import { AscentPublishOptionComponent } from './components/ascent-publish-option/ascent-publish-option.component';
 import { ResponsiveImageComponent } from './components/responsive-image/responsive-image.component';
 import { InfoPropertyComponent } from './components/info-property/info-property.component';
+import { PublishStatusHintComponent } from './components/publish-status-hint/publish-status-hint.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -59,6 +61,7 @@ import { InfoPropertyComponent } from './components/info-property/info-property.
     AscentPublishOptionComponent,
     ResponsiveImageComponent,
     InfoPropertyComponent,
+    PublishStatusHintComponent,
   ],
   imports: [
     CommonModule,
@@ -76,6 +79,7 @@ import { InfoPropertyComponent } from './components/info-property/info-property.
     NgxMatSelectSearchModule,
     MatDatepickerModule,
     MatInputModule,
+    RouterModule,
   ],
   providers: [
     CustomBreakpointsProvider,
@@ -105,6 +109,7 @@ import { InfoPropertyComponent } from './components/info-property/info-property.
     PluralizeVerb,
     ResponsiveImageComponent,
     InfoPropertyComponent,
+    PublishStatusHintComponent,
   ],
 })
 export class SharedModule {}

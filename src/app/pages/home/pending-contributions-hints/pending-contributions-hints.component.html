@@ -3,7 +3,7 @@
     V bazo si prispeval
     {{ pendingDrafts.length | pluralizeNoun: "nov vnos" }}.
     <a *ngIf="!isAdmin" [routerLink]="['/admin/prispevki']"
-      >Predlagaj administratorju objavo.</a
+      >Predlagaj uredništvu objavo.</a
     >
     <a *ngIf="isAdmin" [routerLink]="['/admin/prispevki']"
       >Objavi {{ pendingDrafts.length | pluralizeNoun: "ga" }}.</a

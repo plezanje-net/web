@@ -1,7 +1,7 @@
 <app-data-error *ngIf="error" [error]="error"></app-data-error>
 <app-loader *ngIf="loading && !error"></app-loader>
 
-<app-pending-contributions-notice></app-pending-contributions-notice>
+<app-pending-contributions-hints></app-pending-contributions-hints>
 
 <div *ngIf="!error" [class.not-visible]="loading">
   <div class="container mt-16">

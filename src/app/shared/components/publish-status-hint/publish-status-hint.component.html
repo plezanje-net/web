@@ -1,0 +1,69 @@
+<ng-container *ngIf="!loading">
+  <!-- CRAG -->
+  <div
+    *ngIf="entityType === 'crag' && publishStatus === 'draft'"
+    class="card padding warn"
+  >
+    Plezališče je v statusu osnutek, zato je trenutno vidno samo tebi. Če si
+    zaključil z urejanjem podatkov o plezališču,
+    <a *ngIf="!isAdmin" [routerLink]="['/admin/prispevki']"
+      >predlagaj uredništvu objavo</a
+    ><a *ngIf="isAdmin" [routerLink]="['/admin/prispevki']">ga objavi</a>.
+  </div>
+
+  <div
+    *ngIf="entityType === 'crag' && publishStatus === 'in_review'"
+    class="card padding notice"
+  >
+    Plezališče je v pregledu pri uredništvu.
+    <a *ngIf="isAdmin" [routerLink]="['/admin/prispevki']"
+      >Preglej in objavi ga.</a
+    >
+  </div>
+
+  <!-- SECTOR -->
+  <div
+    *ngIf="entityType === 'sector' && publishStatus === 'draft'"
+    class="card padding warn"
+  >
+    Sektor je v statusu osnutek, zato je trenutno viden samo tebi. Če si
+    zaključil z urejanjem sektorja,
+    <a *ngIf="!isAdmin" [routerLink]="['/admin/prispevki']"
+      >predlagaj uredništvu objavo</a
+    ><a *ngIf="isAdmin" [routerLink]="['/admin/prispevki']">ga objavi</a>.
+  </div>
+
+  <div
+    *ngIf="entityType === 'sector' && publishStatus === 'in_review'"
+    class="card padding notice"
+  >
+    Sektor je v pregledu pri uredništvu.
+    <a *ngIf="isAdmin" [routerLink]="['/admin/prispevki']"
+      >Preglej in objavi ga.</a
+    >
+  </div>
+
+  <!-- ROUTE (on preview and on route page) -->
+  <div
+    *ngIf="entityType === 'route' && publishStatus === 'draft'"
+    class="padding warn"
+    [ngClass]="{ card: !previewMode, preview: previewMode }"
+  >
+    Smer je v statusu osnutek, zato je trenutno vidna samo tebi. Če si zaključil
+    z urejanjem podatkov o smeri,
+    <a *ngIf="!isAdmin" [routerLink]="['/admin/prispevki']"
+      >predlagaj uredništvu objavo</a
+    ><a *ngIf="isAdmin" [routerLink]="['/admin/prispevki']">jo objavi</a>.
+  </div>
+
+  <div
+    *ngIf="entityType === 'route' && publishStatus === 'in_review'"
+    class="padding notice"
+    [ngClass]="{ card: !previewMode, preview: previewMode }"
+  >
+    Smer je v pregledu pri uredništvu.
+    <a *ngIf="isAdmin" [routerLink]="['/admin/prispevki']"
+      >Preglej in objavi jo.</a
+    >
+  </div>
+</ng-container>

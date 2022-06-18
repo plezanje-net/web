@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { map, of, switchMap } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { map, of, Subscription, switchMap } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Contribution, PendingContributionsGQL } from 'src/generated/graphql';
 import { LoadingSpinnerService } from '../loading-spinner.service';
 
 @Component({
-  selector: 'app-pending-contributions-notice',
-  templateUrl: './pending-contributions-notice.component.html',
-  styleUrls: ['./pending-contributions-notice.component.scss'],
+  selector: 'app-pending-contributions-hints',
+  templateUrl: './pending-contributions-hints.component.html',
+  styleUrls: ['./pending-contributions-hints.component.scss'],
 })
-export class PendingContributionsNoticeComponent implements OnInit {
+export class PendingContributionsHintsComponent implements OnInit, OnDestroy {
   isAdmin = false;
   pendingDrafts: Contribution[];
   pendingInReviews: Contribution[];
+
+  subscription: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -21,7 +23,7 @@ export class PendingContributionsNoticeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.authService.currentUser
+    this.subscription = this.authService.currentUser
       .pipe(
         switchMap((user) => {
           if (!user) {
@@ -55,5 +57,9 @@ export class PendingContributionsNoticeComponent implements OnInit {
           this.isAdmin = false;
         }
       });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

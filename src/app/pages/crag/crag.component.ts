@@ -72,6 +72,7 @@ export class CragComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // TODO: unsubscribe
     this.authService.currentUser.subscribe((user) => (this.user = user));
     this.section = this.router.url.includes('/alpinizem/stena')
       ? 'alpinism'

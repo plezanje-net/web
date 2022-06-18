@@ -68,10 +68,26 @@
 
   <div *ngFor="let sector of sectors; let sectorIndex = index">
     <ng-container *ngIf="sector.someRoutesShown">
-      <h3 *ngIf="sector.label || sector.name" class="sector-heading">
+      <h3
+        *ngIf="sector.label || sector.name"
+        class="sector-heading"
+        [ngClass]="{
+          warn: sector.publishStatus === 'draft',
+          notice: sector.publishStatus === 'in_review'
+        }"
+      >
         {{ sector.label }}
         <span>{{ sector.name != "" ? " - " + sector.name : "" }}</span>
       </h3>
+      <app-publish-status-hint
+        class="mt-8 d-block"
+        *ngIf="
+          sector.publishStatus === 'draft' ||
+          sector.publishStatus === 'in_review'
+        "
+        entityType="sector"
+        [publishStatus]="sector.publishStatus"
+      ></app-publish-status-hint>
 
       <!-- Table view -->
       <table *ngIf="availableWidth >= tableWidth" class="shadow mt-16">

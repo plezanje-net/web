@@ -34,6 +34,13 @@
 
   <app-warnings *ngIf="warnings" [warnings]="warnings"></app-warnings>
 
+  <app-publish-status-hint
+    *ngIf="crag.publishStatus === 'draft' || crag.publishStatus === 'in_review'"
+    class="container mt-16"
+    entityType="crag"
+    [publishStatus]="crag.publishStatus"
+  ></app-publish-status-hint>
+
   <div
     class="container mt-16"
     fxLayout="row"

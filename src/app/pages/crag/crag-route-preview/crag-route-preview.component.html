@@ -1,12 +1,10 @@
 <div #container class="preview-container" style="overflow: hidden">
-  <div *ngIf="publishStatus === 'draft'" class="mt-16 status-hint warn">
-    Smer je v statusu osnutek, zato je trenutno vidna samo tebi. Če si zaključil
-    z urejanjem podatkov o smeri,
-    <a [routerLink]="['/admin/prispevki']">predlagaj administratorju objavo</a>.
-  </div>
-  <div *ngIf="publishStatus === 'in_review'" class="mt-16 status-hint notice">
-    Smer je v pregledu pri administratorju.
-  </div>
+  <app-publish-status-hint
+    entityType="route"
+    [publishStatus]="publishStatus"
+    [previewMode]="true"
+    class="mt-16 d-block"
+  ></app-publish-status-hint>
   <div
     *ngIf="!gradeDistributionLoading && gradeDistribution.length"
     class="pb-8"

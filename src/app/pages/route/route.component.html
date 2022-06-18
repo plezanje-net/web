@@ -9,21 +9,14 @@
     </div>
   </div>
 
-  <div class="container mt-16">
-    <div *ngIf="route.publishStatus === 'draft'" class="card padding warn">
-      Smer je v statusu osnutek, zato je trenutno vidna samo tebi. Če si
-      zaključil z urejanjem podatkov o smeri,
-      <a [routerLink]="['/admin/prispevki']">predlagaj administratorju objavo</a
-      >.
-    </div>
-
-    <div
-      *ngIf="route.publishStatus === 'in_review'"
-      class="card padding notice"
-    >
-      Smer je v pregledu pri administratorju.
-    </div>
-  </div>
+  <app-publish-status-hint
+    *ngIf="
+      route.publishStatus === 'draft' || route.publishStatus === 'in_review'
+    "
+    class="container mt-16"
+    entityType="route"
+    [publishStatus]="route.publishStatus"
+  ></app-publish-status-hint>
 
   <app-warnings *ngIf="warnings" [warnings]="warnings"></app-warnings>
 

@@ -11,6 +11,7 @@ query CragBySlug($crag: String!) {
     access
     description
     activityByMonth
+    publishStatus
     peak {
       name
       slug
@@ -28,6 +29,7 @@ query CragBySlug($crag: String!) {
       id
       name
       label
+      publishStatus
       routes {
         id
         name
