@@ -5,7 +5,7 @@ import {
   Crag,
   ManagementDeleteSectorGQL,
   ManagementGetCragSectorsGQL,
-  ManagementSaveSectorPositionsGQL,
+  ManagementSaveSectorPositionGQL,
   Sector,
 } from 'src/generated/graphql';
 
@@ -51,7 +51,7 @@ export class CragSectorsComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
     private sectorsGQL: ManagementGetCragSectorsGQL,
-    private savePositionsGQL: ManagementSaveSectorPositionsGQL,
+    private savePositionGQL: ManagementSaveSectorPositionGQL,
     private deleteSectorGQL: ManagementDeleteSectorGQL,
     private apollo: Apollo
   ) {}
@@ -87,29 +87,22 @@ export class CragSectorsComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
+    if (event.previousIndex == event.currentIndex) return;
+
+    const data = {
+      id: this.sectors[event.previousIndex].id,
+      position:
+        event.currentIndex > event.previousIndex
+          ? this.sectors[event.currentIndex].position + 1
+          : this.sectors[event.currentIndex].position,
+    };
+
+    // move in FE to see changes even before BE responds
     moveItemInArray(this.sectors, event.previousIndex, event.currentIndex);
-
-    const data = this.sectors
-      .map(
-        (sector, index): TmpSector => ({
-          id: sector.id,
-          pos: sector.position,
-          newPos: index + 1,
-        })
-      )
-      .filter((s) => s.pos != s.newPos)
-      .map((s) => ({
-        id: s.id,
-        position: s.newPos,
-      }));
-
-    if (data.length == 0) {
-      return;
-    }
 
     this.savingPositions = true;
 
-    this.savePositionsGQL
+    this.savePositionGQL
       .mutate({ input: data }, { fetchPolicy: 'no-cache' })
       .subscribe(() => {
         this.apollo.client.resetStore().then(() => {
