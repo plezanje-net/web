@@ -11,7 +11,7 @@ import {
   Crag,
   ManagementDeleteRouteGQL,
   ManagementGetSectorGQL,
-  ManagementSaveRoutePositionsGQL,
+  ManagementSaveRoutePositionGQL,
   Route,
   Sector,
 } from '../../../../generated/graphql';
@@ -55,7 +55,7 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
     private sectorGQL: ManagementGetSectorGQL,
-    private savePositionsGQL: ManagementSaveRoutePositionsGQL,
+    private savePositionGQL: ManagementSaveRoutePositionGQL,
     private deleteRouteGQL: ManagementDeleteRouteGQL,
     private apollo: Apollo
   ) {}
@@ -108,29 +108,22 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
   }
 
   drop(event: CdkDragDrop<string[]>) {
+    if (event.previousIndex == event.currentIndex) return;
+
+    const data = {
+      id: this.routes[event.previousIndex].id,
+      position:
+        event.currentIndex > event.previousIndex
+          ? this.routes[event.currentIndex].position + 1
+          : this.routes[event.currentIndex].position,
+    };
+
+    // move in FE to see changes even before BE responds
     moveItemInArray(this.routes, event.previousIndex, event.currentIndex);
-
-    const data = this.routes
-      .map(
-        (route, index): TmpRoute => ({
-          id: route.id,
-          pos: route.position,
-          newPos: index + 1,
-        })
-      )
-      .filter((r) => r.pos != r.newPos)
-      .map((r) => ({
-        id: r.id,
-        position: r.newPos,
-      }));
-
-    if (data.length == 0) {
-      return;
-    }
 
     this.savingPositions = true;
 
-    this.savePositionsGQL
+    this.savePositionGQL
       .mutate({ input: data }, { fetchPolicy: 'no-cache' })
       .subscribe(() => {
         this.apollo.client.resetStore().then(() => {
