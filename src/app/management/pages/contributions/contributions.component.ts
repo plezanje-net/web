@@ -81,8 +81,11 @@ export class ContributionsComponent implements OnInit {
 
   /**
    * Determine what the next publishStatus of the entity contribution can be.
+   * Based on publishStatus of the parent also determine if moving to that status is enabled
    */
-  nextPossibleStatuses(contribution: Contribution) {
+  nextPossibleStatuses(
+    contribution: Contribution
+  ): { enabled: boolean; status: string }[] {
     // An admin can publish her own drafts directly
     // draft --> published
     if (
@@ -90,16 +93,69 @@ export class ContributionsComponent implements OnInit {
       contribution.publishStatus === 'draft' &&
       contribution.user.id === this.user.id
     ) {
-      return ['published'];
+      // entity can be published only if parent entity is already published
+      let enabled = false;
+      switch (contribution.entity) {
+        case 'route':
+          enabled = contribution.route.sector.publishStatus === 'published';
+          break;
+        case 'sector':
+          enabled = contribution.sector.crag.publishStatus === 'published';
+          break;
+        case 'crag':
+          enabled = true;
+          break;
+      }
+
+      return [{ status: 'published', enabled }];
     }
 
-    // An admin can publish other users' contributions that are marked as ready for review
+    // An admin can publish other users' contributions that are marked as ready for review or she can deny them
     // in_review --> published
+    // in_review --> draft
     if (
       this.user.roles.includes('admin') &&
       contribution.publishStatus === 'in_review'
     ) {
-      return ['published', 'draft'];
+      // entity can be published only if parent entity is already published
+      let publishEnabled = false;
+      switch (contribution.entity) {
+        case 'route':
+          publishEnabled =
+            contribution.route.sector.publishStatus === 'published';
+          break;
+        case 'sector':
+          console.log(contribution);
+          publishEnabled =
+            contribution.sector.crag.publishStatus === 'published';
+          break;
+        case 'crag':
+          publishEnabled = true;
+          break;
+      }
+
+      // entity can be denied only if all child entities are already denied
+      let draftEnabled = false;
+      switch (contribution.entity) {
+        case 'route':
+          draftEnabled = true;
+          break;
+        case 'sector':
+          draftEnabled = contribution.sector.routes.every(
+            (route) => route.publishStatus === 'draft'
+          );
+          break;
+        case 'crag':
+          draftEnabled = contribution.crag.sectors.every(
+            (sector) => sector.publishStatus === 'draft'
+          );
+          break;
+      }
+
+      return [
+        { status: 'published', enabled: publishEnabled },
+        { status: 'draft', enabled: draftEnabled },
+      ];
     }
 
     // A regular user can mark her owm contributions as ready for review
@@ -108,12 +164,31 @@ export class ContributionsComponent implements OnInit {
       contribution.publishStatus === 'draft' &&
       contribution.user.id === this.user.id // redundant check, cause BE should filter, but keeep for consistency
     ) {
-      return ['in_review'];
+      let enabled = false;
+      switch (contribution.entity) {
+        case 'route':
+          enabled = ['published', 'in_review'].includes(
+            contribution.route.sector.publishStatus
+          );
+          break;
+        case 'sector':
+          enabled = ['published', 'in_review'].includes(
+            contribution.sector.crag.publishStatus
+          );
+          break;
+        case 'crag':
+          enabled = true;
+          break;
+      }
+      return [{ status: 'in_review', enabled }];
     }
 
     // if none of the above, status changes are not possible
     return null;
   }
+
+  statusButtonsTrackBy = (item: { status: string; enabled: boolean }) =>
+    item.status + item.enabled;
 
   updateStatus(entity: string, entityId: string, newStatus: string) {
     let updateEntityGQL = null;

@@ -5,19 +5,29 @@ query ManagementContributions {
       fullName
     }
     entity
+
     crag {
       id
       name
       slug
+      sectors {
+        publishStatus
+      }
     }
+
     sector {
       id
       name
       crag {
         name
         slug
+        publishStatus
+      }
+      routes {
+        publishStatus
       }
     }
+
     route {
       id
       name
@@ -29,6 +39,7 @@ query ManagementContributions {
       sector {
         id
         name
+        publishStatus
       }
     }
     id

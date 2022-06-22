@@ -22,7 +22,6 @@ export class CragComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private router: Router,
     private authService: AuthService,
     private layoutService: LayoutService,
     private managementGetCragGQL: ManagementGetCragGQL

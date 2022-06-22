@@ -118,8 +118,10 @@ export class CragFormComponent implements OnInit, OnDestroy {
 
     const userSub = this.authService.currentUser.subscribe((user) => {
       this.user = user;
+
       if (
         this.user.roles.includes('admin') ||
+        !this.crag ||
         this.crag.publishStatus === 'draft'
       ) {
         this.cragForm.enable();

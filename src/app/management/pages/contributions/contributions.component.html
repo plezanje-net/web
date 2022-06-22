@@ -93,16 +93,20 @@
         <td class="actions">
           <button
             mat-stroked-button
-            *ngFor="let nextStatus of nextPossibleStatuses(contribution)"
+            *ngFor="
+              let nextStatus of nextPossibleStatuses(contribution);
+              trackBy: statusButtonsTrackBy
+            "
             (click)="
               updateStatus(
                 contribution.entity,
                 contribution[contribution.entity].id,
-                nextStatus
+                nextStatus.status
               )
             "
+            [disabled]="!nextStatus.enabled"
           >
-            {{ publishStatuses[nextStatus].actionLabel }}
+            {{ publishStatuses[nextStatus.status].actionLabel }}
           </button>
         </td>
       </tr>
