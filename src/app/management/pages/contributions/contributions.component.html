@@ -97,13 +97,7 @@
               let nextStatus of nextPossibleStatuses(contribution);
               trackBy: statusButtonsTrackBy
             "
-            (click)="
-              updateStatus(
-                contribution.entity,
-                contribution[contribution.entity].id,
-                nextStatus.status
-              )
-            "
+            (click)="updateStatus(contribution, nextStatus.status)"
             [disabled]="!nextStatus.enabled"
           >
             {{ publishStatuses[nextStatus.status].actionLabel }}

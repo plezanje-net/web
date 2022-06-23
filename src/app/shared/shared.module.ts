@@ -37,6 +37,7 @@ import { ResponsiveImageComponent } from './components/responsive-image/responsi
 import { InfoPropertyComponent } from './components/info-property/info-property.component';
 import { PublishStatusHintComponent } from './components/publish-status-hint/publish-status-hint.component';
 import { RouterModule } from '@angular/router';
+import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { RouterModule } from '@angular/router';
     ResponsiveImageComponent,
     InfoPropertyComponent,
     PublishStatusHintComponent,
+    YesNoDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -110,6 +112,7 @@ import { RouterModule } from '@angular/router';
     ResponsiveImageComponent,
     InfoPropertyComponent,
     PublishStatusHintComponent,
+    YesNoDialogComponent,
   ],
 })
 export class SharedModule {}

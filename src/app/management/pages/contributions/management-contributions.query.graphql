@@ -12,6 +12,9 @@ query ManagementContributions {
       slug
       sectors {
         publishStatus
+        routes {
+          publishStatus
+        }
       }
     }
 
