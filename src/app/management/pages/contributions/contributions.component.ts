@@ -261,9 +261,13 @@ export class ContributionsComponent implements OnInit {
 
             return updateEntityGQL.mutate({
               input: {
-                id: contribution[contribution.entity].id,
-                publishStatus: newStatus,
-                // cascade // TODO: add param when BE is ready
+                ...{
+                  id: contribution[contribution.entity].id,
+                  publishStatus: newStatus,
+                },
+                ...(contribution.entity !== 'route' && {
+                  cascadePublishStatus: cascade,
+                }),
               },
             });
           })
