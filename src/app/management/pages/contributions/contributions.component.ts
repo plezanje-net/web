@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { concatMap, of, switchMap } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
-import { YesNoDialogComponent } from 'src/app/shared/components/yes-no-dialog/yes-no-dialog.component';
 import {
   Contribution,
   ManagementContributionsGQL,
@@ -12,6 +11,7 @@ import {
   ManagementUpdateSectorGQL,
   User,
 } from 'src/generated/graphql';
+import { PublishStatusChangeDialogComponent } from './publish-status-change-dialog/publish-status-change-dialog.component';
 
 @Component({
   selector: 'app-contributions',
@@ -160,7 +160,7 @@ export class ContributionsComponent implements OnInit {
       ];
     }
 
-    // A regular user can mark her owm contributions as ready for review
+    // A regular user can mark her own contributions as ready for review
     // draft --> in_review
     if (
       contribution.publishStatus === 'draft' &&
@@ -195,7 +195,7 @@ export class ContributionsComponent implements OnInit {
 
   updateStatus(contribution: Contribution, newStatus: string) {
     let updateEntityGQL = null;
-    let message = null;
+    let cascadeMessage = null;
 
     switch (contribution.entity) {
       case 'route':
@@ -206,11 +206,10 @@ export class ContributionsComponent implements OnInit {
 
         // As soon as an unpublished entity has children we can infer that they are all unpublished as well (because a child cannot be published before it's parent)
         if (newStatus === 'in_review' && contribution.sector.routes.length) {
-          message =
-            'Ali želiš obenem predlagati tudi objavo vseh smeri v tem sektorju?';
+          cascadeMessage = 'Predlagaj tudi objavo vseh smeri v tem sektorju.';
         }
         if (newStatus === 'published' && contribution.sector.routes.length) {
-          message = 'Ali želiš obenem objaviti tudi vse smeri v tem sektorju?';
+          cascadeMessage = 'Objavi tudi vse smeri v tem sektorju.';
         }
         break;
 
@@ -218,52 +217,55 @@ export class ContributionsComponent implements OnInit {
         updateEntityGQL = this.managementUpdateCragGQL;
 
         if (newStatus === 'in_review' && contribution.crag.sectors.length) {
-          message =
-            'Ali želiš obenem predlagati tudi objavo vseh sektorjev v tem plezališču?';
+          cascadeMessage =
+            'Predlagaj tudi objavo vseh sektorjev v tem plezališču.';
 
           if (
             contribution.crag.sectors.some((sector) => sector.routes.length)
           ) {
-            message =
-              'Ali želiš obenem predlagati tudi objavo vseh sektorjev in vseh smeri v tem plezališču?';
+            cascadeMessage =
+              'Predlagaj tudi objavo vseh sektorjev in vseh smeri v tem plezališču.';
           }
         }
 
         if (newStatus === 'published' && contribution.crag.sectors.length) {
-          message =
-            'Ali želiš obenem objaviti tudi vse sektorje v tem plezališču?';
+          cascadeMessage = 'Objavi tudi vse sektorje v tem plezališču.';
           if (
             contribution.crag.sectors.some((sector) => sector.routes.length)
           ) {
-            message =
-              'Ali želiš obenem objaviti tudi vse sektorje in vse smeri v tem plezališču?';
+            cascadeMessage =
+              'Objavi tudi vse sektorje in vse smeri v tem plezališču.';
           }
         }
         break;
     }
 
     if (updateEntityGQL !== null) {
-      const cascade = message
-        ? this.dialog
-            .open(YesNoDialogComponent, {
-              data: { message },
-            })
-            .afterClosed()
-        : of(false);
-
-      cascade
+      // Open dialog, make user confirm status change, let user choose cascade if applicable, let admin add rejection explanation if applicable
+      this.dialog
+        .open(PublishStatusChangeDialogComponent, {
+          data: { cascadeMessage, newStatus },
+          width: '400px',
+          maxWidth: '90vw',
+          maxHeight: '90vh',
+        })
+        .afterClosed()
         .pipe(
-          concatMap((cascade) => {
-            // user can close the dialog, in that case, do nothing
-            if (cascade === undefined) {
+          concatMap((dialogData) => {
+            // user canceled or closed the dialog, in that case do nothing
+            if (!dialogData) {
               return of(false);
             }
+
+            const cascade = dialogData.cascade;
+            const rejectionMessage = dialogData.rejectionMessage;
 
             return updateEntityGQL.mutate({
               input: {
                 ...{
                   id: contribution[contribution.entity].id,
                   publishStatus: newStatus,
+                  // rejectionMessage //TODO: add param when BE is ready
                 },
                 ...(contribution.entity !== 'route' && {
                   cascadePublishStatus: cascade,
