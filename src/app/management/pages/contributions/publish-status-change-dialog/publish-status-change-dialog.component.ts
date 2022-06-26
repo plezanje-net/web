@@ -12,8 +12,14 @@ export class PublishStatusChangeDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: { cascadeMessage: string; newStatus: string }
-  ) {}
+    public data: {
+      cascadeMessage: string;
+      newStatus: string;
+      forceCascade: boolean;
+    }
+  ) {
+    this.cascade = this.data.forceCascade;
+  }
 
   ngOnInit(): void {}
 }

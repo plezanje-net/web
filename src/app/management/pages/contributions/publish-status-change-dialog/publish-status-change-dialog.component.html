@@ -23,9 +23,12 @@
   </div>
 
   <p class="mt-16">
-    <mat-checkbox *ngIf="data.cascadeMessage" [(ngModel)]="cascade">{{
-      data.cascadeMessage
-    }}</mat-checkbox>
+    <mat-checkbox
+      *ngIf="data.cascadeMessage"
+      [(ngModel)]="cascade"
+      [disabled]="data.forceCascade"
+      >{{ data.cascadeMessage }}</mat-checkbox
+    >
   </p>
 </mat-dialog-content>
 <!-- </div> -->
@@ -35,7 +38,7 @@
     mat-button
     color="primary"
     cdkFocusInitial
-    [mat-dialog-close]="{data, rejectionMessage, cascade}"
+    [mat-dialog-close]="{rejectionMessage, cascade}"
   >
     Potrdi
   </button>

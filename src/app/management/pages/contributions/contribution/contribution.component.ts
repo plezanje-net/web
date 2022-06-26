@@ -112,33 +112,17 @@ export class ContributionComponent implements OnInit, OnDestroy {
         case 'sector':
           publishEnabled =
             contribution.sector.crag.publishStatus === 'published';
+
           break;
         case 'crag':
           publishEnabled = true;
           break;
       }
 
-      // entity can be denied only if all child entities are already denied
-      let draftEnabled = false;
-      switch (contribution.entity) {
-        case 'route':
-          draftEnabled = true;
-          break;
-        case 'sector':
-          draftEnabled = contribution.sector.routes.every(
-            (route) => route.publishStatus === 'draft'
-          );
-          break;
-        case 'crag':
-          draftEnabled = contribution.crag.sectors.every(
-            (sector) => sector.publishStatus === 'draft'
-          );
-          break;
-      }
-
+      // entity can be denied even if not all child entities are already denied. Cascading status change will be forced
       return [
         { status: 'published', enabled: publishEnabled },
-        { status: 'draft', enabled: draftEnabled },
+        { status: 'draft', enabled: true },
       ];
     }
 
@@ -178,6 +162,7 @@ export class ContributionComponent implements OnInit, OnDestroy {
   updateStatus(contribution: Contribution, newStatus: string) {
     let updateEntityGQL = null;
     let cascadeMessage = null;
+    let forceCascade = false;
 
     switch (contribution.entity) {
       case 'route':
@@ -192,6 +177,11 @@ export class ContributionComponent implements OnInit, OnDestroy {
         }
         if (newStatus === 'published' && contribution.sector.routes.length) {
           cascadeMessage = 'Objavi tudi vse smeri v tem sektorju.';
+        }
+        // If a contribution is being rejected and has children, cascading status change should be forced (this can only be editor's actiom)
+        if (newStatus === 'draft' && contribution.sector.routes.length) {
+          cascadeMessage = 'Zavrni tudi vse smeri v tem sektorju.';
+          forceCascade = true;
         }
         break;
 
@@ -219,6 +209,17 @@ export class ContributionComponent implements OnInit, OnDestroy {
               'Objavi tudi vse sektorje in vse smeri v tem plezališču.';
           }
         }
+
+        if (newStatus === 'draft' && contribution.crag.sectors.length) {
+          cascadeMessage = 'Zavrni tudi vse sektorje v tem plezališču.';
+          if (
+            contribution.crag.sectors.some((sector) => sector.routes.length)
+          ) {
+            cascadeMessage =
+              'Zavrni tudi vse sektorje in vse smeri v tem plezališču.';
+          }
+          forceCascade = true;
+        }
         break;
     }
 
@@ -226,7 +227,7 @@ export class ContributionComponent implements OnInit, OnDestroy {
       // Open dialog, make user confirm status change, let user choose cascade if applicable, let admin add rejection explanation if applicable
       this.dialog
         .open(PublishStatusChangeDialogComponent, {
-          data: { cascadeMessage, newStatus },
+          data: { cascadeMessage, newStatus, forceCascade },
           width: '400px',
           maxWidth: '90vw',
           maxHeight: '90vh',
