@@ -298,3 +298,10 @@ span.highlight {
   color: $gray;
   font-size: 10.5px;
 }
+
+.mat-checkbox-layout {
+  white-space: normal !important;
+}
+.mat-checkbox-inner-container {
+  margin-top: 4px !important;
+}
