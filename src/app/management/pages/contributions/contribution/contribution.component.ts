@@ -247,7 +247,7 @@ export class ContributionComponent implements OnInit, OnDestroy {
                 ...{
                   id: contribution[contribution.entity].id,
                   publishStatus: newStatus,
-                  // rejectionMessage //TODO: add param when BE is ready
+                  rejectionMessage,
                 },
                 ...(contribution.entity !== 'route' && {
                   cascadePublishStatus: cascade,
