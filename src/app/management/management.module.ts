@@ -27,6 +27,8 @@ import { CragSectorRoutesComponent } from './pages/crag-sector-routes/crag-secto
 import { NgxMaskModule } from 'ngx-mask';
 import { ContributionsComponent } from './pages/contributions/contributions.component';
 import { PublishStatusChangeDialogComponent } from './pages/contributions/publish-status-change-dialog/publish-status-change-dialog.component';
+import { MatCardModule } from '@angular/material/card';
+import { ContributionComponent } from './pages/contributions/contribution/contribution.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,7 @@ import { PublishStatusChangeDialogComponent } from './pages/contributions/publis
     CragSectorRoutesComponent,
     ContributionsComponent,
     PublishStatusChangeDialogComponent,
+    ContributionComponent,
   ],
   imports: [
     CommonModule,
@@ -60,6 +63,7 @@ import { PublishStatusChangeDialogComponent } from './pages/contributions/publis
     ReactiveFormsModule,
     FormsModule,
     ManagementRoutingModule,
+    MatCardModule,
   ],
 })
 export class ManagementModule {}

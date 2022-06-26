@@ -16,94 +16,77 @@
 
   <div *ngIf="!loading && error">Pri nalaganju je prišlo do napake.</div>
 
-  <table *ngIf="!loading && !error">
-    <thead>
-      <tr>
-        <th>Tip prispevka</th>
-        <th>Ime</th>
-        <th>Plezališče</th>
-        <th>Status</th>
-        <th *ngIf="user.roles.includes('admin')">Predlagatelj</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let contribution of contributions">
-        <td>{{ entityNames[contribution.entity] }}</td>
-
-        <!-- Entity name and link -->
-        <td>
-          <ng-container *ngIf="contribution.crag">
-            <a [routerLink]="['/plezalisce', contribution.crag.slug]">{{
-              contribution.crag.name
-            }}</a>
-          </ng-container>
-          <ng-container *ngIf="contribution.sector">
-            <a [routerLink]="['/plezalisce', contribution.sector.crag.slug]">{{
-              contribution.sector.name
-            }}</a>
-          </ng-container>
-          <ng-container *ngIf="contribution.route">
-            <a
-              [routerLink]="[
-                '/plezalisce',
-                contribution.route.crag.slug,
-                'smer',
-                contribution.route.slug
-              ]"
-              >{{ contribution.route.name }}</a
-            >
-          </ng-container>
-        </td>
-
-        <!-- Crag to which the entity/contribution belongs to -->
-        <td>
-          <ng-container *ngIf="contribution.crag">
-            <a [routerLink]="['/plezalisce', contribution.crag.slug]">{{
-              contribution.crag.name
-            }}</a>
-          </ng-container>
-          <ng-container *ngIf="contribution.sector">
-            <a [routerLink]="['/plezalisce', contribution.sector.crag.slug]">{{
-              contribution.sector.crag.name
-            }}</a>
-          </ng-container>
-          <ng-container *ngIf="contribution.route">
-            <a [routerLink]="['/plezalisce', contribution.route.crag.slug]">{{
-              contribution.route.crag.name
-            }}</a>
-          </ng-container>
-        </td>
-
-        <!-- Current status of the contribution -->
-        <td
-          [ngClass]="{
-            warn: contribution.publishStatus === 'draft',
-            notice: contribution.publishStatus === 'in_review'
-          }"
+  <div *ngIf="!loading && !error">
+    <!-- Crags and all their descendants -->
+    <ng-container *ngFor="let cragContribution of contributionsTree.crags">
+      <app-contribution
+        [contribution]="cragContribution"
+        [link]="['/plezalisce', cragContribution.crag.slug]"
+      ></app-contribution>
+      <ng-container
+        *ngFor="let sectorContribution of cragContribution.children"
+      >
+        <app-contribution
+          [contribution]="sectorContribution"
+          [link]="['/plezalisce', sectorContribution.sector.crag.slug]"
+          [depth]="1"
+        ></app-contribution>
+        <ng-container
+          *ngFor="let routeContribution of sectorContribution.children"
         >
-          {{ this.publishStatuses[contribution.publishStatus].statusLabel }}
-        </td>
+          <app-contribution
+            [contribution]="routeContribution"
+            [link]="[
+              '/plezalisce',
+              routeContribution.route.crag.slug,
+              'smer',
+              routeContribution.route.slug
+            ]"
+            [depth]="2"
+          ></app-contribution>
+        </ng-container>
+      </ng-container>
+    </ng-container>
 
-        <td *ngIf="user.roles.includes('admin')">
-          {{ contribution.user.fullName }}
-        </td>
+    <!-- Orphaned sectors and all their children routes -->
+    <div
+      *ngFor="let sectorContribution of contributionsTree.sectors"
+      style="margin-top: 16px"
+    >
+      <app-contribution
+        [contribution]="sectorContribution"
+        [link]="['/plezalisce', sectorContribution.sector.crag.slug]"
+      ></app-contribution>
+      <ng-container
+        *ngFor="let routeContribution of sectorContribution.children"
+      >
+        <app-contribution
+          [contribution]="routeContribution"
+          [link]="[
+            '/plezalisce',
+            routeContribution.route.crag.slug,
+            'smer',
+            routeContribution.route.slug
+          ]"
+          [depth]="1"
+        ></app-contribution>
+      </ng-container>
+    </div>
 
-        <!-- Actions that can be performed on the contribution (status changes) -->
-        <td class="actions">
-          <button
-            mat-stroked-button
-            *ngFor="
-              let nextStatus of nextPossibleStatuses(contribution);
-              trackBy: statusButtonsTrackBy
-            "
-            (click)="updateStatus(contribution, nextStatus.status)"
-            [disabled]="!nextStatus.enabled"
-          >
-            {{ publishStatuses[nextStatus.status].actionLabel }}
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <!-- Orphaned routes -->
+    <div
+      *ngFor="let routeContribution of contributionsTree.routes"
+      style="margin-top: 16px"
+    >
+      <app-contribution
+        [contribution]="routeContribution"
+        [link]="[
+          '/plezalisce',
+          routeContribution.route.crag.slug,
+          'smer',
+          routeContribution.route.slug
+        ]"
+      ></app-contribution>
+    </div>
+  </div>
 </div>

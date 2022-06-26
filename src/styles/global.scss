@@ -48,6 +48,11 @@ body {
 }
 
 // TODO replace margin/padding util classes with a for loop that generates all these classes
+.my-8 {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
 .mt-4 {
   margin-top: 4px;
 }
@@ -123,9 +128,6 @@ p.mt-16,
 a {
   color: $primary;
   text-decoration: none;
-  &:hover {
-    // color: mat-color($app-primary, 500);
-  }
 }
 
 b {

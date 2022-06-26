@@ -1,0 +1,68 @@
+<mat-card [ngStyle]="{ 'margin-left.px': depth * 16 }">
+  <!-- Entity type label || Publish status -->
+  <div fxLayout="row" fxLayoutAlign="space-between">
+    <div>{{ entityTypeLabel[contribution.entity] }}</div>
+    <div
+      [ngClass]="{
+        warn: contribution.publishStatus === 'draft',
+        notice: contribution.publishStatus === 'in_review'
+      }"
+      class="publish-status"
+    >
+      {{ this.publishStatuses[contribution.publishStatus].statusLabel }}
+    </div>
+  </div>
+
+  <!-- Info || Actions -->
+  <div
+    fxLayout="column"
+    fxLayout.gt-xs="row"
+    fxLayoutAlign.gt-xs="space-between end"
+    fxLayoutGap.gt-xs="8px"
+  >
+    <!-- Info block -->
+    <div>
+      <div [ngStyle.gt-xs]="{ display: 'inline-block' }">
+        <a [routerLink]="link">{{ contribution[contribution.entity].name }}</a>
+      </div>
+
+      <span *ngIf="depth === 0 && contribution.entity === 'sector'">
+        <span fxHide fxShow.gt-xs>,</span>
+        {{ contribution.sector.crag.name }}
+      </span>
+
+      <span *ngIf="depth === 0 && contribution.entity === 'route'">
+        <span fxHide fxShow.gt-xs>,</span>
+        <ng-container *ngIf="contribution.route.sector.name">
+          {{ contribution.route.sector.name }},
+        </ng-container>
+        {{ contribution.route.crag.name }}
+      </span>
+
+      <div *ngIf="user.roles.includes('admin')" class="contributor">
+        <ng-container *ngIf="user.id === contribution.user.id; else otherUser"
+          >Tvoj prispevek</ng-container
+        >
+        <ng-template #otherUser
+          >Prispeval {{ contribution.user.fullName }}</ng-template
+        >
+      </div>
+    </div>
+
+    <!-- Actions block -->
+    <div class="actions">
+      <button
+        mat-stroked-button
+        *ngFor="
+          let nextStatus of nextPossibleStatuses(contribution);
+          trackBy: statusButtonsTrackBy
+        "
+        [disabled]="!nextStatus.enabled"
+        (click)="updateStatus(contribution, nextStatus.status)"
+        class="mt-8"
+      >
+        {{ publishStatuses[nextStatus.status].actionLabel }}
+      </button>
+    </div>
+  </div>
+</mat-card>
