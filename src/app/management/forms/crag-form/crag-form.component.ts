@@ -218,7 +218,7 @@ export class CragFormComponent implements OnInit, OnDestroy {
         this.apollo.client.resetStore().then(() => {
           if (this.crag == null) {
             this.router.navigate([
-              '/admin/uredi-plezalisce',
+              '/urejanje/uredi-plezalisce',
               result.data.createCrag.id,
             ]);
           }

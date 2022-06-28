@@ -20,7 +20,10 @@
       <mat-menu #menu="matMenu">
         <button
           mat-menu-item
-          [routerLink]="['/admin/dodaj-plezalisce', { country: country?.id }]"
+          [routerLink]="[
+            '/urejanje/dodaj-plezalisce',
+            { country: country?.id }
+          ]"
         >
           <mat-icon>add</mat-icon>
           <span>Dodaj plezališče</span>
@@ -68,7 +71,7 @@
             >Ne najdeš plezališča, ki ga iščeš?
             <a
               [routerLink]="[
-                '/admin/dodaj-plezalisce',
+                '/urejanje/dodaj-plezalisce',
                 { country: country?.id }
               ]"
               >Dodaj plezališče</a

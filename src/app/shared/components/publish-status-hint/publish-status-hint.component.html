@@ -6,9 +6,9 @@
   >
     Plezališče je v statusu osnutek, zato je trenutno vidno samo tebi. Če si
     zaključil z urejanjem podatkov o plezališču,
-    <a *ngIf="!isAdmin" [routerLink]="['/admin/prispevki']"
+    <a *ngIf="!isAdmin" [routerLink]="['/urejanje/prispevki']"
       >predlagaj uredništvu objavo</a
-    ><a *ngIf="isAdmin" [routerLink]="['/admin/prispevki']">ga objavi</a>.
+    ><a *ngIf="isAdmin" [routerLink]="['/urejanje/prispevki']">ga objavi</a>.
   </div>
 
   <div
@@ -16,7 +16,7 @@
     class="card padding notice"
   >
     Plezališče je v pregledu pri uredništvu.
-    <a *ngIf="isAdmin" [routerLink]="['/admin/prispevki']"
+    <a *ngIf="isAdmin" [routerLink]="['/urejanje/prispevki']"
       >Preglej in objavi ga.</a
     >
   </div>
@@ -28,9 +28,9 @@
   >
     Sektor je v statusu osnutek, zato je trenutno viden samo tebi. Če si
     zaključil z urejanjem sektorja,
-    <a *ngIf="!isAdmin" [routerLink]="['/admin/prispevki']"
+    <a *ngIf="!isAdmin" [routerLink]="['/urejanje/prispevki']"
       >predlagaj uredništvu objavo</a
-    ><a *ngIf="isAdmin" [routerLink]="['/admin/prispevki']">ga objavi</a>.
+    ><a *ngIf="isAdmin" [routerLink]="['/urejanje/prispevki']">ga objavi</a>.
   </div>
 
   <div
@@ -38,7 +38,7 @@
     class="card padding notice"
   >
     Sektor je v pregledu pri uredništvu.
-    <a *ngIf="isAdmin" [routerLink]="['/admin/prispevki']"
+    <a *ngIf="isAdmin" [routerLink]="['/urejanje/prispevki']"
       >Preglej in objavi ga.</a
     >
   </div>
@@ -51,9 +51,9 @@
   >
     Smer je v statusu osnutek, zato je trenutno vidna samo tebi. Če si zaključil
     z urejanjem podatkov o smeri,
-    <a *ngIf="!isAdmin" [routerLink]="['/admin/prispevki']"
+    <a *ngIf="!isAdmin" [routerLink]="['/urejanje/prispevki']"
       >predlagaj uredništvu objavo</a
-    ><a *ngIf="isAdmin" [routerLink]="['/admin/prispevki']">jo objavi</a>.
+    ><a *ngIf="isAdmin" [routerLink]="['/urejanje/prispevki']">jo objavi</a>.
   </div>
 
   <div
@@ -62,7 +62,7 @@
     [ngClass]="{ card: !previewMode, preview: previewMode }"
   >
     Smer je v pregledu pri uredništvu.
-    <a *ngIf="isAdmin" [routerLink]="['/admin/prispevki']"
+    <a *ngIf="isAdmin" [routerLink]="['/urejanje/prispevki']"
       >Preglej in objavi jo.</a
     >
   </div>

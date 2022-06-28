@@ -96,7 +96,7 @@ const routes: Routes = [
       import('./activity/activity.module').then((m) => m.ActivityModule),
   },
   {
-    path: 'admin',
+    path: 'urejanje',
     loadChildren: () =>
       import('./management/management.module').then((m) => m.ManagementModule),
   },
