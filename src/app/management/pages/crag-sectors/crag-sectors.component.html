@@ -28,9 +28,13 @@
       <div *ngFor="let sector of sectors; let i = index" cdkDrag>
         <div
           fxLayout="row"
-          class="sector mt-8"
           fxLayoutAlign="start center"
           fxLayout.lt-sm="column"
+          class="sector mt-8"
+          [ngClass]="{
+            warn: sector.publishStatus === 'draft',
+            notice: sector.publishStatus === 'in_review'
+          }"
         >
           <div class="name" fxFlex="100" fxFlex.lt-sm>
             <span>{{ sector.label }}</span> {{ sector.name }}

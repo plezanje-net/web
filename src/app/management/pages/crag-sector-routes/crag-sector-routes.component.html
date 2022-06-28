@@ -34,8 +34,12 @@
         <div
           fxLayout="row"
           fxLayoutAlign="start center"
-          class="route mt-8"
           fxLayout.lt-sm="column"
+          class="route mt-8"
+          [ngClass]="{
+            warn: route.publishStatus === 'draft',
+            notice: route.publishStatus === 'in_review'
+          }"
         >
           <div fxFlex class="name" fxFlex="100">
             {{ route.name }}
