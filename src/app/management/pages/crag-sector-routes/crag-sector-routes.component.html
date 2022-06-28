@@ -38,7 +38,8 @@
           class="route mt-8"
           [ngClass]="{
             warn: route.publishStatus === 'draft',
-            notice: route.publishStatus === 'in_review'
+            notice: route.publishStatus === 'in_review',
+            disabled: !canEdit(route)
           }"
         >
           <div fxFlex class="name" fxFlex="100">

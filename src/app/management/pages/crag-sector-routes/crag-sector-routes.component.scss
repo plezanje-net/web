@@ -19,6 +19,10 @@
   .mat-icon-button:not(.mat-accent) {
     color: #666;
   }
+
+  &.disabled {
+    color: $gray;
+  }
 }
 .buttons {
   padding: 12px 0;

@@ -33,7 +33,8 @@
           class="sector mt-8"
           [ngClass]="{
             warn: sector.publishStatus === 'draft',
-            notice: sector.publishStatus === 'in_review'
+            notice: sector.publishStatus === 'in_review',
+            disabled: !canEdit(sector)
           }"
         >
           <div class="name" fxFlex="100" fxFlex.lt-sm>

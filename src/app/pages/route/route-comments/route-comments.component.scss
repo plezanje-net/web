@@ -3,12 +3,12 @@
 h4 {
   font-size: 14px;
   font-weight: 500;
-  color: $gray;
+  color: $gray-dark;
   margin: 16px 0 0 0;
 }
 
 .preview {
-  border-bottom: 1px solid $gray-light;
+  border-bottom: 1px solid $gray-lighter;
   &:last-child {
     border-bottom: none;
   }

@@ -5,24 +5,24 @@
   background: #fff;
   box-shadow: 0 2px 6px 0 #6494ff26;
   padding: 4px 12px;
+  min-height: 52px;
 
   border-left: 1px solid $blue;
   &.warn {
     border-left: 1px solid $red;
   }
-
   &.notice {
     border-left: 1px solid $orange;
   }
-  min-height: 52px;
+
+  &.disabled {
+    color: $gray;
+  }
+
   .name {
-    color: $text-gray;
     font-weight: 500;
     font-size: 16px;
     padding: 12px 0;
-    span {
-      color: $primary;
-    }
   }
 
   .mat-icon-button:not(.mat-accent) {
