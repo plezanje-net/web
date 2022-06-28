@@ -113,7 +113,7 @@ export class CragSectorsComponent implements OnInit {
 
   canEdit(sector: Sector): boolean {
     return (
-      this.user.roles.includes('admin') || sector.publishStatus != 'published'
+      this.user.roles.includes('admin') || sector.publishStatus === 'draft'
     );
   }
 

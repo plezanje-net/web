@@ -25,7 +25,11 @@
       (cdkDropListDropped)="drop($event)"
       [class.saving]="savingPositions"
     >
-      <div *ngFor="let sector of sectors; let i = index" cdkDrag>
+      <div
+        *ngFor="let sector of sectors; let i = index"
+        cdkDrag
+        [cdkDragDisabled]="!canEdit(sector)"
+      >
         <div
           fxLayout="row"
           fxLayoutAlign="start center"
