@@ -156,6 +156,10 @@ export class CragSectorsComponent implements OnInit {
             });
           }),
         error: (error) => {
+          if (error.message === 'route_has_log_entries') {
+            error.message =
+              'Sektorja ni mogoče izbrisati dokler so v njem smeri, ki imajo zabeležene vzpone.';
+          }
           this.snackBar.open(error.message, null, {
             panelClass: 'error',
             duration: 3000,
