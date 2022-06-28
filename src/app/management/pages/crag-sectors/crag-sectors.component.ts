@@ -42,7 +42,6 @@ export class CragSectorsComponent implements OnInit {
   subscriptions: Subscription[] = [];
 
   user: User;
-  fullAccess = false;
 
   constructor(
     private authService: AuthService,
@@ -74,8 +73,6 @@ export class CragSectorsComponent implements OnInit {
       this.crag = <Crag>result.data.crag;
 
       this.user = user;
-      this.fullAccess =
-        user.roles.includes('admin') || user.id == this.crag.user?.id;
 
       this.heading = `${this.crag.name}`;
       this.layoutService.$breadcrumbs.next(
