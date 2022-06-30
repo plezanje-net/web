@@ -51,7 +51,7 @@
     <!-- Orphaned sectors and all their children routes -->
     <div
       *ngFor="let sectorContribution of contributionsTree.sectors"
-      style="margin-top: 16px"
+      class="mt-16"
     >
       <app-contribution
         [contribution]="sectorContribution"
@@ -76,7 +76,7 @@
     <!-- Orphaned routes -->
     <div
       *ngFor="let routeContribution of contributionsTree.routes"
-      style="margin-top: 16px"
+      class="mt-16"
     >
       <app-contribution
         [contribution]="routeContribution"
