@@ -1,5 +1,4 @@
 <mat-dialog-content>
-  <!-- <div> -->
   <p *ngIf="data.newStatus === 'published'">
     Si prepričan_a da želiš objaviti prispevek?
   </p>
@@ -13,7 +12,7 @@
   <div *ngIf="data.newStatus === 'draft'" class="mt-16">
     <mat-form-field class="no-hint">
       <mat-label>Razlog za zavrnitev prispevka</mat-label>
-      <textarea matInput [(ngModel)]="rejectionMessage"></textarea>
+      <textarea matInput [(ngModel)]="rejectionMessage" required></textarea>
     </mat-form-field>
     <p class="footnote">
       Razlog za zavrnitev prispevka bo posredovan uporabniku_ci, ki je
@@ -31,7 +30,7 @@
     >
   </p>
 </mat-dialog-content>
-<!-- </div> -->
+
 <mat-dialog-actions align="end">
   <button type="button" mat-button [mat-dialog-close]="false">Prekliči</button>
   <button
@@ -39,6 +38,7 @@
     color="primary"
     cdkFocusInitial
     [mat-dialog-close]="{rejectionMessage, cascade}"
+    [disabled]="data.newStatus === 'draft' && !rejectionMessage"
   >
     Potrdi
   </button>
