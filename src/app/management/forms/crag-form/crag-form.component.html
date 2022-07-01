@@ -148,6 +148,27 @@
       <span *ngIf="loading" class="loading">
         <mat-spinner diameter="30"></mat-spinner>
       </span>
+
+      <div class="publish-status-actions">
+        <button
+          type="button"
+          mat-stroked-button
+          *ngFor="
+            let nextStatus of contributionService.nextPossiblePublishStatuses(
+              crag
+            );
+            trackBy: contributionService.statusButtonsTrackBy
+          "
+          [disabled]="!nextStatus.enabled || !cragForm.pristine"
+          (click)="
+            contributionService.updatePublishStatus(crag, nextStatus.status)
+          "
+        >
+          {{
+            contributionService.publishStatuses[nextStatus.status].actionLabel
+          }}
+        </button>
+      </div>
     </div>
   </div>
 </form>

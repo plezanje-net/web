@@ -6,11 +6,15 @@ query ManagementGetCragSectors($id: String!) {
       name
       publishStatus
       position
+      created
       routes {
         id
       }
       user {
         id
+      }
+      crag {
+        publishStatus
       }
     }
     slug

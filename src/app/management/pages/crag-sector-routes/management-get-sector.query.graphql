@@ -26,6 +26,10 @@ query ManagementGetSector($id: String!) {
       publishStatus
       isProject
       position
+      created
+      sector {
+        publishStatus
+      }
       routeType {
         id
         name

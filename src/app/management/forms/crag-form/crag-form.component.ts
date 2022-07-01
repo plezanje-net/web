@@ -19,6 +19,7 @@ import {
   ManagementUpdateCragGQL,
 } from 'src/generated/graphql';
 import { GradingSystemsService } from '../../../shared/services/grading-systems.service';
+import { ContributionService } from '../../pages/contributions/contribution/contribution.service';
 
 @Component({
   selector: 'app-crag-form',
@@ -110,7 +111,8 @@ export class CragFormComponent implements OnInit, OnDestroy {
     private updateCragGQL: ManagementUpdateCragGQL,
     private createCragGQL: ManagementCreateCragGQL,
     private deleteCragGQL: ManagementDeleteCragGQL,
-    private apollo: Apollo
+    private apollo: Apollo,
+    public contributionService: ContributionService
   ) {}
 
   ngOnInit(): void {
@@ -128,6 +130,29 @@ export class CragFormComponent implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.push(userSub);
+
+    const cragPublishStatusSub =
+      this.contributionService.publishStatusChanged$.subscribe(
+        (newPublishStatus: string) => {
+          // We have 2 special cases here:
+          //  1) An editor rejected a crag which he now cannot access anymore -> should redirect to Contributions page
+          if (
+            this.user.roles.includes('admin') &&
+            newPublishStatus === 'draft'
+          ) {
+            this.router.navigate(['/urejanje/prispevki']);
+          }
+
+          //  2) A normal user pushed the crag into review -> should disable the form for editing
+          if (
+            !this.user.roles.includes('admin') &&
+            newPublishStatus === 'in_review'
+          ) {
+            this.cragForm.disable();
+          }
+        }
+      );
+    this.subscriptions.push(cragPublishStatusSub);
 
     if (this.crag != null) {
       this.cragForm.patchValue({

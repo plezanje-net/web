@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
+import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { combineLatest, filter, Subscription, switchMap, take } from 'rxjs';
 import {
   Crag,
@@ -19,6 +19,7 @@ import { Apollo } from 'apollo-angular';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from '@sentry/angular';
+import { ContributionService } from '../contributions/contribution/contribution.service';
 
 interface TmpSector {
   id: string;
@@ -52,7 +53,8 @@ export class CragSectorsComponent implements OnInit {
     private sectorsGQL: ManagementGetCragSectorsGQL,
     private savePositionGQL: ManagementSaveSectorPositionGQL,
     private deleteSectorGQL: ManagementDeleteSectorGQL,
-    private apollo: Apollo
+    private apollo: Apollo,
+    public contributionService: ContributionService
   ) {}
 
   ngOnInit(): void {

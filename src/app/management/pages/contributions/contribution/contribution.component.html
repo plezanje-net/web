@@ -9,7 +9,10 @@
       }"
       class="publish-status"
     >
-      {{ this.publishStatuses[contribution.publishStatus].statusLabel }}
+      {{
+        contributionService.publishStatuses[contribution.publishStatus]
+          .statusLabel
+      }}
     </div>
   </div>
 
@@ -54,14 +57,21 @@
       <button
         mat-stroked-button
         *ngFor="
-          let nextStatus of nextPossibleStatuses(contribution);
-          trackBy: statusButtonsTrackBy
+          let nextStatus of contributionService.nextPossiblePublishStatuses(
+            contribution[contribution.entity]
+          );
+          trackBy: contributionService.statusButtonsTrackBy
         "
         [disabled]="!nextStatus.enabled"
-        (click)="updateStatus(contribution, nextStatus.status)"
+        (click)="
+          contributionService.updatePublishStatus(
+            contribution[contribution.entity],
+            nextStatus.status
+          )
+        "
         class="mt-8"
       >
-        {{ publishStatuses[nextStatus.status].actionLabel }}
+        {{ contributionService.publishStatuses[nextStatus.status].actionLabel }}
       </button>
     </div>
   </div>

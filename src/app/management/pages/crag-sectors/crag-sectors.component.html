@@ -52,6 +52,7 @@
               >Uredi smeri</a
             >
           </div>
+
           <div
             *ngIf="canEdit(sector)"
             class="tools"
@@ -71,6 +72,36 @@
 
             <button mat-icon-button (click)="remove(sector)">
               <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+
+          <!-- If a sector is not published, show possible publishStatus change buttons -->
+          <div
+            *ngIf="canEdit(sector)"
+            fxFlex
+            ngClass.lt-sm="mb-8"
+            class="publish-status-actions"
+          >
+            <button
+              mat-stroked-button
+              *ngFor="
+                let nextStatus of contributionService.nextPossiblePublishStatuses(
+                  sector
+                );
+                trackBy: contributionService.statusButtonsTrackBy
+              "
+              [disabled]="!nextStatus.enabled"
+              (click)="
+                contributionService.updatePublishStatus(
+                  sector,
+                  nextStatus.status
+                )
+              "
+            >
+              {{
+                contributionService.publishStatuses[nextStatus.status]
+                  .actionLabel
+              }}
             </button>
           </div>
         </div>

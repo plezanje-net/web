@@ -79,6 +79,36 @@
               <mat-icon>delete</mat-icon>
             </button>
           </div>
+
+          <!-- If a route is not published, show possible publishStatus change buttons -->
+          <div
+            *ngIf="canEdit(route)"
+            fxFlex
+            ngClass.lt-sm="mb-8"
+            class="publish-status-actions"
+          >
+            <button
+              mat-stroked-button
+              *ngFor="
+                let nextStatus of contributionService.nextPossiblePublishStatuses(
+                  route
+                );
+                trackBy: contributionService.statusButtonsTrackBy
+              "
+              [disabled]="!nextStatus.enabled"
+              (click)="
+                contributionService.updatePublishStatus(
+                  route,
+                  nextStatus.status
+                )
+              "
+            >
+              {{
+                contributionService.publishStatuses[nextStatus.status]
+                  .actionLabel
+              }}
+            </button>
+          </div>
         </div>
       </div>
     </div>

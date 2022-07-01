@@ -2,10 +2,10 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { User } from '@sentry/angular';
 import { Apollo } from 'apollo-angular';
-import { filter, map, Subscription, switchMap, take, tap } from 'rxjs';
+import { filter, Subscription, switchMap, take } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import {
   Crag,
@@ -22,6 +22,7 @@ import {
   RouteFormValues,
 } from '../../forms/route-form/route-form.component';
 import { CragAdminBreadcrumbs } from '../../utils/crag-admin-breadcrumbs';
+import { ContributionService } from '../contributions/contribution/contribution.service';
 
 interface TmpRoute {
   id: string;
@@ -57,7 +58,8 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
     private sectorGQL: ManagementGetSectorGQL,
     private savePositionGQL: ManagementSaveRoutePositionGQL,
     private deleteRouteGQL: ManagementDeleteRouteGQL,
-    private apollo: Apollo
+    private apollo: Apollo,
+    public contributionService: ContributionService
   ) {}
 
   ngOnInit(): void {

@@ -10,17 +10,22 @@ query ManagementContributions {
       id
       name
       slug
+      publishStatus
       sectors {
         publishStatus
         routes {
           publishStatus
         }
       }
+      user {
+        id
+      }
     }
 
     sector {
       id
       name
+      publishStatus
       crag {
         id
         name
@@ -30,12 +35,16 @@ query ManagementContributions {
       routes {
         publishStatus
       }
+      user {
+        id
+      }
     }
 
     route {
       id
       name
       slug
+      publishStatus
       crag {
         name
         slug
@@ -44,6 +53,9 @@ query ManagementContributions {
         id
         name
         publishStatus
+      }
+      user {
+        id
       }
     }
 

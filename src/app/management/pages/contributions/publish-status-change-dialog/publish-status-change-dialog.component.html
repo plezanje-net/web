@@ -36,7 +36,6 @@
   <button
     mat-button
     color="primary"
-    cdkFocusInitial
     [mat-dialog-close]="{rejectionMessage, cascade}"
     [disabled]="data.newStatus === 'draft' && !rejectionMessage"
   >

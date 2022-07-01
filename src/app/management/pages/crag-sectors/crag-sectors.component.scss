@@ -52,3 +52,14 @@
     z-index: 1;
   }
 }
+
+.publish-status-actions {
+  text-align: right;
+  white-space: nowrap;
+  button {
+    text-transform: uppercase;
+    &:last-child {
+      margin-left: 8px;
+    }
+  }
+}
