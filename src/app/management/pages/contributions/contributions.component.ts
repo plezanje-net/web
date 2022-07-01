@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { LayoutService } from 'src/app/services/layout.service';
 import {
   Contribution,
   ManagementContributionsGQL,
@@ -26,9 +27,18 @@ export class ContributionsComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   contributionsTree: ContributionsTree;
 
-  constructor(private managementContributionsGQL: ManagementContributionsGQL) {}
+  constructor(
+    private managementContributionsGQL: ManagementContributionsGQL,
+    private layoutService: LayoutService
+  ) {}
 
   ngOnInit(): void {
+    this.layoutService.$breadcrumbs.next([
+      {
+        name: 'Prispevki',
+      },
+    ]);
+
     this.subscription = this.managementContributionsGQL
       .watch()
       .valueChanges.subscribe({
