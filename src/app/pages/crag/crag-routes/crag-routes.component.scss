@@ -51,7 +51,7 @@ mat-option {
 }
 
 // icons should be same height as line height for nicer alignment
-::ng-deep mat-icon.mat-icon {
+mat-icon.mat-icon {
   font-size: 20px;
   height: 20px;
   width: 20px;
