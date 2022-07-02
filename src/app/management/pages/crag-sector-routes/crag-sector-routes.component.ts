@@ -167,8 +167,7 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
     this.dialog
       .open(ConfirmationDialogComponent, {
         data: {
-          title: 'Brisanje sektorja',
-          message: 'Si prepričan, da želiš izbrisati to smer?',
+          message: 'Si prepričan_a, da želiš izbrisati to smer?',
         },
       })
       .afterClosed()

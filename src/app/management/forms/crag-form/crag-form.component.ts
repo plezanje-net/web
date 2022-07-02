@@ -269,8 +269,8 @@ export class CragFormComponent implements OnInit, OnDestroy {
     this.dialog
       .open(ConfirmationDialogComponent, {
         data: {
-          title: 'Brisanje plezališča',
-          message: 'Si prepričan, da želiš izbrisati to plezališče',
+          message:
+            'Si prepričan_a, da želiš izbrisati to plezališče in vse sektorje in smeri v njem?',
         },
       })
       .afterClosed()
@@ -285,12 +285,16 @@ export class CragFormComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.snackBar.open('Plezališče je bilo izbrisano', null, {
-            duration: 2000,
+            duration: 3000,
           });
           this.apollo.client.resetStore();
           this.router.navigate(['/plezalisca']);
         },
         error: (error) => {
+          if (error.message === 'crag_has_log_entries') {
+            error.message =
+              'Plezališča ni mogoče izbrisati, ker so v njem zabeležene aktivnosti.';
+          }
           this.snackBar.open(error.message, null, {
             panelClass: 'error',
             duration: 3000,
@@ -298,5 +302,16 @@ export class CragFormComponent implements OnInit, OnDestroy {
           this.loading = false;
         },
       });
+  }
+
+  /**
+   * A crag can be deleted if it is still a draft. An editor can also delete a crag but not one that was pushed to review.
+   */
+  canDelete() {
+    return (
+      this.crag.publishStatus === 'draft' ||
+      (this.user.roles.includes('admin') &&
+        this.crag.publishStatus === 'published')
+    );
   }
 }
