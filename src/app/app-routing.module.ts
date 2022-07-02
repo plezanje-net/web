@@ -19,6 +19,7 @@ import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-member
 import { AlpinismComponent } from './pages/alpinism/alpinism.component';
 import { AboutComponent } from './pages/about/about.component';
 import { ChangelogComponent } from './pages/changelog/changelog.component';
+import { HowToContributeComponent } from './pages/help/how-to-contribute/how-to-contribute.component';
 
 const routes: Routes = [
   {
@@ -124,6 +125,10 @@ const routes: Routes = [
   {
     path: 'dnevnik-sprememb',
     component: ChangelogComponent,
+  },
+  {
+    path: 'navodila/tvoji-prispevki',
+    component: HowToContributeComponent,
   },
   {
     path: '**',
