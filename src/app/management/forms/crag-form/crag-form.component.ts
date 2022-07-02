@@ -309,9 +309,9 @@ export class CragFormComponent implements OnInit, OnDestroy {
    */
   canDelete() {
     return (
-      this.crag.publishStatus === 'draft' ||
+      this.crag?.publishStatus === 'draft' ||
       (this.user.roles.includes('admin') &&
-        this.crag.publishStatus === 'published')
+        this.crag?.publishStatus === 'published')
     );
   }
 }
