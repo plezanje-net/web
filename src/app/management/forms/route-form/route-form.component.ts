@@ -203,7 +203,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
       this.apollo.client.resetStore().then(() => {
         this.saving = false;
 
-        const { routeTypeId, defaultGradingSystemId, status } = value;
+        const { routeTypeId, defaultGradingSystemId, status, position } = value;
 
         this.dialogRef.close(
           value.addAnother
@@ -212,6 +212,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
                 routeTypeId,
                 defaultGradingSystemId,
                 status,
+                position: position + 1,
               }
             : null
         );
