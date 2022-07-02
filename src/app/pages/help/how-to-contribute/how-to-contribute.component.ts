@@ -15,7 +15,7 @@ export class HowToContributeComponent implements OnInit {
         name: 'Navodila',
       },
       {
-        name: 'Kako prispevati',
+        name: 'Dodajanje prispevkov',
       },
     ]);
   }
