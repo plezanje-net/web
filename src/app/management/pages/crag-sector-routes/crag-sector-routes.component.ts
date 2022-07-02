@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '@sentry/angular';
 import { Apollo } from 'apollo-angular';
-import { filter, Subscription, switchMap, take } from 'rxjs';
+import { combineLatest, filter, Subscription, switchMap, take } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import {
   Crag,
@@ -63,8 +63,8 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    const sectorSub = this.activatedRoute.params
-      .pipe(
+    const sub = combineLatest([
+      this.activatedRoute.params.pipe(
         filter((params) => params.sector != null),
         switchMap(
           (params) =>
@@ -72,29 +72,29 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
               id: params.sector,
             }).valueChanges
         )
-      )
-      .subscribe((result) => {
-        this.loading = false;
+      ),
+      this.authService.currentUser.asObservable(),
+    ]).subscribe(([result, user]) => {
+      this.loading = false;
 
-        this.sector = <Sector>result.data.sector;
-        this.crag = <Crag>this.sector.crag;
+      this.sector = <Sector>result.data.sector;
+      this.crag = <Crag>this.sector.crag;
 
-        this.routes = [...(<Route[]>result.data.sector.routes)];
+      this.routes = [...(<Route[]>result.data.sector.routes)];
 
-        this.heading = `${this.crag.name}${
-          this.sector.label || this.sector.name ? ', ' : ''
-        }${this.sector.label}${
-          this.sector.label && this.sector.name ? ' -' : ''
-        } ${this.sector.name}`;
+      this.heading = `${this.crag.name}${
+        this.sector.label || this.sector.name ? ', ' : ''
+      }${this.sector.label}${
+        this.sector.label && this.sector.name ? ' -' : ''
+      } ${this.sector.name}`;
 
-        this.layoutService.$breadcrumbs.next(
-          new CragAdminBreadcrumbs(this.crag).build()
-        );
-      });
+      this.layoutService.$breadcrumbs.next(
+        new CragAdminBreadcrumbs(this.crag).build()
+      );
 
-    this.user = this.authService.currentUser.value;
-
-    this.subscriptions.push(sectorSub);
+      this.user = user;
+    });
+    this.subscriptions.push(sub);
   }
 
   ngOnDestroy(): void {

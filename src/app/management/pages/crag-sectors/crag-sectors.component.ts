@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { combineLatest, filter, Subscription, switchMap, take } from 'rxjs';
 import {
@@ -32,7 +32,7 @@ interface TmpSector {
   templateUrl: './crag-sectors.component.html',
   styleUrls: ['./crag-sectors.component.scss'],
 })
-export class CragSectorsComponent implements OnInit {
+export class CragSectorsComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   savingPositions: boolean = false;
   heading: string = '';
@@ -58,7 +58,7 @@ export class CragSectorsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    combineLatest([
+    const sub = combineLatest([
       this.activatedRoute.params.pipe(
         filter((params) => params.crag != null),
         switchMap(
@@ -83,6 +83,12 @@ export class CragSectorsComponent implements OnInit {
 
       this.sectors = [...(<Sector[]>result.data.crag.sectors)];
     });
+
+    this.subscriptions.push(sub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   drop(event: CdkDragDrop<string[]>) {

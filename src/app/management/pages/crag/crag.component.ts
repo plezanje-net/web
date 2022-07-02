@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, of, Subscription, switchMap } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -11,7 +11,7 @@ import { CragAdminBreadcrumbs } from '../../utils/crag-admin-breadcrumbs';
   templateUrl: './crag.component.html',
   styleUrls: ['./crag.component.scss'],
 })
-export class CragComponent implements OnInit {
+export class CragComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   error: boolean = false;
   heading: string = '';
@@ -28,8 +28,8 @@ export class CragComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    combineLatest([
-      this.activatedRoute.params.pipe(
+    const sub = this.activatedRoute.params
+      .pipe(
         switchMap((params) =>
           params.crag != null
             ? this.managementGetCragGQL.watch({
@@ -37,33 +37,38 @@ export class CragComponent implements OnInit {
               }).valueChanges
             : of(null)
         )
-      ),
-      this.authService.currentUser.asObservable(),
-    ]).subscribe({
-      next: ([result, user]) => {
-        if (result == null) {
-          this.layoutService.$breadcrumbs.next([
-            {
-              name: 'Dodajanje plezališča',
-            },
-          ]);
-          this.heading = `Dodajanje plezališča`;
+      )
+      .subscribe({
+        next: (result) => {
+          if (result == null) {
+            this.layoutService.$breadcrumbs.next([
+              {
+                name: 'Dodajanje plezališča',
+              },
+            ]);
+            this.heading = `Dodajanje plezališča`;
+            this.loading = false;
+            return;
+          }
+
+          this.crag = <Crag>result.data.crag;
+
+          this.layoutService.$breadcrumbs.next(
+            new CragAdminBreadcrumbs(this.crag).build()
+          );
+          this.heading = `${this.crag.name}`;
           this.loading = false;
-          return;
-        }
+        },
+        error: () => {
+          this.loading = false;
+          this.error = true;
+        },
+      });
 
-        this.crag = <Crag>result.data.crag;
+    this.subscriptions.push(sub);
+  }
 
-        this.layoutService.$breadcrumbs.next(
-          new CragAdminBreadcrumbs(this.crag).build()
-        );
-        this.heading = `${this.crag.name}`;
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-        this.error = true;
-      },
-    });
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }
