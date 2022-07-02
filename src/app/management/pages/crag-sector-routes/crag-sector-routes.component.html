@@ -70,6 +70,7 @@
                 [difficulty]="route.difficulty"
                 [gradingSystemId]="route.defaultGradingSystem?.id"
                 [showModifier]="true"
+                [disabled]="!canEdit(route)"
               ></app-grade>
             </button>
             <button mat-button *ngIf="route.isProject">Projekt</button>
