@@ -2,6 +2,7 @@
   [formGroup]="cragForm"
   (submit)="save()"
   class="card padding no-border mt-16"
+  [ngClass]="crag?.publishStatus"
 >
   <div fxLayout="row" fxLayoutGap="8px" fxLayout.lt-sm="column">
     <p fxFlex="50">
