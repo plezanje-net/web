@@ -23,6 +23,14 @@
   &.disabled {
     color: $gray;
   }
+  &.ghost {
+    box-shadow: none;
+    border-left: none;
+    background: none;
+    i {
+      color: $gray;
+    }
+  }
 }
 .buttons {
   padding: 12px 0;

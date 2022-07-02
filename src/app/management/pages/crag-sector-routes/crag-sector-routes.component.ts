@@ -134,9 +134,9 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
       });
   }
 
-  add(values: RouteFormValues = null): void {
-    if (values == null) {
-      values = { defaultGradingSystemId: this.crag.defaultGradingSystem.id };
+  add(values: RouteFormValues = {}): void {
+    if (values.defaultGradingSystemId == null) {
+      values.defaultGradingSystemId = this.crag.defaultGradingSystem.id;
     }
     this.dialog
       .open(RouteFormComponent, {
@@ -144,7 +144,9 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
           values: {
             ...values,
             position:
-              this.routes.length == 0
+              values.position != null
+                ? values.position
+                : this.routes.length == 0
                 ? 1
                 : this.routes[this.routes.length - 1].position + 1,
             sectorId: this.sector.id,

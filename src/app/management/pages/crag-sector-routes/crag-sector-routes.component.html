@@ -22,6 +22,24 @@
 
   <div class="container p15 mt-16">
     <div
+      *ngIf="routes.length"
+      fxLayout="row"
+      fxLayoutAlign="start center"
+      fxLayout.lt-sm="column"
+      class="route ghost mt-8"
+    >
+      <div fxFlex class="tools" fxLayout="row" fxLayoutAlign="end center">
+        <i>Dodaj smer na začetek</i>
+        <button
+          mat-icon-button
+          (click)="add({ position: routes[0].position })"
+          matTooltip="Dodaj na začetek"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div
       cdkDropList
       (cdkDropListDropped)="drop($event)"
       [class.saving]="savingPositions"
@@ -78,6 +96,14 @@
             <button mat-icon-button (click)="remove(route)">
               <mat-icon>delete</mat-icon>
             </button>
+
+            <button
+              mat-icon-button
+              (click)="add({ position: route.position + 1 })"
+              matTooltip="Dodaj kot naslednjo"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
           </div>
 
           <!-- If a route is not published, show possible publishStatus change buttons -->
@@ -112,8 +138,10 @@
         </div>
       </div>
     </div>
-    <div class="buttons mt-16">
-      <button mat-button color="primary" (click)="add()">Dodaj smeri</button>
+    <div class="buttons mt-16" *ngIf="routes.length == 0">
+      <button mat-button color="primary" (click)="add()">
+        Dodaj prvo smer
+      </button>
     </div>
   </div>
 </div>
