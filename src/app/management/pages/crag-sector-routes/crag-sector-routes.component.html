@@ -75,28 +75,23 @@
             <button mat-button *ngIf="route.isProject">Projekt</button>
           </div>
 
-          <div
-            fxFlex
-            class="tools"
-            fxLayout="row"
-            fxLayoutAlign="start center"
-            *ngIf="canEdit(route)"
-          >
-            <button mat-icon-button (click)="edit(route)">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              matTooltip="Spremeni vrstni red"
-              cdkDragHandle
-            >
-              <mat-icon>sort</mat-icon>
-            </button>
+          <div fxFlex class="tools" fxLayout="row" fxLayoutAlign="start center">
+            <ng-container *ngIf="canEdit(route)">
+              <button mat-icon-button (click)="edit(route)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                matTooltip="Spremeni vrstni red"
+                cdkDragHandle
+              >
+                <mat-icon>sort</mat-icon>
+              </button>
 
-            <button mat-icon-button (click)="remove(route)">
-              <mat-icon>delete</mat-icon>
-            </button>
-
+              <button mat-icon-button (click)="remove(route)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </ng-container>
             <button
               mat-icon-button
               (click)="add({ position: route.position + 1 })"

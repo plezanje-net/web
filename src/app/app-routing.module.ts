@@ -127,7 +127,7 @@ const routes: Routes = [
     component: ChangelogComponent,
   },
   {
-    path: 'navodila/tvoji-prispevki',
+    path: 'navodila/dodajanje-prispevkov',
     component: HowToContributeComponent,
   },
   {
