@@ -147,7 +147,7 @@ export class CragSectorsComponent implements OnInit, OnDestroy {
         data: {
           title: 'Brisanje sektorja',
           message:
-            'Si prepričan, da želiš izbrisati ta sektor in vse njegove smeri?',
+            'Si prepričan_a, da želiš izbrisati ta sektor in vse smeri v njem?',
         },
       })
       .afterClosed()

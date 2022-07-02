@@ -5,7 +5,7 @@
     class="card padding warn"
   >
     Plezališče je v statusu osnutek, zato je trenutno vidno samo tebi. Če si
-    zaključil z urejanjem podatkov o plezališču,
+    zaključil_a z urejanjem podatkov o plezališču,
     <a *ngIf="!isAdmin" [routerLink]="['/urejanje/prispevki']"
       >predlagaj uredništvu objavo</a
     ><a *ngIf="isAdmin" [routerLink]="['/urejanje/prispevki']">ga objavi</a>.
@@ -27,7 +27,7 @@
     class="card padding warn"
   >
     Sektor je v statusu osnutek, zato je trenutno viden samo tebi. Če si
-    zaključil z urejanjem sektorja,
+    zaključil_a z urejanjem sektorja,
     <a *ngIf="!isAdmin" [routerLink]="['/urejanje/prispevki']"
       >predlagaj uredništvu objavo</a
     ><a *ngIf="isAdmin" [routerLink]="['/urejanje/prispevki']">ga objavi</a>.
@@ -49,8 +49,8 @@
     class="padding warn"
     [ngClass]="{ card: !previewMode, preview: previewMode }"
   >
-    Smer je v statusu osnutek, zato je trenutno vidna samo tebi. Če si zaključil
-    z urejanjem podatkov o smeri,
+    Smer je v statusu osnutek, zato je trenutno vidna samo tebi. Če si
+    zaključil_a z urejanjem podatkov o smeri,
     <a *ngIf="!isAdmin" [routerLink]="['/urejanje/prispevki']"
       >predlagaj uredništvu objavo</a
     ><a *ngIf="isAdmin" [routerLink]="['/urejanje/prispevki']">jo objavi</a>.
