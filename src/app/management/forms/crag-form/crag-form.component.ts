@@ -177,7 +177,7 @@ export class CragFormComponent implements OnInit, OnDestroy {
     this.subscriptions.push(routeSub);
 
     this.countriesGQL
-      .fetch()
+      .fetch({ input: { orderBy: { field: 'name', direction: 'ASC' } } })
       .pipe(take(1))
       .subscribe((result) => {
         this.countries = result.data.countries;
