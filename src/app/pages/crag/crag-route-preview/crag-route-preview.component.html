@@ -1,4 +1,10 @@
-<div #container class="preview-container">
+<div #container class="preview-container" style="overflow: hidden">
+  <app-publish-status-hint
+    entityType="route"
+    [publishStatus]="publishStatus"
+    [previewMode]="true"
+    class="mt-16 d-block"
+  ></app-publish-status-hint>
   <div
     *ngIf="!gradeDistributionLoading && gradeDistribution.length"
     class="pb-8"

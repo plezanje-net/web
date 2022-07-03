@@ -127,10 +127,10 @@ table {
   }
 
   th {
-    color: $gray;
+    color: $gray-dark;
     vertical-align: bottom;
     white-space: nowrap;
-    border-bottom: 1px solid $gray-light;
+    border-bottom: 1px solid $gray-lighter;
 
     &.checkbox {
       width: 40px;
@@ -140,7 +140,7 @@ table {
 
   td {
     vertical-align: middle;
-    border-top: 1px solid $gray-light;
+    border-top: 1px solid $gray-lighter;
   }
 
   tbody tr:first-child {
@@ -165,7 +165,7 @@ table {
   .route {
     display: flex;
     align-items: center;
-    border-top: 1px solid $gray-light;
+    border-top: 1px solid $gray-lighter;
     &:first-child {
       border-top: none;
     }
@@ -249,4 +249,11 @@ table {
 
 .selected {
   background-color: $blue-very-light;
+}
+
+.warn {
+  color: $red;
+}
+.notice {
+  color: $orange;
 }

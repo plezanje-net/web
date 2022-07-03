@@ -13,7 +13,7 @@
       <a
         mat-button
         color="primary"
-        [routerLink]="['/admin/uredi-plezalisce/' + crag.id + '/sektorji']"
+        [routerLink]="['/urejanje/uredi-plezalisce/' + crag.id + '/sektorji']"
         *ngIf="crag"
         >Vsi sektorji</a
       >
@@ -22,16 +22,43 @@
 
   <div class="container p15 mt-16">
     <div
+      *ngIf="routes.length"
+      fxLayout="row"
+      fxLayoutAlign="start center"
+      fxLayout.lt-sm="column"
+      class="route ghost mt-8"
+    >
+      <div fxFlex class="tools" fxLayout="row" fxLayoutAlign="end center">
+        <i>Dodaj smer na začetek</i>
+        <button
+          mat-icon-button
+          (click)="add({ position: routes[0].position })"
+          matTooltip="Dodaj na začetek"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div
       cdkDropList
       (cdkDropListDropped)="drop($event)"
       [class.saving]="savingPositions"
     >
-      <div *ngFor="let route of routes; let i = index" cdkDrag>
+      <div
+        *ngFor="let route of routes; let i = index"
+        cdkDrag
+        [cdkDragDisabled]="!canEdit(route)"
+      >
         <div
           fxLayout="row"
           fxLayoutAlign="start center"
-          class="route mt-8"
           fxLayout.lt-sm="column"
+          class="route mt-8"
+          [ngClass]="{
+            warn: route.publishStatus === 'draft',
+            notice: route.publishStatus === 'in_review',
+            disabled: !canEdit(route)
+          }"
         >
           <div fxFlex class="name" fxFlex="100">
             {{ route.name }}
@@ -43,32 +70,74 @@
                 [difficulty]="route.difficulty"
                 [gradingSystemId]="route.defaultGradingSystem?.id"
                 [showModifier]="true"
+                [disabled]="!canEdit(route)"
               ></app-grade>
             </button>
             <button mat-button *ngIf="route.isProject">Projekt</button>
           </div>
 
           <div fxFlex class="tools" fxLayout="row" fxLayoutAlign="start center">
-            <button mat-icon-button (click)="edit(route)">
-              <mat-icon>edit</mat-icon>
-            </button>
+            <ng-container *ngIf="canEdit(route)">
+              <button mat-icon-button (click)="edit(route)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                matTooltip="Spremeni vrstni red"
+                cdkDragHandle
+              >
+                <mat-icon>sort</mat-icon>
+              </button>
+
+              <button mat-icon-button (click)="remove(route)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </ng-container>
             <button
               mat-icon-button
-              matTooltip="Spremeni vrstni red"
-              cdkDragHandle
+              (click)="add({ position: route.position + 1 })"
+              matTooltip="Dodaj kot naslednjo"
             >
-              <mat-icon>sort</mat-icon>
+              <mat-icon>add</mat-icon>
             </button>
+          </div>
 
-            <button mat-icon-button (click)="remove(route)">
-              <mat-icon>delete</mat-icon>
+          <!-- If a route is not published, show possible publishStatus change buttons -->
+          <div
+            *ngIf="canEdit(route)"
+            fxFlex
+            ngClass.lt-sm="mb-8"
+            class="publish-status-actions"
+          >
+            <button
+              mat-stroked-button
+              *ngFor="
+                let nextStatus of contributionService.nextPossiblePublishStatuses(
+                  route
+                );
+                trackBy: contributionService.statusButtonsTrackBy
+              "
+              [disabled]="!nextStatus.enabled"
+              (click)="
+                contributionService.updatePublishStatus(
+                  route,
+                  nextStatus.status
+                )
+              "
+            >
+              {{
+                contributionService.publishStatuses[nextStatus.status]
+                  .actionLabel
+              }}
             </button>
           </div>
         </div>
       </div>
     </div>
-    <div class="buttons mt-16">
-      <button mat-button color="primary" (click)="add()">Dodaj smeri</button>
+    <div class="buttons mt-16" *ngIf="routes.length == 0">
+      <button mat-button color="primary" (click)="add()">
+        Dodaj prvo smer
+      </button>
     </div>
   </div>
 </div>

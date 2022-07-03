@@ -13,8 +13,7 @@
       <a
         mat-button
         color="primary"
-        [routerLink]="['/admin/uredi-plezalisce/' + crag.id]"
-        *ngIf="crag"
+        [routerLink]="['/urejanje/uredi-plezalisce/' + crag.id]"
         >Uredi plezališče</a
       >
     </div>
@@ -26,12 +25,21 @@
       (cdkDropListDropped)="drop($event)"
       [class.saving]="savingPositions"
     >
-      <div *ngFor="let sector of sectors; let i = index" cdkDrag>
+      <div
+        *ngFor="let sector of sectors; let i = index"
+        cdkDrag
+        [cdkDragDisabled]="!canEdit(sector)"
+      >
         <div
           fxLayout="row"
-          class="sector mt-8"
           fxLayoutAlign="start center"
           fxLayout.lt-sm="column"
+          class="sector mt-8"
+          [ngClass]="{
+            warn: sector.publishStatus === 'draft',
+            notice: sector.publishStatus === 'in_review',
+            disabled: !canEdit(sector)
+          }"
         >
           <div class="name" fxFlex="100" fxFlex.lt-sm>
             <span>{{ sector.label }}</span> {{ sector.name }}
@@ -40,11 +48,17 @@
             <a
               mat-button
               color="primary"
-              [routerLink]="['/admin/uredi-sektor/', sector.id]"
+              [routerLink]="['/urejanje/uredi-sektor/', sector.id]"
               >Uredi smeri</a
             >
           </div>
-          <div class="tools" fxLayout="row" fxLayoutAlign="start center">
+
+          <div
+            *ngIf="canEdit(sector)"
+            class="tools"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+          >
             <button mat-icon-button (click)="edit(sector)">
               <mat-icon>edit</mat-icon>
             </button>
@@ -58,6 +72,36 @@
 
             <button mat-icon-button (click)="remove(sector)">
               <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+
+          <!-- If a sector is not published, show possible publishStatus change buttons -->
+          <div
+            *ngIf="canEdit(sector)"
+            fxFlex
+            ngClass.lt-sm="mb-8"
+            class="publish-status-actions"
+          >
+            <button
+              mat-stroked-button
+              *ngFor="
+                let nextStatus of contributionService.nextPossiblePublishStatuses(
+                  sector
+                );
+                trackBy: contributionService.statusButtonsTrackBy
+              "
+              [disabled]="!nextStatus.enabled"
+              (click)="
+                contributionService.updatePublishStatus(
+                  sector,
+                  nextStatus.status
+                )
+              "
+            >
+              {{
+                contributionService.publishStatuses[nextStatus.status]
+                  .actionLabel
+              }}
             </button>
           </div>
         </div>

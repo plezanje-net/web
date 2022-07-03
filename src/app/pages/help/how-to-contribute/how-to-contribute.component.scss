@@ -1,0 +1,54 @@
+@import "../../../../styles/colors.scss";
+
+$light-gray: #0000008a;
+$almost-black: rgba(0, 0, 0, 0.87);
+
+h2,
+h3 {
+  color: $almost-black;
+  padding: 0;
+}
+
+h3 {
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+
+mat-card {
+  margin-top: 16px;
+  border-radius: 0;
+}
+
+.date {
+  color: $light-gray;
+}
+
+img {
+  max-width: 100%;
+  margin-top: 16px;
+}
+
+.grade-modifier {
+  position: relative;
+  top: 7px;
+  height: 20px;
+  line-height: 5px;
+
+  &.hard {
+    color: $colors-red;
+  }
+
+  &.soft {
+    color: $colors-green;
+  }
+}
+
+ul {
+  margin-bottom: 12px;
+  margin-top: -4px;
+  li {
+    list-style: circle;
+    list-style-position: inside;
+    padding-left: 16px;
+  }
+}

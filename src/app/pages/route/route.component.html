@@ -9,6 +9,15 @@
     </div>
   </div>
 
+  <app-publish-status-hint
+    *ngIf="
+      route.publishStatus === 'draft' || route.publishStatus === 'in_review'
+    "
+    class="container mt-16"
+    entityType="route"
+    [publishStatus]="route.publishStatus"
+  ></app-publish-status-hint>
+
   <app-warnings *ngIf="warnings" [warnings]="warnings"></app-warnings>
 
   <div

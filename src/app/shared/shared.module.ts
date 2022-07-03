@@ -29,11 +29,15 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { GradeComponent } from './components/grade/grade.component';
 import { PluralizeNoun } from './pipes/pluralize-noun.pipe';
+import { PluralizeVerb } from './pipes/pluralize-verb.pipe';
 import { DataErrorComponent } from './components/data-error/data-error.component';
 import { AscentTypeComponent } from './components/ascent-type/ascent-type.component';
 import { AscentPublishOptionComponent } from './components/ascent-publish-option/ascent-publish-option.component';
 import { ResponsiveImageComponent } from './components/responsive-image/responsive-image.component';
 import { InfoPropertyComponent } from './components/info-property/info-property.component';
+import { PublishStatusHintComponent } from './components/publish-status-hint/publish-status-hint.component';
+import { RouterModule } from '@angular/router';
+import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.component';
 
 @NgModule({
   declarations: [
@@ -53,10 +57,13 @@ import { InfoPropertyComponent } from './components/info-property/info-property.
     OrientationPipe,
     GradeComponent,
     PluralizeNoun,
+    PluralizeVerb,
     AscentTypeComponent,
     AscentPublishOptionComponent,
     ResponsiveImageComponent,
     InfoPropertyComponent,
+    PublishStatusHintComponent,
+    YesNoDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -74,6 +81,7 @@ import { InfoPropertyComponent } from './components/info-property/info-property.
     NgxMatSelectSearchModule,
     MatDatepickerModule,
     MatInputModule,
+    RouterModule,
   ],
   providers: [
     CustomBreakpointsProvider,
@@ -100,8 +108,11 @@ import { InfoPropertyComponent } from './components/info-property/info-property.
     MatInputModule,
     GradeComponent,
     PluralizeNoun,
+    PluralizeVerb,
     ResponsiveImageComponent,
     InfoPropertyComponent,
+    PublishStatusHintComponent,
+    YesNoDialogComponent,
   ],
 })
 export class SharedModule {}

@@ -1,18 +1,5 @@
-import {
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Apollo } from 'apollo-angular';
@@ -38,6 +25,7 @@ export interface RouteFormValues {
   defaultGradingSystemId?: string;
   routeTypeId?: string;
   addAnother?: boolean;
+  publishStatus?: string;
 }
 
 @Component({
@@ -61,6 +49,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
     position: new FormControl(),
     sectorId: new FormControl(),
     addAnother: new FormControl(false),
+    publishStatus: new FormControl('draft'),
   });
 
   gradingSystems: GradingSystem[];
@@ -214,7 +203,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
       this.apollo.client.resetStore().then(() => {
         this.saving = false;
 
-        const { routeTypeId, defaultGradingSystemId } = value;
+        const { routeTypeId, defaultGradingSystemId, status, position } = value;
 
         this.dialogRef.close(
           value.addAnother
@@ -222,6 +211,8 @@ export class RouteFormComponent implements OnInit, OnDestroy {
                 addAnother: true,
                 routeTypeId,
                 defaultGradingSystemId,
+                status,
+                position: position + 1,
               }
             : null
         );
@@ -259,9 +250,9 @@ export class RouteFormComponent implements OnInit, OnDestroy {
             routeTypeId: value.routeTypeId,
             baseDifficulty: value.baseDifficulty,
             defaultGradingSystemId: value.defaultGradingSystemId,
-            position: this.data.values.position,
-            sectorId: this.data.values.sectorId,
-            status: 'public',
+            position: value.position,
+            sectorId: value.sectorId,
+            publishStatus: value.publishStatus,
           },
         })
         .subscribe({

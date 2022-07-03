@@ -1,6 +1,0 @@
-mutation ManagementSaveRoutePositions($input: [UpdateRouteInput!]!) {
-  updateRoutes(input: $input) {
-    id
-    position
-  }
-}

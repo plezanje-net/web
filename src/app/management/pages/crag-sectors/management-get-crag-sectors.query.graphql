@@ -4,10 +4,17 @@ query ManagementGetCragSectors($id: String!) {
       id
       label
       name
-      status
+      publishStatus
       position
+      created
       routes {
         id
+      }
+      user {
+        id
+      }
+      crag {
+        publishStatus
       }
     }
     slug
@@ -17,6 +24,10 @@ query ManagementGetCragSectors($id: String!) {
       name
       id
       slug
+    }
+    publishStatus
+    user {
+      id
     }
   }
 }

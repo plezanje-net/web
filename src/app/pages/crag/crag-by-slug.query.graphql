@@ -2,6 +2,7 @@ query CragBySlug($crag: String!) {
   cragBySlug(slug: $crag) {
     id
     slug
+    status
     name
     type
     orientation
@@ -10,6 +11,7 @@ query CragBySlug($crag: String!) {
     access
     description
     activityByMonth
+    publishStatus
     peak {
       name
       slug
@@ -27,6 +29,7 @@ query CragBySlug($crag: String!) {
       id
       name
       label
+      publishStatus
       routes {
         id
         name
@@ -54,6 +57,7 @@ query CragBySlug($crag: String!) {
         nrClimbers
         position
         starRating
+        publishStatus
       }
       bouldersOnly
     }
@@ -85,6 +89,9 @@ query CragBySlug($crag: String!) {
       id
       title
       path
+    }
+    user {
+      id
     }
   }
 }

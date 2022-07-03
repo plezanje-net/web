@@ -1,0 +1,26 @@
+@import "../../../../styles/variables.scss";
+
+.warn {
+  color: $red;
+  &.card {
+    border-left: 1px solid $red;
+  }
+}
+
+.notice {
+  color: $orange;
+  &.card {
+    border-left: 1px solid $orange;
+  }
+}
+
+.warn,
+.notice {
+  a {
+    color: unset;
+    text-decoration: underline;
+  }
+  &.preview {
+    font-size: 12px;
+  }
+}

@@ -25,10 +25,7 @@
         <button mat-menu-item (click)="addComment('warning')">
           <span>Dodaj opozorilo</span>
         </button>
-        <a
-          mat-menu-item
-          [routerLink]="['/admin/uredi-plezalisce', crag.id]"
-          *ngIf="canEdit"
+        <a mat-menu-item [routerLink]="['/urejanje/uredi-plezalisce', crag.id]"
           >Uredi plezališče</a
         >
       </mat-menu>
@@ -36,6 +33,13 @@
   </div>
 
   <app-warnings *ngIf="warnings" [warnings]="warnings"></app-warnings>
+
+  <app-publish-status-hint
+    *ngIf="crag.publishStatus === 'draft' || crag.publishStatus === 'in_review'"
+    class="container mt-16"
+    entityType="crag"
+    [publishStatus]="crag.publishStatus"
+  ></app-publish-status-hint>
 
   <div
     class="container mt-16"

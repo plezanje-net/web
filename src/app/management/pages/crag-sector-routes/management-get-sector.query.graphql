@@ -23,9 +23,13 @@ query ManagementGetSector($id: String!) {
       slug
       length
       name
-      status
+      publishStatus
       isProject
       position
+      created
+      sector {
+        publishStatus
+      }
       routeType {
         id
         name
@@ -44,6 +48,9 @@ query ManagementGetSector($id: String!) {
         height
         id
         number
+      }
+      user {
+        id
       }
     }
   }

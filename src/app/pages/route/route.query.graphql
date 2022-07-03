@@ -10,7 +10,7 @@ query RouteBySlug($cragSlug: String!, $routeSlug: String!) {
     name
     length
     author
-    status
+    publishStatus
     routeEvents {
       id
       eventDate

@@ -32,6 +32,7 @@ export class CragRoutePreviewComponent implements OnChanges {
   _routeGradesInitialized: boolean | null;
 
   @Input() routeId: string;
+  @Input() publishStatus = 'published';
   @Output() heightChangeEvent = new EventEmitter<number>();
   @ViewChild('container') container: ElementRef;
 

@@ -16,16 +16,6 @@
       <mat-label>Ime sektorja</mat-label>
       <input matInput formControlName="name" />
     </mat-form-field>
-    <mat-form-field fxFlex>
-      <mat-label>Status</mat-label>
-      <mat-select formControlName="status">
-        <mat-option
-          *ngFor="let option of statusOptions"
-          [value]="option.value"
-          >{{ option.label }}</mat-option
-        >
-      </mat-select>
-    </mat-form-field>
   </div>
   <mat-dialog-actions align="end">
     <div fxLayout="row" fxLayoutAlign="end center">

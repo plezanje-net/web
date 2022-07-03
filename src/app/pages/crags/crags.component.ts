@@ -7,6 +7,8 @@ import { CragsQuery, CragsGQL } from '../../../generated/graphql';
 import { GraphQLError } from 'graphql';
 import { FormControl } from '@angular/forms';
 import { ROUTE_TYPES } from 'src/app/common/route-types.constants';
+import { AuthService } from 'src/app/auth/auth.service';
+import { User } from '@sentry/angular';
 
 @Component({
   selector: 'app-crags',
@@ -26,13 +28,17 @@ export class CragsComponent implements OnInit, OnDestroy {
   map: any;
 
   search = new FormControl();
-  searchSub: Subscription;
 
   filteredCrags: CragsQuery['countryBySlug']['crags'] = [];
 
   routeTypes = ROUTE_TYPES;
 
+  user: User;
+
+  subscriptions: Subscription[] = [];
+
   constructor(
+    private authService: AuthService,
     private layoutService: LayoutService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -48,7 +54,12 @@ export class CragsComponent implements OnInit, OnDestroy {
 
     this.loading = true;
 
-    this.activatedRoute.params.subscribe((params) => {
+    const authSub = this.authService.currentUser.subscribe(
+      (user) => (this.user = user)
+    );
+    this.subscriptions.push(authSub);
+
+    const routeSub = this.activatedRoute.params.subscribe((params) => {
       this.cragsLoading = true;
 
       const rotueType = this.routeTypes.find((rt) => rt.slug === params['tip']);
@@ -60,6 +71,7 @@ export class CragsComponent implements OnInit, OnDestroy {
             areaSlug: params['obmocje'],
             routeTypeId: rotueType?.id,
             type: 'sport',
+            allowEmpty: true,
           },
         })
         .pipe(take(1))
@@ -81,9 +93,12 @@ export class CragsComponent implements OnInit, OnDestroy {
         });
     });
 
-    this.searchSub = this.search.valueChanges.subscribe(() =>
+    this.subscriptions.push(authSub);
+
+    const searchSub = this.search.valueChanges.subscribe(() =>
       this.filterCrags()
     );
+    this.subscriptions.push(searchSub);
   }
 
   filterCrags(): void {
@@ -147,6 +162,6 @@ export class CragsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.searchSub.unsubscribe();
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }

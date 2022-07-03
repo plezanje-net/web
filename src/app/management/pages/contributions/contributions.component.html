@@ -1,0 +1,92 @@
+<div class="white-back mt-16">
+  <div
+    class="container py-8"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+    fxLayout.lt-sm="column"
+  >
+    <div>
+      <h1>Odprti prispevki</h1>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-16">
+  <app-loader *ngIf="loading"></app-loader>
+
+  <div *ngIf="!loading && error">Pri nalaganju je prišlo do napake.</div>
+
+  <div *ngIf="!loading && !error">
+    <!-- Crags and all their descendants -->
+    <ng-container *ngFor="let cragContribution of contributionsTree.crags">
+      <app-contribution
+        [contribution]="cragContribution"
+        [link]="['/plezalisce', cragContribution.crag.slug]"
+      ></app-contribution>
+      <ng-container
+        *ngFor="let sectorContribution of cragContribution.children"
+      >
+        <app-contribution
+          [contribution]="sectorContribution"
+          [link]="['/plezalisce', sectorContribution.sector.crag.slug]"
+          [depth]="1"
+        ></app-contribution>
+        <ng-container
+          *ngFor="let routeContribution of sectorContribution.children"
+        >
+          <app-contribution
+            [contribution]="routeContribution"
+            [link]="[
+              '/plezalisce',
+              routeContribution.route.crag.slug,
+              'smer',
+              routeContribution.route.slug
+            ]"
+            [depth]="2"
+          ></app-contribution>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+
+    <!-- Orphaned sectors and all their children routes -->
+    <div
+      *ngFor="let sectorContribution of contributionsTree.sectors"
+      class="mt-16"
+    >
+      <app-contribution
+        [contribution]="sectorContribution"
+        [link]="['/plezalisce', sectorContribution.sector.crag.slug]"
+      ></app-contribution>
+      <ng-container
+        *ngFor="let routeContribution of sectorContribution.children"
+      >
+        <app-contribution
+          [contribution]="routeContribution"
+          [link]="[
+            '/plezalisce',
+            routeContribution.route.crag.slug,
+            'smer',
+            routeContribution.route.slug
+          ]"
+          [depth]="1"
+        ></app-contribution>
+      </ng-container>
+    </div>
+
+    <!-- Orphaned routes -->
+    <div
+      *ngFor="let routeContribution of contributionsTree.routes"
+      class="mt-16"
+    >
+      <app-contribution
+        [contribution]="routeContribution"
+        [link]="[
+          '/plezalisce',
+          routeContribution.route.crag.slug,
+          'smer',
+          routeContribution.route.slug
+        ]"
+      ></app-contribution>
+    </div>
+  </div>
+</div>

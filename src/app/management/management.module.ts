@@ -5,7 +5,7 @@ import { ManagementRoutingModule } from './management-routing.module';
 import { CragComponent } from './pages/crag/crag.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SectorFormComponent } from './forms/sector-form/sector-form.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSelectModule } from '@angular/material/select';
@@ -24,7 +24,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CragSectorRoutesComponent } from './pages/crag-sector-routes/crag-sector-routes.component';
-import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { NgxMaskModule } from 'ngx-mask';
+import { ContributionsComponent } from './pages/contributions/contributions.component';
+import { PublishStatusChangeDialogComponent } from './pages/contributions/publish-status-change-dialog/publish-status-change-dialog.component';
+import { MatCardModule } from '@angular/material/card';
+import { ContributionComponent } from './pages/contributions/contribution/contribution.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +38,9 @@ import { NgxMaskModule, IConfig } from 'ngx-mask';
     RouteFormComponent,
     CragSectorsComponent,
     CragSectorRoutesComponent,
+    ContributionsComponent,
+    PublishStatusChangeDialogComponent,
+    ContributionComponent,
   ],
   imports: [
     CommonModule,
@@ -54,7 +61,9 @@ import { NgxMaskModule, IConfig } from 'ngx-mask';
     SharedModule,
     DragDropModule,
     ReactiveFormsModule,
+    FormsModule,
     ManagementRoutingModule,
+    MatCardModule,
   ],
 })
 export class ManagementModule {}
