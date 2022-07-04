@@ -129,13 +129,14 @@
     </div>
   </div>
   <div>
-    <mat-form-field fxFlex="100" class="no-hint">
-      <mat-label>Komentar</mat-label>
+    <mat-form-field fxFlex="100">
+      <mat-label>Opombe</mat-label>
       <textarea
         matInput
         formControlName="notes"
         [rows]="activity ? 3 : 6"
       ></textarea>
+      <mat-hint>Opombe bodo vidne samo tebi</mat-hint>
     </mat-form-field>
   </div>
   <div fxFlex fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="16px">

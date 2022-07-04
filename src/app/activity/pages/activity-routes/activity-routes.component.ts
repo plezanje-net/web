@@ -72,6 +72,7 @@ export class ActivityRoutesComponent implements OnInit, OnDestroy {
       { name: 'route', label: 'Smer' },
       { name: 'grade', label: 'Ocena', sortable: true },
       { name: 'ascentType', label: 'Vrsta vzpona' },
+      { name: 'notes', label: 'Opombe' },
       { name: 'publish', label: 'Vidnost' },
     ],
     [
