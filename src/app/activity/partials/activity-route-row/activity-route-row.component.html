@@ -43,11 +43,13 @@
 <td>
   <app-ascent-type [value]="route.ascentType"></app-ascent-type>
 </td>
+<td *ngIf="!noNotes">{{ route.notes }}</td>
 <td>
   <app-ascent-publish-option
     [value]="route.publish"
   ></app-ascent-publish-option>
 </td>
+
 <td *ngIf="rowAction" class="tools">
   <button mat-icon-button type="button" [mat-menu-trigger-for]="menu">
     <mat-icon>more_vert</mat-icon>

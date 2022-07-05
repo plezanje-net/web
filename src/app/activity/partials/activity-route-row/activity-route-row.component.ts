@@ -17,6 +17,7 @@ export class ActivityRouteRowComponent implements OnInit {
   @Input() route: ActivityRoute;
   @Input() rowAction: Subject<RowAction>;
   @Input() displayType: 'activity' | 'activityForm' | 'routes' = 'routes';
+  @Input() noNotes = false;
   publishOptions = PUBLISH_OPTIONS;
 
   constructor(
