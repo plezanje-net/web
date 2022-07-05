@@ -89,6 +89,8 @@ query CragBySlug($crag: String!) {
       id
       title
       path
+      aspectRatio
+      maxIntrinsicWidth
     }
     user {
       id

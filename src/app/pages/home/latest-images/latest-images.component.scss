@@ -17,6 +17,21 @@ h2 {
   height: 100%;
   cursor: pointer;
 
+  // Comment this if we want cover effect -->
+  // display: flex;
+  // flex-direction: row;
+  // align-items: center;
+  // justify-content: center;
+  // --> cover
+
+  // Uncomment this  if we want cover effect -->
+  ::ng-deep img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+  }
+  // --> cover
+
   .info {
     position: absolute;
     top: 0;
