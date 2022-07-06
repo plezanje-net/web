@@ -15,6 +15,7 @@ import {
 } from 'src/generated/graphql';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { User } from '@sentry/angular';
+import { ScrollService } from 'src/app/services/scroll.service';
 
 @Component({
   selector: 'app-crag',
@@ -68,7 +69,8 @@ export class CragComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private cragBySlugGQL: CragBySlugGQL,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private scrollService: ScrollService
   ) {}
 
   ngOnInit(): void {
@@ -102,9 +104,14 @@ export class CragComponent implements OnInit, OnDestroy {
       }
 
       this.cragSub = this.cragBySlugGQL
-        .watch({
-          crag: params.crag,
-        })
+        .watch(
+          {
+            crag: params.crag,
+          },
+          {
+            // fetchPolicy: 'no-cache', // TODO: this is a test
+          }
+        )
         .valueChanges.subscribe({
           next: (result) => {
             this.loading = false;
@@ -222,6 +229,8 @@ export class CragComponent implements OnInit, OnDestroy {
         `Plezališče ${this.crag.name}`,
         this.crag.country.name,
       ]);
+
+      this.scrollService.restoreScroll();
     }
   }
 
