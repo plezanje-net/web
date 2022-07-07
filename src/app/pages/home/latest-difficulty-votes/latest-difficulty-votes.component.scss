@@ -1,0 +1,16 @@
+@import "../../../../styles/colors.scss";
+
+$border-color: rgba(0, 0, 0, 0.08); // very light gray
+$table-header-text-color: #0000008a; // light gray
+
+h2 {
+  color: $primary;
+  background-color: transparent;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: normal;
+  margin-top: 32px;
+  margin-bottom: 16x;
+  padding: 0;
+  box-shadow: none;
+}

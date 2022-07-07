@@ -1,0 +1,39 @@
+<h2>Zadnje predlagane ocene</h2>
+
+<div *ngIf="!loading" fxLayout="column" fxLayoutGap="16px">
+  <mat-card>
+    <mat-card-content>
+      <div *ngFor="let vote of difficultyVotes" class="row">
+        {{ vote.user.fullName }} / {{ vote.created | date: "d. M. yyyy" }} /
+        <app-grade
+          [difficulty]="vote.difficulty"
+          [gradingSystemId]="vote.route.defaultGradingSystem.id"
+          [showModifier]="false"
+        >
+        </app-grade>
+        [<a [routerLink]="['/plezalisce', vote.route.crag.slug]">
+          {{ vote.route.crag.name }}</a
+        >
+        /
+        <a
+          [routerLink]="[
+            '/plezalisce',
+            vote.route.crag.slug,
+            'smer',
+            vote.route.slug
+          ]"
+        >
+          {{ vote.route.name }}
+        </a>
+        /
+        <app-grade
+          [difficulty]="vote.route.difficulty"
+          [gradingSystemId]="vote.route.defaultGradingSystem.id"
+          [showModifier]="true"
+        >
+        </app-grade>
+        ]
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
