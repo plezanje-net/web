@@ -1,7 +1,7 @@
 import { ViewportScroller } from '@angular/common';
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
-import { asyncScheduler, filter, observeOn, take } from 'rxjs';
+import { asyncScheduler, filter } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,8 +12,7 @@ export class ScrollService {
 
   constructor(
     private router: Router,
-    private viewportScroller: ViewportScroller,
-    private zone: NgZone
+    private viewportScroller: ViewportScroller
   ) {}
 
   /**
@@ -21,7 +20,6 @@ export class ScrollService {
    * Positions are indexed by the event id.
    */
   startCachingScrollPositions() {
-    console.log('starting caching scroll positions');
     this.router.events
       .pipe(filter((event) => event instanceof NavigationStart))
       .subscribe((event: NavigationStart) => {
@@ -47,17 +45,14 @@ export class ScrollService {
    * This is expected to be called from components after they fetch their data.
    */
   restoreScroll() {
-    this.zone.onMicrotaskEmpty
-      .asObservable()
-      .pipe(take(1), observeOn(asyncScheduler))
-      .subscribe(() => {
-        // If this is a back or a forward click
-        if (this.lastEvent.navigationTrigger === 'popstate') {
-          this.viewportScroller.scrollToPosition([
-            0,
-            this.scrollPositions[this.lastEvent.restoredState.navigationId + 1],
-          ]);
-        }
-      });
+    asyncScheduler.schedule(() => {
+      // If this is a back or a forward click
+      if (this.lastEvent.navigationTrigger === 'popstate') {
+        this.viewportScroller.scrollToPosition([
+          0,
+          this.scrollPositions[this.lastEvent.restoredState.navigationId + 1],
+        ]);
+      }
+    });
   }
 }
