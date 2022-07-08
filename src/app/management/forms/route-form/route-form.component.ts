@@ -100,13 +100,22 @@ export class RouteFormComponent implements OnInit, OnDestroy {
     const projectSub = this.form.controls.isProject.valueChanges.subscribe(
       (value) => {
         const baseDifficultyControl = this.form.controls.baseDifficulty;
-        if (value == true || this.data.route) {
+
+        if (value) {
+          // if project, reset base difficulty and disable it
           baseDifficultyControl.setValue(null);
+          baseDifficultyControl.disable();
           baseDifficultyControl.clearValidators();
         } else {
-          baseDifficultyControl.addValidators(Validators.required);
+          // if not project, enable base difficulty but only if editable (no user votes yet) or new route
+          if (
+            !this.data.route ||
+            this.baseDifficultyEditable(this.data.route)
+          ) {
+            baseDifficultyControl.enable();
+            baseDifficultyControl.addValidators(Validators.required);
+          }
         }
-
         baseDifficultyControl.updateValueAndValidity();
       }
     );
@@ -165,12 +174,28 @@ export class RouteFormComponent implements OnInit, OnDestroy {
 
     if (this.data.route) {
       this.editing = true;
+
+      if (!this.baseDifficultyEditable(this.data.route)) {
+        this.form.controls.baseDifficulty.disable();
+        this.form.controls.isProject.disable();
+      }
+
       this.form.patchValue({
         ...this.data.route,
         routeTypeId: this.data.route.routeType.id,
         defaultGradingSystemId: this.data.route.defaultGradingSystem.id,
+        baseDifficulty: this.data.route.difficultyVotes.find(
+          (vote) => vote.isBase
+        )?.difficulty,
       });
     }
+  }
+
+  private baseDifficultyEditable(route: Route) {
+    return (
+      route?.difficultyVotes.length == 0 ||
+      (route?.difficultyVotes.length == 1 && route?.difficultyVotes[0].isBase)
+    );
   }
 
   loadDifficultyOptions(gradingSystemId: string) {
@@ -234,6 +259,8 @@ export class RouteFormComponent implements OnInit, OnDestroy {
             length: +value.length,
             routeTypeId: value.routeTypeId,
             defaultGradingSystemId: value.defaultGradingSystemId,
+            baseDifficulty: value.baseDifficulty ?? null,
+            isProject: value.isProject,
           },
         })
         .subscribe({
