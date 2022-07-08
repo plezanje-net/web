@@ -104,14 +104,9 @@ export class CragComponent implements OnInit, OnDestroy {
       }
 
       this.cragSub = this.cragBySlugGQL
-        .watch(
-          {
-            crag: params.crag,
-          },
-          {
-            // fetchPolicy: 'no-cache', // TODO: this is a test
-          }
-        )
+        .watch({
+          crag: params.crag,
+        })
         .valueChanges.subscribe({
           next: (result) => {
             this.loading = false;
