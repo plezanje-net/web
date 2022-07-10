@@ -9,6 +9,7 @@ import { FormControl } from '@angular/forms';
 import { ROUTE_TYPES } from 'src/app/common/route-types.constants';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from '@sentry/angular';
+import { ScrollService } from 'src/app/services/scroll.service';
 
 @Component({
   selector: 'app-crags',
@@ -42,7 +43,8 @@ export class CragsComponent implements OnInit, OnDestroy {
     private layoutService: LayoutService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private cragsGQL: CragsGQL
+    private cragsGQL: CragsGQL,
+    private scrollService: ScrollService
   ) {}
 
   ngOnInit(): void {
@@ -159,6 +161,8 @@ export class CragsComponent implements OnInit, OnDestroy {
     ]);
 
     this.layoutService.setTitle(['Seznam plezališč', this.country.name]);
+
+    this.scrollService.restoreScroll();
   }
 
   ngOnDestroy(): void {

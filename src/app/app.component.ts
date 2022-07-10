@@ -12,6 +12,8 @@ import { Subscription, take } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 
+import { ScrollService } from './services/scroll.service';
+
 declare let gtag: Function;
 
 @Component({
@@ -31,7 +33,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     private layoutService: LayoutService,
     private matIconRegistry: MatIconRegistry,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    private scrollService: ScrollService
   ) {
     this.matIconRegistry.addSvgIcon(
       'multipitch',
@@ -90,6 +93,9 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe(() => gtag('event', 'page_view'));
 
     this.subscriptions.push(routerSub);
+
+    this.scrollService.startCachingScrollPositions();
+    this.scrollService.enableDefaultScrollToTop();
   }
 
   ngOnDestroy(): void {

@@ -116,7 +116,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   hostResizeObserver: ResizeObserver;
   routeListViewStyle: 'compact' | 'table';
   tableWidth: number;
-  availableWidth: number;
+  availableWidth: number = 0;
   sortAll = ['position', 1];
   search = new FormControl();
   searchSub: Subscription;
