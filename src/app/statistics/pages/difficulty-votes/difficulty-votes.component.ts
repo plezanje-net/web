@@ -36,7 +36,7 @@ export class DifficultyVotesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.layoutService.$breadcrumbs.next([
       {
-        path: '/pregledi',
+        // path: '/pregledi',
         name: 'Pregledi',
       },
       {
