@@ -42,8 +42,11 @@
 
     <app-latest-ticks (errorEvent)="handleError($event)"></app-latest-ticks>
 
-    <app-latest-difficulty-votes
-      (errorEvent)="handleError($event)"
-    ></app-latest-difficulty-votes>
+    <div fxLayout="row" fxLayoutAlign="space-around">
+      <app-latest-difficulty-votes
+        fxFlex="600px"
+        (errorEvent)="handleError($event)"
+      ></app-latest-difficulty-votes>
+    </div>
   </div>
 </div>

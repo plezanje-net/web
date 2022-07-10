@@ -1,21 +1,31 @@
-<h2>Zadnje predlagane ocene</h2>
-
-<div *ngIf="!loading" fxLayout="column" fxLayoutGap="16px">
-  <mat-card>
-    <mat-card-content>
-      <div *ngFor="let vote of difficultyVotes" class="row">
-        {{ vote.user.fullName }} / {{ vote.created | date: "d. M. yyyy" }} /
-        <app-grade
-          [difficulty]="vote.difficulty"
-          [gradingSystemId]="vote.route.defaultGradingSystem.id"
-          [showModifier]="false"
-        >
-        </app-grade>
-        [<a [routerLink]="['/plezalisce', vote.route.crag.slug]">
+<div fxLayout="row" fxLayoutAlign="space-between">
+  <h2>Zadnje predlagane ocene</h2>
+  <a
+    [routerLink]="['/pregledi/ocene']"
+    mat-icon-button
+    color="primary"
+    matTooltip="Prikaži vse"
+    ><mat-icon>read_more</mat-icon></a
+  >
+</div>
+<mat-card *ngIf="!loading">
+  <div class="row" *ngFor="let vote of difficultyVotes">
+    <div class="heading" fxLayout="row" fxLayoutAlign="space-between">
+      <span>{{ vote.user.fullName }}</span>
+      <span>{{ vote.created | date: "d. M. yyyy" }}</span>
+    </div>
+    <div class="mt-8" fxLayout="row" fxLayoutAlign="space-between">
+      <span>Plezališče</span>
+      <span
+        ><a [routerLink]="['/plezalisce', vote.route.crag.slug]">
           {{ vote.route.crag.name }}</a
-        >
-        /
-        <a
+        ></span
+      >
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-between">
+      <span>Smer</span>
+      <span
+        ><a
           [routerLink]="[
             '/plezalisce',
             vote.route.crag.slug,
@@ -24,16 +34,35 @@
           ]"
         >
           {{ vote.route.name }}
-        </a>
-        /
+        </a></span
+      >
+    </div>
+    <div class="mt-8" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="8px">
+      <div>
         <app-grade
           [difficulty]="vote.route.difficulty"
           [gradingSystemId]="vote.route.defaultGradingSystem.id"
           [showModifier]="true"
         >
         </app-grade>
-        ]
       </div>
-    </mat-card-content>
-  </mat-card>
-</div>
+      <div class="direction">
+        <mat-icon inline>{{
+          vote.difficulty > vote.route.difficulty + 25
+            ? "north_east"
+            : vote.difficulty < vote.route.difficulty - 25
+            ? "south_east"
+            : "east"
+        }}</mat-icon>
+      </div>
+      <div>
+        <app-grade
+          [difficulty]="vote.difficulty"
+          [gradingSystemId]="vote.route.defaultGradingSystem.id"
+          [showModifier]="false"
+        >
+        </app-grade>
+      </div>
+    </div>
+  </div>
+</mat-card>
