@@ -39,12 +39,13 @@
     <app-popular-crags (errorEvent)="handleError($event)"></app-popular-crags>
 
     <!-- <app-latest-images (errorEvent)="handleError($event)"></app-latest-images> -->
-
-    <app-latest-ticks (errorEvent)="handleError($event)"></app-latest-ticks>
-
-    <div fxLayout="row" fxLayoutAlign="space-around">
+    <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="16px">
+      <app-latest-ticks
+        fxFlex="50"
+        (errorEvent)="handleError($event)"
+      ></app-latest-ticks>
       <app-latest-difficulty-votes
-        fxFlex="600px"
+        fxFlex="50"
         (errorEvent)="handleError($event)"
       ></app-latest-difficulty-votes>
     </div>

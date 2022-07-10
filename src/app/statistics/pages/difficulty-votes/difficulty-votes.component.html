@@ -68,44 +68,51 @@
         <app-loader></app-loader>
       </div>
       <div fxShow.lt-md fxHide class="row" *ngFor="let vote of difficultyVotes">
-        <div class="heading" fxLayout="row" fxLayoutAlign="space-between">
-          <ng-container
-            *ngTemplateOutlet="user; context: { vote: vote }"
-          ></ng-container>
+        <div class="date">
           <ng-container
             *ngTemplateOutlet="date; context: { vote: vote }"
           ></ng-container>
         </div>
-        <div class="mt-8" fxLayout="row" fxLayoutAlign="space-between">
-          <span>Plezališče</span>
+        <div>
           <ng-container
-            *ngTemplateOutlet="crag; context: { vote: vote }"
+            *ngTemplateOutlet="user; context: { vote: vote }"
           ></ng-container>
         </div>
-        <div fxLayout="row" fxLayoutAlign="space-between">
-          <span>Smer</span>
-          <span *ngTemplateOutlet="route; context: { vote: this.vote }"></span>
-        </div>
         <div
-          class="mt-8"
           fxLayout="row"
-          fxLayoutAlign="center"
+          fxLayoutAlign="space-between center"
           fxLayoutGap="8px"
         >
           <div>
             <ng-container
-              *ngTemplateOutlet="avgGrade; context: { vote: vote }"
-            ></ng-container>
-          </div>
-          <div class="direction">
+              *ngTemplateOutlet="crag; context: { vote: vote }"
+            ></ng-container
+            >,
             <ng-container
-              *ngTemplateOutlet="directionIndicator; context: { vote: vote }"
+              *ngTemplateOutlet="route; context: { vote: this.vote }"
             ></ng-container>
           </div>
           <div>
-            <ng-container
-              *ngTemplateOutlet="proposedGrade; context: { vote: vote }"
-            ></ng-container>
+            <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="8px">
+              <div class="grade">
+                <ng-container
+                  *ngTemplateOutlet="avgGrade; context: { vote: vote }"
+                ></ng-container>
+              </div>
+              <div class="direction">
+                <ng-container
+                  *ngTemplateOutlet="
+                    directionIndicator;
+                    context: { vote: vote }
+                  "
+                ></ng-container>
+              </div>
+              <div class="grade">
+                <ng-container
+                  *ngTemplateOutlet="proposedGrade; context: { vote: vote }"
+                ></ng-container>
+              </div>
+            </div>
           </div>
         </div>
       </div>

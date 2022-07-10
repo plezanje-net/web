@@ -1,68 +1,114 @@
 <div fxLayout="row" fxLayoutAlign="space-between">
-  <h2>Zadnje predlagane ocene</h2>
-  <a
-    [routerLink]="['/pregledi/ocene']"
-    mat-icon-button
-    color="primary"
-    matTooltip="Prikaži vse"
-    ><mat-icon>read_more</mat-icon></a
-  >
+  <h2>Zadnji predlogi ocen</h2>
 </div>
+
+<ng-template #route let-vote="vote">
+  <a
+    [routerLink]="[
+      '/plezalisce',
+      vote.route.crag.slug,
+      'smer',
+      vote.route.slug
+    ]"
+  >
+    {{ vote.route.name }}
+  </a>
+</ng-template>
+
+<ng-template #crag let-vote="vote">
+  <a [routerLink]="['/plezalisce', vote.route.crag.slug]">
+    {{ vote.route.crag.name }}</a
+  >
+</ng-template>
+
+<ng-template #date let-vote="vote">
+  <span>{{ vote.created | date: "d. M. yyyy" }}</span>
+</ng-template>
+
+<ng-template #user let-vote="vote">
+  <span>{{ vote.user.fullName }}</span>
+</ng-template>
+
+<ng-template #avgGrade let-vote="vote">
+  <app-grade
+    [difficulty]="vote.route.difficulty"
+    [gradingSystemId]="vote.route.defaultGradingSystem.id"
+    [showModifier]="true"
+  >
+  </app-grade>
+</ng-template>
+
+<ng-template #proposedGrade let-vote="vote">
+  <app-grade
+    [difficulty]="vote.difficulty"
+    [gradingSystemId]="vote.route.defaultGradingSystem.id"
+    [showModifier]="false"
+  >
+  </app-grade>
+</ng-template>
+
+<ng-template #directionIndicator let-vote="vote">
+  <mat-icon inline>{{
+    vote.difficulty > vote.route.difficulty + 25
+      ? "north_east"
+      : vote.difficulty < vote.route.difficulty - 25
+      ? "south_east"
+      : "east"
+  }}</mat-icon>
+</ng-template>
+
 <mat-card *ngIf="!loading">
-  <div class="row" *ngFor="let vote of difficultyVotes">
-    <div class="heading" fxLayout="row" fxLayoutAlign="space-between">
-      <span>{{ vote.user.fullName }}</span>
-      <span>{{ vote.created | date: "d. M. yyyy" }}</span>
-    </div>
-    <div class="mt-8" fxLayout="row" fxLayoutAlign="space-between">
-      <span>Plezališče</span>
-      <span
-        ><a [routerLink]="['/plezalisce', vote.route.crag.slug]">
-          {{ vote.route.crag.name }}</a
-        ></span
-      >
-    </div>
-    <div fxLayout="row" fxLayoutAlign="space-between">
-      <span>Smer</span>
-      <span
-        ><a
-          [routerLink]="[
-            '/plezalisce',
-            vote.route.crag.slug,
-            'smer',
-            vote.route.slug
-          ]"
-        >
-          {{ vote.route.name }}
-        </a></span
-      >
-    </div>
-    <div class="mt-8" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="8px">
-      <div>
-        <app-grade
-          [difficulty]="vote.route.difficulty"
-          [gradingSystemId]="vote.route.defaultGradingSystem.id"
-          [showModifier]="true"
-        >
-        </app-grade>
-      </div>
-      <div class="direction">
-        <mat-icon inline>{{
-          vote.difficulty > vote.route.difficulty + 25
-            ? "north_east"
-            : vote.difficulty < vote.route.difficulty - 25
-            ? "south_east"
-            : "east"
-        }}</mat-icon>
+  <mat-card-content>
+    <div class="row" *ngFor="let vote of difficultyVotes">
+      <div class="date">
+        <ng-container
+          *ngTemplateOutlet="date; context: { vote: vote }"
+        ></ng-container>
       </div>
       <div>
-        <app-grade
-          [difficulty]="vote.difficulty"
-          [gradingSystemId]="vote.route.defaultGradingSystem.id"
-          [showModifier]="false"
-        >
-        </app-grade>
+        <ng-container
+          *ngTemplateOutlet="user; context: { vote: vote }"
+        ></ng-container>
+      </div>
+      <div
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+        fxLayoutGap="8px"
+      >
+        <div>
+          <ng-container
+            *ngTemplateOutlet="crag; context: { vote: vote }"
+          ></ng-container
+          >,
+          <ng-container
+            *ngTemplateOutlet="route; context: { vote: this.vote }"
+          ></ng-container>
+        </div>
+        <div>
+          <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="8px">
+            <div class="grade">
+              <ng-container
+                *ngTemplateOutlet="avgGrade; context: { vote: vote }"
+              ></ng-container>
+            </div>
+            <div class="direction">
+              <ng-container
+                *ngTemplateOutlet="directionIndicator; context: { vote: vote }"
+              ></ng-container>
+            </div>
+            <div class="grade">
+              <ng-container
+                *ngTemplateOutlet="proposedGrade; context: { vote: vote }"
+              ></ng-container>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button [routerLink]="['/pregledi/ocene']">
+      Prikaži več predlogov
+    </button>
+  </mat-card-actions>
 </mat-card>
