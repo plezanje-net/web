@@ -78,5 +78,6 @@ query RouteBySlug($cragSlug: String!, $routeSlug: String!) {
     nrTicks
     nrTries
     nrClimbers
+    description
   }
 }

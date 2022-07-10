@@ -36,10 +36,21 @@
       >
     </span>
   </div>
+
+  <!-- Route length -->
   <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
     <div class="label">Dolžina</div>
     <span class="text-right"> {{ route.length }} m </span>
   </div>
+
+  <!-- Route description -->
+  <div *ngIf="route.description" class="row">
+    <div fxLayout="column">
+      <div class="label mt-4">Opis smeri</div>
+      <div class="description">{{ route.description }}</div>
+    </div>
+  </div>
+
   <div
     class="row"
     fxLayout="row"
@@ -53,6 +64,7 @@
       }})
     </span>
   </div>
+
   <div *ngFor="let property of route.properties" class="row">
     <app-info-property [property]="property"></app-info-property>
   </div>
