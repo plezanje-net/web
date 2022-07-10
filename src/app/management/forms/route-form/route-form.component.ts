@@ -191,10 +191,15 @@ export class RouteFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Base grade of a route can be edited only if no user votes have been cast yet and no ascent has been recorded yet.
+   */
   private baseDifficultyEditable(route: Route) {
     return (
-      route?.difficultyVotes.length == 0 ||
-      (route?.difficultyVotes.length == 1 && route?.difficultyVotes[0].isBase)
+      (route?.difficultyVotes.length == 0 ||
+        (route?.difficultyVotes.length == 1 &&
+          route?.difficultyVotes[0].isBase)) &&
+      route.nrTries === 0
     );
   }
 
@@ -226,8 +231,6 @@ export class RouteFormComponent implements OnInit, OnDestroy {
 
     const success = () => {
       this.apollo.client.resetStore().then(() => {
-        this.saving = false;
-
         const { routeTypeId, defaultGradingSystemId, status, position } = value;
 
         this.dialogRef.close(
@@ -244,6 +247,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
       });
     };
     const error = () => {
+      this.dialogRef.close();
       this.snackbar.open('Pri shranjevanju je prišlo do napake', null, {
         panelClass: 'error',
         duration: 3000,
