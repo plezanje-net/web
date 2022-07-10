@@ -52,6 +52,7 @@ query ManagementGetSector($id: String!) {
       user {
         id
       }
+      nrTries
     }
   }
 }

@@ -13,8 +13,10 @@
       [legacy]="true"
     ></app-grade>
     <div>
-      <ng-container *ngIf="grade.isBase">Bazna ocena</ng-container>
-      <ng-container *ngIf="!grade.isBase && grade.user"
+      <ng-container *ngIf="grade.isBase && !grade.user"
+        >Bazna ocena</ng-container
+      >
+      <ng-container *ngIf="grade.user"
         >{{ grade.user.firstname + " " + grade.user.lastname }}
       </ng-container>
     </div>

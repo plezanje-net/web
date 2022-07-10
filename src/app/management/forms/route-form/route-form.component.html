@@ -56,10 +56,10 @@
     fxLayout.lt-md="column"
     fxLayoutAlign.lt-md="stretch"
   >
-    <div fxLayout="column" fxFlex *ngIf="!editing">
+    <div fxLayout="column" fxFlex>
       <mat-checkbox formControlName="isProject">Smer je projekt</mat-checkbox>
     </div>
-    <div fxFlex *ngIf="!editing && !form.value.isProject">
+    <div fxFlex>
       <app-grade-select
         fxFlex
         label="Bazna ocena"
