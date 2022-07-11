@@ -20,6 +20,7 @@ import { AlpinismComponent } from './pages/alpinism/alpinism.component';
 import { AboutComponent } from './pages/about/about.component';
 import { ChangelogComponent } from './pages/changelog/changelog.component';
 import { HowToContributeComponent } from './pages/help/how-to-contribute/how-to-contribute.component';
+import { LatestAscentsComponent } from './pages/home/latest-ascents/latest-ascents.component';
 
 const routes: Routes = [
   {
@@ -134,6 +135,11 @@ const routes: Routes = [
   {
     path: 'navodila/dodajanje-prispevkov',
     component: HowToContributeComponent,
+  },
+  {
+    path: 'vzponi',
+    component: LatestAscentsComponent,
+    // TODO: move this to statisctics module when difficultyVotes is merged
   },
   {
     path: '**',
