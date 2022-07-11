@@ -97,6 +97,11 @@ const routes: Routes = [
       import('./activity/activity.module').then((m) => m.ActivityModule),
   },
   {
+    path: 'pregledi',
+    loadChildren: () =>
+      import('./statistics/statistics.module').then((m) => m.StatisticsModule),
+  },
+  {
     path: 'urejanje',
     loadChildren: () =>
       import('./management/management.module').then((m) => m.ManagementModule),
