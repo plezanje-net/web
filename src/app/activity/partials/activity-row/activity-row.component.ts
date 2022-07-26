@@ -33,14 +33,24 @@ export class ActivityRowComponent implements OnInit {
     this.activity.routes.forEach((ar) => {
       if (
         ar.route.difficulty > highestDifficulty &&
-        ar.ascentType !== 'attempt' &&
-        ar.ascentType !== 't_attempt'
+        [
+          'attempt',
+          't_attempt',
+          'allfree',
+          't_allfree',
+          'aid',
+          't_aid',
+        ].indexOf(ar.ascentType) === -1
       ) {
         highestDifficulty = ar.route.difficulty;
         highestDiffGradingSystemId = ar.route.defaultGradingSystem.id;
       }
 
-      if (!isNaN(Number(ar.route.length))) {
+      if (
+        !isNaN(Number(ar.route.length)) &&
+        ar.ascentType !== 'attempt' &&
+        ar.ascentType !== 't_attempt'
+      ) {
         totalLength += Number(ar.route.length);
       }
     });
