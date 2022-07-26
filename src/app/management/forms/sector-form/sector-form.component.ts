@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Apollo } from 'apollo-angular';
 import { take } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 import { Registry } from 'src/app/types/registry';
 import {
   ManagementCreateSectorGQL,
@@ -25,20 +26,14 @@ export interface SectorFormComponentData {
 export class SectorFormComponent implements OnInit {
   saving = false;
 
-  statusOptions: Registry[] = [
-    { value: 'public', label: 'Vidijo vsi' },
-    { value: 'hidden', label: 'Samo za prijavljene' },
-    { value: 'admin', label: 'Samo za admine' },
-    { value: 'archive', label: 'Arhivirano' },
-  ];
-
   form = new FormGroup({
     label: new FormControl(''),
     name: new FormControl(''),
-    status: new FormControl('public', Validators.required),
+    publishStatus: new FormControl('draft'),
   });
 
   constructor(
+    private authService: AuthService,
     @Inject(MAT_DIALOG_DATA) private data: SectorFormComponentData,
     private createGQL: ManagementCreateSectorGQL,
     private updateGQL: ManagementUpdateSectorGQL,
@@ -67,6 +62,7 @@ export class SectorFormComponent implements OnInit {
         panelClass: 'error',
         duration: 3000,
       });
+      this.saving = false;
     };
 
     if (this.data.sector != null) {

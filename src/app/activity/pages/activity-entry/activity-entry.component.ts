@@ -38,6 +38,7 @@ export class ActivityEntryComponent implements OnInit, OnDestroy {
     );
     this.subscriptions.push(typeSub);
 
+    // TODO: activity routes should probably be ordered by 1st to last. now it seems as if they are inverted
     const routeSub = this.activatedRoute.params
       .pipe(
         switchMap((params) => {

@@ -2,6 +2,7 @@
   [formGroup]="cragForm"
   (submit)="save()"
   class="card padding no-border mt-16"
+  [ngClass]="crag?.publishStatus"
 >
   <div fxLayout="row" fxLayoutGap="8px" fxLayout.lt-sm="column">
     <p fxFlex="50">
@@ -104,16 +105,6 @@
 
   <div fxLayout="row" fxLayoutGap="8px" fxLayout.lt-sm="column">
     <p fxFlex="50">
-      <mat-form-field>
-        <mat-label>Status</mat-label>
-        <mat-select formControlName="status">
-          <mat-option *ngFor="let status of statuses" [value]="status.value"
-            >{{ status.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </p>
-    <p fxFlex="50">
       <mat-form-field fxFlex>
         <mat-label>Privzeti sistem ocenjevanja</mat-label>
         <mat-select formControlName="defaultGradingSystemId">
@@ -127,17 +118,72 @@
     </p>
   </div>
 
-  <div fxLayout="row" fxLayoutAlign="end center">
-    <button
-      *ngIf="!loading"
-      mat-button
-      color="primary"
-      [disabled]="!cragForm.valid || cragForm.pristine"
+  <div fxLayout="row">
+    <p fxFlex="50" fxLayoutAlign="start center">
+      <mat-checkbox formControlName="isHidden"
+        >Prikaži samo prijavljenim uporabnikom</mat-checkbox
+      >
+    </p>
+  </div>
+
+  <div fxLayout="row">
+    <div
+      fxFlex
+      *ngIf="
+        crag?.user?.id == user.id && ['user', 'proposal'].includes(crag.status)
+      "
     >
-      Shrani
-    </button>
-    <span *ngIf="loading" class="loading">
-      <mat-spinner diameter="30"></mat-spinner>
-    </span>
+      <button mat-button type="button" (click)="deleteCrag()">
+        Izbriši plezališče
+      </button>
+    </div>
+    <div fxFlex="100" fxLayoutAlign="end center" fxLayoutGap="8px">
+      <button
+        *ngIf="!loading"
+        mat-button
+        color="primary"
+        [disabled]="!cragForm.valid || cragForm.pristine"
+      >
+        Shrani
+      </button>
+      <span *ngIf="loading" class="loading">
+        <mat-spinner diameter="30"></mat-spinner>
+      </span>
+
+      <div
+        *ngIf="contributionService.nextPossiblePublishStatuses(crag)"
+        class="publish-status-actions"
+      >
+        <button
+          type="button"
+          mat-stroked-button
+          *ngFor="
+            let nextStatus of contributionService.nextPossiblePublishStatuses(
+              crag
+            );
+            trackBy: contributionService.statusButtonsTrackBy
+          "
+          [disabled]="!nextStatus.enabled || !cragForm.pristine"
+          (click)="
+            contributionService.updatePublishStatus(crag, nextStatus.status)
+          "
+        >
+          {{
+            contributionService.publishStatuses[nextStatus.status].actionLabel
+          }}
+        </button>
+      </div>
+
+      <div *ngIf="canDelete()" class="delete">
+        <button
+          type="button"
+          mat-stroked-button
+          color="warn"
+          (click)="deleteCrag()"
+        >
+          Izbriši
+        </button>
+      </div>
+    </div>
   </div>
 </form>

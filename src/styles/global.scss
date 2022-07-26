@@ -12,6 +12,7 @@ body {
 .container {
   margin: 0 16px;
   width: auto;
+  display: block;
 }
 
 /* SM (small) */
@@ -47,6 +48,11 @@ body {
 }
 
 // TODO replace margin/padding util classes with a for loop that generates all these classes
+.my-8 {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
 .mt-4 {
   margin-top: 4px;
 }
@@ -55,12 +61,31 @@ body {
   margin-top: 8px;
 }
 
+p.mt-16,
 .mt-16 {
   margin-top: 16px;
 }
 
+.mt-32 {
+  margin-top: 32px;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}
+.mb-8 {
+  margin-bottom: 8px;
+}
+
 .mb-32 {
   margin-bottom: 32px;
+}
+.ml-16 {
+  margin-left: 16px;
+}
+
+.pb-8 {
+  padding-bottom: 8px;
 }
 
 .py-8 {
@@ -106,9 +131,6 @@ body {
 a {
   color: $primary;
   text-decoration: none;
-  &:hover {
-    // color: mat-color($app-primary, 500);
-  }
 }
 
 b {
@@ -181,7 +203,7 @@ b {
     height: 52px;
     td {
       vertical-align: middle;
-      padding: 0 12px;
+      padding: 8px 12px;
       &.tools {
         width: 10px;
         white-space: nowrap;
@@ -255,10 +277,6 @@ body {
   }
 }
 
-.star {
-  color: #dd0;
-}
-
 span.highlight {
   // background-color: #ffd740;
   background-color: #ffe57f;
@@ -277,4 +295,16 @@ span.highlight {
 .swiper-pagination-bullet-active {
   background-color: $primary !important;
   opacity: 1 !important;
+}
+
+.footnote {
+  color: $gray-dark;
+  font-size: 10.5px;
+}
+
+.mat-checkbox-layout {
+  white-space: normal !important;
+}
+.mat-checkbox-inner-container {
+  margin-top: 4px !important;
 }

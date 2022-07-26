@@ -1,4 +1,8 @@
-<div *ngIf="label != ''" class="label">{{label}}</div>
+<div *ngIf="label != ''" class="label">{{ label }}</div>
 <div class="editor" [class.focused]="focus">
-  <editor apiKey="x0sen324zfse95ob0puqpwo7xykmf6uspxj10zquqswkkatg" [init]="settings" [formControl]="control"></editor>
+  <editor
+    apiKey="x0sen324zfse95ob0puqpwo7xykmf6uspxj10zquqswkkatg"
+    [init]="settings"
+    [formControl]="control"
+  ></editor>
 </div>

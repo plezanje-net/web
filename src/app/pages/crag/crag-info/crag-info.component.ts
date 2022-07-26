@@ -45,9 +45,11 @@ export class CragInfoComponent implements OnInit, OnChanges {
       'Dec',
     ];
 
-    this.attendanceDistribution = this.crag.activityByMonth.map((value, m) => ({
-      label: months[m],
-      value: value,
-    }));
+    this.attendanceDistribution = this.crag.activityByMonth.find((a) => a > 20)
+      ? this.crag.activityByMonth.map((value, m) => ({
+          label: months[m],
+          value: value,
+        }))
+      : [];
   }
 }

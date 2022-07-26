@@ -1,6 +1,0 @@
-mutation ManagementSaveSectorPositions($input: [UpdateSectorInput!]!) {
-  updateSectors(input: $input) {
-    id
-    position
-  }
-}

@@ -10,7 +10,7 @@ query RouteBySlug($cragSlug: String!, $routeSlug: String!) {
     name
     length
     author
-    status
+    publishStatus
     routeEvents {
       id
       eventDate
@@ -34,6 +34,18 @@ query RouteBySlug($cragSlug: String!, $routeSlug: String!) {
       updated
       isBase
       includedInCalculation
+    }
+    properties {
+      id
+      propertyType {
+        id
+        name
+        valueType
+      }
+      stringValue
+      textValue
+      numValue
+      author
     }
     comments {
       type
@@ -63,5 +75,9 @@ query RouteBySlug($cragSlug: String!, $routeSlug: String!) {
         }
       }
     }
+    nrTicks
+    nrTries
+    nrClimbers
+    description
   }
 }

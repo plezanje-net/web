@@ -1,6 +1,35 @@
+@import "../../../../styles/variables.scss";
+
 .mat-form-field {
   width: 100%;
 }
 .mat-hint a {
   text-decoration: none;
+}
+
+.publish-status-actions {
+  text-align: right;
+  white-space: nowrap;
+  button {
+    text-transform: uppercase;
+    &:not(:first-child) {
+      margin-left: 8px;
+    }
+  }
+}
+
+.delete button {
+  text-transform: uppercase;
+}
+
+form {
+  &.draft {
+    border-left: 1px solid $red;
+  }
+  &.in_review {
+    border-left: 1px solid $orange;
+  }
+  &.published {
+    border-left: 1px solid $blue;
+  }
 }

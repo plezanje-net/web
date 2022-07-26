@@ -24,6 +24,13 @@ export class EditorComponent implements OnInit {
       editor.on('focusout', () => {
         this.focus = false;
       });
+      editor.on('init', () => {
+        if (this.control.disabled) {
+          this.control.disable();
+        } else {
+          this.control.enable();
+        }
+      });
     },
     plugins: ['autolink lists link'],
     toolbar:

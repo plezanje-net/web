@@ -1,7 +1,7 @@
 <div fxLayout="row wrap">
   <div
     fxFlex="50"
-    *ngFor="let image of images"
+    *ngFor="let image of images; let i = index"
     class="image-container"
     fxLayout="row"
     fxLayoutAlign="center center"
@@ -17,9 +17,10 @@
           (max-width: 1439px) calc(33.33vw - 182px),
           298px
         "
+        [maxIntrinsicWidth]="image.maxIntrinsicWidth"
         [fallbackWidth]="600"
         [imageAlt]="image.title"
-        (click)="onImageClick(image)"
+        (click)="onImageClick(i)"
       ></app-responsive-image>
 
       <div class="title">{{ image.title }}</div>

@@ -1,0 +1,8 @@
+query PendingContributions {
+  contributions {
+    id
+    entity
+    publishStatus
+    created
+  }
+}

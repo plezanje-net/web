@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Input,
   OnDestroy,
   OnInit,
@@ -12,9 +13,11 @@ import { SnackBarButtonsComponent } from 'src/app/shared/snack-bar-buttons/snack
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import dayjs from 'dayjs';
 import ActivitySelection from 'src/app/types/activity-selection.interface';
-import { Crag, MyCragSummaryGQL, Route } from 'src/generated/graphql';
-import { ASCENT_TYPES } from 'src/app/common/activity.constants';
-import { IDistribution } from 'src/app/common/distribution-chart/distribution-chart.component';
+import { Crag, MyCragSummaryGQL, Route, Sector } from 'src/generated/graphql';
+import { KeyValue } from '@angular/common';
+import { MatSelectChange } from '@angular/material/select';
+import { FormControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-crag-routes',
@@ -23,6 +26,100 @@ import { IDistribution } from 'src/app/common/distribution-chart/distribution-ch
 })
 export class CragRoutesComponent implements OnInit, OnDestroy {
   @Input() crag: Crag;
+
+  sectors: (Sector & {
+    sortedDirection?: number;
+    sortedField?: string;
+    someRoutesShown: boolean;
+  })[] = [];
+
+  // Provide some sensible default
+  shownColumns = [
+    'name',
+    'length',
+    'difficulty',
+    'starRating',
+    'multipitch',
+    'comments',
+    'myAscents',
+  ];
+
+  allColumns = {
+    name: {
+      field: 'name',
+      selectLabel: 'Ime',
+      tableLabel: 'Ime',
+      defaultSortDirection: 1,
+      width: 100,
+    },
+    length: {
+      field: 'length',
+      selectLabel: 'Dolžina',
+      tableLabel: 'Dolžina',
+      defaultSortDirection: 1,
+      width: 85,
+    },
+    difficulty: {
+      field: 'difficulty',
+      selectLabel: 'Težavnost',
+      tableLabel: 'Težavnost',
+      defaultSortDirection: 1,
+      width: 103,
+    },
+    nrTicks: {
+      field: 'nrTicks',
+      selectLabel: 'Število uspešnih vzponov',
+      tableLabel: 'Uspešnih vzponov',
+      defaultSortDirection: -1,
+      width: 160,
+    },
+    nrTries: {
+      field: 'nrTries',
+      selectLabel: 'Število poskusov',
+      tableLabel: 'Poskusov',
+      defaultSortDirection: -1,
+      width: 100,
+    },
+    nrClimbers: {
+      field: 'nrClimbers',
+      selectLabel: 'Število plezalcev',
+      tableLabel: 'Plezalcev',
+      defaultSortDirection: -1,
+      width: 99,
+    },
+    starRating: {
+      field: 'starRating',
+      selectLabel: 'Lepota smeri',
+      defaultSortDirection: -1,
+      width: 36,
+    },
+    multipitch: {
+      field: 'multipitch',
+      selectLabel: 'Večraztežajna smer',
+      defaultSortDirection: -1,
+      width: 36,
+    },
+    comments: {
+      field: 'comments',
+      selectLabel: 'Smer ima komentarje',
+      defaultSortDirection: -1,
+      width: 36,
+    },
+    myAscents: {
+      field: 'myAscents',
+      selectLabel: 'Moji vzponi',
+      defaultSortDirection: -1,
+      width: 36,
+    },
+  };
+  math = Math;
+  hostResizeObserver: ResizeObserver;
+  routeListViewStyle: 'compact' | 'table';
+  tableWidth: number;
+  availableWidth: number = 0;
+  sortAll = ['position', 1];
+  search = new FormControl();
+  searchSub: Subscription;
 
   selectedRoutes: Route[] = [];
   selectedRoutesIds: string[] = [];
@@ -40,10 +137,40 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     private router: Router,
     private myCragSummaryGQL: MyCragSummaryGQL,
     private localStorageService: LocalStorageService,
-    private changeDetection: ChangeDetectorRef
+    private changeDetection: ChangeDetectorRef,
+    private hostElement: ElementRef
   ) {}
 
   ngOnInit(): void {
+    if (sessionStorage.getItem('shownColumns')) {
+      this.shownColumns = JSON.parse(sessionStorage.getItem('shownColumns'));
+    }
+
+    // Hide length column if crag has only boulders
+    if (this.crag.sectors.every((sector) => sector.bouldersOnly)) {
+      delete this.allColumns.length;
+      this.shownColumns = this.shownColumns.filter(
+        (column) => column != 'length'
+      );
+    }
+
+    this.recalculateTableWidth();
+
+    this.hostResizeObserver = new ResizeObserver((entries) => {
+      this.availableWidth = entries[0].contentRect.width;
+    });
+    this.hostResizeObserver.observe(this.hostElement.nativeElement);
+
+    // Make a copy (original is readonly and cannot be sorted or extended with fields)
+    this.crag.sectors.forEach((sector) => {
+      const routes = [];
+      sector.routes.forEach((route) => routes.push({ ...route, show: true }));
+      this.sectors.push({ ...sector, someRoutesShown: true, routes: routes });
+    });
+    this.searchSub = this.search.valueChanges.subscribe(() => {
+      this.filterRoutes();
+    });
+
     this.section = this.router.url.includes('/alpinizem/stena')
       ? 'alpinism'
       : 'sport';
@@ -67,6 +194,121 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.snackBar.dismiss();
+    this.hostResizeObserver.disconnect();
+    this.searchSub.unsubscribe();
+  }
+
+  onSelectedColumnsSelectionChange() {
+    sessionStorage.setItem('shownColumns', JSON.stringify(this.shownColumns));
+    this.recalculateTableWidth();
+  }
+
+  recalculateTableWidth() {
+    this.tableWidth = this.shownColumns.reduce(
+      (prev, curr) => prev + this.allColumns[curr].width,
+      40
+    );
+  }
+
+  /**
+   * sorts routes in all sectors by the same sort field and direction
+   * used when compact view is shown and sort can be selected only from select input
+   */
+  sortAllRoutes(event: MatSelectChange) {
+    const [field, direction] = event.value;
+    this.sectors.forEach((sector, index) => {
+      this.sortRoutes(index, field, direction);
+    });
+  }
+
+  onSortableHeaderClick(sectorIndex: number, sortField: string) {
+    this.sortAll = null; // unset dropdown sort select input
+    this.sortRoutes(sectorIndex, sortField);
+  }
+
+  /**
+   * sorts routes in one sector
+   * used when table view is shown and each sector can be sorted individually by clicking on fields in table header
+   */
+  sortRoutes(sectorIndex: number, sortField: string, sortDirection?: number) {
+    if (sortDirection) {
+      this.sectors[sectorIndex].sortedDirection = sortDirection;
+    } else {
+      if (sortField === 'position') {
+        // sorting by position is always asc (left to right), sorting by any other field inverts direction on each click
+        this.sectors[sectorIndex].sortedDirection = 1;
+      } else {
+        this.sectors[sectorIndex].sortedDirection =
+          this.sectors[sectorIndex].sortedField === sortField
+            ? this.sectors[sectorIndex].sortedDirection * -1
+            : this.allColumns[sortField].defaultSortDirection ?? 1;
+      }
+    }
+
+    this.sectors[sectorIndex].sortedField = sortField;
+
+    this.sectors[sectorIndex].routes.sort((r1, r2) => {
+      switch (this.sectors[sectorIndex].sortedField) {
+        case 'difficulty':
+          if (r1.isProject && r2.isProject) return 0;
+          if (r1.isProject) return this.sectors[sectorIndex].sortedDirection;
+          if (r2.isProject)
+            return this.sectors[sectorIndex].sortedDirection * -1;
+          break;
+
+        case 'multipitch':
+          if (r1.pitches.length && r2.pitches.length) return 0;
+          if (r1.pitches.length)
+            return this.sectors[sectorIndex].sortedDirection;
+          if (r2.pitches.length)
+            return this.sectors[sectorIndex].sortedDirection * -1;
+          return 0;
+
+        case 'comments':
+          if (r1.comments.length && r2.comments.length) return 0;
+          if (r1.comments.length)
+            return this.sectors[sectorIndex].sortedDirection;
+          if (r2.comments.length)
+            return this.sectors[sectorIndex].sortedDirection * -1;
+          return 0;
+
+        case 'myAscents':
+          if (this.ascents[r1.id] && this.ascents[r2.id]) return 0;
+          if (this.ascents[r1.id])
+            return this.sectors[sectorIndex].sortedDirection;
+          if (this.ascents[r2.id])
+            return this.sectors[sectorIndex].sortedDirection * -1;
+          return 0;
+      }
+
+      // default sort mode:
+      return r1[sortField] < r2[sortField]
+        ? this.sectors[sectorIndex].sortedDirection * -1
+        : this.sectors[sectorIndex].sortedDirection;
+    });
+  }
+
+  filterRoutes(): void {
+    let searchTerm = this.search.value;
+    searchTerm = searchTerm.toLowerCase();
+    searchTerm = searchTerm.replace(/[cčć]/gi, '[cčć]');
+    searchTerm = searchTerm.replace(/[sš]/gi, '[sš]');
+    searchTerm = searchTerm.replace(/[zž]/gi, '[zž]');
+    const regExp = new RegExp(searchTerm);
+
+    this.sectors.forEach((sector) =>
+      sector.routes.forEach(
+        (route: Route & { show: boolean }) =>
+          (route.show = regExp.test(route.name.toLowerCase()))
+      )
+    );
+
+    this.sectors.forEach(
+      (sector) =>
+        (sector.someRoutesShown = sector.routes.some(
+          (route: Route & { show: boolean }) => route.show
+        ))
+    );
   }
 
   onCheckBoxClick(event: Event) {
@@ -88,25 +330,11 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
         (selectedRoute) => selectedRoute.id
       );
 
-      // Append users previous activity (summary) to the routes that are being logged
-      const selectedRoutesWTouch = this.selectedRoutes.map((route) => ({
-        ...route,
-        tried: !!this.ascents[route.id],
-        ticked: ASCENT_TYPES.some(
-          (ascentType) =>
-            this.ascents[route.id] == ascentType.value && ascentType.tick
-        ),
-        // TODO: add this info to ASCENT_TYPES constant
-        trTicked: ['t_flash', 't_onsight', 't_redpoint', 't_repeat'].includes(
-          this.ascents[route.id]
-        ),
-      }));
-
       this.localStorageService.setItem(
         'activity-selection',
         {
           crag: this.crag,
-          routes: selectedRoutesWTouch,
+          routes: this.selectedRoutes,
         },
         dayjs().add(1, 'day').toISOString()
       );
@@ -151,25 +379,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       })
       .then((success) => {
         if (success) {
-          // TODO: some dry refactor?
-
-          // Append users previous activity (summary) to the routes that are being logged
-          const selectedRoutesWTouch = this.selectedRoutes.map((route) => ({
-            ...route,
-            tried: !!this.ascents[route.id],
-            ticked: ASCENT_TYPES.some(
-              (ascentType) =>
-                this.ascents[route.id] == ascentType.value && ascentType.tick
-            ),
-            trTicked: [
-              't_flash',
-              't_onsight',
-              't_redpoint',
-              't_repeat',
-            ].includes(this.ascents[route.id]),
-          }));
-
-          this.addRoutesToLocalStorage(selectedRoutesWTouch);
+          this.addRoutesToLocalStorage(this.selectedRoutes);
 
           this.router.navigate([
             '/plezalni-dnevnik/vpis',
@@ -217,11 +427,12 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   }
 
   onPreviewHeightEvent(height: number): void {
-    if (height !== 0) {
-      height += 20; // for the 20px padding above the content
-    }
-
     this.expandedRowHeight = height;
     this.changeDetection.detectChanges();
   }
+
+  // Preserve original property order, when using keyvalue pipe in template
+  originalOrder = (a: KeyValue<any, any>, b: KeyValue<any, any>): number => {
+    return 0;
+  };
 }

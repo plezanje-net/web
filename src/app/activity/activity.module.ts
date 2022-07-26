@@ -31,6 +31,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ActivityEntryRoutesComponent } from './partials/activity-entry-routes/activity-entry-routes.component';
+import { DryRunActivityDialogComponent } from './forms/activity-form/dry-run-activity-dialog/dry-run-activity-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -45,6 +47,7 @@ import { ActivityEntryRoutesComponent } from './partials/activity-entry-routes/a
     ActivityFormComponent,
     ActivityFormRouteComponent,
     ActivityEntryRoutesComponent,
+    DryRunActivityDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -66,6 +69,7 @@ import { ActivityEntryRoutesComponent } from './partials/activity-entry-routes/a
     SharedModule,
     ReactiveFormsModule,
     ActivityRoutingModule,
+    MatDialogModule,
   ],
   providers: [
     {

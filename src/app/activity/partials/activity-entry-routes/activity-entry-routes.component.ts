@@ -23,6 +23,8 @@ export class ActivityEntryRoutesComponent implements OnInit {
 
   rowAction$ = new Subject(); // source
 
+  noNotes = false;
+
   constructor(
     private deleteActivityRouteGQL: DeleteActivityRouteGQL,
     private router: Router,
@@ -33,6 +35,9 @@ export class ActivityEntryRoutesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // save some space by hiding notes column if there are none
+    this.noNotes = !this.routes.some((route) => route.notes);
+
     this.rowAction$.subscribe((action: any) => {
       switch (action.action) {
         case 'filterByCrag':

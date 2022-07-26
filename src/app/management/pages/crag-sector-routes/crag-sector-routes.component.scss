@@ -1,15 +1,35 @@
 @import "../../../../styles/colors.scss";
+@import "../../../../styles/variables.scss";
 
 .route {
   background: #fff;
   box-shadow: 0 2px 6px 0 #6494ff26;
   padding: 4px 12px;
   border-left: 1px solid $primary;
+  &.warn {
+    border-left: 1px solid $red;
+  }
+
+  &.notice {
+    border-left: 1px solid $orange;
+  }
   .name {
     padding: 12px 0;
   }
   .mat-icon-button:not(.mat-accent) {
     color: #666;
+  }
+
+  &.disabled {
+    color: $gray;
+  }
+  &.ghost {
+    box-shadow: none;
+    border-left: none;
+    background: none;
+    i {
+      color: $gray;
+    }
   }
 }
 .buttons {
@@ -30,5 +50,16 @@
     height: 100%;
     background: rgba(255, 255, 255, 0.4);
     z-index: 1;
+  }
+}
+
+.publish-status-actions {
+  text-align: right;
+  white-space: nowrap;
+  button {
+    text-transform: uppercase;
+    &:last-child {
+      margin-left: 8px;
+    }
   }
 }

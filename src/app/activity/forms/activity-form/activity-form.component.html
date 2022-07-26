@@ -52,7 +52,12 @@
       <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="16px">
         <mat-form-field class="no-hint" fxFlex="50">
           <mat-label>Datum</mat-label>
-          <input matInput formControlName="date" [matDatepicker]="picker" />
+          <input
+            matInput
+            formControlName="date"
+            [matDatepicker]="picker"
+            [max]="maxDate"
+          />
           <mat-datepicker-toggle
             matSuffix
             [for]="picker"
@@ -118,6 +123,12 @@
             [last]="last"
             (move)="moveRoute(index, $event)"
           ></app-activity-form-route>
+        </div>
+
+        <div class="footnote">
+          *Tvoji predlogi o težavnosti in lepoti smeri bodo v vsakem primeru
+          javno objavljeni (če jih podaš) ne glede na izbrano vidnost
+          zabeleženih vzponov.
         </div>
       </div>
     </div>

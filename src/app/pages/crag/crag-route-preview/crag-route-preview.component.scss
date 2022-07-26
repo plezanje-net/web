@@ -1,0 +1,16 @@
+@import "../../../../styles/variables.scss";
+
+h4 {
+  font-size: 14px;
+  font-weight: 500;
+  color: $gray-dark;
+  margin: 16px 0 8px 0;
+}
+
+.preview-container {
+  padding: 0 42px 16px 42px;
+  div {
+    // to avoid collapsing margins
+    overflow: auto;
+  }
+}

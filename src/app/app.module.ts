@@ -54,7 +54,6 @@ import { CragCommentsComponent } from './pages/crag/crag-comments/crag-comments.
 import {
   DateAdapter,
   MatNativeDateModule,
-  MAT_DATE_FORMATS,
   MAT_DATE_LOCALE,
   NativeDateAdapter,
 } from '@angular/material/core';
@@ -95,6 +94,11 @@ import localeSl from '@angular/common/locales/sl';
 registerLocaleData(localeSl);
 import * as Sentry from '@sentry/angular';
 import { Router } from '@angular/router';
+import { ChangelogComponent } from './pages/changelog/changelog.component';
+import { SortableHeaderFieldComponent } from './common/sortable-header-field/sortable-header-field.component';
+import { PendingContributionsHintsComponent } from './pages/home/pending-contributions-hints/pending-contributions-hints.component';
+import { HowToContributeComponent } from './pages/help/how-to-contribute/how-to-contribute.component';
+import { LatestDifficultyVotesComponent } from './pages/home/latest-difficulty-votes/latest-difficulty-votes.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -166,6 +170,11 @@ class CustomDateAdapter extends NativeDateAdapter {
     ConfirmClubMembershipComponent,
     AlpinismComponent,
     AboutComponent,
+    ChangelogComponent,
+    SortableHeaderFieldComponent,
+    PendingContributionsHintsComponent,
+    HowToContributeComponent,
+    LatestDifficultyVotesComponent,
   ],
   imports: [
     BrowserModule,

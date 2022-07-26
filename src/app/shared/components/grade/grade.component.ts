@@ -15,6 +15,7 @@ export class GradeComponent implements OnInit {
   @Input() gradingSystemId: string;
   @Input() showModifier: boolean = false;
   @Input() legacy: boolean = false;
+  @Input() disabled: boolean = false;
 
   // grade: Grade;
   grade: IGrade;

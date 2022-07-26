@@ -1,15 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
-import { subscribe } from 'graphql';
-import { filter, Subject, Subscription, switchMap, take } from 'rxjs';
-import { SnackBarButtonsComponent } from 'src/app/shared/snack-bar-buttons/snack-bar-buttons.component';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { combineLatest, filter, Subscription, switchMap, take } from 'rxjs';
 import {
   Crag,
   ManagementDeleteSectorGQL,
   ManagementGetCragSectorsGQL,
-  ManagementSaveSectorPositionsGQL,
-  Route,
+  ManagementSaveSectorPositionGQL,
   Sector,
 } from 'src/generated/graphql';
 
@@ -21,6 +17,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { SectorFormComponent } from '../../forms/sector-form/sector-form.component';
 import { Apollo } from 'apollo-angular';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { AuthService } from 'src/app/auth/auth.service';
+import { User } from '@sentry/angular';
+import { ContributionService } from '../contributions/contribution/contribution.service';
 
 interface TmpSector {
   id: string;
@@ -33,7 +32,7 @@ interface TmpSector {
   templateUrl: './crag-sectors.component.html',
   styleUrls: ['./crag-sectors.component.scss'],
 })
-export class CragSectorsComponent implements OnInit {
+export class CragSectorsComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   savingPositions: boolean = false;
   heading: string = '';
@@ -43,20 +42,24 @@ export class CragSectorsComponent implements OnInit {
 
   subscriptions: Subscription[] = [];
 
+  user: User;
+
   constructor(
+    private authService: AuthService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
     private sectorsGQL: ManagementGetCragSectorsGQL,
-    private savePositionsGQL: ManagementSaveSectorPositionsGQL,
+    private savePositionGQL: ManagementSaveSectorPositionGQL,
     private deleteSectorGQL: ManagementDeleteSectorGQL,
-    private apollo: Apollo
+    private apollo: Apollo,
+    public contributionService: ContributionService
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.params
-      .pipe(
+    const sub = combineLatest([
+      this.activatedRoute.params.pipe(
         filter((params) => params.crag != null),
         switchMap(
           ({ crag }) =>
@@ -64,45 +67,47 @@ export class CragSectorsComponent implements OnInit {
               id: crag,
             }).valueChanges
         )
-      )
-      .subscribe((result) => {
-        this.loading = false;
+      ),
+      this.authService.currentUser.asObservable(),
+    ]).subscribe(([result, user]) => {
+      this.loading = false;
 
-        this.crag = <Crag>result.data.crag;
+      this.crag = <Crag>result.data.crag;
 
-        this.heading = `${this.crag.name}`;
-        this.layoutService.$breadcrumbs.next(
-          new CragAdminBreadcrumbs(this.crag).build()
-        );
+      this.user = user;
 
-        this.sectors = [...(<Sector[]>result.data.crag.sectors)];
-      });
+      this.heading = `${this.crag.name}`;
+      this.layoutService.$breadcrumbs.next(
+        new CragAdminBreadcrumbs(this.crag).build()
+      );
+
+      this.sectors = [...(<Sector[]>result.data.crag.sectors)];
+    });
+
+    this.subscriptions.push(sub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   drop(event: CdkDragDrop<string[]>) {
+    if (event.previousIndex == event.currentIndex) return;
+
+    const data = {
+      id: this.sectors[event.previousIndex].id,
+      position:
+        event.currentIndex > event.previousIndex
+          ? this.sectors[event.currentIndex].position + 1
+          : this.sectors[event.currentIndex].position,
+    };
+
+    // move in FE to see changes even before BE responds
     moveItemInArray(this.sectors, event.previousIndex, event.currentIndex);
-
-    const data = this.sectors
-      .map(
-        (sector, index): TmpSector => ({
-          id: sector.id,
-          pos: sector.position,
-          newPos: index + 1,
-        })
-      )
-      .filter((s) => s.pos != s.newPos)
-      .map((s) => ({
-        id: s.id,
-        position: s.newPos,
-      }));
-
-    if (data.length == 0) {
-      return;
-    }
 
     this.savingPositions = true;
 
-    this.savePositionsGQL
+    this.savePositionGQL
       .mutate({ input: data }, { fetchPolicy: 'no-cache' })
       .subscribe(() => {
         this.apollo.client.resetStore().then(() => {
@@ -112,6 +117,12 @@ export class CragSectorsComponent implements OnInit {
           });
         });
       });
+  }
+
+  canEdit(sector: Sector): boolean {
+    return (
+      this.user.roles.includes('admin') || sector.publishStatus === 'draft'
+    );
   }
 
   add(): void {
@@ -136,7 +147,7 @@ export class CragSectorsComponent implements OnInit {
         data: {
           title: 'Brisanje sektorja',
           message:
-            'Si prepričan, da želiš izbrisati ta sektor in vse njegove smeri?',
+            'Si prepričan_a, da želiš izbrisati ta sektor in vse smeri v njem?',
         },
       })
       .afterClosed()
@@ -153,6 +164,10 @@ export class CragSectorsComponent implements OnInit {
             });
           }),
         error: (error) => {
+          if (error.message === 'route_has_log_entries') {
+            error.message =
+              'Sektorja ni mogoče izbrisati dokler so v njem smeri, ki imajo zabeležene vzpone.';
+          }
           this.snackBar.open(error.message, null, {
             panelClass: 'error',
             duration: 3000,

@@ -29,7 +29,7 @@
       <button
         type="button"
         mat-icon-button
-        (click)="move.emit(2)"
+        (click)="activityFormService.duplicateRoute(myIndex)"
         [disabled]="route.disabled"
         matTooltip="Dodaj ponovitev"
       >
@@ -39,7 +39,7 @@
         type="button"
         mat-icon-button
         *ngIf="!first"
-        (click)="move.emit(-1)"
+        (click)="activityFormService.moveRoute(myIndex, -1)"
         [disabled]="route.disabled"
         matTooltip="Premakni navzgor"
       >
@@ -49,7 +49,7 @@
         type="button"
         mat-icon-button
         *ngIf="!last"
-        (click)="move.emit(1)"
+        (click)="activityFormService.moveRoute(myIndex, 1)"
         [disabled]="route.disabled"
         matTooltip="Premakni navzdol"
       >
@@ -59,7 +59,7 @@
         *ngIf="this.activityFormService.numOfRoutes > 1"
         type="button"
         mat-icon-button
-        (click)="move.emit(0)"
+        (click)="activityFormService.removeRouteAt(myIndex)"
         [disabled]="route.disabled"
         matTooltip="Odstrani"
       >
@@ -73,18 +73,14 @@
       <mat-form-field class="no-hint" fxFlex="50">
         <mat-label>Vrsta vzpona</mat-label>
         <mat-select formControlName="ascentType">
-          <mat-select-trigger>{{ ascentTypeTrigger }}</mat-select-trigger>
+          <mat-select-trigger>{{
+            mapAscentTypeValueToFullLabel(route.value.ascentType)
+          }}</mat-select-trigger>
           <ng-container *ngFor="let type of nonTopRopeAscentTypes">
             <mat-option
               *ngIf="logPossibleEver(type.value)"
               [value]="type.value"
-              [disabled]="
-                !activityFormService.logPossible(
-                  type.value,
-                  myIndex,
-                  route.value.routeId
-                )
-              "
+              [disabled]="!activityFormService.logPossible(myIndex, type.value)"
               >{{ type.label }}
             </mat-option>
           </ng-container>
@@ -94,11 +90,7 @@
                 *ngIf="logPossibleEver(type.value)"
                 [value]="type.value"
                 [disabled]="
-                  !activityFormService.logPossible(
-                    type.value,
-                    myIndex,
-                    route.value.routeId
-                  )
+                  !activityFormService.logPossible(myIndex, type.value)
                 "
                 >{{ type.label }}
               </mat-option>
@@ -137,13 +129,14 @@
     </div>
   </div>
   <div>
-    <mat-form-field fxFlex="100" class="no-hint">
-      <mat-label>Komentar</mat-label>
+    <mat-form-field fxFlex="100">
+      <mat-label>Opombe</mat-label>
       <textarea
         matInput
         formControlName="notes"
         [rows]="activity ? 3 : 6"
       ></textarea>
+      <mat-hint>Opombe bodo vidne samo tebi</mat-hint>
     </mat-form-field>
   </div>
   <div fxFlex fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="16px">
@@ -154,6 +147,7 @@
         emptyText="Ne predlagaj ocene"
         [gradingSystemId]="route.value.defaultGradingSystemId"
         [noHint]="true"
+        [focusDifficulty]="route.value.difficulty"
       ></app-grade-select>
     </div>
 
@@ -165,28 +159,22 @@
             Nič posebnega
           </span>
           <span *ngIf="route.controls.votedStarRating.value == 1"
-            ><mat-icon>star_border</mat-icon>
-            <span class="icon-text">Lepa</span>
-          </span>
+            ><mat-icon>star_border</mat-icon
+            ><span class="icon-text">Lepa</span></span
+          >
           <span *ngIf="route.controls.votedStarRating.value == 2"
             ><mat-icon>star</mat-icon>
             <span class="icon-text">Čudovita</span>
           </span>
         </mat-select-trigger>
         <mat-option [value]="null">Ne predlagaj lepote</mat-option>
-        <mat-option [value]="0"><span></span>Nič posebnega</mat-option>
-        <mat-option [value]="1"
-          ><span
-            ><mat-icon>star_border</mat-icon>
-            <span class="icon-text">Lepa</span>
-          </span></mat-option
-        >
-        <mat-option [value]="2"
-          ><span
-            ><mat-icon>star</mat-icon
-            ><span class="icon-text">Čudovita</span></span
-          ></mat-option
-        >
+        <mat-option [value]="0">Nič posebnega</mat-option>
+        <mat-option [value]="1">
+          <span><mat-icon>star_border</mat-icon>Lepa</span>
+        </mat-option>
+        <mat-option [value]="2">
+          <span><mat-icon>star</mat-icon>Čudovita</span>
+        </mat-option>
       </mat-select>
     </mat-form-field>
   </div>
