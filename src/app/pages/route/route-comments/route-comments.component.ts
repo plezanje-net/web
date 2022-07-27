@@ -27,6 +27,7 @@ export class RouteCommentsComponent implements AfterViewInit {
   regularComments: IComment[];
   conditions: IComment[];
   descriptions: IComment[];
+  showNoCommentsMessage = false;
 
   @Output() onViewInit = new EventEmitter<void>();
   @Input() action$: Subject<string>;
@@ -47,6 +48,11 @@ export class RouteCommentsComponent implements AfterViewInit {
         this.regularComments.push(comment);
       }
     });
+
+    this.showNoCommentsMessage =
+      this.conditions.length === 0 &&
+      this.descriptions.length === 0 &&
+      this.regularComments.length === 0;
   }
 
   get comments(): IComment[] {
