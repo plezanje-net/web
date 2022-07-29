@@ -61,8 +61,8 @@ export class RouteCommentsComponent implements AfterViewInit {
 
   constructor() {}
 
-  addComment(actionType: string) {
-    this.action$.next(actionType);
+  addComment() {
+    this.action$.next('add-comment');
   }
 
   ngAfterViewInit(): void {

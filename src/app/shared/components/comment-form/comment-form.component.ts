@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import dayjs from 'dayjs';
@@ -16,7 +16,6 @@ import {
 
 export interface DialogData {
   comment?: Comment;
-  type?: string;
   iceFall?: IceFall;
   route?: Route;
   crag?: Crag;
@@ -34,9 +33,11 @@ export class CommentFormComponent implements OnInit {
   loading = false;
 
   commentForm = new FormGroup({
+    type: new FormControl('comment'),
     content: new FormControl(),
   });
 
+  minDate = new Date();
   maxDate?: Date;
 
   constructor(
@@ -48,42 +49,59 @@ export class CommentFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.updateFormType();
     if (this.data.comment != null) {
-      this.title = 'Uredi komentar';
-      this.commentForm.patchValue({ content: this.data.comment.content });
-
-      if (this.data.comment.type === 'warning') {
-        this.addExposedUntilField();
-        this.commentForm.patchValue({
-          exposedUntil: this.data.comment.exposedUntil,
-        });
-      }
+      this.commentForm.patchValue({
+        content: this.data.comment.content,
+        type: this.data.comment.type,
+      });
     }
+  }
 
-    switch (this.data.type) {
+  onTypeChange() {
+    this.updateFormType();
+  }
+
+  updateFormType() {
+    let prefix = this.data.comment != null ? 'Uredi' : 'Dodaj';
+
+    switch (this.type) {
+      case 'comment':
+        this.title = `${prefix} komentar`;
+        this.removeExposedUntilField();
+        break;
       case 'warning':
-        this.title = 'Dodaj opozorilo';
+        this.title = `${prefix} opozorilo`;
         this.addExposedUntilField();
+        if (this.data.comment != null) {
+          this.commentForm.patchValue({
+            exposedUntil: this.data.comment.exposedUntil,
+          });
+        }
         break;
       case 'condition':
-        this.title = 'Dodaj informacijo o razmerah';
-        break;
-      case 'comment':
-        this.title = 'Dodaj komentar';
+        this.title = `${prefix} opis razmer`;
+        this.removeExposedUntilField();
         break;
       case 'description':
         // TODO: it seems that only peaks and routes can have comments of type description. Might want to include entity type in the title and generalize this. Should discuss.
-        this.title = 'Dodaj opis';
+        this.title = `${prefix} opis smeri`;
+        this.removeExposedUntilField();
         break;
-      default:
-        this.title = '';
     }
   }
 
   addExposedUntilField() {
-    this.commentForm.addControl('exposedUntil', new FormControl());
+    this.commentForm.addControl(
+      'exposedUntil',
+      new FormControl(null, [Validators.required])
+    );
     this.maxDate = new Date();
     this.maxDate.setMonth(this.maxDate.getMonth() + 1); // let user choose max 1 month validity of warning exposure
+  }
+
+  removeExposedUntilField() {
+    this.commentForm.removeControl('exposedUntil');
   }
 
   save() {
@@ -100,13 +118,13 @@ export class CommentFormComponent implements OnInit {
   createComment() {
     const value = {
       content: this.commentForm.value.content,
-      type: this.data.type,
+      type: this.type,
       iceFallId: this.data.iceFall ? this.data.iceFall.id : null,
       routeId: this.data.route ? this.data.route.id : null,
       cragId: this.data.crag ? this.data.crag.id : null,
       peakId: this.data.peak ? this.data.peak.id : null,
       exposedUntil:
-        this.data.type === 'warning'
+        this.type === 'warning'
           ? dayjs(this.commentForm.value.exposedUntil).format('YYYY-MM-DD')
           : null,
     };
@@ -173,5 +191,9 @@ export class CommentFormComponent implements OnInit {
           });
         },
       });
+  }
+
+  get type(): string {
+    return this.commentForm.value.type;
   }
 }
