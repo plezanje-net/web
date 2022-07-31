@@ -1,0 +1,153 @@
+<app-data-error *ngIf="error" [error]="error"></app-data-error>
+
+<ng-container *ngIf="!error">
+  <div class="white-back mt-16">
+    <div class="container py-8">
+      <h1>Zgodovina vponov</h1>
+    </div>
+  </div>
+
+  <div class="container mt-16">
+    <div class="card has-loader scrollable-table">
+      <div class="card-loader" *ngIf="loading">
+        <app-loader></app-loader>
+      </div>
+      <table class="card-table">
+        <thead>
+          <tr class="row header">
+            <th></th>
+            <th>Datum</th>
+            <th>Plezalec_ka</th>
+            <th>Plezališče</th>
+            <th>Smer</th>
+            <th>Težavnost</th>
+            <th>Način vzpona</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let activity of activities; let i = index">
+            <tr
+              class="row"
+              (click)="
+                activityMainRows[i].expanded = !activityMainRows[i].expanded
+              "
+            >
+              <td class="button">
+                <ng-container *ngIf="activity.routes.length > 1">
+                  <button mat-icon-button>
+                    <mat-icon>{{
+                      activityMainRows[i].expanded
+                        ? "expand_less"
+                        : "expand_more"
+                    }}</mat-icon>
+                  </button>
+                </ng-container>
+              </td>
+              <td>{{ activity.date | date: "d. M. yyyy" }}</td>
+              <td>{{ activity.user.fullName }}</td>
+              <td>
+                <a
+                  [routerLink]="[
+                    '/plezalisce',
+                    activity.routes[0].route.crag.slug
+                  ]"
+                >
+                  {{ activity.routes[0].route.crag.name }}</a
+                >
+              </td>
+              <td>
+                <a
+                  [routerLink]="[
+                    '/plezalisce',
+                    activity.routes[0].route.crag.slug,
+                    'smer',
+                    activity.routes[0].route.slug
+                  ]"
+                >
+                  {{ activity.routes[0].route.name }}
+                </a>
+              </td>
+              <td>
+                <app-grade
+                  [difficulty]="activity.routes[0].route.difficulty"
+                  [gradingSystemId]="
+                    activity.routes[0].route.defaultGradingSystem.id
+                  "
+                  [showModifier]="true"
+                >
+                </app-grade>
+              </td>
+              <td>
+                <app-ascent-type
+                  [value]="activity.routes[0].ascentType"
+                ></app-ascent-type>
+              </td>
+            </tr>
+            <ng-container *ngIf="activity.routes.length > 1">
+              <tr
+                *ngFor="let activityRoute of activity.routes | slice: 1"
+                class="row expandable-row expanded-row"
+                [ngClass]="{ 'expanded-row': activityMainRows[i].expanded }"
+              >
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="w-border">
+                  <div>
+                    <div>
+                      <a
+                        [routerLink]="[
+                          '/plezalisce',
+                          activityRoute.route.crag.slug,
+                          'smer',
+                          activityRoute.route.slug
+                        ]"
+                      >
+                        {{ activityRoute.route.name }}
+                      </a>
+                    </div>
+                  </div>
+                </td>
+                <td class="w-border">
+                  <div>
+                    <div>
+                      <app-grade
+                        [difficulty]="activityRoute.route.difficulty"
+                        [gradingSystemId]="
+                          activityRoute.route.defaultGradingSystem.id
+                        "
+                        [showModifier]="true"
+                      >
+                      </app-grade>
+                    </div>
+                  </div>
+                </td>
+                <td class="w-border">
+                  <div>
+                    <div>
+                      <app-ascent-type
+                        [value]="activityRoute.ascentType"
+                      ></app-ascent-type>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+
+    <mat-paginator
+      *ngIf="pagination != null"
+      hidePageSize
+      showFirstLastButtons
+      [length]="pagination.itemCount"
+      [pageIndex]="pagination.pageNumber - 1"
+      [pageSize]="pagination.pageSize"
+      (page)="paginate($event)"
+    >
+    </mat-paginator>
+  </div>
+</ng-container>

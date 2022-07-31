@@ -13,9 +13,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { SharedModule } from '../shared/shared.module';
 import { StatisticsHomeComponent } from './pages/statistics-home/statistics-home.component';
+import { AscentsComponent } from './pages/ascents/ascents.component';
 
 @NgModule({
-  declarations: [DifficultyVotesComponent, StatisticsHomeComponent],
+  declarations: [
+    DifficultyVotesComponent,
+    StatisticsHomeComponent,
+    AscentsComponent,
+  ],
   imports: [
     CommonModule,
     FlexLayoutModule,

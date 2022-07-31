@@ -201,7 +201,8 @@ b {
   width: 100%;
   .row {
     height: 52px;
-    td {
+    td,
+    th {
       vertical-align: middle;
       padding: 8px 12px;
       &.tools {
@@ -211,7 +212,10 @@ b {
       }
     }
     &.header {
-      td {
+      td,
+      th {
+        font-weight: normal;
+        text-align: left;
         padding-top: 12px;
         height: 52px;
         span.sortable {
