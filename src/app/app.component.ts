@@ -42,6 +42,11 @@ export class AppComponent implements OnInit, OnDestroy {
         '../assets/icons/multipitch.svg'
       )
     );
+
+    this.matIconRegistry.registerFontClassAlias(
+      'matSymbols',
+      'material-symbols'
+    );
   }
 
   ngOnInit(): void {
