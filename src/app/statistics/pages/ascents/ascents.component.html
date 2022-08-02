@@ -114,9 +114,12 @@
                   "
                 ></ng-container>
               </td>
+
+              <!-- Ascent type -->
               <td>
                 <app-ascent-type
                   [value]="activity.routes[0].ascentType"
+                  displayType="iconAndText"
                 ></app-ascent-type>
               </td>
             </tr>
@@ -159,6 +162,7 @@
                     <div>
                       <app-ascent-type
                         [value]="activityRoute.ascentType"
+                        displayType="iconAndText"
                       ></app-ascent-type>
                     </div>
                   </div>
@@ -227,38 +231,23 @@
                   ></ng-container>
                 </div>
 
-                <!-- Style and grade -->
+                <!-- Ascent type and grade -->
                 <div
-                  flex="1 1 85px"
+                  flex="1 1 89px"
                   fxLayout="row"
                   fxLayoutAlign="center center"
                   class="pr-8"
                 >
                   <div fxLayout="row">
-                    <!-- TODO: add TR icon. using MP as a placeholder for now -->
-                    <mat-icon
-                      svgIcon="multipitch"
-                      title="Top rope"
-                      style="
-                        width: 18px;
-                        font-size: 18px;
-                        height: 18px;
-                        display: block;
-                      "
-                    ></mat-icon>
-
-                    <mat-icon
-                      fontSet="matSymbols"
-                      style="
-                        width: 18px;
-                        font-size: 18px;
-                        height: 18px;
-                        display: block;
-                      "
-                      >tools_ladder</mat-icon
-                    >
+                    <!-- Ascent type -->
+                    <app-ascent-type
+                      [value]="activity.routes[0].ascentType"
+                      displayType="icon"
+                    ></app-ascent-type>
                   </div>
-                  <div class="grade">
+
+                  <!-- Grade -->
+                  <div class="grade ml-4">
                     <ng-container
                       *ngTemplateOutlet="
                         grade;
@@ -301,36 +290,19 @@
 
                   <!-- Style and grade -->
                   <div
-                    flex="1 1 85px"
+                    flex="1 1 89px"
                     fxLayout="row"
                     fxLayoutAlign="center center"
                     class="pr-8"
                   >
                     <div fxLayout="row">
-                      <!-- TODO: add TR icon. using MP as a placeholder for now -->
-                      <mat-icon
-                        svgIcon="multipitch"
-                        title="Top rope"
-                        style="
-                          width: 18px;
-                          font-size: 18px;
-                          height: 18px;
-                          display: block;
-                        "
-                      ></mat-icon>
-
-                      <mat-icon
-                        fontSet="matSymbols"
-                        style="
-                          width: 18px;
-                          font-size: 18px;
-                          height: 18px;
-                          display: block;
-                        "
-                        >tools_ladder</mat-icon
-                      >
+                      <app-ascent-type
+                        [value]="activityRoute.ascentType"
+                        displayType="icon"
+                      ></app-ascent-type>
                     </div>
-                    <div class="grade">
+
+                    <div class="grade ml-4">
                       <ng-container
                         *ngTemplateOutlet="
                           grade;
