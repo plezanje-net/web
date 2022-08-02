@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, switchMap } from 'rxjs';
+import { ASCENT_TYPES } from 'src/app/common/activity.constants';
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from 'src/app/types/data-error';
 import {
@@ -24,6 +25,8 @@ export class AscentsComponent implements OnInit, OnDestroy {
   loading = false;
   error: DataError = null;
   subscription: Subscription;
+  noTopropeOnPage = false;
+  ascentTypes = ASCENT_TYPES;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -78,6 +81,14 @@ export class AscentsComponent implements OnInit, OnDestroy {
           });
 
           this.pagination = result.data.activities.meta;
+
+          this.noTopropeOnPage = !this.activities.some((activity) =>
+            activity.routes.some(
+              (route) =>
+                this.ascentTypes.find((at) => at.value === route.ascentType)
+                  .topRope
+            )
+          );
         },
         error: () => {
           this.loading = false;

@@ -120,6 +120,7 @@
                 <app-ascent-type
                   [value]="activity.routes[0].ascentType"
                   displayType="iconAndText"
+                  [fixedIconsWidth]="!noTopropeOnPage"
                 ></app-ascent-type>
               </td>
             </tr>
@@ -163,6 +164,7 @@
                       <app-ascent-type
                         [value]="activityRoute.ascentType"
                         displayType="iconAndText"
+                        [fixedIconsWidth]="!noTopropeOnPage"
                       ></app-ascent-type>
                     </div>
                   </div>
