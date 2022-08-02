@@ -13,13 +13,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { SharedModule } from '../shared/shared.module';
 import { StatisticsHomeComponent } from './pages/statistics-home/statistics-home.component';
-import { AscentsComponent } from './pages/ascents/ascents.component';
+import { AscentsHistoryComponent } from './pages/ascents-history/ascents-history.component';
 
 @NgModule({
   declarations: [
     DifficultyVotesComponent,
     StatisticsHomeComponent,
-    AscentsComponent,
+    AscentsHistoryComponent,
   ],
   imports: [
     CommonModule,

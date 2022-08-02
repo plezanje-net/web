@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../auth/auth.guard';
 import { DifficultyVotesComponent } from './pages/difficulty-votes/difficulty-votes.component';
-import { AscentsComponent } from './pages/ascents/ascents.component';
+import { AscentsHistoryComponent } from './pages/ascents-history/ascents-history.component';
 import { StatisticsHomeComponent } from './pages/statistics-home/statistics-home.component';
 
 const routes: Routes = [
@@ -17,7 +17,7 @@ const routes: Routes = [
   },
   {
     path: 'vzponi',
-    component: AscentsComponent,
+    component: AscentsHistoryComponent,
     canActivate: [AuthGuard],
   },
 ];

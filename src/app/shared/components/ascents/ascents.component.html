@@ -1,0 +1,302 @@
+<ng-template #date let-activity="activity">
+  {{ activity.date | date: "d. M. yyyy" }}
+</ng-template>
+
+<ng-template #user let-activity="activity">
+  {{ activity.user.fullName }}
+</ng-template>
+
+<ng-template #crag let-activity="activity">
+  <a [routerLink]="['/plezalisce', activity.routes[0].route.crag.slug]">
+    {{ activity.routes[0].route.crag.name }}</a
+  >
+</ng-template>
+
+<ng-template #route let-activityRoute="activityRoute">
+  <a
+    [routerLink]="[
+      '/plezalisce',
+      activityRoute.route.crag.slug,
+      'smer',
+      activityRoute.route.slug
+    ]"
+  >
+    {{ activityRoute.route.name }}
+  </a>
+</ng-template>
+
+<ng-template #grade let-activityRoute="activityRoute">
+  <app-grade
+    [difficulty]="activityRoute.route.difficulty"
+    [gradingSystemId]="activityRoute.route.defaultGradingSystem.id"
+    [showModifier]="true"
+  >
+  </app-grade>
+</ng-template>
+
+<!-- table view -->
+<table class="card-table" fxHide [fxShow.gt-sm]="!forceCompact">
+  <thead>
+    <tr class="row header">
+      <th></th>
+      <th>Datum</th>
+      <th>Plezalec_ka</th>
+      <th>Plezališče</th>
+      <th>Smer</th>
+      <th>Težavnost</th>
+      <th>Način vzpona</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let activity of activities; let i = index">
+      <tr
+        class="row"
+        (click)="activityMainRows[i].expanded = !activityMainRows[i].expanded"
+      >
+        <td class="button">
+          <ng-container *ngIf="activity.routes.length > 1">
+            <button mat-icon-button>
+              <mat-icon>{{
+                activityMainRows[i].expanded ? "expand_less" : "expand_more"
+              }}</mat-icon>
+            </button>
+          </ng-container>
+        </td>
+        <td>
+          <ng-container
+            *ngTemplateOutlet="date; context: { activity: activity }"
+          ></ng-container>
+        </td>
+        <td>
+          <ng-container
+            *ngTemplateOutlet="user; context: { activity: activity }"
+          ></ng-container>
+        </td>
+        <td>
+          <ng-container
+            *ngTemplateOutlet="crag; context: { activity: activity }"
+          ></ng-container>
+        </td>
+        <td>
+          <ng-container
+            *ngTemplateOutlet="
+              route;
+              context: { activityRoute: activity.routes[0] }
+            "
+          ></ng-container>
+        </td>
+
+        <!-- Grade -->
+        <td>
+          <ng-container
+            *ngTemplateOutlet="
+              grade;
+              context: { activityRoute: activity.routes[0] }
+            "
+          ></ng-container>
+        </td>
+
+        <!-- Ascent type -->
+        <td>
+          <app-ascent-type
+            [value]="activity.routes[0].ascentType"
+            displayType="iconAndText"
+            [fixedIconsWidth]="!noTopropeOnPage"
+          ></app-ascent-type>
+        </td>
+      </tr>
+      <ng-container *ngIf="activity.routes.length > 1">
+        <tr
+          *ngFor="let activityRoute of activity.routes | slice: 1"
+          class="row expandable-row"
+          [ngClass]="{ 'expanded-row': activityMainRows[i].expanded }"
+        >
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td class="w-border">
+            <div>
+              <div>
+                <ng-container
+                  *ngTemplateOutlet="
+                    route;
+                    context: { activityRoute: activityRoute }
+                  "
+                ></ng-container>
+              </div>
+            </div>
+          </td>
+          <td class="w-border">
+            <div>
+              <div>
+                <ng-container
+                  *ngTemplateOutlet="
+                    grade;
+                    context: { activityRoute: activityRoute }
+                  "
+                ></ng-container>
+              </div>
+            </div>
+          </td>
+          <td class="w-border">
+            <div>
+              <div>
+                <app-ascent-type
+                  [value]="activityRoute.ascentType"
+                  displayType="iconAndText"
+                  [fixedIconsWidth]="!noTopropeOnPage"
+                ></app-ascent-type>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+    </ng-container>
+  </tbody>
+</table>
+
+<!-- compact view -->
+<div class="compact" [fxHide.gt-sm]="!forceCompact">
+  <ng-container *ngFor="let activity of activities; let i = index">
+    <!-- Activity with main activity route -->
+    <div
+      fxLayout="row"
+      (click)="
+        activityMainRows[i].expanded =
+          !activityMainRows[i].expanded && activity.routes.length > 1
+      "
+      class="activity"
+    >
+      <!-- More/Less icon if applicable -->
+      <div fxFlex="1 1 22px" class="more-less">
+        <div *ngIf="activity.routes.length > 1" class="pr-4">
+          <mat-icon class="small pt-1 d-block">{{
+            activityMainRows[i].expanded ? "expand_less" : "expand_more"
+          }}</mat-icon>
+        </div>
+      </div>
+
+      <!-- Activity data and first activity route data -->
+      <div fxFlex="1 1 100%">
+        <!-- Date of activity -->
+        <div class="date">
+          <ng-container
+            *ngTemplateOutlet="date; context: { activity: activity }"
+          ></ng-container>
+        </div>
+
+        <!-- User -->
+        <div>
+          <ng-container
+            *ngTemplateOutlet="user; context: { activity: activity }"
+          ></ng-container
+          >,
+          <ng-container
+            *ngTemplateOutlet="crag; context: { activity: activity }"
+          ></ng-container>
+        </div>
+
+        <!-- Crag route style and grade -->
+        <div
+          fxLayout="row"
+          fxLayoutAlign="space-between center"
+          [ngClass]="{ 'pt-8': activityMainRows[i].expanded }"
+          class="main-activity-route"
+        >
+          <!-- Route name -->
+          <div>
+            <ng-container
+              *ngTemplateOutlet="
+                route;
+                context: { activityRoute: activity.routes[0] }
+              "
+            ></ng-container>
+          </div>
+
+          <!-- Ascent type and grade -->
+          <div
+            flex="1 1 89px"
+            fxLayout="row"
+            fxLayoutAlign="center center"
+            class="pr-8"
+          >
+            <div fxLayout="row">
+              <!-- Ascent type -->
+              <app-ascent-type
+                [value]="activity.routes[0].ascentType"
+                displayType="icon"
+              ></app-ascent-type>
+            </div>
+
+            <!-- Grade -->
+            <div class="grade ml-4">
+              <ng-container
+                *ngTemplateOutlet="
+                  grade;
+                  context: { activityRoute: activity.routes[0] }
+                "
+              ></ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="activity.routes.length > 1">
+      <div *ngFor="let activityRoute of activity.routes | slice: 1">
+        <div
+          fxLayout="row"
+          class="pl-8 expandable-row"
+          [ngClass]="{ 'expanded-row': activityMainRows[i].expanded }"
+        >
+          <div fxFlex="1 1 22px">
+            <!-- dummy -->
+          </div>
+
+          <!-- Crag route style and grade -->
+          <div
+            fxFlex="1 1 100%"
+            fxLayout="row"
+            fxLayoutAlign="space-between center"
+            class="activity-route"
+          >
+            <!-- Route name -->
+            <div>
+              <ng-container
+                *ngTemplateOutlet="
+                  route;
+                  context: { activityRoute: activityRoute }
+                "
+              ></ng-container>
+            </div>
+
+            <!-- Style and grade -->
+            <div
+              flex="1 1 89px"
+              fxLayout="row"
+              fxLayoutAlign="center center"
+              class="pr-8"
+            >
+              <div fxLayout="row">
+                <app-ascent-type
+                  [value]="activityRoute.ascentType"
+                  displayType="icon"
+                ></app-ascent-type>
+              </div>
+
+              <div class="grade ml-4">
+                <ng-container
+                  *ngTemplateOutlet="
+                    grade;
+                    context: { activityRoute: activityRoute }
+                  "
+                ></ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>

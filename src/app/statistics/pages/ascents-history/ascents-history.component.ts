@@ -14,19 +14,19 @@ import {
 } from 'src/generated/graphql';
 
 @Component({
-  selector: 'app-ascents',
-  templateUrl: './ascents.component.html',
-  styleUrls: ['./ascents.component.scss'],
+  selector: 'app-ascents-history',
+  templateUrl: './ascents-history.component.html',
+  styleUrls: ['./ascents-history.component.scss'],
 })
-export class AscentsComponent implements OnInit, OnDestroy {
+export class AscentsHistoryComponent implements OnInit, OnDestroy {
   activities: Activity[];
   activityMainRows: { expanded: boolean }[] = [];
   pagination: PaginationMeta;
   loading = false;
   error: DataError = null;
   subscription: Subscription;
-  noTopropeOnPage = false;
-  ascentTypes = ASCENT_TYPES;
+  noTopropeOnPage = false; // TODO: remove after ported to subcomponent
+  ascentTypes = ASCENT_TYPES; // TODO: remove after ported to subcomponent
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -82,6 +82,7 @@ export class AscentsComponent implements OnInit, OnDestroy {
 
           this.pagination = result.data.activities.meta;
 
+          // TODO: remove after ported to subcomponent
           this.noTopropeOnPage = !this.activities.some((activity) =>
             activity.routes.some(
               (route) =>
