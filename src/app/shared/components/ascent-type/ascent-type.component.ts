@@ -11,6 +11,7 @@ export class AscentTypeComponent implements OnInit {
   @Input() value: string;
   @Input() displayType = 'text';
   @Input() iconAlignment = 'end';
+  @Input() fixedIconsWidth = true;
 
   ascentType: Registry;
 

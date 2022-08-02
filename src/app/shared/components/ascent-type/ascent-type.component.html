@@ -1,7 +1,9 @@
 <div fxLayout="row" fxLayoutAlign="start center">
   <ng-container *ngIf="displayType === 'icon' || displayType === 'iconAndText'">
     <div
-      style="width: 36px"
+      [ngClass]="{
+        'fixed-icons-width': fixedIconsWidth
+      }"
       fxLayout="row"
       [fxLayoutAlign]="iconAlignment + ' center'"
     >
