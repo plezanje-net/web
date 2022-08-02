@@ -16,6 +16,7 @@ import {
 
 export interface DialogData {
   comment?: Comment;
+  type?: string;
   iceFall?: IceFall;
   route?: Route;
   crag?: Crag;
@@ -33,7 +34,7 @@ export class CommentFormComponent implements OnInit {
   loading = false;
 
   commentForm = new FormGroup({
-    type: new FormControl('comment'),
+    type: new FormControl(),
     content: new FormControl(),
   });
 
@@ -49,6 +50,12 @@ export class CommentFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (this.data.type) {
+      this.commentForm.patchValue({
+        type: this.data.type,
+      });
+    }
+
     this.updateFormType();
     if (this.data.comment != null) {
       this.commentForm.patchValue({

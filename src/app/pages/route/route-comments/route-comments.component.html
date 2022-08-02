@@ -7,7 +7,7 @@
   >
     <span fxFlex="100">Komentarji</span>
     <div fxFlex>
-      <button (click)="addComment()" mat-button color="primary">
+      <button (click)="addComment('add-comment')" mat-button color="primary">
         Dodaj komentar
       </button>
     </div>
@@ -30,17 +30,22 @@
   >
     <app-comment [comment]="comment" [previewMode]="previewMode"></app-comment>
   </div>
-  <div *ngIf="showNoCommentsMessage && !previewMode" class="p-16">
+  <div *ngIf="regularComments.length === 0 && !previewMode" class="p-16">
     Ta smer nima še nobenega komentarja.
   </div>
 
   <h3
-    *ngIf="!previewMode"
+    *ngIf="!previewMode && conditions.length > 0"
     fxLayout="row"
     fxLayoutAlign="center center"
     fxLayout.lt-md="column"
   >
-    <span fxFlex="100" *ngIf="conditions.length > 0">Opisi razmer</span>
+    <span fxFlex="100">Opisi razmer</span>
+    <div fxFlex>
+      <button mat-button color="primary" (click)="addComment('add-condition')">
+        Dodaj opis razmer
+      </button>
+    </div>
   </h3>
   <div
     *ngFor="let conditionComment of conditions"
@@ -56,12 +61,21 @@
   </div>
 
   <h3
-    *ngIf="!previewMode"
+    *ngIf="!previewMode && descriptions.length > 0"
     fxLayout="row"
     fxLayoutAlign="center center"
     fxLayout.lt-md="column"
   >
-    <span fxFlex="100" *ngIf="descriptions.length > 0">Opisi smeri</span>
+    <span fxFlex="100">Opisi smeri</span>
+    <div fxFlex>
+      <button
+        mat-button
+        color="primary"
+        (click)="addComment('add-description')"
+      >
+        Dodaj opis smeri
+      </button>
+    </div>
   </h3>
   <div
     *ngFor="let description of descriptions"

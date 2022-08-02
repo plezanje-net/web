@@ -69,18 +69,25 @@ export class RouteComponent implements OnInit, OnDestroy {
     this.actionSubscription = this.action$.subscribe((action) => {
       switch (action) {
         case 'add-comment':
-          this.addComment();
+          this.addComment('comment');
+          break;
+        case 'add-condition':
+          this.addComment('condition');
+          break;
+        case 'add-description':
+          this.addComment('description');
           break;
       }
     });
   }
 
-  addComment() {
+  addComment(type: string) {
     this.authService.guardedAction({}).then((success) => {
       if (success) {
         this.dialog.open(CommentFormComponent, {
           data: {
             route: this.route,
+            type,
           },
           autoFocus: false,
         });
