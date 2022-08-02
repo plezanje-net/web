@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { DataError } from 'src/app/types/data-error';
 import {
   Activity,
   AscentsGQL,
   FindActivitiesInput,
   FindActivityRoutesInput,
 } from 'src/generated/graphql';
+import { LoadingSpinnerService } from '../loading-spinner.service';
 
 @Component({
   selector: 'app-latest-ascents',
@@ -12,12 +14,19 @@ import {
   styleUrls: ['./latest-ascents.component.scss'],
 })
 export class LatestAscentsComponent implements OnInit {
+  @Output() errorEvent = new EventEmitter<DataError>();
+
   activities: Activity[];
   loading = true;
 
-  constructor(private ascentsGQL: AscentsGQL) {}
+  constructor(
+    private ascentsGQL: AscentsGQL,
+    private loadingSpinnerService: LoadingSpinnerService
+  ) {}
 
   ngOnInit(): void {
+    this.loadingSpinnerService.pushLoader();
+
     const gqlParams: {
       activitiesInput: FindActivitiesInput;
       activityRoutesInput: FindActivityRoutesInput;
@@ -35,14 +44,15 @@ export class LatestAscentsComponent implements OnInit {
 
     this.ascentsGQL.fetch(gqlParams).subscribe({
       next: (result) => {
+        this.loadingSpinnerService.popLoader();
         this.activities = <Activity[]>result.data.activities.items;
-        console.log(this.activities);
         this.loading = false;
       },
       error: () => {
-        // this.error = {
-        //   message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
-        // };
+        this.loadingSpinnerService.popLoader();
+        this.errorEvent.emit({
+          message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
+        });
       },
     });
   }

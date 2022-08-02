@@ -24,12 +24,14 @@ export class AscentsComponent implements OnInit {
       this.activityMainRows.push({ expanded: false });
     });
 
-    // TODO: add another if. because we only need to calculate this for large view
-    this.noTopropeOnPage = !this.activities.some((activity) =>
-      activity.routes.some(
-        (route) =>
-          this.ascentTypes.find((at) => at.value === route.ascentType).topRope
-      )
-    );
+    // We don't need to decide about this detail if compact view is forced
+    if (!this.forceCompact) {
+      this.noTopropeOnPage = !this.activities.some((activity) =>
+        activity.routes.some(
+          (route) =>
+            this.ascentTypes.find((at) => at.value === route.ascentType).topRope
+        )
+      );
+    }
   }
 }

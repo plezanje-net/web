@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, switchMap } from 'rxjs';
-import { ASCENT_TYPES } from 'src/app/common/activity.constants';
 import { LayoutService } from 'src/app/services/layout.service';
 import { DataError } from 'src/app/types/data-error';
 import {
@@ -20,13 +19,11 @@ import {
 })
 export class AscentsHistoryComponent implements OnInit, OnDestroy {
   activities: Activity[];
-  activityMainRows: { expanded: boolean }[] = [];
+
   pagination: PaginationMeta;
   loading = false;
   error: DataError = null;
   subscription: Subscription;
-  noTopropeOnPage = false; // TODO: remove after ported to subcomponent
-  ascentTypes = ASCENT_TYPES; // TODO: remove after ported to subcomponent
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -72,24 +69,8 @@ export class AscentsHistoryComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (result) => {
           this.loading = false;
-
           this.activities = <Activity[]>result.data.activities.items;
-
-          this.activityMainRows = [];
-          this.activities.forEach(() => {
-            this.activityMainRows.push({ expanded: false });
-          });
-
           this.pagination = result.data.activities.meta;
-
-          // TODO: remove after ported to subcomponent
-          this.noTopropeOnPage = !this.activities.some((activity) =>
-            activity.routes.some(
-              (route) =>
-                this.ascentTypes.find((at) => at.value === route.ascentType)
-                  .topRope
-            )
-          );
         },
         error: () => {
           this.loading = false;
