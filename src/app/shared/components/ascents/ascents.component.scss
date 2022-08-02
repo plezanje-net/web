@@ -54,6 +54,10 @@
     color: $gray;
   }
 
+  div:hover {
+    background: $blue-very-light;
+  }
+
   .activity {
     border-top: 1px solid $gray-lighter;
     &:first-child {
@@ -71,6 +75,9 @@
   div.more-less {
     div {
       height: 20px;
+    }
+    &:hover {
+      cursor: pointer;
     }
   }
 
