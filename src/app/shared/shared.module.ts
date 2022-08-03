@@ -39,6 +39,7 @@ import { PublishStatusHintComponent } from './components/publish-status-hint/pub
 import { RouterModule } from '@angular/router';
 import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.component';
 import { AscentsComponent } from './components/ascents/ascents.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -84,6 +85,7 @@ import { AscentsComponent } from './components/ascents/ascents.component';
     MatDatepickerModule,
     MatInputModule,
     RouterModule,
+    MatTooltipModule,
   ],
   providers: [
     CustomBreakpointsProvider,
