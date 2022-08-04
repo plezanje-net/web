@@ -52,6 +52,7 @@ export class AscentsHistoryComponent implements OnInit, OnDestroy {
             activitiesInput: {
               type: ['crag'],
               hasRoutesWithPublish: ['public'],
+              orderBy: { field: 'date', direction: 'DESC' },
             },
             activityRoutesInput: {
               publish: ['public'],

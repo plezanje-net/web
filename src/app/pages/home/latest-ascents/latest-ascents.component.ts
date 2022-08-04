@@ -48,6 +48,7 @@ export class LatestAscentsComponent implements OnInit, OnDestroy {
             activitiesInput: {
               type: ['crag'],
               hasRoutesWithPublish: ['public'],
+              orderBy: { field: 'date', direction: 'DESC' },
               pageSize: 10,
             },
             activityRoutesInput: {
