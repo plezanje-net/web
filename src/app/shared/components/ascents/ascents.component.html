@@ -111,10 +111,10 @@
           class="row expandable-row"
           [ngClass]="{ 'expanded-row': activityMainRows[i].expanded }"
         >
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td class="fake-border"></td>
+          <td class="fake-border"></td>
+          <td class="fake-border"></td>
+          <td class="fake-border"></td>
           <td class="w-border">
             <div>
               <div>
@@ -197,10 +197,11 @@
           ></ng-container>
         </div>
 
-        <!-- Crag route style and grade -->
+        <!-- Route name, ascent type and grade -->
         <div
           fxLayout="row"
           fxLayoutAlign="space-between center"
+          fxLayoutGap="8px"
           [ngClass]="{ 'pt-8': activityMainRows[i].expanded }"
           class="main-activity-route"
         >
@@ -254,11 +255,12 @@
             <!-- dummy -->
           </div>
 
-          <!-- Crag route style and grade -->
+          <!-- Route name, ascent style and grade -->
           <div
             fxFlex="1 1 100%"
             fxLayout="row"
             fxLayoutAlign="space-between center"
+            fxLayoutGap="8px"
             class="activity-route"
           >
             <!-- Route name -->
