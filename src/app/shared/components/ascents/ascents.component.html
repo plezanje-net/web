@@ -62,7 +62,7 @@
             </button>
           </ng-container>
         </td>
-        <td>
+        <td class="date">
           <ng-container
             *ngTemplateOutlet="date; context: { activity: activity }"
           ></ng-container>
@@ -115,39 +115,34 @@
           <td class="fake-border"></td>
           <td class="fake-border"></td>
           <td class="fake-border"></td>
+
           <td class="w-border">
             <div>
-              <div>
-                <ng-container
-                  *ngTemplateOutlet="
-                    route;
-                    context: { activityRoute: activityRoute }
-                  "
-                ></ng-container>
-              </div>
+              <ng-container
+                *ngTemplateOutlet="
+                  route;
+                  context: { activityRoute: activityRoute }
+                "
+              ></ng-container>
             </div>
           </td>
           <td class="w-border">
             <div>
-              <div>
-                <ng-container
-                  *ngTemplateOutlet="
-                    grade;
-                    context: { activityRoute: activityRoute }
-                  "
-                ></ng-container>
-              </div>
+              <ng-container
+                *ngTemplateOutlet="
+                  grade;
+                  context: { activityRoute: activityRoute }
+                "
+              ></ng-container>
             </div>
           </td>
           <td class="w-border">
             <div>
-              <div>
-                <app-ascent-type
-                  [value]="activityRoute.ascentType"
-                  displayType="iconAndText"
-                  [fixedIconsWidth]="!noTopropeOnPage"
-                ></app-ascent-type>
-              </div>
+              <app-ascent-type
+                [value]="activityRoute.ascentType"
+                displayType="iconAndText"
+                [fixedIconsWidth]="!noTopropeOnPage"
+              ></app-ascent-type>
             </div>
           </td>
         </tr>
@@ -186,8 +181,8 @@
           ></ng-container>
         </div>
 
-        <!-- User -->
-        <div>
+        <!-- User and crag -->
+        <div class="pr-8">
           <ng-container
             *ngTemplateOutlet="user; context: { activity: activity }"
           ></ng-container
