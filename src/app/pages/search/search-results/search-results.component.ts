@@ -88,14 +88,17 @@ export class SearchResultsComponent implements OnInit {
       return text;
     }
 
-    // strip first and last spaces, then replace all (multiple) middle spaces with single ORs
+    // first escape all special characters. user could be searching for "&" or ">" or "+" and so on...
+    searchString = this.searchService.escape(searchString);
+
+    // strip first and last spaces, then replace all (multiple) middle spaces with regex ORs
     searchString = searchString.trim().replace(/\s+/g, '|');
 
-    // replace csz in search terms with character sets so that all accents are matched
+    // convert characters with possible accents to character groups
     searchString = this.searchService.ignoreAccents(searchString);
 
-    // each term should be a start of a word (start with a non word character (includes closing html >))
-    searchString = '\\b' + searchString + ''; // this fails when accented character is the first character of the word... will do for now
+    // each term should be a start of a string or after a space or after an opening parentheses or after a closing html tag
+    searchString = '(?<=^|\\s|>|\\()' + searchString + '';
 
     // exclude matching text inside html tags
     if (searchingInHtml) {

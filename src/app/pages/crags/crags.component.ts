@@ -111,6 +111,7 @@ export class CragsComponent implements OnInit, OnDestroy {
     } else {
       let searchTerm = this.search.value;
       searchTerm = searchTerm.toLowerCase();
+      searchTerm = this.searchService.escape(searchTerm);
       searchTerm = this.searchService.ignoreAccents(searchTerm);
 
       const regExp = new RegExp(searchTerm);

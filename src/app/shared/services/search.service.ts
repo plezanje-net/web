@@ -19,4 +19,11 @@ export class SearchService {
 
     return searchString;
   }
+
+  /**
+   * Escapes all regex special characters
+   */
+  escape(searchString: string) {
+    return searchString.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+  }
 }
