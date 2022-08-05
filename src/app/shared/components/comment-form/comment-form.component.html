@@ -8,24 +8,12 @@
 </div>
 
 <form [formGroup]="commentForm" (submit)="save()">
-  <div fxLayout="column" fxLayoutGap="16px">
-    <mat-form-field>
-      <mat-label>Tip komentarja</mat-label>
-      <mat-select formControlName="type" (selectionChange)="onTypeChange()">
-        <mat-option value="comment">Komentar</mat-option>
-        <mat-option value="warning">Opozorilo</mat-option>
-        <mat-option value="condition">Opis razmer</mat-option>
-        <mat-option value="description">Opis smeri</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <div fxLayout="row">
-      <app-editor
-        fxFlex="100"
-        placeholder="Komentar"
-        [control]="commentForm.controls.content"
-      ></app-editor>
-    </div>
+  <div fxLayout="row">
+    <app-editor
+      fxFlex="100"
+      placeholder="Komentar"
+      [control]="commentForm.controls.content"
+    ></app-editor>
   </div>
 
   <div

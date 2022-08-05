@@ -57,6 +57,7 @@ export class CommentFormComponent implements OnInit {
     }
 
     this.updateFormType();
+
     if (this.data.comment != null) {
       this.commentForm.patchValue({
         content: this.data.comment.content,
@@ -65,35 +66,30 @@ export class CommentFormComponent implements OnInit {
     }
   }
 
-  onTypeChange() {
-    this.updateFormType();
-  }
-
   updateFormType() {
-    let prefix = this.data.comment != null ? 'Uredi' : 'Dodaj';
-
     switch (this.type) {
       case 'comment':
-        this.title = `${prefix} komentar`;
+        if (this.data.comment != null) {
+          this.title = 'Uredi komentar';
+        } else {
+          this.title = 'Dodaj komentar';
+        }
+
         this.removeExposedUntilField();
         break;
       case 'warning':
-        this.title = `${prefix} opozorilo`;
+        if (this.data.comment != null) {
+          this.title = 'Uredi opozorilo';
+        } else {
+          this.title = 'Dodaj opozorilo';
+        }
+
         this.addExposedUntilField();
         if (this.data.comment != null) {
           this.commentForm.patchValue({
             exposedUntil: this.data.comment.exposedUntil,
           });
         }
-        break;
-      case 'condition':
-        this.title = `${prefix} opis razmer`;
-        this.removeExposedUntilField();
-        break;
-      case 'description':
-        // TODO: it seems that only peaks and routes can have comments of type description. Might want to include entity type in the title and generalize this. Should discuss.
-        this.title = `${prefix} opis smeri`;
-        this.removeExposedUntilField();
         break;
     }
   }
