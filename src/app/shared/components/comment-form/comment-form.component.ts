@@ -99,10 +99,7 @@ export class CommentFormComponent implements OnInit {
   }
 
   addExposedUntilField() {
-    this.commentForm.addControl(
-      'exposedUntil',
-      new FormControl(null, [Validators.required])
-    );
+    this.commentForm.addControl('exposedUntil', new FormControl(null));
     this.maxDate = new Date();
     this.maxDate.setMonth(this.maxDate.getMonth() + 1); // let user choose max 1 month validity of warning exposure
   }
