@@ -113,28 +113,40 @@ export class SearchComponent implements OnInit, OnDestroy {
     switch (optionValue.__typename) {
       case 'Crag':
         const crag = optionValue;
-        this.router.navigate(['/plezalisce', crag.slug]);
+
+        this.router.navigate(
+          crag.type == 'alpine'
+            ? ['/alpinizem/stena', crag.slug]
+            : ['/plezalisce', crag.slug]
+        );
+
         break;
 
       case 'Route':
         const route = optionValue;
-        this.router.navigate([
-          '/plezalisce',
-          route.crag.slug,
-          'smer',
-          route.slug,
-        ]);
+
+        this.router.navigate(
+          route.routeType.id == 'alpine'
+            ? ['/alpinizem/stena', route.crag.slug, 'smer', route.slug]
+            : ['/plezalisce', route.crag.slug, 'smer', route.slug]
+        );
         break;
 
       case 'Sector':
         const sector = optionValue;
-        this.router.navigate(['/plezalisce', sector.crag.slug]);
+
+        this.router.navigate(
+          sector.crag.type == 'alpine'
+            ? ['/alpinizem/stena', sector.crag.slug]
+            : ['/plezalisce', sector.crag.slug]
+        );
         break;
 
-      case 'User':
-        const user = optionValue;
-        this.router.navigate(['/uporabniki', user.fullName]);
-        break;
+      // not used until we implement user profile pages
+      // case 'User':
+      //   const user = optionValue;
+      //   this.router.navigate(['/uporabniki', user.fullName]);
+      //   break;
     }
   }
 
