@@ -131,7 +131,7 @@ export class CommentFormComponent implements OnInit {
       cragId: this.data.crag ? this.data.crag.id : null,
       peakId: this.data.peak ? this.data.peak.id : null,
       exposedUntil:
-        this.type === 'warning'
+        this.type === 'warning' && this.commentForm.value.exposedUntil
           ? dayjs(this.commentForm.value.exposedUntil).format('YYYY-MM-DD')
           : null,
     };
