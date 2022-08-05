@@ -10,6 +10,7 @@ import { ROUTE_TYPES } from 'src/app/common/route-types.constants';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from '@sentry/angular';
 import { ScrollService } from 'src/app/services/scroll.service';
+import { SearchService } from 'src/app/shared/services/search.service';
 
 @Component({
   selector: 'app-crags',
@@ -44,7 +45,8 @@ export class CragsComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private cragsGQL: CragsGQL,
-    private scrollService: ScrollService
+    private scrollService: ScrollService,
+    private searchService: SearchService
   ) {}
 
   ngOnInit(): void {
@@ -109,9 +111,8 @@ export class CragsComponent implements OnInit, OnDestroy {
     } else {
       let searchTerm = this.search.value;
       searchTerm = searchTerm.toLowerCase();
-      searchTerm = searchTerm.replace(/[cčć]/gi, '[cčć]');
-      searchTerm = searchTerm.replace(/[sš]/gi, '[sš]');
-      searchTerm = searchTerm.replace(/[zž]/gi, '[zž]');
+      searchTerm = this.searchService.ignoreAccents(searchTerm);
+
       const regExp = new RegExp(searchTerm);
 
       this.filteredCrags = this.country.crags.filter((crag) =>

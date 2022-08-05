@@ -18,6 +18,7 @@ import { KeyValue } from '@angular/common';
 import { MatSelectChange } from '@angular/material/select';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { SearchService } from 'src/app/shared/services/search.service';
 
 @Component({
   selector: 'app-crag-routes',
@@ -138,7 +139,8 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     private myCragSummaryGQL: MyCragSummaryGQL,
     private localStorageService: LocalStorageService,
     private changeDetection: ChangeDetectorRef,
-    private hostElement: ElementRef
+    private hostElement: ElementRef,
+    private searchService: SearchService
   ) {}
 
   ngOnInit(): void {
@@ -291,9 +293,8 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
   filterRoutes(): void {
     let searchTerm = this.search.value;
     searchTerm = searchTerm.toLowerCase();
-    searchTerm = searchTerm.replace(/[cčć]/gi, '[cčć]');
-    searchTerm = searchTerm.replace(/[sš]/gi, '[sš]');
-    searchTerm = searchTerm.replace(/[zž]/gi, '[zž]');
+    searchTerm = this.searchService.ignoreAccents(searchTerm);
+
     const regExp = new RegExp(searchTerm);
 
     this.sectors.forEach((sector) =>

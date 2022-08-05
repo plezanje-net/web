@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, switchMap } from 'rxjs';
 import { LayoutService } from 'src/app/services/layout.service';
+import { SearchService } from 'src/app/shared/services/search.service';
 import { SearchGQL, SearchQuery } from 'src/generated/graphql';
 
 @Component({
@@ -21,7 +22,8 @@ export class SearchResultsComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private searchGQL: SearchGQL,
-    private layoutService: LayoutService
+    private layoutService: LayoutService,
+    private searchService: SearchService
   ) {}
 
   ngOnInit(): void {
@@ -90,12 +92,10 @@ export class SearchResultsComponent implements OnInit {
     searchString = searchString.trim().replace(/\s+/g, '|');
 
     // replace csz in search terms with character sets so that all accents are matched
-    searchString = searchString.replace(/[cčć]/gi, '[cčć]');
-    searchString = searchString.replace(/[sš]/gi, '[sš]');
-    searchString = searchString.replace(/[zž]/gi, '[zž]');
+    searchString = this.searchService.ignoreAccents(searchString);
 
     // each term should be a start of a word (start with a non word character (includes closing html >))
-    searchString = '\\b' + searchString + '';
+    searchString = '\\b' + searchString + ''; // this fails when accented character is the first character of the word... will do for now
 
     // exclude matching text inside html tags
     if (searchingInHtml) {
