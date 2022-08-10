@@ -99,6 +99,7 @@ import { SortableHeaderFieldComponent } from './common/sortable-header-field/sor
 import { PendingContributionsHintsComponent } from './pages/home/pending-contributions-hints/pending-contributions-hints.component';
 import { HowToContributeComponent } from './pages/help/how-to-contribute/how-to-contribute.component';
 import { LatestDifficultyVotesComponent } from './pages/home/latest-difficulty-votes/latest-difficulty-votes.component';
+import { LatestCommentsComponent } from './pages/home/latest-comments/latest-comments.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -175,6 +176,7 @@ class CustomDateAdapter extends NativeDateAdapter {
     PendingContributionsHintsComponent,
     HowToContributeComponent,
     LatestDifficultyVotesComponent,
+    LatestCommentsComponent,
   ],
   imports: [
     BrowserModule,

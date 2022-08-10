@@ -1,0 +1,27 @@
+query LatestComments($limit: Int!) {
+  latestComments(limit: $limit) {
+    id
+    type
+    user {
+      id
+    }
+    content
+    created
+    updated
+    crag {
+      name
+      slug
+      country {
+        slug
+        name
+      }
+    }
+    route {
+      name
+    }
+    # peak {
+    #   slug
+    #   name
+    # }
+  }
+}
