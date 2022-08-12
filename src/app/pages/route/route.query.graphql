@@ -50,6 +50,7 @@ query RouteBySlug($cragSlug: String!, $routeSlug: String!) {
     comments {
       type
       user {
+        id
         fullName
       }
       content
