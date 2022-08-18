@@ -126,7 +126,7 @@ export class SearchComponent implements OnInit, OnDestroy {
         const route = optionValue;
 
         this.router.navigate(
-          route.routeType.id == 'alpine'
+          route.crag.type == 'alpine'
             ? ['/alpinizem/stena', route.crag.slug, 'smer', route.slug]
             : ['/plezalisce', route.crag.slug, 'smer', route.slug]
         );

@@ -101,7 +101,7 @@
               fxLayoutGap="5px"
               class="row"
               [routerLink]="
-                route.routeType.id == 'alpine'
+                route.crag.type == 'alpine'
                   ? ['/alpinizem/stena', route.crag.slug, 'smer', route.slug]
                   : ['/plezalisce', route.crag.slug, 'smer', route.slug]
               "
@@ -211,7 +211,7 @@
               class="row"
               [routerLink]="
                 comment?.route
-                  ? comment.route.routeType.id == 'alpine'
+                  ? comment.route.crag.type == 'alpine'
                     ? [
                         '/alpinizem/stena',
                         comment.route.crag.slug,

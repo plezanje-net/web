@@ -16,9 +16,7 @@ query SearchAutoComplete($searchString: String) {
       crag {
         id
         slug
-      }
-      routeType {
-        id
+        type
       }
     }
 

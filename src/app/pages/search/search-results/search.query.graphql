@@ -27,15 +27,13 @@ query Search($query: String) {
       defaultGradingSystem {
         id
       }
-      routeType {
-        id
-      }
       isProject
       length
       crag {
         id
         name
         slug
+        type
         country {
           id
           slug
@@ -80,13 +78,11 @@ query Search($query: String) {
           id
           name
           slug
+          type
           country {
             id
             slug
           }
-        }
-        routeType {
-          id
         }
       }
       user {
