@@ -341,14 +341,24 @@
 
                 <td *ngIf="shownColumns.includes('starRating')" class="icon">
                   <mat-icon
-                    *ngIf="math.round(route.starRating) == 1"
-                    title="Lepa"
+                    *ngIf="
+                      math.round(route.starRating) == 1 &&
+                      route.nrStarRatingVotes >= minNrStarRatingVotes
+                    "
+                    title="Lepa ({{
+                      route.nrStarRatingVotes | pluralizeNoun: 'glas'
+                    }})"
                   >
                     star_border
                   </mat-icon>
                   <mat-icon
-                    *ngIf="math.round(route.starRating) == 2"
-                    title="Čudovita"
+                    *ngIf="
+                      math.round(route.starRating) == 2 &&
+                      route.nrStarRatingVotes >= minNrStarRatingVotes
+                    "
+                    title="Čudovita ({{
+                      route.nrStarRatingVotes | pluralizeNoun: 'glas'
+                    }})"
                   >
                     star
                   </mat-icon>
@@ -453,14 +463,24 @@
 
                   <div *ngIf="shownColumns.includes('starRating')" class="star">
                     <mat-icon
-                      *ngIf="math.round(route.starRating) == 1"
-                      title="Lepa"
+                      *ngIf="
+                        math.round(route.starRating) == 1 &&
+                        route.nrStarRatingVotes >= minNrStarRatingVotes
+                      "
+                      title="Lepa ({{
+                        route.nrStarRatingVotes | pluralizeNoun: 'glas'
+                      }})"
                     >
                       star_border
                     </mat-icon>
                     <mat-icon
-                      *ngIf="math.round(route.starRating) == 2"
-                      title="Čudovita"
+                      *ngIf="
+                        math.round(route.starRating) == 2 &&
+                        route.nrStarRatingVotes >= minNrStarRatingVotes
+                      "
+                      title="Čudovita ({{
+                        route.nrStarRatingVotes | pluralizeNoun: 'glas'
+                      }})"
                     >
                       star
                     </mat-icon>
