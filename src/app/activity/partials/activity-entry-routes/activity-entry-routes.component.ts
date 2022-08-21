@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { concatMap, filter, Subject, switchMap } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
+import { ASCENT_TYPES } from 'src/app/common/activity.constants';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { GenderizeVerbPipe } from 'src/app/shared/pipes/genderize-verb.pipe';
 import {
@@ -24,6 +25,9 @@ export class ActivityEntryRoutesComponent implements OnInit {
   rowAction$ = new Subject(); // source
 
   noNotes = false;
+  noTopropeOnPage = false;
+
+  ascentTypes = ASCENT_TYPES;
 
   constructor(
     private deleteActivityRouteGQL: DeleteActivityRouteGQL,
@@ -35,8 +39,14 @@ export class ActivityEntryRoutesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // save some space by hiding notes column if there are none
+    // Save some space by hiding notes column if there are none
     this.noNotes = !this.routes.some((route) => route.notes);
+
+    // If none of the activity routes (ascents) have ascent type with toprope, save extra space for tr icon
+    this.noTopropeOnPage = !this.routes.some(
+      (route) =>
+        this.ascentTypes.find((at) => at.value === route.ascentType).topRope
+    );
 
     this.rowAction$.subscribe((action: any) => {
       switch (action.action) {

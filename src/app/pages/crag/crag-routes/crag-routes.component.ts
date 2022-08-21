@@ -110,7 +110,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       field: 'myAscents',
       selectLabel: 'Moji vzponi',
       defaultSortDirection: -1,
-      width: 36,
+      width: 52,
     },
   };
   math = Math;

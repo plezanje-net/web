@@ -1,0 +1,16 @@
+<h2>Zadnji vzponi</h2>
+
+<mat-card>
+  <mat-card-content>
+    <app-ascents
+      *ngIf="!loading"
+      [activities]="activities"
+      [forceCompact]="true"
+    ></app-ascents>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button [routerLink]="['/pregledi/vzponi']">
+      Prikaži več vzponov
+    </button>
+  </mat-card-actions>
+</mat-card>

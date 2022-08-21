@@ -18,6 +18,8 @@ export class ActivityRouteRowComponent implements OnInit {
   @Input() rowAction: Subject<RowAction>;
   @Input() displayType: 'activity' | 'activityForm' | 'routes' = 'routes';
   @Input() noNotes = false;
+  @Input() noTopropeOnPage = false;
+
   publishOptions = PUBLISH_OPTIONS;
 
   constructor(

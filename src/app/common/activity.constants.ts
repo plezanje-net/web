@@ -12,7 +12,7 @@ export const ASCENT_TYPES: AscentType[] = [
   {
     value: 'onsight',
     label: 'Na pogled',
-    color: 'green',
+    icon: 'visibility',
     topRope: false,
     tick: true,
     topRopeTick: false,
@@ -20,7 +20,7 @@ export const ASCENT_TYPES: AscentType[] = [
   {
     value: 'flash',
     label: 'Flash',
-    color: 'green',
+    icon: 'flash_on',
     topRope: false,
     tick: true,
     topRopeTick: false,
@@ -28,7 +28,7 @@ export const ASCENT_TYPES: AscentType[] = [
   {
     value: 'redpoint',
     label: 'Z rdečo piko',
-    color: 'green',
+    icon: 'adjust',
     topRope: false,
     tick: true,
     topRopeTick: false,
@@ -36,7 +36,7 @@ export const ASCENT_TYPES: AscentType[] = [
   {
     value: 'repeat',
     label: 'Ponovitev',
-    color: 'green',
+    icon: 'hdr_weak',
     topRope: false,
     tick: true,
     topRopeTick: false,
@@ -44,7 +44,7 @@ export const ASCENT_TYPES: AscentType[] = [
   {
     value: 'allfree',
     label: 'Vse prosto',
-    color: 'yellow',
+    icon: 'checkroom',
     topRope: false,
     tick: false,
     topRopeTick: false,
@@ -52,7 +52,7 @@ export const ASCENT_TYPES: AscentType[] = [
   {
     value: 'aid',
     label: 'Tehnično plezanje',
-    color: 'yellow',
+    icon: 'tools_ladder',
     topRope: false,
     tick: false,
     topRopeTick: false,
@@ -60,7 +60,7 @@ export const ASCENT_TYPES: AscentType[] = [
   {
     value: 'attempt',
     label: 'Neuspel poskus',
-    color: 'yellow',
+    icon: 'close',
     topRope: false,
     tick: false,
     topRopeTick: false,
@@ -68,7 +68,7 @@ export const ASCENT_TYPES: AscentType[] = [
   {
     value: 't_onsight',
     label: 'Na pogled',
-    color: 'green',
+    icon: 'visibility',
     topRope: true,
     tick: false,
     topRopeTick: true,
@@ -76,7 +76,7 @@ export const ASCENT_TYPES: AscentType[] = [
   {
     value: 't_flash',
     label: 'Flash',
-    color: 'green',
+    icon: 'flash_on',
     topRope: true,
     tick: false,
     topRopeTick: true,
@@ -84,7 +84,7 @@ export const ASCENT_TYPES: AscentType[] = [
   {
     value: 't_redpoint',
     label: 'Z rdečo piko',
-    color: 'green',
+    icon: 'adjust',
     topRope: true,
     tick: false,
     topRopeTick: true,
@@ -92,7 +92,7 @@ export const ASCENT_TYPES: AscentType[] = [
   {
     value: 't_repeat',
     label: 'Ponovitev',
-    color: 'green',
+    icon: 'hdr_weak',
     topRope: true,
     tick: false,
     topRopeTick: false,
@@ -100,7 +100,7 @@ export const ASCENT_TYPES: AscentType[] = [
   {
     value: 't_allfree',
     label: 'Vse prosto',
-    color: 'yellow',
+    icon: 'checkroom',
     topRope: true,
     tick: false,
     topRopeTick: false,
@@ -108,7 +108,7 @@ export const ASCENT_TYPES: AscentType[] = [
   {
     value: 't_aid',
     label: 'Tehnično plezanje',
-    color: 'yellow',
+    icon: 'tools_ladder',
     topRope: true,
     tick: false,
     topRopeTick: false,
@@ -116,7 +116,7 @@ export const ASCENT_TYPES: AscentType[] = [
   {
     value: 't_attempt',
     label: 'Neuspel poskus',
-    color: 'yellow',
+    icon: 'close',
     topRope: true,
     tick: false,
     topRopeTick: false,

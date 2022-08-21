@@ -39,6 +39,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    // TODO: this fixes a bug where the spinner is not hidden. should be further inspected to find out the reason why this happens. login when clicking any auth protected page. then navigate back to home to reproduce the endless spinenr...
+    this.loadingSpinnerService.resetLoaders();
+
     this.subscription.unsubscribe();
   }
 }
