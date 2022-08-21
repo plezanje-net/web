@@ -112,8 +112,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       width: 36,
     },
   };
-  math = Math;
-  minNrStarRatingVotes = 3; // The minimun number of star rating votes that a route should have before displaying the star rating
+
   hostResizeObserver: ResizeObserver;
   routeListViewStyle: 'compact' | 'table';
   tableWidth: number;
