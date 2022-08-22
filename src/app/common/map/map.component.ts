@@ -55,6 +55,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   currentPosition: any;
 
   map: Map;
+  mapOverlay = true;
 
   constructor() {}
 
@@ -126,7 +127,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.map.getView().fit(this.vectorLayer.getSource().getExtent(), {
           size: this.map.getSize(),
           maxZoom: 15,
-          padding: [30, 30, 30, 30]
+          padding: [30, 30, 30, 30],
         });
       }
     });

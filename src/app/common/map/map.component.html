@@ -1,4 +1,11 @@
-<div [id]="'crag-map-' + id" [ngStyle]="{ 'height.px': height }"></div>
+<div class="crag-map-container">
+  <div [id]="'crag-map-' + id" [ngStyle]="{ 'height.px': height }"></div>
+  <div
+    class="crag-map-overlay"
+    *ngIf="mapOverlay"
+    (click)="mapOverlay = false"
+  ></div>
+</div>
 <div #popup class="popup" [hidden]="true" title="Plezališče">
   <div>
     <p>
