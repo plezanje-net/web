@@ -46,13 +46,11 @@ export class LatestDifficultyVotesComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (result) => {
-          setTimeout(() => {
-            this.loadingSpinnerService.popLoader();
-            this.loading = false;
-            this.difficultyVotes = <DifficultyVote[]>(
-              result.data.latestDifficultyVotes.items
-            );
-          }, 3000);
+          this.loadingSpinnerService.popLoader();
+          this.loading = false;
+          this.difficultyVotes = <DifficultyVote[]>(
+            result.data.latestDifficultyVotes.items
+          );
         },
         error: () => this.queryError(),
       });
