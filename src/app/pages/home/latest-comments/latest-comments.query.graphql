@@ -4,6 +4,7 @@ query LatestComments($limit: Int!) {
     type
     user {
       id
+      fullName
     }
     content
     created

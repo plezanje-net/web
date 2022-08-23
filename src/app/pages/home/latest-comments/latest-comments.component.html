@@ -3,7 +3,15 @@
 </div>
 
 <mat-card *ngIf="!loading">
-  <mat-card-content> Vrstice </mat-card-content>
+  <mat-card-content>
+    <div class="row" *ngFor="let comment of comments">
+      <app-comment
+        [comment]="comment"
+        [commentType]="comment.type"
+        previewMode="true"
+      ></app-comment>
+    </div>
+  </mat-card-content>
   <mat-card-actions>
     <button mat-button [routerLink]="['/pregledi/komentarji']">
       Prikaži več komentarjev
