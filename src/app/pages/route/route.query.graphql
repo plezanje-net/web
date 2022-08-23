@@ -48,6 +48,7 @@ query RouteBySlug($cragSlug: String!, $routeSlug: String!) {
       author
     }
     comments {
+      id
       type
       user {
         id
