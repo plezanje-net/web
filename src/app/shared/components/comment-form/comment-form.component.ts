@@ -35,7 +35,7 @@ export class CommentFormComponent implements OnInit {
 
   commentForm = new FormGroup({
     type: new FormControl(),
-    content: new FormControl(),
+    content: new FormControl(null, [Validators.required]),
   });
 
   minDate = new Date();
@@ -105,7 +105,8 @@ export class CommentFormComponent implements OnInit {
   }
 
   save() {
-    this.loading = false;
+    if (!this.commentForm.valid) return;
+    this.loading = true;
     this.commentForm.disable();
 
     if (this.data.comment != undefined) {
