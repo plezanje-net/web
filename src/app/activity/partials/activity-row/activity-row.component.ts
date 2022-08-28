@@ -17,6 +17,8 @@ export class ActivityRowComponent implements OnInit {
   type: string;
   highestDifficulty: number;
   highestDiffGradingSystemId: string;
+  highestLeadClimbedDifficulty: number;
+  highestLeadClimbedGradingSystemId: string;
   totalLength: number;
 
   constructor() {}
@@ -29,6 +31,8 @@ export class ActivityRowComponent implements OnInit {
     let totalLength = 0;
     let highestDifficulty = Number.MIN_SAFE_INTEGER;
     let highestDiffGradingSystemId: string;
+    let highestLeadClimbedDifficulty = Number.MIN_SAFE_INTEGER;
+    let highestLeadClimbedGradingSystemId: string;
 
     this.activity.routes.forEach((ar) => {
       if (
@@ -47,15 +51,18 @@ export class ActivityRowComponent implements OnInit {
       }
 
       if (
+        ar.route.difficulty > highestLeadClimbedDifficulty &&
+        ['redpoint', 'flash', 'onsight', 'repeat'].indexOf(ar.ascentType) !== -1
+      ) {
+        highestLeadClimbedDifficulty = ar.route.difficulty;
+        highestLeadClimbedGradingSystemId = ar.route.defaultGradingSystem.id;
+      }
+
+      if (
         !isNaN(Number(ar.route.length)) &&
-        [
-          'attempt',
-          't_attempt',
-          'allfree',
-          't_allfree',
-          'aid',
-          't_aid',
-        ].indexOf(ar.ascentType) === -1
+        ['attempt', 't_attempt', 'allfree', 't_allfree'].indexOf(
+          ar.ascentType
+        ) === -1
       ) {
         totalLength += Number(ar.route.length);
       }
@@ -64,5 +71,7 @@ export class ActivityRowComponent implements OnInit {
     this.totalLength = totalLength;
     this.highestDifficulty = highestDifficulty;
     this.highestDiffGradingSystemId = highestDiffGradingSystemId;
+    this.highestLeadClimbedDifficulty = highestLeadClimbedDifficulty;
+    this.highestLeadClimbedGradingSystemId = highestLeadClimbedGradingSystemId;
   }
 }

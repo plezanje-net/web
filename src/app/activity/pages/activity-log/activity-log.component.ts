@@ -64,6 +64,7 @@ export class ActivityLogComponent implements OnInit, OnDestroy {
       { name: 'route', label: 'Lokacija' },
       { name: 'nrRoutes', label: '' },
       { name: 'hardestRoute', label: 'Najtežja smer' },
+      { name: 'hardestLeadClimbedRoute', label: 'Najtežja smer v vodstvu' },
       { name: 'totalLength', label: 'Skupna dolžina' },
     ],
     [

@@ -28,6 +28,13 @@
   ></app-grade>
 </td>
 <td>
+  <app-grade
+    *ngIf="highestLeadClimbedDifficulty && highestLeadClimbedGradingSystemId"
+    [difficulty]="highestLeadClimbedDifficulty"
+    [gradingSystemId]="highestLeadClimbedGradingSystemId"
+  ></app-grade>
+</td>
+<td>
   {{ totalLength ? totalLength + " m" : "" }}
 </td>
 
