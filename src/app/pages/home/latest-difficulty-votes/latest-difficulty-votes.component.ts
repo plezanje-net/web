@@ -5,12 +5,14 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 import { DataError } from 'src/app/types/data-error';
 import {
   DifficultyVote,
   LatestDifficultyVotesGQL,
 } from 'src/generated/graphql';
+import { LoadingSpinnerService } from '../loading-spinner.service';
 
 @Component({
   selector: 'app-latest-difficulty-votes',
@@ -24,15 +26,27 @@ export class LatestDifficultyVotesComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   difficultyVotes: DifficultyVote[] = [];
 
-  constructor(private latestDiffcultyVotesGQL: LatestDifficultyVotesGQL) {}
+  subscription;
+
+  constructor(
+    private authService: AuthService,
+    private latestDiffcultyVotesGQL: LatestDifficultyVotesGQL,
+    private loadingSpinnerService: LoadingSpinnerService
+  ) {}
 
   ngOnInit(): void {
-    const sub = this.latestDiffcultyVotesGQL
-      .watch({
-        input: { pageSize: 10 },
-      })
-      .valueChanges.subscribe({
+    const sub = this.authService.currentUser
+      .pipe(
+        switchMap((user) => {
+          this.loadingSpinnerService.pushLoader();
+          return this.latestDiffcultyVotesGQL.fetch({
+            input: { pageSize: 10 },
+          });
+        })
+      )
+      .subscribe({
         next: (result) => {
+          this.loadingSpinnerService.popLoader();
           this.loading = false;
           this.difficultyVotes = <DifficultyVote[]>(
             result.data.latestDifficultyVotes.items

@@ -80,12 +80,41 @@ p.mt-16,
 .mb-32 {
   margin-bottom: 32px;
 }
+.ml-4 {
+  margin-left: 4px;
+}
 .ml-16 {
   margin-left: 16px;
 }
 
+.pt-1 {
+  padding-top: 1px;
+}
+.pt-8 {
+  padding-top: 8px;
+}
+.pr-4 {
+  padding-right: 4px;
+}
+.pr-8 {
+  padding-right: 8px;
+}
+
 .pb-8 {
   padding-bottom: 8px;
+}
+.pl-8 {
+  padding-left: 8px;
+}
+
+.px-4 {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.px-8 {
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .py-8 {
@@ -96,6 +125,10 @@ p.mt-16,
 .py-16 {
   padding-top: 16px;
   padding-bottom: 16px;
+}
+
+.p-8 {
+  padding: 8px;
 }
 
 .p-16 {
@@ -201,7 +234,8 @@ b {
   width: 100%;
   .row {
     height: 52px;
-    td {
+    td,
+    th {
       vertical-align: middle;
       padding: 8px 12px;
       &.tools {
@@ -211,7 +245,10 @@ b {
       }
     }
     &.header {
-      td {
+      td,
+      th {
+        font-weight: normal;
+        text-align: left;
         padding-top: 12px;
         height: 52px;
         span.sortable {
@@ -307,4 +344,18 @@ span.highlight {
 }
 .mat-checkbox-inner-container {
   margin-top: 4px !important;
+}
+
+.material-symbols {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px; /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
 }

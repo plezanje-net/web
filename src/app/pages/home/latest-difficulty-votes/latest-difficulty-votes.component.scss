@@ -1,7 +1,5 @@
 @import "../../../../styles/colors.scss";
-
-$border-color: rgba(0, 0, 0, 0.08); // very light gray
-$table-header-text-color: #0000008a; // light gray
+@import "../../../../styles/variables.scss";
 
 h2 {
   color: $primary;
@@ -15,18 +13,26 @@ h2 {
   box-shadow: none;
 }
 .date {
-  color: #757575;
+  color: $gray;
 }
 .grade {
   white-space: nowrap;
 }
 .direction .mat-icon {
-  font-size: 16px;
-  color: #757575;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  display: block;
 }
-.row:first-child {
-  border-top:none;
+
+.row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  &:first-child {
+    border-top: none;
+  }
 }
+
 .mat-card {
   border-radius: 0;
   .mat-card-actions {

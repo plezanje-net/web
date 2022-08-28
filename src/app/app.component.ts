@@ -42,6 +42,17 @@ export class AppComponent implements OnInit, OnDestroy {
         '../assets/icons/multipitch.svg'
       )
     );
+    this.matIconRegistry.addSvgIcon(
+      'toprope',
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        '../assets/icons/toprope.svg'
+      )
+    );
+
+    this.matIconRegistry.registerFontClassAlias(
+      'matSymbols',
+      'material-symbols'
+    );
   }
 
   ngOnInit(): void {

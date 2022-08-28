@@ -93,6 +93,8 @@ export class ActivityRoutesComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
+  noTopropeOnPage = false;
+
   constructor(
     private router: Router,
     private dialog: MatDialog,
@@ -229,6 +231,11 @@ export class ActivityRoutesComponent implements OnInit, OnDestroy {
   querySuccess(data: MyActivityRoutesQuery['myActivityRoutes']): void {
     this.routes = data.items;
     this.pagination = data.meta;
+
+    this.noTopropeOnPage = !this.routes.some(
+      (route) =>
+        this.ascentTypes.find((at) => at.value === route.ascentType).topRope
+    );
   }
 
   deleteActivityRoute(activityRoute: ActivityRoute) {
