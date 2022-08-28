@@ -41,7 +41,11 @@
   </ng-template>
 </td>
 <td>
-  <app-ascent-type [value]="route.ascentType"></app-ascent-type>
+  <app-ascent-type
+    [value]="route.ascentType"
+    displayType="iconAndText"
+    [fixedIconsWidth]="!noTopropeOnPage"
+  ></app-ascent-type>
 </td>
 <td *ngIf="!noNotes">{{ route.notes }}</td>
 <td>

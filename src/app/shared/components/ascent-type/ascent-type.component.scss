@@ -11,8 +11,22 @@
 }
 
 mat-icon.mat-icon {
-  font-size: 20px;
-  height: 20px;
-  width: 20px;
-  vertical-align: middle;
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  display: block;
+
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 48;
+
+  // Tie special icon tweaks to a class name with same name as icon name so that the class can be attached to the icon by icon name
+  &.visibility {
+    font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 20;
+  }
+  &.adjust {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 40;
+  }
+}
+
+.fixed-icons-width {
+  width: 36px;
 }

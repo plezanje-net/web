@@ -1,0 +1,27 @@
+@import "../../../../styles/colors.scss";
+
+h2 {
+  color: $primary;
+  background-color: transparent;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: normal;
+  margin-top: 32px;
+  margin-bottom: 16px;
+  padding: 0;
+  box-shadow: none;
+}
+
+.mat-card {
+  border-radius: 0;
+
+  .mat-card-content {
+    margin-bottom: 0;
+  }
+
+  .mat-card-actions {
+    button {
+      color: $primary;
+    }
+  }
+}

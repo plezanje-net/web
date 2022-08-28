@@ -38,6 +38,8 @@ import { InfoPropertyComponent } from './components/info-property/info-property.
 import { PublishStatusHintComponent } from './components/publish-status-hint/publish-status-hint.component';
 import { RouterModule } from '@angular/router';
 import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.component';
+import { AscentsComponent } from './components/ascents/ascents.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -64,6 +66,7 @@ import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.c
     InfoPropertyComponent,
     PublishStatusHintComponent,
     YesNoDialogComponent,
+    AscentsComponent,
   ],
   imports: [
     CommonModule,
@@ -82,6 +85,7 @@ import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.c
     MatDatepickerModule,
     MatInputModule,
     RouterModule,
+    MatTooltipModule,
   ],
   providers: [
     CustomBreakpointsProvider,
@@ -113,6 +117,7 @@ import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.c
     InfoPropertyComponent,
     PublishStatusHintComponent,
     YesNoDialogComponent,
+    AscentsComponent,
   ],
 })
 export class SharedModule {}

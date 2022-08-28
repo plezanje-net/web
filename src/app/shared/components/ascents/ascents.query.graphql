@@ -1,0 +1,39 @@
+query Ascents(
+  $activitiesInput: FindActivitiesInput
+  $activityRoutesInput: FindActivityRoutesInput
+) {
+  activities(input: $activitiesInput) {
+    items {
+      id
+      name
+      date
+      user {
+        fullName
+      }
+      routes(input: $activityRoutesInput) {
+        route {
+          id
+          name
+          slug
+          difficulty
+          defaultGradingSystem {
+            id
+          }
+          crag {
+            id
+            name
+            slug
+          }
+        }
+        ascentType
+        score
+      }
+    }
+    meta {
+      itemCount
+      pageCount
+      pageNumber
+      pageSize
+    }
+  }
+}
