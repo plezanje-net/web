@@ -60,9 +60,7 @@ export class ActivityRowComponent implements OnInit {
 
       if (
         !isNaN(Number(ar.route.length)) &&
-        ['attempt', 't_attempt', 'allfree', 't_allfree'].indexOf(
-          ar.ascentType
-        ) === -1
+        ['attempt', 't_attempt'].indexOf(ar.ascentType) === -1
       ) {
         totalLength += Number(ar.route.length);
       }
