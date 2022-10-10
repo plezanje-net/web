@@ -4,8 +4,21 @@
 
 <div *ngIf="!error && !loading">
   <div class="white-back mt-16">
-    <div class="container py-8">
+    <div
+      class="container py-8"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+    >
       <h1>{{ route.name }}</h1>
+
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon color="primary">more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="addComment('warning')">
+          <span>Dodaj opozorilo</span>
+        </button>
+      </mat-menu>
     </div>
   </div>
 
