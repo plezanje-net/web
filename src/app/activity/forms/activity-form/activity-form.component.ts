@@ -14,6 +14,7 @@ import {
   RoutesTouchesGQL,
   DryRunCreateActivityGQL,
   DryRunUpdateActivityGQL,
+  StarRatingVotesGQL,
 } from 'src/generated/graphql';
 import dayjs from 'dayjs';
 import { Router } from '@angular/router';
@@ -81,7 +82,8 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     private activityFormService: ActivityFormService,
     private myActivitiesGQL: MyActivitiesGQL,
     private activityEntryGQL: ActivityEntryGQL,
-    private routesTouchesGQL: RoutesTouchesGQL
+    private routesTouchesGQL: RoutesTouchesGQL,
+    private starRatingVotesGQL: StarRatingVotesGQL
   ) {}
 
   ngOnInit(): void {
@@ -104,6 +106,26 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       this.selectedRoutes.forEach((route) => {
         this.addRoute(route);
       });
+    }
+
+    // Fetch user's previous star rating votes, and display them below the star rating inputs
+    if (this.selectedRoutes?.length) {
+      this.starRatingVotesGQL
+        .fetch({
+          routeIds: this.selectedRoutes.map((route) => route.id),
+        })
+        .subscribe({
+          next: (response) => {
+            const starRatingVotesForRoutes = {};
+            response.data.starRatingVotes.forEach((vote) => {
+              starRatingVotesForRoutes[vote.route.id] = vote.stars;
+            });
+
+            // store it in a service, to be accessed in the form-route component
+            this.activityFormService.starRatingVotesForRoutes =
+              starRatingVotesForRoutes;
+          },
+        });
     }
 
     this.activityForm.controls.date.valueChanges

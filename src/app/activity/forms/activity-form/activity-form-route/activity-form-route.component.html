@@ -151,7 +151,10 @@
       ></app-grade-select>
     </div>
 
-    <mat-form-field fxFlex="50" class="no-hint">
+    <mat-form-field
+      fxFlex="50"
+      [ngClass]="{'no-hint':activityFormService.starRatingVotesForRoutes?.[route.value.routeId] == null}"
+    >
       <mat-label>Lepota smeri</mat-label>
       <mat-select formControlName="votedStarRating" class="star-rating">
         <mat-select-trigger>
@@ -176,6 +179,28 @@
           <span><mat-icon>star</mat-icon>Čudovita</span>
         </mat-option>
       </mat-select>
+      <mat-hint
+        class="star-rating-hint"
+        *ngIf="
+          activityFormService.starRatingVotesForRoutes?.[route.value.routeId] != null
+        "
+        ><span>Tvoj trenutni glas:</span>
+        <span
+          *ngIf="activityFormService.starRatingVotesForRoutes?.[route.value.routeId] == 0"
+          class="ml-4"
+          ><span>Nič posebnega</span></span
+        >
+        <span
+          *ngIf="activityFormService.starRatingVotesForRoutes?.[route.value.routeId] == 1"
+          class="ml-4"
+          ><mat-icon>star_border</mat-icon><span>Lepa</span></span
+        >
+        <span
+          *ngIf="activityFormService.starRatingVotesForRoutes?.[route.value.routeId] == 2"
+          class="ml-4"
+          ><mat-icon>star</mat-icon><span>Čudovita</span></span
+        >
+      </mat-hint>
     </mat-form-field>
   </div>
 </div>

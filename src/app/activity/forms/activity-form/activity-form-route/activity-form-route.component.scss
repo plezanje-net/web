@@ -37,3 +37,13 @@ mat-option {
     margin-left: 20px;
   }
 }
+
+.mat-hint.star-rating-hint {
+  display: flex;
+  align-items: center;
+
+  span:last-child {
+    font-weight: 500;
+    display: flex;
+  }
+}

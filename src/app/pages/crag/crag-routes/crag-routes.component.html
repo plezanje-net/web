@@ -340,16 +340,10 @@
                 </td>
 
                 <td *ngIf="shownColumns.includes('starRating')" class="icon">
-                  <mat-icon
-                    *ngIf="math.round(route.starRating) == 1"
-                    title="Lepa"
-                  >
+                  <mat-icon *ngIf="route.starRating == 1" title="Lepa">
                     star_border
                   </mat-icon>
-                  <mat-icon
-                    *ngIf="math.round(route.starRating) == 2"
-                    title="Čudovita"
-                  >
+                  <mat-icon *ngIf="route.starRating == 2" title="Čudovita">
                     star
                   </mat-icon>
                 </td>
@@ -453,16 +447,10 @@
                   </div>
 
                   <div *ngIf="shownColumns.includes('starRating')" class="star">
-                    <mat-icon
-                      *ngIf="math.round(route.starRating) == 1"
-                      title="Lepa"
-                    >
+                    <mat-icon *ngIf="route.starRating == 1" title="Lepa">
                       star_border
                     </mat-icon>
-                    <mat-icon
-                      *ngIf="math.round(route.starRating) == 2"
-                      title="Čudovita"
-                    >
+                    <mat-icon *ngIf="route.starRating == 2" title="Čudovita">
                       star
                     </mat-icon>
                   </div>

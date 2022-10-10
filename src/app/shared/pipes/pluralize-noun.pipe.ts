@@ -74,6 +74,19 @@ export class PluralizeNoun implements PipeTransform {
             return `${count} uporabniških prispevkov`;
         }
 
+      case 'glas':
+        switch (count % 100) {
+          case 1:
+            return `${count} glas`;
+          case 2:
+            return `${count} glasova`;
+          case 3:
+          case 4:
+            return `${count} glasovi`;
+          default:
+            return `${count} glasov`;
+        }
+
       // A pronoun is a subcategory of nouns
       case 'ga':
         switch (count) {
