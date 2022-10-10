@@ -1,0 +1,16 @@
+@import "../../../../styles/variables.scss";
+
+h4 {
+  font-size: 14px;
+  font-weight: 500;
+  color: $gray-dark;
+  margin: 16px 0 0 0;
+}
+
+.preview {
+  border-bottom: 1px solid $gray-lighter;
+  &:last-child {
+    border-bottom: none;
+  }
+  padding: 16px 0 16px 0;
+}

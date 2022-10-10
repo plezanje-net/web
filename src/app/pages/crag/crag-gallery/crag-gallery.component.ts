@@ -18,13 +18,13 @@ export class CragGalleryComponent {
 
   constructor(private dialog: MatDialog, private authService: AuthService) {}
 
-  onImageClick(image): void {
+  onImageClick(index: number): void {
     this.dialog.open(ImageFullComponent, {
       width: '100vw',
       height: '100vh',
       maxWidth: '100vw',
       maxHeight: '100vh',
-      data: { image },
+      data: { images: this.images, currentImageIndex: index },
       autoFocus: false,
     });
   }

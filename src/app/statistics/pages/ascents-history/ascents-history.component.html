@@ -1,0 +1,29 @@
+<app-data-error *ngIf="error" [error]="error"></app-data-error>
+
+<ng-container *ngIf="!error">
+  <div class="white-back mt-16">
+    <div class="container py-8">
+      <h1>Zgodovina vzponov</h1>
+    </div>
+  </div>
+
+  <div class="container mt-16">
+    <div class="card has-loader">
+      <div class="card-loader" *ngIf="loading">
+        <app-loader></app-loader>
+      </div>
+      <app-ascents *ngIf="!loading" [activities]="activities"></app-ascents>
+    </div>
+
+    <mat-paginator
+      *ngIf="pagination != null"
+      hidePageSize
+      showFirstLastButtons
+      [length]="pagination.itemCount"
+      [pageIndex]="pagination.pageNumber - 1"
+      [pageSize]="pagination.pageSize"
+      (page)="paginate($event)"
+    >
+    </mat-paginator>
+  </div>
+</ng-container>

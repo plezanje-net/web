@@ -1,0 +1,5 @@
+mutation ActivityRouteChangePublish($input: UpdateActivityRouteInput!) {
+  updateActivityRoute(input: $input) {
+    publish
+  }
+}

@@ -1,5 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {
+  APP_INITIALIZER,
+  ErrorHandler,
+  NgModule,
+  Inject,
+  Optional,
+} from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -46,9 +52,10 @@ import { CragRoutesComponent } from './pages/crag/crag-routes/crag-routes.compon
 import { CragInfoComponent } from './pages/crag/crag-info/crag-info.component';
 import { CragCommentsComponent } from './pages/crag/crag-comments/crag-comments.component';
 import {
+  DateAdapter,
   MatNativeDateModule,
-  MAT_DATE_FORMATS,
   MAT_DATE_LOCALE,
+  NativeDateAdapter,
 } from '@angular/material/core';
 import { CragGalleryComponent } from './pages/crag/crag-gallery/crag-gallery.component';
 import { RouteComponent } from './pages/route/route.component';
@@ -80,10 +87,43 @@ import { CragRoutePreviewComponent } from './pages/crag/crag-route-preview/crag-
 import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
 import { SwiperModule } from 'swiper/angular';
 import { AlpinismComponent } from './pages/alpinism/alpinism.component';
+import { AboutComponent } from './pages/about/about.component';
+import { Platform } from '@angular/cdk/platform';
+import { registerLocaleData } from '@angular/common';
+import localeSl from '@angular/common/locales/sl';
+registerLocaleData(localeSl);
+import * as Sentry from '@sentry/angular';
+import { Router } from '@angular/router';
+import { ChangelogComponent } from './pages/changelog/changelog.component';
+import { SortableHeaderFieldComponent } from './common/sortable-header-field/sortable-header-field.component';
+import { PendingContributionsHintsComponent } from './pages/home/pending-contributions-hints/pending-contributions-hints.component';
+import { HowToContributeComponent } from './pages/help/how-to-contribute/how-to-contribute.component';
+import { LatestDifficultyVotesComponent } from './pages/home/latest-difficulty-votes/latest-difficulty-votes.component';
+import { LatestAscentsComponent } from './pages/home/latest-ascents/latest-ascents.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
 };
+
+class CustomDateAdapter extends NativeDateAdapter {
+  constructor(
+    @Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: string,
+    platform: Platform
+  ) {
+    super(matDateLocale, platform);
+  }
+
+  getFirstDayOfWeek = () => 1;
+
+  parse(value: any): Date {
+    const arr = value.split('.');
+    if (arr.length == 3) {
+      return new Date(`${arr[1]}. ${arr[0]}. ${arr[2]}`);
+    }
+
+    return super.parse(value);
+  }
+}
 
 @NgModule({
   declarations: [
@@ -130,6 +170,13 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     CragRoutePreviewComponent,
     ConfirmClubMembershipComponent,
     AlpinismComponent,
+    AboutComponent,
+    ChangelogComponent,
+    SortableHeaderFieldComponent,
+    PendingContributionsHintsComponent,
+    HowToContributeComponent,
+    LatestDifficultyVotesComponent,
+    LatestAscentsComponent,
   ],
   imports: [
     BrowserModule,
@@ -163,6 +210,20 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
     SwiperModule,
   ],
   providers: [
+    {
+      provide: ErrorHandler,
+      useValue: Sentry.createErrorHandler(),
+    },
+    {
+      provide: Sentry.TraceService,
+      deps: [Router],
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => () => {},
+      deps: [Sentry.TraceService],
+      multi: true,
+    },
     AuthGuard,
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
@@ -173,21 +234,12 @@ const formFieldAppearance: MatFormFieldDefaultOptions = {
       useClass: AuthInterceptor,
       multi: true,
     },
-    {
-      provide: MAT_DATE_FORMATS,
-      useValue: {
-        parse: {
-          dateInput: 'DD.MM.YYYY',
-        },
-        display: {
-          dateInput: 'DD.MM.YYYY',
-          monthYearLabel: 'MMM YYYY',
-          dateA11yLabel: 'LL',
-          monthYearA11yLabel: 'MMMM YYYY',
-        },
-      },
-    },
     { provide: MAT_DATE_LOCALE, useValue: 'sl-SI' },
+    {
+      provide: DateAdapter,
+      useClass: CustomDateAdapter,
+      deps: [MAT_DATE_LOCALE, Platform],
+    },
   ],
   bootstrap: [AppComponent],
 })

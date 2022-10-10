@@ -1,32 +1,8 @@
 <form [formGroup]="activityForm" (submit)="save()">
-  <div class="mt-16" *ngIf="type == 'crag'">
-    <mat-radio-group
-      fxLayout="row"
-      fxLayoutAlign="start start"
-      formControlName="onlyRoutes"
-    >
-      <label fxFlex="50"
-        ><mat-radio-button [value]="false">Vnesi plezalni dan</mat-radio-button
-        ><span
-          >V tvojem dnevniku se bo pojavil <b>Plezalni dan</b> s preplezanmi
-          smermi. Datum in soplezalec bosta skupna vsem vzponom.<br />
-          (Priporočamo za sprotno vnašanje.)</span
-        ></label
-      >
-      <label fxFlex="50">
-        <mat-radio-button [value]="true"
-          >Vnesi samo preplezane smeri </mat-radio-button
-        ><span
-          >Označene smeri bodo zavedene v tvojem plezalnem dnevniku vsaka
-          posebej. Datum lahko nastaviš na vsakem posameznem vzponu.<br />
-          (Priporočamo pri vnašanju za nazaj.)
-        </span>
-      </label>
-    </mat-radio-group>
-  </div>
-
-  <div *ngIf="!activityForm.value.onlyRoutes" class="card mt-16">
-    <h3 *ngIf="type === 'crag'">Plezalni dan</h3>
+  <h3 *ngIf="activityForm.controls.type.value == 'crag'">
+    {{ formType == "new" ? "Dodaj" : "Uredi" }} plezalni dan
+  </h3>
+  <div class="card">
     <div
       fxLayout="row"
       fxLayout.lt-md="column"
@@ -37,15 +13,12 @@
     ></div>
 
     <div fxLayout="column" fxLayoutGap="16px" class="p-16">
-      <div
-        fxLayout="row"
-        fxLayout.lt-md="column"
-        fxLayoutGap="16px"
-        *ngIf="type != 'crag'"
-      >
+      <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="16px">
         <mat-form-field
           fxFlex="50"
-          class.no-hint="activityForm.value.type != 'crag' || type != 'crag'"
+          [class.no-hint]="
+            activityForm.controls.type.value != 'crag' || this.crag != null
+          "
         >
           <mat-label>Vrsta aktivnosti</mat-label>
           <mat-select formControlName="type">
@@ -55,20 +28,36 @@
               >{{ option.label }}
             </mat-option>
           </mat-select>
-          <mat-hint *ngIf="activityForm.value.type == 'crag' && type != 'crag'"
-            >Za vnos smeri iz baze jih najprej obkljukaj na strani
-            plezališča</mat-hint
+          <mat-hint
+            *ngIf="
+              activityForm.controls.type.value == 'crag' && this.crag == null
+            "
+            >* Uporabi le, če plezališča ni v naši bazi. Če plezališče obstaja,
+            najprej obkljukaj smeri na njegovi strani.</mat-hint
           >
         </mat-form-field>
-        <mat-form-field fxFlex="50" class="no-hint">
+        <mat-form-field
+          fxFlex="50"
+          class="no-hint"
+          *ngIf="crag == null && peak == null && iceFall == null"
+        >
           <mat-label>Lokacija</mat-label>
           <input matInput type="text" formControlName="name" />
+        </mat-form-field>
+        <mat-form-field fxFlex="50" class="no-hint" *ngIf="crag != null">
+          <mat-label>Plezališče</mat-label>
+          <input matInput type="text" disabled [value]="crag.name" />
         </mat-form-field>
       </div>
       <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="16px">
         <mat-form-field class="no-hint" fxFlex="50">
           <mat-label>Datum</mat-label>
-          <input matInput formControlName="date" [matDatepicker]="picker" />
+          <input
+            matInput
+            formControlName="date"
+            [matDatepicker]="picker"
+            [max]="maxDate"
+          />
           <mat-datepicker-toggle
             matSuffix
             [for]="picker"
@@ -78,7 +67,7 @@
         <mat-form-field
           class="no-hint"
           fxFlex="50"
-          *ngIf="activityForm.value.type != 'crag'"
+          *ngIf="activityForm.controls.type.value != 'crag'"
         >
           <mat-label>Trajanje (min)</mat-label>
           <input matInput type="number" formControlName="duration" />
@@ -86,7 +75,7 @@
         <mat-form-field
           class="no-hint"
           fxFlex="50"
-          *ngIf="activityForm.value.type == 'crag'"
+          *ngIf="activityForm.controls.type.value == 'crag'"
         >
           <mat-label>Soplezalci</mat-label>
           <input matInput type="text" formControlName="partners" />
@@ -101,28 +90,46 @@
     </div>
   </div>
 
-  <div class="card mt-16" *ngIf="type == 'crag'">
+  <div class="mt-16" *ngIf="activity && activity.routes.length > 0">
     <h3>Preplezane smeri</h3>
+    <app-activity-entry-routes
+      [routes]="activity.routes"
+      type="form"
+    ></app-activity-entry-routes>
+  </div>
 
-    <div class="p-16">
-      <div
-        *ngFor="
-          let route of routes.controls;
-          let first = first;
-          let last = last;
-          let index = index
-        "
-        class="route"
-      >
-        <app-activity-form-route
-          [myIndex]="index"
-          [route]="route"
-          [crag]="crag"
-          [activity]="!activityForm.value.onlyRoutes"
-          [first]="first"
-          [last]="last"
-          (move)="moveRoute(index, $event)"
-        ></app-activity-form-route>
+  <div class="mt-16" *ngIf="routes.controls.length">
+    <h3>
+      {{
+        formType == "add" ? "Dodaj nove preplezane smeri" : "Preplezane smeri"
+      }}
+    </h3>
+    <div class="card">
+      <div class="p-16">
+        <div
+          *ngFor="
+            let route of routes.controls;
+            let first = first;
+            let last = last;
+            let index = index
+          "
+          class="route"
+        >
+          <app-activity-form-route
+            [myIndex]="index"
+            [route]="route"
+            [crag]="crag"
+            [first]="first"
+            [last]="last"
+            (move)="moveRoute(index, $event)"
+          ></app-activity-form-route>
+        </div>
+
+        <div class="footnote">
+          *Tvoji predlogi o težavnosti in lepoti smeri bodo v vsakem primeru
+          javno objavljeni (če jih podaš) ne glede na izbrano vidnost
+          zabeleženih vzponov.
+        </div>
       </div>
     </div>
   </div>
@@ -132,7 +139,11 @@
       <button type="button" mat-button (click)="location.back()">
         Prekliči
       </button>
-      <button mat-button color="primary" [disabled]="!activityForm.valid">
+      <button
+        mat-button
+        color="primary"
+        [disabled]="!activityForm.valid || loadingActivity"
+      >
         SHRANI
       </button>
     </div>

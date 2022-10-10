@@ -17,6 +17,9 @@ import { ClubComponent } from './pages/club/club.component';
 import { SearchResultsComponent } from './pages/search/search-results/search-results.component';
 import { ConfirmClubMembershipComponent } from './pages/club/confirm-club-membership/confirm-club-membership.component';
 import { AlpinismComponent } from './pages/alpinism/alpinism.component';
+import { AboutComponent } from './pages/about/about.component';
+import { ChangelogComponent } from './pages/changelog/changelog.component';
+import { HowToContributeComponent } from './pages/help/how-to-contribute/how-to-contribute.component';
 
 const routes: Routes = [
   {
@@ -94,7 +97,12 @@ const routes: Routes = [
       import('./activity/activity.module').then((m) => m.ActivityModule),
   },
   {
-    path: 'admin',
+    path: 'pregledi',
+    loadChildren: () =>
+      import('./statistics/statistics.module').then((m) => m.StatisticsModule),
+  },
+  {
+    path: 'urejanje',
     loadChildren: () =>
       import('./management/management.module').then((m) => m.ManagementModule),
   },
@@ -113,6 +121,21 @@ const routes: Routes = [
       import('./ice-falls/ice-falls.module').then((m) => m.IceFallsModule),
   },
   {
+    path: 'o-plezanje-net',
+    component: AboutComponent,
+    data: {
+      hideBreadcrumbs: true,
+    },
+  },
+  {
+    path: 'dnevnik-sprememb',
+    component: ChangelogComponent,
+  },
+  {
+    path: 'navodila/dodajanje-prispevkov',
+    component: HowToContributeComponent,
+  },
+  {
     path: '**',
     component: NotFoundComponent,
   },
@@ -121,7 +144,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      scrollPositionRestoration: 'top',
+      scrollPositionRestoration: 'disabled',
       // preloadingStrategy: PreloadAllModules,
     }),
   ],

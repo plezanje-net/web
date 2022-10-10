@@ -1,16 +1,28 @@
 <div *ngIf="!error">
   <div class="container mt-16">
     <div>
-      <div fxLayout="row" [formGroup]="filters" fxLayoutGap="8px">
-        <mat-form-field appearance="fill">
+      <div
+        fxLayout="row"
+        fxLayout.lt-sm="column"
+        [formGroup]="filters"
+        fxLayoutGap="16px"
+        class="mb-16"
+      >
+        <mat-form-field appearance="fill" class="no-hint">
           <mat-label>Časovno obdobje</mat-label>
           <mat-date-range-input [rangePicker]="picker">
             <input
               matStartDate
+              readonly
               formControlName="dateFrom"
-              placeholder="Start date"
+              placeholder="Datum od"
             />
-            <input matEndDate formControlName="dateTo" placeholder="End date" />
+            <input
+              matEndDate
+              readonly
+              formControlName="dateTo"
+              placeholder="do"
+            />
           </mat-date-range-input>
           <div matSuffix fxLayout="row">
             <button
@@ -39,7 +51,7 @@
           >
         </mat-form-field>
 
-        <mat-form-field>
+        <mat-form-field class="no-hint">
           <mat-label>Vrsta vzpona</mat-label>
           <mat-select formControlName="ascentType" multiple>
             <mat-option *ngFor="let type of ascentTypes" [value]="type.value"
@@ -50,6 +62,7 @@
 
         <mat-form-field
           *ngIf="filterMemberFullName && filters.controls.userId.value"
+          class="no-hint"
         >
           <mat-label>Član</mat-label>
           <input matInput [value]="filterMemberFullName" disabled />
@@ -65,6 +78,7 @@
 
         <mat-form-field
           *ngIf="filterRouteName && filters.controls.routeId.value"
+          class="no-hint"
         >
           <mat-label>Smer</mat-label>
           <input matInput [value]="filterRouteName" disabled />
@@ -78,7 +92,10 @@
         </mat-form-field>
         <input type="hidden" formControlName="routeId" />
 
-        <mat-form-field *ngIf="filterCragName && filters.controls.cragId.value">
+        <mat-form-field
+          *ngIf="filterCragName && filters.controls.cragId.value"
+          class="no-hint"
+        >
           <mat-label>Plezališče</mat-label>
           <input matInput [value]="filterCragName" disabled />
           <button
@@ -92,7 +109,7 @@
         <input type="hidden" formControlName="cragId" />
       </div>
 
-      <div class="card">
+      <div class="card scrollable-table">
         <div class="card-loader" *ngIf="loading">
           <app-loader></app-loader>
         </div>
@@ -161,7 +178,11 @@
               </ng-template>
             </td>
             <td>
-              <app-ascent-type [value]="route.ascentType"></app-ascent-type>
+              <app-ascent-type
+                [value]="route.ascentType"
+                displayType="iconAndText"
+                [fixedIconsWidth]="!noTopropeOnPage"
+              ></app-ascent-type>
             </td>
             <td class="tools">
               <button mat-icon-button [mat-menu-trigger-for]="menu">

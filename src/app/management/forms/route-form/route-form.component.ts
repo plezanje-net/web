@@ -1,18 +1,5 @@
-import {
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Apollo } from 'apollo-angular';
@@ -38,6 +25,7 @@ export interface RouteFormValues {
   defaultGradingSystemId?: string;
   routeTypeId?: string;
   addAnother?: boolean;
+  publishStatus?: string;
 }
 
 @Component({
@@ -61,6 +49,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
     position: new FormControl(),
     sectorId: new FormControl(),
     addAnother: new FormControl(false),
+    publishStatus: new FormControl('draft'),
   });
 
   gradingSystems: GradingSystem[];
@@ -111,13 +100,22 @@ export class RouteFormComponent implements OnInit, OnDestroy {
     const projectSub = this.form.controls.isProject.valueChanges.subscribe(
       (value) => {
         const baseDifficultyControl = this.form.controls.baseDifficulty;
-        if (value == true || this.data.route) {
+
+        if (value) {
+          // if project, reset base difficulty and disable it
           baseDifficultyControl.setValue(null);
+          baseDifficultyControl.disable();
           baseDifficultyControl.clearValidators();
         } else {
-          baseDifficultyControl.addValidators(Validators.required);
+          // if not project, enable base difficulty but only if editable (no user votes yet) or new route
+          if (
+            !this.data.route ||
+            this.baseDifficultyEditable(this.data.route)
+          ) {
+            baseDifficultyControl.enable();
+            baseDifficultyControl.addValidators(Validators.required);
+          }
         }
-
         baseDifficultyControl.updateValueAndValidity();
       }
     );
@@ -176,12 +174,33 @@ export class RouteFormComponent implements OnInit, OnDestroy {
 
     if (this.data.route) {
       this.editing = true;
+
+      if (!this.baseDifficultyEditable(this.data.route)) {
+        this.form.controls.baseDifficulty.disable();
+        this.form.controls.isProject.disable();
+      }
+
       this.form.patchValue({
         ...this.data.route,
         routeTypeId: this.data.route.routeType.id,
         defaultGradingSystemId: this.data.route.defaultGradingSystem.id,
+        baseDifficulty: this.data.route.difficultyVotes.find(
+          (vote) => vote.isBase
+        )?.difficulty,
       });
     }
+  }
+
+  /**
+   * Base grade of a route can be edited only if no user votes have been cast yet and no ascent has been recorded yet.
+   */
+  private baseDifficultyEditable(route: Route) {
+    return (
+      (route?.difficultyVotes.length == 0 ||
+        (route?.difficultyVotes.length == 1 &&
+          route?.difficultyVotes[0].isBase)) &&
+      route.nrTries === 0
+    );
   }
 
   loadDifficultyOptions(gradingSystemId: string) {
@@ -212,9 +231,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
 
     const success = () => {
       this.apollo.client.resetStore().then(() => {
-        this.saving = false;
-
-        const { routeTypeId, defaultGradingSystemId } = value;
+        const { routeTypeId, defaultGradingSystemId, status, position } = value;
 
         this.dialogRef.close(
           value.addAnother
@@ -222,12 +239,15 @@ export class RouteFormComponent implements OnInit, OnDestroy {
                 addAnother: true,
                 routeTypeId,
                 defaultGradingSystemId,
+                status,
+                position: position + 1,
               }
             : null
         );
       });
     };
     const error = () => {
+      this.dialogRef.close();
       this.snackbar.open('Pri shranjevanju je prišlo do napake', null, {
         panelClass: 'error',
         duration: 3000,
@@ -240,9 +260,11 @@ export class RouteFormComponent implements OnInit, OnDestroy {
           input: {
             id: value.id,
             name: value.name,
-            length: value.length,
+            length: +value.length,
             routeTypeId: value.routeTypeId,
             defaultGradingSystemId: value.defaultGradingSystemId,
+            baseDifficulty: value.baseDifficulty ?? null,
+            isProject: value.isProject,
           },
         })
         .subscribe({
@@ -254,14 +276,14 @@ export class RouteFormComponent implements OnInit, OnDestroy {
         .mutate({
           input: {
             name: value.name,
-            length: value.length,
+            length: +value.length,
             isProject: value.isProject,
             routeTypeId: value.routeTypeId,
             baseDifficulty: value.baseDifficulty,
             defaultGradingSystemId: value.defaultGradingSystemId,
-            position: this.data.values.position,
-            sectorId: this.data.values.sectorId,
-            status: 'public',
+            position: value.position,
+            sectorId: value.sectorId,
+            publishStatus: value.publishStatus,
           },
         })
         .subscribe({

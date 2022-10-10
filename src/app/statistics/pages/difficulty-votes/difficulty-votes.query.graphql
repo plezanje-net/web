@@ -1,0 +1,34 @@
+query DifficultyVotes($input: LatestDifficultyVotesInput!) {
+  latestDifficultyVotes(input: $input) {
+    items {
+      id
+      difficulty
+      created
+      route {
+        id
+        name
+        slug
+        difficulty
+        defaultGradingSystem {
+          id
+        }
+        crag {
+          id
+          name
+          slug
+        }
+      }
+      user {
+        id
+        fullName
+        gender
+      }
+    }
+    meta {
+      itemCount
+      pageCount
+      pageNumber
+      pageSize
+    }
+  }
+}

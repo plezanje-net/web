@@ -20,7 +20,10 @@
       <mat-menu #menu="matMenu">
         <button
           mat-menu-item
-          [routerLink]="['/admin/dodaj-plezalisce', { country: country?.id }]"
+          [routerLink]="[
+            '/urejanje/dodaj-plezalisce',
+            { country: country?.id }
+          ]"
         >
           <mat-icon>add</mat-icon>
           <span>Dodaj plezališče</span>
@@ -64,10 +67,21 @@
             autocomplete="off"
             (keydown)="searchKeyDown($event)"
           />
+          <mat-hint
+            >Ne najdeš plezališča, ki ga iščeš?
+            <a
+              [routerLink]="[
+                '/urejanje/dodaj-plezalisce',
+                { country: country?.id }
+              ]"
+              >Dodaj plezališče</a
+            >
+            in ga pošlji v potrditev uredništvu.</mat-hint
+          >
         </mat-form-field>
       </div>
 
-      <div class="card" *ngIf="!cragsLoading">
+      <div class="card mt-16" *ngIf="!cragsLoading">
         <div
           fxLayout="row"
           fxLayoutAlign="start center"
@@ -97,18 +111,20 @@
           </div>
           <div fxFlex="20" fxFlex.lt-md class="routes">
             <span fxHide.gt-sm>{{ crag.nrRoutes }} smeri<br /></span>
-            <app-grade
-              [difficulty]="crag.minDifficulty"
-              [gradingSystemId]="crag.defaultGradingSystem.id"
-            ></app-grade>
-            {{
-              crag.minDifficulty != null && crag.maxDifficulty != null
-                ? " do "
-                : ""
-            }}<app-grade
-              [difficulty]="crag.maxDifficulty"
-              [gradingSystemId]="crag.defaultGradingSystem.id"
-            ></app-grade>
+            <ng-container *ngIf="crag.nrRoutes > 0">
+              <app-grade
+                [difficulty]="crag.minDifficulty"
+                [gradingSystemId]="crag.defaultGradingSystem.id"
+              ></app-grade>
+              {{
+                crag.minDifficulty != null && crag.maxDifficulty != null
+                  ? " do "
+                  : ""
+              }}<app-grade
+                [difficulty]="crag.maxDifficulty"
+                [gradingSystemId]="crag.defaultGradingSystem.id"
+              ></app-grade>
+            </ng-container>
           </div>
         </div>
       </div>

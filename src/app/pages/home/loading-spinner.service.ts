@@ -26,4 +26,9 @@ export class LoadingSpinnerService {
       this.showLoader.next(false);
     }
   }
+
+  resetLoaders() {
+    this.nLoading = 0;
+    this.showLoader.next(false);
+  }
 }

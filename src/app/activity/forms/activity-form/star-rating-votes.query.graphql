@@ -1,0 +1,9 @@
+query starRatingVotes($routeIds: [String!]!) {
+  starRatingVotes(routeIds: $routeIds) {
+    id
+    stars
+    route {
+      id
+    }
+  }
+}

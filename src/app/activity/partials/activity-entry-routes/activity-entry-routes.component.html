@@ -1,0 +1,23 @@
+<div class="card scrollable-table">
+  <table class="card-table">
+    <tr class="row header">
+      <td>Smer</td>
+      <td>Ocena</td>
+      <td>Vrsta vzpona</td>
+      <td *ngIf="!noNotes">Opombe</td>
+      <td>Vidnost</td>
+      <td></td>
+    </tr>
+
+    <tr
+      class="row"
+      *ngFor="let route of routes"
+      app-activity-route-row
+      [route]="route"
+      [rowAction]="rowAction$"
+      [displayType]="type == 'form' ? 'activityForm' : 'activity'"
+      [noNotes]="noNotes"
+      [noTopropeOnPage]="noTopropeOnPage"
+    ></tr>
+  </table>
+</div>

@@ -1,19 +1,28 @@
 @import "../../../../styles/colors.scss";
+@import "../../../../styles/variables.scss";
 
 .sector {
   background: #fff;
   box-shadow: 0 2px 6px 0 #6494ff26;
   padding: 4px 12px;
-  border-left: 1px solid #ffc107;
   min-height: 52px;
+
+  border-left: 1px solid $blue;
+  &.warn {
+    border-left: 1px solid $red;
+  }
+  &.notice {
+    border-left: 1px solid $orange;
+  }
+
+  &.disabled {
+    color: $gray;
+  }
+
   .name {
-    color: $text-gray;
     font-weight: 500;
     font-size: 16px;
     padding: 12px 0;
-    span {
-      color: $primary;
-    }
   }
 
   .mat-icon-button:not(.mat-accent) {
@@ -41,5 +50,16 @@
     height: 100%;
     background: rgba(255, 255, 255, 0.4);
     z-index: 1;
+  }
+}
+
+.publish-status-actions {
+  text-align: right;
+  white-space: nowrap;
+  button {
+    text-transform: uppercase;
+    &:last-child {
+      margin-left: 8px;
+    }
   }
 }

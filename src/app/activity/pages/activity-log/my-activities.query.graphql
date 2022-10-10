@@ -7,8 +7,13 @@ query MyActivities($input: FindActivitiesInput) {
       type
       duration
       routes {
+        ascentType
         route {
           difficulty
+          length
+          defaultGradingSystem {
+            id
+          }
         }
       }
       crag {

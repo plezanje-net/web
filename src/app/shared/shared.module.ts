@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EditorModule } from '@tinymce/tinymce-angular';
+import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { EditorComponent } from './editor/editor.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AscentTypePipe } from './pipes/ascent-type.pipe';
@@ -29,10 +29,18 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { GradeComponent } from './components/grade/grade.component';
 import { PluralizeNoun } from './pipes/pluralize-noun.pipe';
+import { PluralizeVerb } from './pipes/pluralize-verb.pipe';
 import { DataErrorComponent } from './components/data-error/data-error.component';
 import { AscentTypeComponent } from './components/ascent-type/ascent-type.component';
 import { AscentPublishOptionComponent } from './components/ascent-publish-option/ascent-publish-option.component';
 import { ImageUploadComponent } from './components/image-upload/image-upload.component';
+import { ResponsiveImageComponent } from './components/responsive-image/responsive-image.component';
+import { InfoPropertyComponent } from './components/info-property/info-property.component';
+import { PublishStatusHintComponent } from './components/publish-status-hint/publish-status-hint.component';
+import { RouterModule } from '@angular/router';
+import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.component';
+import { AscentsComponent } from './components/ascents/ascents.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -52,9 +60,15 @@ import { ImageUploadComponent } from './components/image-upload/image-upload.com
     OrientationPipe,
     GradeComponent,
     PluralizeNoun,
+    PluralizeVerb,
     AscentTypeComponent,
     AscentPublishOptionComponent,
     ImageUploadComponent,
+    ResponsiveImageComponent,
+    InfoPropertyComponent,
+    PublishStatusHintComponent,
+    YesNoDialogComponent,
+    AscentsComponent,
   ],
   imports: [
     CommonModule,
@@ -72,8 +86,14 @@ import { ImageUploadComponent } from './components/image-upload/image-upload.com
     NgxMatSelectSearchModule,
     MatDatepickerModule,
     MatInputModule,
+    RouterModule,
+    MatTooltipModule,
   ],
-  providers: [CustomBreakpointsProvider, GenderizeVerbPipe],
+  providers: [
+    CustomBreakpointsProvider,
+    GenderizeVerbPipe,
+    { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
+  ],
   exports: [
     EditorComponent,
     SnackBarButtonsComponent,
@@ -94,6 +114,12 @@ import { ImageUploadComponent } from './components/image-upload/image-upload.com
     MatInputModule,
     GradeComponent,
     PluralizeNoun,
+    PluralizeVerb,
+    ResponsiveImageComponent,
+    InfoPropertyComponent,
+    PublishStatusHintComponent,
+    YesNoDialogComponent,
+    AscentsComponent,
   ],
 })
 export class SharedModule {}

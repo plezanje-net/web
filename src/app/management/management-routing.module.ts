@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../auth/auth.guard';
+import { ContributionsComponent } from './pages/contributions/contributions.component';
 import { CragSectorRoutesComponent } from './pages/crag-sector-routes/crag-sector-routes.component';
 import { CragSectorsComponent } from './pages/crag-sectors/crag-sectors.component';
 import { CragComponent } from './pages/crag/crag.component';
@@ -24,6 +25,11 @@ const routes: Routes = [
   {
     path: 'dodaj-plezalisce',
     component: CragComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'prispevki',
+    component: ContributionsComponent,
     canActivate: [AuthGuard],
   },
 ];

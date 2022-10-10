@@ -16,6 +16,7 @@ query Search($query: String) {
         id
         slug
       }
+      type
     }
     routes {
       __typename
@@ -32,6 +33,7 @@ query Search($query: String) {
         id
         name
         slug
+        type
         country {
           id
           slug
@@ -50,6 +52,7 @@ query Search($query: String) {
           id
           slug
         }
+        type
       }
     }
     comments {
@@ -64,6 +67,7 @@ query Search($query: String) {
           id
           slug
         }
+        type
       }
       route {
         __typename
@@ -74,6 +78,7 @@ query Search($query: String) {
           id
           name
           slug
+          type
           country {
             id
             slug
@@ -86,10 +91,12 @@ query Search($query: String) {
       }
       created
     }
-    users {
-      __typename
-      id
-      fullName
-    }
+
+    # Searching for users is temporarily disabled.
+    # users {
+    #   __typename
+    #   id
+    #   fullName
+    # }
   }
 }

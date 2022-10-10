@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, switchMap } from 'rxjs';
 import { LayoutService } from 'src/app/services/layout.service';
+import { SearchService } from 'src/app/shared/services/search.service';
 import { SearchGQL, SearchQuery } from 'src/generated/graphql';
 
 @Component({
@@ -21,7 +22,8 @@ export class SearchResultsComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private searchGQL: SearchGQL,
-    private layoutService: LayoutService
+    private layoutService: LayoutService,
+    private searchService: SearchService
   ) {}
 
   ngOnInit(): void {
@@ -55,7 +57,7 @@ export class SearchResultsComponent implements OnInit {
             this.searchResults.crags,
             this.searchResults.routes,
             this.searchResults.sectors,
-            this.searchResults.users,
+            // this.searchResults.users,  // Searching for users is temporarily disabled
             this.searchResults.comments,
           ].findIndex((val) => val.length > 0);
 
@@ -86,16 +88,17 @@ export class SearchResultsComponent implements OnInit {
       return text;
     }
 
-    // strip first and last spaces, then replace all (multiple) middle spaces with single ORs
+    // first escape all special characters. user could be searching for "&" or ">" or "+" and so on...
+    searchString = this.searchService.escape(searchString);
+
+    // strip first and last spaces, then replace all (multiple) middle spaces with regex ORs
     searchString = searchString.trim().replace(/\s+/g, '|');
 
-    // replace csz in search terms with character sets so that all accents are matched
-    searchString = searchString.replace(/[cčć]/gi, '[cčć]');
-    searchString = searchString.replace(/[sš]/gi, '[sš]');
-    searchString = searchString.replace(/[zž]/gi, '[zž]');
+    // convert characters with possible accents to character groups
+    searchString = this.searchService.ignoreAccents(searchString);
 
-    // each term should be a start of a word (start with a non word character (includes closing html >))
-    searchString = '\\b' + searchString + '';
+    // each term should be a start of a string or after a space or after an opening parentheses or after a closing html tag
+    searchString = '(?<=^|\\s|>|\\()' + searchString + '';
 
     // exclude matching text inside html tags
     if (searchingInHtml) {

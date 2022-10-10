@@ -12,10 +12,11 @@
       <mat-date-range-input [rangePicker]="picker">
         <input
           matStartDate
+          readonly
           formControlName="dateFrom"
-          placeholder="Start date"
+          placeholder="Datum od"
         />
-        <input matEndDate formControlName="dateTo" placeholder="End date" />
+        <input matEndDate readonly formControlName="dateTo" placeholder="do" />
       </mat-date-range-input>
       <div matSuffix fxLayout="row">
         <button

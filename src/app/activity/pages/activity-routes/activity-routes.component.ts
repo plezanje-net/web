@@ -72,7 +72,8 @@ export class ActivityRoutesComponent implements OnInit, OnDestroy {
       { name: 'route', label: 'Smer' },
       { name: 'grade', label: 'Ocena', sortable: true },
       { name: 'ascentType', label: 'Vrsta vzpona' },
-      { name: 'publish', label: 'Objava' },
+      { name: 'notes', label: 'Opombe' },
+      { name: 'publish', label: 'Vidnost' },
     ],
     [
       { name: 'dateFrom', type: 'date' },
@@ -91,6 +92,8 @@ export class ActivityRoutesComponent implements OnInit, OnDestroy {
   publishOptions = PUBLISH_OPTIONS;
 
   subscriptions: Subscription[] = [];
+
+  noTopropeOnPage = false;
 
   constructor(
     private router: Router,
@@ -228,6 +231,11 @@ export class ActivityRoutesComponent implements OnInit, OnDestroy {
   querySuccess(data: MyActivityRoutesQuery['myActivityRoutes']): void {
     this.routes = data.items;
     this.pagination = data.meta;
+
+    this.noTopropeOnPage = !this.routes.some(
+      (route) =>
+        this.ascentTypes.find((at) => at.value === route.ascentType).topRope
+    );
   }
 
   deleteActivityRoute(activityRoute: ActivityRoute) {
@@ -255,8 +263,14 @@ export class ActivityRoutesComponent implements OnInit, OnDestroy {
             Če je to tvoj edini uspešni vzpon v tej smeri, boš s tem ${this.genderizeVerbPipe.transform(
               'pobrisal',
               user.gender
-            )} tudi svoj glas o težavnosti te smeri in svojo oceno lepote te smeri.`
+            )} tudi svoj morebitni glas o težavnosti te smeri.`
             : ``;
+
+          finePrint += `<br/>
+            Če je to tvoj edini vzpon v tej smeri, boš s tem ${this.genderizeVerbPipe.transform(
+              'pobrisal',
+              user.gender
+            )} tudi svoj morebitni glas o lepoti te smeri.`;
 
           return this.dialog
             .open(ConfirmationDialogComponent, {

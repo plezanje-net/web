@@ -1,5 +1,10 @@
 <div class="card no-border">
-  <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
+  <div
+    class="row"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+    *ngIf="!hideGrade"
+  >
     <div class="label">Težavnost</div>
     <span class="text-right">
       <span *ngIf="route.isProject">P</span>
@@ -31,31 +36,37 @@
       >
     </span>
   </div>
+
+  <!-- Route length -->
   <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
     <div class="label">Dolžina</div>
     <span class="text-right"> {{ route.length }} m </span>
   </div>
+
+  <!-- Route description -->
+  <div *ngIf="route.description" class="row">
+    <div fxLayout="column">
+      <div class="label mt-4">Opis smeri</div>
+      <div class="description">{{ route.description }}</div>
+    </div>
+  </div>
+
   <div
     class="row"
     fxLayout="row"
     fxLayoutAlign="space-between center"
-    *ngIf="author"
+    *ngFor="let event of route.routeEvents"
   >
-    <div class="label">Avtor</div>
-    <span class="text-right">
-      {{ author }}
+    <div class="label">{{ eventTypeMap[event.eventType] }}</div>
+    <span class="text-right"
+      >{{ event.author }} ({{
+        event.eventDate | date: (event.showFullDate ? "d. M. Y" : "Y")
+      }})
     </span>
   </div>
-  <div
-    class="row"
-    fxLayout="row"
-    fxLayoutAlign="space-between center"
-    *ngIf="firstAscent"
-  >
-    <div class="label">Prvi vzpon</div>
-    <span class="text-right">
-      {{ firstAscent }}
-    </span>
+
+  <div *ngFor="let property of route.properties" class="row">
+    <app-info-property [property]="property"></app-info-property>
   </div>
 </div>
 
@@ -70,4 +81,20 @@
     [difficulty]="route.difficulty"
     [gradingSystemId]="route.defaultGradingSystem.id"
   ></app-route-grades>
+</div>
+
+<div class="card no-border">
+  <h2>Popularnost smeri</h2>
+  <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
+    <div class="label">Število uspešnih vzponov</div>
+    <span class="text-right">{{ route.nrTicks }}</span>
+  </div>
+  <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
+    <div class="label">Število poskusov v smeri</div>
+    <span class="text-right">{{ route.nrTries }}</span>
+  </div>
+  <div class="row" fxLayout="row" fxLayoutAlign="space-between center">
+    <div class="label">Število plezalcev</div>
+    <span class="text-right">{{ route.nrClimbers }}</span>
+  </div>
 </div>

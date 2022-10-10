@@ -1,14 +1,41 @@
 import { NgModule } from '@angular/core';
 import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
-import { ApolloClientOptions, InMemoryCache } from '@apollo/client/core';
+import {
+  ApolloClientOptions,
+  ApolloLink,
+  InMemoryCache,
+} from '@apollo/client/core';
+import { onError } from '@apollo/client/link/error';
+import { RetryLink } from '@apollo/client/link/retry';
 import { HttpLink } from 'apollo-angular/http';
 import { environment } from 'src/environments/environment';
+import * as Sentry from '@sentry/angular';
+import { GraphQLError } from 'graphql';
 
 const uri = environment.apiUrl;
 
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach((error: GraphQLError) => {
+      if (error.message != 'Unauthorized Exception') {
+        Sentry.captureMessage(error.message);
+      }
+    });
+  }
+  if (networkError) {
+    Sentry.captureMessage(networkError.message);
+  }
+});
+
+const retryLink = new RetryLink({
+  delay: {
+    initial: 500,
+  },
+});
+
 export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
   return {
-    link: httpLink.create({ uri }),
+    link: ApolloLink.from([errorLink, retryLink, httpLink.create({ uri })]),
     cache: new InMemoryCache({
       typePolicies: {
         Crag: {

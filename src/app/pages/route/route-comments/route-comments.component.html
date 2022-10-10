@@ -1,90 +1,78 @@
 <div #container>
   <h3
-    *ngIf="!previewMode || regularComments.length"
+    *ngIf="!previewMode"
     fxLayout="row"
     fxLayoutAlign="center center"
     fxLayout.lt-md="column"
   >
-    <span fxFlex="100">{{
-      previewMode ? "Najnovejši komentarji" : "Komentarji"
-    }}</span>
+    <span fxFlex="100">Komentarji</span>
     <div fxFlex>
-      <button
-        *ngIf="!previewMode"
-        (click)="addComment('add-comment')"
-        mat-button
-        color="primary"
-      >
+      <button (click)="addComment('add-comment')" mat-button color="primary">
         Dodaj komentar
       </button>
     </div>
   </h3>
-
+  <!-- simplify by having same title for all comment types on route comment previews... -->
+  <h4
+    *ngIf="
+      previewMode &&
+      (regularComments.length || conditions.length || descriptions.length)
+    "
+  >
+    Najnovejši komentarji
+  </h4>
   <div
     *ngFor="let comment of regularComments | slice: 0:(previewMode ? 3 : 1000)"
     class="comment"
+    [class.preview]="previewMode"
     fxLayout="column"
     fxLayoutGap="8px"
   >
-    <app-comment [comment]="comment"></app-comment>
+    <app-comment [comment]="comment" [previewMode]="previewMode"></app-comment>
   </div>
-  <div *ngIf="!regularComments.length && !previewMode" class="p-16">
+  <div *ngIf="regularComments.length === 0 && !previewMode" class="p-16">
     Ta smer nima še nobenega komentarja.
   </div>
 
   <h3
-    *ngIf="!previewMode"
+    *ngIf="!previewMode && conditions.length > 0"
     fxLayout="row"
     fxLayoutAlign="center center"
     fxLayout.lt-md="column"
   >
-    <span fxFlex="100"
-      ><ng-container *ngIf="conditions.length > 0"
-        >Opisi razmer</ng-container
-      ></span
-    >
-    <div fxFlex>
-      <button mat-button color="primary" (click)="addComment('add-condition')">
-        Dodaj opis razmer
-      </button>
-    </div>
+    <span fxFlex="100">Opisi razmer</span>
   </h3>
   <div
     *ngFor="let conditionComment of conditions"
     class="comment"
+    [class.preview]="previewMode"
     fxLayout="column"
     fxLayoutGap="8px"
   >
-    <app-comment [comment]="conditionComment"></app-comment>
+    <app-comment
+      [comment]="conditionComment"
+      [previewMode]="previewMode"
+    ></app-comment>
   </div>
 
   <h3
-    *ngIf="!previewMode"
+    *ngIf="!previewMode && descriptions.length > 0"
     fxLayout="row"
     fxLayoutAlign="center center"
     fxLayout.lt-md="column"
   >
-    <span fxFlex="100"
-      ><ng-container *ngIf="descriptions.length > 0"
-        >Opisi smeri</ng-container
-      ></span
-    >
-    <div fxFlex>
-      <button
-        mat-button
-        color="primary"
-        (click)="addComment('add-description')"
-      >
-        Dodaj opis smeri
-      </button>
-    </div>
+    <span fxFlex="100">Opisi smeri</span>
   </h3>
   <div
     *ngFor="let description of descriptions"
     class="comment"
+    [class.preview]="previewMode"
     fxLayout="column"
     fxLayoutGap="8px"
   >
-    <app-comment [comment]="description"></app-comment>
+    <app-comment
+      [comment]="description"
+      [previewMode]="previewMode"
+    ></app-comment>
   </div>
 </div>

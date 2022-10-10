@@ -15,10 +15,16 @@
         <mat-date-range-input [rangePicker]="picker">
           <input
             matStartDate
+            readonly
             formControlName="dateFrom"
-            placeholder="Start date"
+            placeholder="Datum od"
           />
-          <input matEndDate formControlName="dateTo" placeholder="End date" />
+          <input
+            matEndDate
+            readonly
+            formControlName="dateTo"
+            placeholder="do"
+          />
         </mat-date-range-input>
         <div matSuffix fxLayout="row">
           <button
@@ -58,7 +64,7 @@
       </mat-form-field>
 
       <mat-form-field>
-        <mat-label>Objava</mat-label>
+        <mat-label>Vidnost</mat-label>
         <mat-select formControlName="publish" multiple>
           <mat-option
             *ngFor="let option of publishOptions"
@@ -131,6 +137,7 @@
           app-activity-route-row
           [route]="route"
           [rowAction]="rowAction$"
+          [noTopropeOnPage]="noTopropeOnPage"
         ></tr>
       </table>
     </div>

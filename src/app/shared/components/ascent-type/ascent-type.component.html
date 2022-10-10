@@ -1,11 +1,38 @@
-<ng-container *ngIf="displayType=='text'">
-  <span *ngIf="ascentType" [ngClass]="'color-' + (topRope ? 'yellow' : ascentType.color)">{{ ascentType.label }}
-    <span class="toprope" *ngIf="topRope"> (top rope)</span></span>
-  <span *ngIf="ascentType == null"><i>{{ type }}</i></span>
-</ng-container>
-<ng-container *ngIf="displayType=='icon'">
-  <span *ngIf="ascentType" [ngClass]="'color-' + (topRope ? 'yellow' : ascentType.color)"
-    [matTooltip]="ascentType.label"><button mat-button>
-      <mat-icon>{{ icon }}</mat-icon>
-    </button></span>
-</ng-container>
+<div fxLayout="row" fxLayoutAlign="start center">
+  <ng-container *ngIf="displayType === 'icon' || displayType === 'iconAndText'">
+    <div
+      [ngClass]="{
+        'fixed-icons-width': fixedIconsWidth
+      }"
+      fxLayout="row"
+      [fxLayoutAlign]="iconAlignment + ' center'"
+    >
+      <mat-icon
+        *ngIf="ascentType && ascentType.topRope"
+        svgIcon="toprope"
+        matTooltip="Top rope"
+        title="Top rope"
+      ></mat-icon>
+      <mat-icon
+        *ngIf="ascentType"
+        [ngClass]="ascentType.icon"
+        fontSet="matSymbols"
+        [matTooltip]="ascentType.label"
+        [title]="ascentType.label"
+        >{{ ascentType.icon }}</mat-icon
+      >
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="displayType === 'text' || displayType === 'iconAndText'">
+    <div
+      *ngIf="ascentType"
+      [ngClass]="{ 'ml-4': displayType === 'iconAndText' }"
+    >
+      {{ ascentType.label }} <span *ngIf="ascentType.topRope"> (top rope)</span>
+    </div>
+    <span *ngIf="ascentType === null"
+      ><i>{{ type }}</i></span
+    >
+  </ng-container>
+</div>

@@ -1,36 +1,84 @@
-.button-row {
+.full-container {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+
+  // background-color: antiquewhite;
+}
+
+.close-button-row {
   height: 40px;
-  width: 100%;
   text-align: right;
+
+  // background-color: cornflowerblue;
 }
 
-.image-row {
-  overflow: auto;
+.navi-image-caption-row {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0%;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  // background-color: violet;
 }
 
-.image-w-caption-wrap {
-  max-height: 100%;
-  place-content: center;
-}
-
-img {
-  max-height: 100%;
-  max-width: 100%;
-  object-fit: scale-down;
-}
-
-.caption {
-  margin-top: 4px;
+.navi-col {
+  width: 40px;
   text-align: center;
 }
 
+.image-w-caption-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  // background-color: aquamarine;
+}
+
+// ::ng-deep img {
+//   margin: auto;
+//   display: block;
+
+//   /* flex-grow: 0; not needed anymore --> keep until tested in all browsers.
+//   flex-shrink: 0;
+//   flex-basis: auto;
+//   background-color: pink; */
+
+//   /* max-width: 100%; not needed anymore?? */
+//   /* deduct top and bottom padding of overlay and what is reserved for the caption> 60 + 30 + 30 */
+//   /* max-height: calc(100vh - 160px); not needed anymore??*/
+
+//   /* object-fit: scale-down;  not needed anymore ??? --> keep in comment, test with some strange browsers, then remove */
+// }
+
+.caption-wrap {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 64px;
+  text-align: center;
+
+  padding-top: 4px;
+
+  // background-color: lightsalmon;
+}
+
 .author {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
   mat-icon {
     font-size: 12px;
     line-height: 12px;
     width: 12px;
     height: 12px;
   }
+
   span {
     margin-left: 4px;
   }

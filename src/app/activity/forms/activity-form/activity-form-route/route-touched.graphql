@@ -1,6 +1,0 @@
-query RouteTouched($routeId: String!) {
-  routeTouched(routeId: $routeId) {
-    ticked
-    tried
-  }
-}

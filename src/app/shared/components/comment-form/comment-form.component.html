@@ -17,7 +17,7 @@
   </div>
 
   <div
-    *ngIf="data?.type === 'warning' || data.comment?.type === 'warning'"
+    *ngIf="type === 'warning'"
     class="mt-16"
     fxLayout="column"
     fxLayout.gt-xs="row"
@@ -29,6 +29,7 @@
         <input
           formControlName="exposedUntil"
           matInput
+          [min]="minDate"
           [max]="maxDate"
           [matDatepicker]="picker"
         />

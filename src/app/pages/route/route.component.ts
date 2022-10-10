@@ -12,6 +12,7 @@ import { Subject, Subscription, switchMap } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CommentFormComponent } from 'src/app/shared/components/comment-form/comment-form.component';
+import { GradingSystemsService } from 'src/app/shared/services/grading-systems.service';
 
 @Component({
   selector: 'app-route',
@@ -36,7 +37,8 @@ export class RouteComponent implements OnInit, OnDestroy {
     private layoutService: LayoutService,
     private authService: AuthService,
     private dialog: MatDialog,
-    private routeBySlugGQL: RouteBySlugGQL
+    private routeBySlugGQL: RouteBySlugGQL,
+    private gradingSystemService: GradingSystemsService
   ) {}
 
   ngOnInit(): void {
@@ -156,6 +158,19 @@ export class RouteComponent implements OnInit, OnDestroy {
           name: this.route.name,
         },
       ]);
+
+      this.layoutService.setTitle([
+        this.route.name,
+        `Smer v plezališču ${this.route.sector.crag.name}`,
+      ]);
+
+      this.gradingSystemService
+        .diffToGrade(this.route.difficulty, this.route.defaultGradingSystem.id)
+        .then((grade) => {
+          this.layoutService.setDescription(
+            `${this.route.name}; Plezališče ${this.route.sector.crag.name}; Težavnost: ${grade.name}; Dolžina: ${this.route.length}`
+          );
+        });
     }
   }
 

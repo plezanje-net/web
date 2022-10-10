@@ -12,9 +12,7 @@
           <tbody>
             <tr *ngFor="let tick of tickGroup.ticks">
               <td>
-                <a [routerLink]="['/uporabniki', tick.user.fullName]">
-                  {{ tick.user.fullName }}
-                </a>
+                {{ tick.user.fullName }}
                 je
                 {{ tick.ascentType | ascentType }}
                 {{ "preplezal" | genderizeVerb: tick.user.gender }}

@@ -20,6 +20,23 @@
     >{{ activity.duration }} min</ng-container
   >
 </td>
+<td>
+  <app-grade
+    *ngIf="highestDifficulty && highestDiffGradingSystemId"
+    [difficulty]="highestDifficulty"
+    [gradingSystemId]="highestDiffGradingSystemId"
+  ></app-grade>
+</td>
+<td>
+  <app-grade
+    *ngIf="highestLeadClimbedDifficulty && highestLeadClimbedGradingSystemId"
+    [difficulty]="highestLeadClimbedDifficulty"
+    [gradingSystemId]="highestLeadClimbedGradingSystemId"
+  ></app-grade>
+</td>
+<td>
+  {{ totalLength ? totalLength + " m" : "" }}
+</td>
 
 <td class="tools">
   <button mat-icon-button [mat-menu-trigger-for]="menu">
@@ -37,9 +54,12 @@
     >
       <span>Vsi vnosi za to plezališče</span>
     </button>
-    <!-- <button mat-menu-item>
+    <button
+      mat-menu-item
+      [routerLink]="['/plezalni-dnevnik/uredi/', activity.id]"
+    >
       <span>Uredi vnos</span>
-    </button> -->
+    </button>
     <button
       mat-menu-item
       (click)="rowAction.next({ item: activity, action: 'delete' })"

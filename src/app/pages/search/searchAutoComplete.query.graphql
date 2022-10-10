@@ -5,6 +5,7 @@ query SearchAutoComplete($searchString: String) {
       id
       name
       slug
+      type
     }
 
     routes {
@@ -15,6 +16,7 @@ query SearchAutoComplete($searchString: String) {
       crag {
         id
         slug
+        type
       }
     }
 
@@ -25,13 +27,15 @@ query SearchAutoComplete($searchString: String) {
       crag {
         id
         slug
+        type
       }
     }
 
-    users {
-      __typename
-      id
-      fullName
-    }
+    # Searching for users is temporarily disabled.
+    # users {
+    #   __typename
+    #   id
+    #   fullName
+    # }
   }
 }

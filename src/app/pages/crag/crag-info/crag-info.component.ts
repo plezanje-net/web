@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Crag } from 'src/generated/graphql';
 import { IDistribution } from '../../../common/distribution-chart/distribution-chart.component';
@@ -8,7 +8,7 @@ import { IDistribution } from '../../../common/distribution-chart/distribution-c
   templateUrl: './crag-info.component.html',
   styleUrls: ['./crag-info.component.scss'],
 })
-export class CragInfoComponent implements OnInit {
+export class CragInfoComponent implements OnInit, OnChanges {
   @Input() crag: Crag;
 
   @Input() id: string = 'default';
@@ -20,6 +20,14 @@ export class CragInfoComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
+    this.init();
+  }
+
+  ngOnChanges(): void {
+    this.init();
+  }
+
+  init() {
     this.crags$.next([this.crag]);
 
     const months = [
@@ -37,9 +45,11 @@ export class CragInfoComponent implements OnInit {
       'Dec',
     ];
 
-    this.attendanceDistribution = this.crag.activityByMonth.map((value, m) => ({
-      label: months[m],
-      value: value,
-    }));
+    this.attendanceDistribution = this.crag.activityByMonth.find((a) => a > 20)
+      ? this.crag.activityByMonth.map((value, m) => ({
+          label: months[m],
+          value: value,
+        }))
+      : [];
   }
 }

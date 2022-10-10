@@ -1,0 +1,8 @@
+mutation UpdateActivity(
+  $input: UpdateActivityInput!
+  $routes: [CreateActivityRouteInput!]!
+) {
+  updateActivity(input: $input, routes: $routes) {
+    id
+  }
+}

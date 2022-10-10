@@ -11,6 +11,7 @@ import { Comment } from 'src/generated/graphql';
 export class CommentComponent implements OnInit, OnDestroy {
   @Input() comment: Comment;
   @Input() commentType: string;
+  @Input() previewMode = false;
 
   isAuthor = false;
 

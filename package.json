@@ -23,6 +23,8 @@
     "@angular/platform-browser-dynamic": "~13.2.2",
     "@angular/router": "~13.2.2",
     "@apollo/client": "^3.5.9",
+    "@sentry/angular": "^6.19.2",
+    "@sentry/tracing": "^6.19.2",
     "@tinymce/tinymce-angular": "^4.2.4",
     "apollo-angular": "^3.0.0-alpha.2",
     "apollo-link-error": "^1.1.13",
@@ -34,6 +36,7 @@
     "ol": "^6.5.0",
     "rxjs": "~7.4.0",
     "swiper": "^7.4.1",
+    "tinymce": "^5.10.3",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },

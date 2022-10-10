@@ -2,20 +2,30 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
+  Activity,
+  ActivityEntryGQL,
   Crag,
   CreateActivityGQL,
+  UpdateActivityGQL,
   IceFall,
+  MyActivitiesGQL,
   Peak,
   Route,
+  RoutesTouchesGQL,
+  DryRunCreateActivityGQL,
+  DryRunUpdateActivityGQL,
+  StarRatingVotesGQL,
 } from 'src/generated/graphql';
 import dayjs from 'dayjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { ActivityFormService } from './activity-form.service';
-import { filter } from 'rxjs';
+import { concatMap, EMPTY, map, of, switchMap } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { ACTIVITY_TYPES } from 'src/app/common/activity.constants';
 import { Location } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { DryRunActivityDialogComponent } from './dry-run-activity-dialog/dry-run-activity-dialog.component';
 
 @Component({
   selector: 'app-activity-form',
@@ -23,18 +33,25 @@ import { Location } from '@angular/common';
   styleUrls: ['./activity-form.component.scss'],
 })
 export class ActivityFormComponent implements OnInit, OnDestroy {
-  @Input() type: string;
-  @Input() crag: Crag;
   @Input() selectedRoutes: Route[];
+  @Input() crag: Crag;
   @Input() peak: Peak;
   @Input() iceFall: IceFall;
 
+  @Input() activity: Activity;
+
+  // new - no activity yet, edit - edit activity fields but add no routes, add - add routes to existing activity
+  @Input() formType: 'new' | 'edit' | 'add' = 'new';
+
+  maxDate = new Date();
+
   loading: boolean = false;
+  loadingActivity: boolean = false;
 
   routes = new FormArray([]);
 
   typeOptions = ACTIVITY_TYPES.filter(
-    (type) => type.value != 'iceFall' && type.value != 'peak'
+    (a) => a.value != 'peak' && a.value != 'iceFall'
   );
 
   activityForm = new FormGroup({
@@ -44,50 +61,146 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     peakId: new FormControl(null),
     iceFallId: new FormControl(null),
     duration: new FormControl(null),
-    date: new FormControl('2021-01-01'),
+    date: new FormControl(),
     partners: new FormControl(),
     notes: new FormControl(),
-    onlyRoutes: new FormControl(false),
     routes: this.routes,
   });
-
-  afMutex = false;
 
   subscriptions: Subscription[] = [];
 
   constructor(
     private snackBar: MatSnackBar,
+    private dialog: MatDialog,
     private createActivityGQL: CreateActivityGQL,
+    private updateActivityGQL: UpdateActivityGQL,
+    private dryRunCreateActivityGQL: DryRunCreateActivityGQL,
+    private dryRunUpdateActivityGQL: DryRunUpdateActivityGQL,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
     public location: Location,
     private localStorageService: LocalStorageService,
-    private activityFormService: ActivityFormService
+    private activityFormService: ActivityFormService,
+    private myActivitiesGQL: MyActivitiesGQL,
+    private activityEntryGQL: ActivityEntryGQL,
+    private routesTouchesGQL: RoutesTouchesGQL,
+    private starRatingVotesGQL: StarRatingVotesGQL
   ) {}
 
   ngOnInit(): void {
-    if (this.selectedRoutes.length) {
+    if (this.formType == 'edit' && this.crag != null) {
+      this.activityForm.controls.date.disable();
+    }
+
+    if (this.activity) {
+      this.activityForm.patchValue({
+        date: this.activity.date,
+        notes: this.activity.notes,
+        partners: this.activity.partners,
+        duration: this.activity.duration,
+        name: this.activity.name,
+        type: this.activity.type,
+      });
+    }
+
+    if (this.selectedRoutes != null) {
       this.selectedRoutes.forEach((route) => {
         this.addRoute(route);
       });
     }
 
-    // first time emmits, when activity form date is patched bellow
-    // ui prevents it, but should probably check the state of the onlyroutes checkbox first?
-    this.activityForm.controls.date.valueChanges.subscribe((value) => {
-      this.patchRouteDates(value);
-    });
+    // Fetch user's previous star rating votes, and display them below the star rating inputs
+    if (this.selectedRoutes?.length) {
+      this.starRatingVotesGQL
+        .fetch({
+          routeIds: this.selectedRoutes.map((route) => route.id),
+        })
+        .subscribe({
+          next: (response) => {
+            const starRatingVotesForRoutes = {};
+            response.data.starRatingVotes.forEach((vote) => {
+              starRatingVotesForRoutes[vote.route.id] = vote.stars;
+            });
 
-    this.activityForm.controls.onlyRoutes.valueChanges.subscribe((value) => {
-      if (!value) {
-        this.patchRouteDates(this.activityForm.value.date);
-      }
-    });
+            // store it in a service, to be accessed in the form-route component
+            this.activityFormService.starRatingVotesForRoutes =
+              starRatingVotesForRoutes;
+          },
+        });
+    }
 
-    this.activityForm.patchValue({
-      date: dayjs().format('YYYY-MM-DD'),
-      type: this.type,
-    });
+    this.activityForm.controls.date.valueChanges
+      .pipe(
+        switchMap((date) => {
+          // Disable all ascentType inputs, until we get users route touches before the newly selected date
+          this.routes.controls.forEach((routeFormGroup) =>
+            routeFormGroup.get('ascentType').disable({ emitEvent: false })
+          );
+
+          this.patchRouteDates(date); // TODO: do we need to do this? logging routes with different dates is not possible anymore, so we can have only one date now!
+
+          const routeIds = new Set(
+            this.routes.controls.map(
+              (routeFormGroup) => routeFormGroup.get('routeId').value
+            )
+          );
+          return this.routesTouchesGQL.fetch({
+            input: {
+              routeIds: [...routeIds],
+              before: date,
+            },
+          });
+        })
+      )
+      .subscribe((result) => {
+        const { ticked, tried, trTicked } = result.data.routesTouches;
+        const tickedRoutes = new Set(ticked.map((ar) => ar.routeId));
+        const triedRoutes = new Set(tried.map((ar) => ar.routeId));
+        const trTickedRoutes = new Set(trTicked.map((ar) => ar.routeId));
+
+        this.routes.controls.forEach((route) => {
+          const routeId = route.get('routeId').value;
+
+          const routeTicked = tickedRoutes.has(routeId);
+          route.get('ticked').setValue(routeTicked);
+
+          const routeTried = triedRoutes.has(routeId);
+          route.get('tried').setValue(routeTried);
+
+          const routeTrTicked = trTickedRoutes.has(routeId);
+          route.get('trTicked').setValue(routeTrTicked);
+
+          // If not already set, set default value for ascentType based on user's log history (might get changed rihgt away with revalidateAT, but it's a good first guess anyway)
+          if (!route.get('ascentType').value) {
+            route.patchValue(
+              {
+                ascentType: routeTicked ? 'repeat' : 'redpoint',
+              },
+              { emitEvent: false }
+            );
+          }
+        });
+
+        this.activityFormService.revalidateAscentTypes();
+        this.activityFormService.conditionallyDisableVotedDifficultyInputs();
+        this.activityFormService.conditionallyDisableVotedStarRatingInputs();
+
+        // Now that user's ascent history has been fetched and ascentTypes revalidated, we can reenable ascentType controls
+        this.routes.controls.forEach((routeFormGroup) => {
+          routeFormGroup.get('ascentType').enable();
+          // routeFormGroup.get('ascentType').enable({ emitEvent: false }); // TODO: this would be the better way, but seems that material needs event emitted in order to update the display of the field (does work if no material)
+        });
+      });
+
+    if (this.crag != null && this.formType != 'edit') {
+      this.watchForOverlappingActivity();
+    }
+
+    if (this.activity == null) {
+      this.activityForm.patchValue({
+        date: dayjs().format('YYYY-MM-DD'),
+        type: this.getInitialType(),
+      });
+    }
 
     if (this.crag != null) {
       this.activityForm.patchValue({
@@ -96,18 +209,68 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       });
     }
 
+    if (this.formType != 'new' || this.crag) {
+      this.activityForm.controls.type.disable();
+    }
+
     this.activityFormService.initialize(this.routes);
-    this.activityForm.valueChanges
-      .pipe(filter(() => !this.afMutex))
-      .subscribe(() => {
-        this.afMutex = true;
-        this.activityFormService.conditionallyDisableVotedDifficultyInputs();
-        this.afMutex = false;
-      });
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
+  getInitialType() {
+    if (this.crag != null) return 'crag';
+    if (this.peak != null) return 'peak';
+    if (this.iceFall != null) return 'iceFall';
+    return null;
+  }
+
+  watchForOverlappingActivity() {
+    this.activityForm.controls.date.valueChanges
+      .pipe(
+        switchMap((date) => {
+          this.loadingActivity = true;
+          return this.myActivitiesGQL.fetch({
+            input: {
+              dateFrom: dayjs(date).format('YYYY-MM-DD'),
+              dateTo: dayjs(date).format('YYYY-MM-DD'),
+              cragId: this.crag.id,
+            },
+          });
+        }),
+        map((response) => response.data.myActivities.items[0] ?? null),
+        switchMap((activity) =>
+          activity != null
+            ? this.activityEntryGQL.fetch({ id: activity.id })
+            : of(null)
+        ),
+        map((response) => (response ? response.data.activity : null))
+      )
+      .subscribe((activity) => {
+        this.loadingActivity = false;
+
+        if (activity == null && this.activity != null) {
+          this.activityForm.patchValue({
+            notes: null,
+            partners: null,
+          });
+        }
+        if (activity == null) {
+          this.activity = null;
+          this.formType = 'new';
+          return;
+        }
+
+        this.activity = <Activity>activity;
+        this.activityForm.patchValue({
+          notes: activity.notes,
+          partners: activity.partners,
+        });
+
+        this.formType = this.routes.length == 0 ? 'edit' : 'add';
+      });
   }
 
   patchRouteDates(value: dayjs.Dayjs): void {
@@ -125,7 +288,7 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         difficulty: new FormControl(route.difficulty),
         defaultGradingSystemId: new FormControl(route.defaultGradingSystem.id),
         isProject: new FormControl(route.isProject),
-        ascentType: new FormControl(!route?.ticked ? 'redpoint' : 'repeat', [
+        ascentType: new FormControl({ value: null, disabled: true }, [
           Validators.required,
         ]),
         date: new FormControl(),
@@ -142,66 +305,15 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
     );
   }
 
-  moveRoute(routeIndex: number, direction: number): void {
-    switch (direction) {
-      case 0:
-        // delete the route at routeIndex
-        this.routes.removeAt(routeIndex);
-        break;
-      case 2:
-        // add a copy of the same route
-        const routeFormGroupOriginal = <FormGroup>this.routes.at(routeIndex);
-        const routeFormGroupCopy = this.copyFormFroup(routeFormGroupOriginal);
-        this.routes.insert(routeIndex + 1, routeFormGroupCopy);
-        break;
-      default:
-        // switch position of adjacent routes
-        const temp = this.routes.controls[routeIndex + direction];
-        this.routes.controls[routeIndex + direction] =
-          this.routes.controls[routeIndex];
-        this.routes.controls[routeIndex] = temp;
-    }
-  }
-
-  private copyFormFroup(formGroupOriginal: FormGroup) {
-    const formGroupData = Object.keys(formGroupOriginal.controls).reduce(
-      (fgData, key) => {
-        fgData[key] = new FormControl(
-          formGroupOriginal.get(key).value,
-          formGroupOriginal.get(key).validator
-        );
-        return fgData;
-      },
-      {}
-    );
-    return new FormGroup(formGroupData);
-  }
-
   save(): void {
-    const data = this.activityForm.value;
-
-    this.loading = true;
+    const data = this.activityForm.getRawValue();
 
     this.activityForm.disable({ emitEvent: false });
 
-    const activity = {
-      date: dayjs(data.date).format('YYYY-MM-DD'),
-      name: data.name,
-      duration: data.duration,
-      type: data.type,
-      notes: data.notes,
-      partners: data.partners,
-      cragId: data.cragId,
-      peakId: data.peakId,
-      iceFallId: data.iceFallId,
-    };
-
     const routes = this.routes.value.map((route: any, i: number) => {
       return {
-        date: route.date
-          ? dayjs(route.date).format('YYYY-MM-DD')
-          : activity.date,
-        partner: route.partner || activity.partners,
+        date: dayjs(data.date).format('YYYY-MM-DD'), // TODO enforce this on backend
+        partner: route.partner || data.partners,
         notes: route.notes,
         routeId: route.routeId,
         ascentType: route.ascentType,
@@ -212,27 +324,150 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
       };
     });
 
-    this.createActivityGQL.mutate({ input: activity, routes }).subscribe({
+    const activityInput = {
+      date: dayjs(data.date).format('YYYY-MM-DD'), // TODO backend make sure that this did not change in case it has logged routes
+      duration: data.duration,
+      name: data.name,
+      notes: data.notes,
+      partners: data.partners,
+    };
+
+    // We have 3 possible cases here:
+    // 1: edit  -> we are updating the activity data only (no routes changes) -> no dry run is needed
+    // 2: add   -> we are adding routes to existing activity -> do dry run
+    // 3: new   -> we are creating a new activity -> do dry run
+
+    // Before actually saving (mutating) the log, do a dry run and get back the ascent type changes that the log might trigger
+    // If any, show them to the user, and only after another confirmation, do the actual mutation
+    switch (this.formType) {
+      case 'edit':
+        const editActivityInput = {
+          ...activityInput,
+          id: this.activity.id,
+        };
+
+        this.updateActivityGQL
+          .mutate({ input: editActivityInput, routes: [] })
+          .subscribe(this.getActivityMutationObserver());
+        break;
+
+      case 'add':
+        const addToActivityInput = {
+          ...activityInput,
+          id: this.activity.id,
+        };
+
+        this.dryRunUpdateActivityGQL
+          .fetch({ input: addToActivityInput, routes })
+          .pipe(
+            concatMap((result) => {
+              if (result.data.dryRunUpdateActivity.length) {
+                // If we got back some data, there will be changes in 'future' logs, so user needs to preview and confirm them
+                const dryRunSideEffects = result.data.dryRunUpdateActivity;
+                return this.dialog
+                  .open(DryRunActivityDialogComponent, {
+                    data: { dryRunSideEffects },
+                  })
+                  .afterClosed();
+              } else {
+                return of(true); // If no data from dryRun, theb emit true and complete as if the dialog was opened and confirmed
+              }
+            }),
+            concatMap((confirmed) => {
+              if (confirmed) {
+                // User confirmed autocorrect changes, so do the actual mutation now
+                this.loading = true;
+                return this.updateActivityGQL.mutate({
+                  input: addToActivityInput,
+                  routes,
+                });
+              } else {
+                // User declined. Nothing to do. Make form active again and complete.
+                this.activityForm.enable({ emitEvent: false });
+                this.loading = false;
+                return EMPTY; // just completes
+              }
+            })
+          )
+          .subscribe(this.getActivityMutationObserver());
+        break;
+
+      case 'new':
+        const createActivityInput = {
+          ...activityInput,
+          type: data.type,
+          cragId: data.cragId,
+          peakId: data.peakId,
+          iceFallId: data.iceFallId,
+        };
+
+        this.dryRunCreateActivityGQL
+          .fetch({ input: createActivityInput, routes })
+          .pipe(
+            concatMap((result) => {
+              if (result.data.dryRunCreateActivity.length) {
+                // If we got back some data, there will be changes in 'future' logs, so user needs to preview and confirm them
+                const dryRunSideEffects = result.data.dryRunCreateActivity;
+                return this.dialog
+                  .open(DryRunActivityDialogComponent, {
+                    data: { dryRunSideEffects },
+                  })
+                  .afterClosed();
+              } else {
+                return of(true); // If no data from dryRun, theb emit true and complete as if the dialog was opened and confirmed
+              }
+            }),
+            concatMap((confirmed) => {
+              if (confirmed) {
+                // User confirmed autocorrect changes, so do the actual mutation now
+                this.loading = true;
+                return this.createActivityGQL.mutate({
+                  input: createActivityInput,
+                  routes,
+                });
+              } else {
+                // User declined. Nothing to do. Make form active again and complete.
+                this.activityForm.enable({ emitEvent: false });
+                this.loading = false;
+                return EMPTY; // just completes
+              }
+            })
+          )
+          .subscribe(this.getActivityMutationObserver());
+    }
+  }
+
+  private getActivityMutationObserver() {
+    return {
       next: () => {
         if (this.crag) {
-          this.successCragWithRoutes();
-          return;
+          this.localStorageService.removeItem('activity-selection');
+
+          if (this.formType == 'new') {
+            this.successCragWithRoutes();
+            return;
+          }
         }
-        this.snackBar.open('Vnos je bil shranjen v plezalni dnevnik', null, {
-          duration: 3000,
-        });
+        this.snackBar.open(
+          this.formType == 'edit'
+            ? 'Vnos v plezalnem dnevniku je bil posodobljen'
+            : 'Vnos je bil shranjen v plezalni dnevnik',
+          null,
+          {
+            duration: 3000,
+          }
+        );
         this.router.navigate(['/plezalni-dnevnik']);
       },
       error: () => {
         this.loading = false;
         this.activityForm.enable();
-        this.snackBar.open(
-          'Vnosa ni bilo mogoče shraniti v plezalni dnevnik',
-          null,
-          { panelClass: 'error', duration: 3000 }
-        );
+        this.snackBar.open('Vnosa ni bilo mogoče shraniti', null, {
+          panelClass: 'error',
+          duration: 3000,
+        });
       },
-    });
+    };
   }
 
   successCragWithRoutes() {

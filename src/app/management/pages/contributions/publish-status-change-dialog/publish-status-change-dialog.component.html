@@ -1,0 +1,44 @@
+<mat-dialog-content>
+  <p *ngIf="data.newStatus === 'published'">
+    Si prepričan_a da želiš objaviti prispevek?
+  </p>
+  <p *ngIf="data.newStatus === 'in_review'">
+    Si prepričan_a da želiš uredništvu predlagati objavo prispevka?
+  </p>
+  <p *ngIf="data.newStatus === 'draft'">
+    Si prepričan_a da želiš zavrniti predlog za objavo prispevka?
+  </p>
+
+  <div *ngIf="data.newStatus === 'draft'" class="mt-16">
+    <mat-form-field class="no-hint">
+      <mat-label>Razlog za zavrnitev prispevka</mat-label>
+      <textarea matInput [(ngModel)]="rejectionMessage" required></textarea>
+    </mat-form-field>
+    <p class="footnote">
+      Razlog za zavrnitev prispevka bo posredovan uporabniku_ci, ki je
+      predlagal_a objavo. Na podlagi tvojega sporočila bo lahko uredil_a
+      prispevek tako, da bo primeren za objavo.
+    </p>
+  </div>
+
+  <p class="mt-16">
+    <mat-checkbox
+      *ngIf="data.cascadeMessage"
+      [(ngModel)]="cascade"
+      [disabled]="data.forceCascade"
+      >{{ data.cascadeMessage }}</mat-checkbox
+    >
+  </p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button type="button" mat-button [mat-dialog-close]="false">Prekliči</button>
+  <button
+    mat-button
+    color="primary"
+    [mat-dialog-close]="{rejectionMessage, cascade}"
+    [disabled]="data.newStatus === 'draft' && !rejectionMessage"
+  >
+    Potrdi
+  </button>
+</mat-dialog-actions>

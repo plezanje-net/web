@@ -38,6 +38,7 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
       { name: 'crag', label: 'Plezališče' },
       { name: 'route', label: 'Smer' },
       { name: 'grade', label: 'Ocena', sortable: true },
+      { name: 'ascentType', label: 'Tip vzpona' },
     ],
     [
       { name: 'dateFrom', type: 'date' },
@@ -76,6 +77,8 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
   memberAddedSubscription: Subscription;
   filtersSubscription: Subscription;
   ignoreFormChange = true;
+
+  noTopropeOnPage = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -182,6 +185,12 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
   querySuccess(data: any) {
     this.activityRoutes = data.activityRoutesByClubSlug.items;
     this.pagination = data.activityRoutesByClubSlug.meta;
+
+    this.noTopropeOnPage = !this.activityRoutes.some(
+      (route) =>
+        this.ascentTypes.find((at) => at.value === route.ascentType).topRope
+    );
+
     this.applyRelationFilterDisplayValues();
   }
 

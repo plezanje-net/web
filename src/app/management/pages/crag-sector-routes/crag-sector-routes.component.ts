@@ -2,14 +2,16 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { User } from '@sentry/angular';
 import { Apollo } from 'apollo-angular';
-import { filter, map, Subscription, switchMap, take, tap } from 'rxjs';
+import { combineLatest, filter, Subscription, switchMap, take } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 import {
   Crag,
   ManagementDeleteRouteGQL,
   ManagementGetSectorGQL,
-  ManagementSaveRoutePositionsGQL,
+  ManagementSaveRoutePositionGQL,
   Route,
   Sector,
 } from '../../../../generated/graphql';
@@ -20,6 +22,7 @@ import {
   RouteFormValues,
 } from '../../forms/route-form/route-form.component';
 import { CragAdminBreadcrumbs } from '../../utils/crag-admin-breadcrumbs';
+import { ContributionService } from '../contributions/contribution/contribution.service';
 
 interface TmpRoute {
   id: string;
@@ -43,20 +46,25 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
+  user: User;
+  fullAccess = false;
+
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
+    private authService: AuthService,
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
     private sectorGQL: ManagementGetSectorGQL,
-    private savePositionsGQL: ManagementSaveRoutePositionsGQL,
+    private savePositionGQL: ManagementSaveRoutePositionGQL,
     private deleteRouteGQL: ManagementDeleteRouteGQL,
-    private apollo: Apollo
+    private apollo: Apollo,
+    public contributionService: ContributionService
   ) {}
 
   ngOnInit(): void {
-    const sectorSub = this.activatedRoute.params
-      .pipe(
+    const sub = combineLatest([
+      this.activatedRoute.params.pipe(
         filter((params) => params.sector != null),
         switchMap(
           (params) =>
@@ -64,57 +72,57 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
               id: params.sector,
             }).valueChanges
         )
-      )
-      .subscribe((result) => {
-        this.loading = false;
+      ),
+      this.authService.currentUser.asObservable(),
+    ]).subscribe(([result, user]) => {
+      this.loading = false;
 
-        this.sector = <Sector>result.data.sector;
-        this.crag = <Crag>this.sector.crag;
+      this.sector = <Sector>result.data.sector;
+      this.crag = <Crag>this.sector.crag;
 
-        this.routes = [...(<Route[]>result.data.sector.routes)];
+      this.routes = [...(<Route[]>result.data.sector.routes)];
 
-        this.heading = `${this.crag.name}${
-          this.sector.label || this.sector.name ? ', ' : ''
-        }${this.sector.label}${
-          this.sector.label && this.sector.name ? ' -' : ''
-        } ${this.sector.name}`;
+      this.heading = `${this.crag.name}${
+        this.sector.label || this.sector.name ? ', ' : ''
+      }${this.sector.label}${
+        this.sector.label && this.sector.name ? ' -' : ''
+      } ${this.sector.name}`;
 
-        this.layoutService.$breadcrumbs.next(
-          new CragAdminBreadcrumbs(this.crag).build()
-        );
-      });
+      this.layoutService.$breadcrumbs.next(
+        new CragAdminBreadcrumbs(this.crag).build()
+      );
 
-    this.subscriptions.push(sectorSub);
+      this.user = user;
+    });
+    this.subscriptions.push(sub);
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
+  // A route can be edited by admin (always) or by a user if it's his contribution and still in status draft
+  canEdit(route: Route): boolean {
+    return this.user.roles.includes('admin') || route.publishStatus === 'draft';
+  }
+
   drop(event: CdkDragDrop<string[]>) {
+    if (event.previousIndex == event.currentIndex) return;
+
+    const data = {
+      id: this.routes[event.previousIndex].id,
+      position:
+        event.currentIndex > event.previousIndex
+          ? this.routes[event.currentIndex].position + 1
+          : this.routes[event.currentIndex].position,
+    };
+
+    // move in FE to see changes even before BE responds
     moveItemInArray(this.routes, event.previousIndex, event.currentIndex);
-
-    const data = this.routes
-      .map(
-        (route, index): TmpRoute => ({
-          id: route.id,
-          pos: route.position,
-          newPos: index + 1,
-        })
-      )
-      .filter((r) => r.pos != r.newPos)
-      .map((r) => ({
-        id: r.id,
-        position: r.newPos,
-      }));
-
-    if (data.length == 0) {
-      return;
-    }
 
     this.savingPositions = true;
 
-    this.savePositionsGQL
+    this.savePositionGQL
       .mutate({ input: data }, { fetchPolicy: 'no-cache' })
       .subscribe(() => {
         this.apollo.client.resetStore().then(() => {
@@ -126,9 +134,9 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
       });
   }
 
-  add(values: RouteFormValues = null): void {
-    if (values == null) {
-      values = { defaultGradingSystemId: this.crag.defaultGradingSystem.id };
+  add(values: RouteFormValues = {}): void {
+    if (values.defaultGradingSystemId == null) {
+      values.defaultGradingSystemId = this.crag.defaultGradingSystem.id;
     }
     this.dialog
       .open(RouteFormComponent, {
@@ -136,7 +144,9 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
           values: {
             ...values,
             position:
-              this.routes.length == 0
+              values.position != null
+                ? values.position
+                : this.routes.length == 0
                 ? 1
                 : this.routes[this.routes.length - 1].position + 1,
             sectorId: this.sector.id,
@@ -159,8 +169,7 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
     this.dialog
       .open(ConfirmationDialogComponent, {
         data: {
-          title: 'Brisanje sektorja',
-          message: 'Si prepričan, da želiš izbrisati to smer?',
+          message: 'Si prepričan_a, da želiš izbrisati to smer?',
         },
       })
       .afterClosed()
@@ -178,6 +187,10 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
           });
         },
         error: (error) => {
+          if (error.message === 'route_has_log_entries') {
+            error.message =
+              'Smeri ni mogoče izbrisati, ker ima zabeležene vzpone.';
+          }
           this.snackBar.open(error.message, null, {
             panelClass: 'error',
             duration: 3000,

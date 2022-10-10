@@ -37,7 +37,11 @@
             </div>
             <div
               *ngFor="let crag of searchResults.crags"
-              [routerLink]="['/plezalisce', crag.slug]"
+              [routerLink]="
+                crag.type == 'alpine'
+                  ? ['/alpinizem/stena', crag.slug]
+                  : ['/plezalisce', crag.slug]
+              "
               fxLayout="row"
               fxLayoutAlign="start center"
               fxLayoutGap="5px"
@@ -96,12 +100,11 @@
               fxLayoutAlign="start center"
               fxLayoutGap="5px"
               class="row"
-              [routerLink]="[
-                '/plezalisce',
-                route.crag.slug,
-                'smer',
-                route.slug
-              ]"
+              [routerLink]="
+                route.crag.type == 'alpine'
+                  ? ['/alpinizem/stena', route.crag.slug, 'smer', route.slug]
+                  : ['/plezalisce', route.crag.slug, 'smer', route.slug]
+              "
             >
               <div fxFlex>
                 <a [innerHtml]="highlight(route.name, searchString)"></a>
@@ -139,7 +142,11 @@
               fxLayout="row"
               fxLayoutAlign="start center"
               class="row"
-              [routerLink]="['/plezalisce', sector.crag.slug]"
+              [routerLink]="
+                sector.crag.type == 'alpine'
+                  ? ['/alpinizem/stena', sector.crag.slug]
+                  : ['/plezalisce', sector.crag.slug]
+              "
             >
               <div fxFlex>
                 <a [innerHtml]="highlight(sector.name, searchString)"></a>
@@ -149,7 +156,7 @@
           </div>
         </mat-tab>
 
-        <mat-tab label="Uporabniki ({{ searchResults.users.length }})">
+        <!-- <mat-tab label="Uporabniki ({{ searchResults.users.length }})">
           <div *ngIf="!searchResults.users.length" class="results-tab">
             Za iskalni niz "{{ searchString }}" med uporabniki ni rezultatov :(
           </div>
@@ -177,7 +184,7 @@
               </div>
             </div>
           </div>
-        </mat-tab>
+        </mat-tab> -->
 
         <mat-tab label="Komentarji ({{ searchResults.comments.length }})">
           <div *ngIf="!searchResults.comments.length" class="results-tab">
@@ -204,12 +211,21 @@
               class="row"
               [routerLink]="
                 comment?.route
-                  ? [
-                      '/plezalisce',
-                      comment.route.crag.slug,
-                      'smer',
-                      comment.route.slug
-                    ]
+                  ? comment.route.crag.type == 'alpine'
+                    ? [
+                        '/alpinizem/stena',
+                        comment.route.crag.slug,
+                        'smer',
+                        comment.route.slug
+                      ]
+                    : [
+                        '/plezalisce',
+                        comment.route.crag.slug,
+                        'smer',
+                        comment.route.slug
+                      ]
+                  : comment.crag.type == 'alpine'
+                  ? ['/alpinizem/stena', comment.crag.slug]
                   : ['/plezalisce', comment.crag.slug]
               "
             >

@@ -34,7 +34,7 @@ export class AuthService {
   }
 
   async login(loginResponse: LoginResponse): Promise<any> {
-    await this.apollo.client.resetStore();
+    await this.apollo.client.clearStore();
     this.localStorageService.setItem(
       'auth',
       loginResponse,

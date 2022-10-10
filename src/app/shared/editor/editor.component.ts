@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { RawEditorSettings } from 'tinymce';
 
 @Component({
   selector: 'app-editor',
@@ -13,7 +14,7 @@ export class EditorComponent implements OnInit {
 
   focus: boolean = false;
 
-  settings = {
+  settings: RawEditorSettings = {
     height: 250,
     menubar: false,
     entity_encoding: 'raw',
@@ -24,11 +25,19 @@ export class EditorComponent implements OnInit {
       editor.on('focusout', () => {
         this.focus = false;
       });
+      editor.on('init', () => {
+        if (this.control.disabled) {
+          this.control.disable();
+        } else {
+          this.control.enable();
+        }
+      });
     },
     plugins: ['autolink lists link'],
     toolbar:
       'undo redo | bold italic underline strikethrough | \
       bullist numlist | link',
+    elementpath: false,
   };
 
   constructor() {}

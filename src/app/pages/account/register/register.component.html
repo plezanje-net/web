@@ -17,6 +17,7 @@
             <mat-label>E-naslov</mat-label>
             <input
               matInput
+              type="email"
               formControlName="email"
               id="email"
               autocomplete="email"
@@ -79,13 +80,13 @@
           </div>
         </div>
 
-        <p class="conditions">
+        <!-- <p class="conditions">
           <mat-checkbox formControlName="conditions"
             >Strinjam se s <a href="#">pogoji uporabe portala</a>
           </mat-checkbox>
-        </p>
+        </p> -->
 
-        <div fxLayout="row" fxLayoutAlign="center center">
+        <div fxLayout="row" fxLayoutAlign="center center" class="mt-16">
           <button
             *ngIf="!loading"
             mat-flat-button

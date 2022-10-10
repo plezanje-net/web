@@ -1,0 +1,50 @@
+$border-color: rgba(0, 0, 0, 0.08); // very light gray
+$table-header-text-color: #0000008a; // light gray
+
+.mat-dialog-content {
+  max-width: 600px;
+}
+
+span {
+  white-space: nowrap;
+}
+
+p {
+  margin-top: 16px;
+}
+
+table {
+  margin-top: 16px;
+  width: 100%;
+
+  tr {
+    &:hover {
+      background: #f6f9ff;
+    }
+    td,
+    th {
+      text-align: left;
+      height: 42px;
+      line-height: 1.25rem;
+      padding: 1px 16px;
+      border-bottom: 1px solid $border-color;
+      border-top: 1px solid $border-color;
+
+      vertical-align: middle;
+
+      &:last-child {
+        text-align: center;
+      }
+    }
+
+    th {
+      font-weight: 400;
+      color: $table-header-text-color;
+      background-color: #fff;
+    }
+  }
+}
+
+app-ascent-type {
+  display: inline-block;
+}

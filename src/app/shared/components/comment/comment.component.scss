@@ -1,4 +1,5 @@
 @import "../../../../styles/colors.scss";
+@import "../../../../styles/variables.scss";
 
 .comment {
   margin-bottom: 16px;
@@ -7,8 +8,13 @@
   margin-bottom: 16px;
   border-left-color: $accent;
 }
+
+.preview {
+  margin-bottom: 0;
+}
+
 .author {
-  color: #00000080;
+  color: $gray-dark;
   margin-bottom: -4px;
   > .actions {
     margin: -8px;

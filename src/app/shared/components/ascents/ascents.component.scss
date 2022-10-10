@@ -1,0 +1,128 @@
+@import "../../../../styles/variables.scss";
+
+.card-table {
+  tr {
+    td.button {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    td.date {
+      white-space: nowrap;
+    }
+
+    &.expandable-row {
+      padding: 0;
+      height: 0;
+      border-top: 0;
+
+      td {
+        border-top: 0px solid white;
+        transition: all $cubic-bezier;
+
+        padding: 0;
+
+        div {
+          max-height: 0;
+          min-height: 0;
+          opacity: 0;
+          padding: 0 12px;
+          transition: all $cubic-bezier;
+
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+
+    &.expanded-row {
+      td {
+        &.w-border {
+          border-top: 1px solid $gray-lighter;
+        }
+        &.fake-border {
+          border-top: 1px solid white;
+        }
+
+        div {
+          max-height: 96px;
+          min-height: 52px;
+          opacity: 1;
+          padding: 8px 12px;
+        }
+      }
+    }
+  }
+
+  mat-icon {
+    vertical-align: middle;
+  }
+}
+
+.compact {
+  .date {
+    color: $gray;
+  }
+
+  div:hover {
+    background: $blue-very-light;
+  }
+
+  .activity {
+    border-top: 1px solid $gray-lighter;
+    &:first-child {
+      border-top: none;
+    }
+    padding: 8px 0 8px 8px;
+  }
+
+  mat-icon.small {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+  }
+
+  div.more-less {
+    div {
+      height: 20px;
+    }
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .grade {
+    width: 41px;
+  }
+
+  .expandable-row {
+    overflow: hidden;
+
+    .activity-route {
+      border-top: 1px solid $gray-lighter;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    min-height: 0;
+    max-height: 0;
+    opacity: 0;
+    transition: all $cubic-bezier;
+  }
+
+  .expanded-row {
+    .activity-route {
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    min-height: 37px;
+    max-height: 96px;
+    opacity: 1;
+  }
+
+  .main-activity-route {
+    transition: padding-top $cubic-bezier;
+  }
+}

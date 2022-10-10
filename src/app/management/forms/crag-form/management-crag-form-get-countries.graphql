@@ -1,5 +1,5 @@
-query ManagementCragFormGetCountries {
-  countries {
+query ManagementCragFormGetCountries($input: FindCountriesInput) {
+  countries(input: $input) {
     id
     name
     areas {

@@ -6,7 +6,6 @@ query IceFallBySlug($slug: String!) {
     height
     id
     description
-    access
     country {
       name
       slug
@@ -37,6 +36,18 @@ query IceFallBySlug($slug: String!) {
         id
         fullName
       }
+    }
+    properties {
+      id
+      propertyType {
+        id
+        name
+        valueType
+      }
+      stringValue
+      textValue
+      numValue
+      author
     }
     images {
       path

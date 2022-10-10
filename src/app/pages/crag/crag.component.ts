@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DataError } from 'src/app/types/data-error';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LayoutService } from 'src/app/services/layout.service';
-import { Subject, Subscription, take } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { Tab } from '../../types/tab';
 import { AuthService } from 'src/app/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,6 +14,8 @@ import {
   Crag,
 } from 'src/generated/graphql';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { User } from '@sentry/angular';
+import { ScrollService } from 'src/app/services/scroll.service';
 
 @Component({
   selector: 'app-crag',
@@ -24,8 +26,6 @@ export class CragComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   error: DataError = null;
 
-  canEdit: boolean = false;
-
   crag: CragBySlugQuery['cragBySlug'];
 
   warnings: CragBySlugQuery['cragBySlug']['comments'];
@@ -33,6 +33,9 @@ export class CragComponent implements OnInit, OnDestroy {
   map: any;
 
   action$ = new Subject<string>();
+
+  isPrivate = false;
+  user: User;
 
   tabs: Array<Tab> = [
     {
@@ -66,10 +69,13 @@ export class CragComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private cragBySlugGQL: CragBySlugGQL,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private scrollService: ScrollService
   ) {}
 
   ngOnInit(): void {
+    // TODO: unsubscribe
+    this.authService.currentUser.subscribe((user) => (this.user = user));
     this.section = this.router.url.includes('/alpinizem/stena')
       ? 'alpinism'
       : 'sport';
@@ -143,11 +149,6 @@ export class CragComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(actionsSub);
 
-    const authSub = this.authService.currentUser.subscribe(
-      (user) => (this.canEdit = user != null && user.roles.includes('admin'))
-    );
-    this.subscriptions.push(authSub);
-
     const breakpointSub = this.breakpointObserver
       .observe([Breakpoints.Small, Breakpoints.XSmall])
       .subscribe((res) => {
@@ -218,6 +219,13 @@ export class CragComponent implements OnInit, OnDestroy {
           name: this.crag.name,
         },
       ]);
+
+      this.layoutService.setTitle([
+        `Plezališče ${this.crag.name}`,
+        this.crag.country.name,
+      ]);
+
+      this.scrollService.restoreScroll();
     }
   }
 

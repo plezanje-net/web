@@ -1,23 +1,25 @@
-import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Apollo, gql, MutationResult } from 'apollo-angular';
-import { Observable, Subscription, switchMap, take } from 'rxjs';
+import { User } from '@sentry/angular';
+import { Apollo, MutationResult } from 'apollo-angular';
+import { filter, Observable, Subscription, switchMap, take, tap } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { Registry } from 'src/app/types/registry';
 import {
-  Country,
   Crag,
-  CreateActivityMutation,
   GradingSystem,
   ManagementCragFormGetCountriesGQL,
   ManagementCragFormGetCountriesQuery,
   ManagementCreateCragGQL,
-  ManagementCreateCragMutation,
+  ManagementDeleteCragGQL,
   ManagementUpdateCragGQL,
 } from 'src/generated/graphql';
 import { GradingSystemsService } from '../../../shared/services/grading-systems.service';
+import { ContributionService } from '../../pages/contributions/contribution/contribution.service';
 
 @Component({
   selector: 'app-crag-form',
@@ -37,8 +39,9 @@ export class CragFormComponent implements OnInit, OnDestroy {
     description: new FormControl(),
     areaId: new FormControl(),
     countryId: new FormControl(null, Validators.required),
-    status: new FormControl(null, Validators.required),
+    isHidden: new FormControl(false),
     defaultGradingSystemId: new FormControl(null, Validators.required),
+    publishStatus: new FormControl('draft'),
   });
 
   loading: boolean = false;
@@ -47,8 +50,9 @@ export class CragFormComponent implements OnInit, OnDestroy {
   areas: ManagementCragFormGetCountriesQuery['countries'][0]['areas'] = [];
 
   gradingSystems: GradingSystem[];
+  subscriptions: Subscription[] = [];
 
-  subsriptions: Subscription[] = [];
+  user: User;
 
   types: Registry[] = [
     {
@@ -58,33 +62,6 @@ export class CragFormComponent implements OnInit, OnDestroy {
     {
       value: 'alpine',
       label: 'Alpinizem',
-    },
-  ];
-
-  statuses: Registry[] = [
-    // {
-    //   value: 'user',
-    //   label: 'Začasno / zasebno',
-    // },
-    // {
-    //   value: 'proposal',
-    //   label: 'Predlagaj administratorju',
-    // },
-    {
-      value: 'admin',
-      label: 'Vidno administratorjem',
-    },
-    {
-      value: 'archive',
-      label: 'Arhivirano',
-    },
-    {
-      value: 'hidden',
-      label: 'Vidno prijavljenim',
-    },
-    {
-      value: 'public',
-      label: 'Vidno vsem',
     },
   ];
 
@@ -124,17 +101,59 @@ export class CragFormComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
+    private authService: AuthService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog,
     private gradingSystemsService: GradingSystemsService,
     private countriesGQL: ManagementCragFormGetCountriesGQL,
     private updateCragGQL: ManagementUpdateCragGQL,
     private createCragGQL: ManagementCreateCragGQL,
-    private apollo: Apollo
+    private deleteCragGQL: ManagementDeleteCragGQL,
+    private apollo: Apollo,
+    public contributionService: ContributionService
   ) {}
 
   ngOnInit(): void {
+    this.cragForm.disable();
+
+    const userSub = this.authService.currentUser.subscribe((user) => {
+      this.user = user;
+
+      if (
+        this.user.roles.includes('admin') ||
+        !this.crag ||
+        this.crag.publishStatus === 'draft'
+      ) {
+        this.cragForm.enable();
+      }
+    });
+    this.subscriptions.push(userSub);
+
+    const cragPublishStatusSub =
+      this.contributionService.publishStatusChanged$.subscribe(
+        (newPublishStatus: string) => {
+          // We have 2 special cases here:
+          //  1) An editor rejected a crag which he now cannot access anymore -> should redirect to Contributions page
+          if (
+            this.user.roles.includes('admin') &&
+            newPublishStatus === 'draft'
+          ) {
+            this.router.navigate(['/urejanje/prispevki']);
+          }
+
+          //  2) A normal user pushed the crag into review -> should disable the form for editing
+          if (
+            !this.user.roles.includes('admin') &&
+            newPublishStatus === 'in_review'
+          ) {
+            this.cragForm.disable();
+          }
+        }
+      );
+    this.subscriptions.push(cragPublishStatusSub);
+
     if (this.crag != null) {
       this.cragForm.patchValue({
         ...this.crag,
@@ -155,10 +174,10 @@ export class CragFormComponent implements OnInit, OnDestroy {
         });
       }
     });
-    this.subsriptions.push(routeSub);
+    this.subscriptions.push(routeSub);
 
     this.countriesGQL
-      .fetch()
+      .fetch({ input: { orderBy: { field: 'name', direction: 'ASC' } } })
       .pipe(take(1))
       .subscribe((result) => {
         this.countries = result.data.countries;
@@ -170,11 +189,11 @@ export class CragFormComponent implements OnInit, OnDestroy {
         this.countryChanged(v);
       }
     );
-    this.subsriptions.push(countrySub);
+    this.subscriptions.push(countrySub);
   }
 
   ngOnDestroy(): void {
-    this.subsriptions.forEach((sub) => sub.unsubscribe());
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   countryChanged(value: string) {
@@ -224,7 +243,7 @@ export class CragFormComponent implements OnInit, OnDestroy {
         this.apollo.client.resetStore().then(() => {
           if (this.crag == null) {
             this.router.navigate([
-              '/admin/uredi-plezalisce',
+              '/urejanje/uredi-plezalisce',
               result.data.createCrag.id,
             ]);
           }
@@ -244,5 +263,55 @@ export class CragFormComponent implements OnInit, OnDestroy {
         );
       },
     });
+  }
+
+  deleteCrag() {
+    this.dialog
+      .open(ConfirmationDialogComponent, {
+        data: {
+          message:
+            'Si prepričan_a, da želiš izbrisati to plezališče in vse sektorje in smeri v njem?',
+        },
+      })
+      .afterClosed()
+      .pipe(
+        take(1),
+        filter((value) => value != null),
+        tap(() => {
+          this.loading = true;
+        }),
+        switchMap(() => this.deleteCragGQL.mutate({ id: this.crag.id }))
+      )
+      .subscribe({
+        next: () => {
+          this.snackBar.open('Plezališče je bilo izbrisano', null, {
+            duration: 3000,
+          });
+          this.apollo.client.resetStore();
+          this.router.navigate(['/plezalisca']);
+        },
+        error: (error) => {
+          if (error.message === 'crag_has_log_entries') {
+            error.message =
+              'Plezališča ni mogoče izbrisati, ker so v njem zabeležene aktivnosti.';
+          }
+          this.snackBar.open(error.message, null, {
+            panelClass: 'error',
+            duration: 3000,
+          });
+          this.loading = false;
+        },
+      });
+  }
+
+  /**
+   * A crag can be deleted if it is still a draft. An editor can also delete a crag but not one that was pushed to review.
+   */
+  canDelete() {
+    return (
+      this.crag?.publishStatus === 'draft' ||
+      (this.user.roles.includes('admin') &&
+        this.crag?.publishStatus === 'published')
+    );
   }
 }

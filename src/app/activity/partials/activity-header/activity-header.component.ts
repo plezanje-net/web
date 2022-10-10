@@ -7,7 +7,6 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ActivityHeaderComponent implements OnInit {
   @Input() active: string;
-  @Input() hideTabs = false;
 
   constructor() {}
 
