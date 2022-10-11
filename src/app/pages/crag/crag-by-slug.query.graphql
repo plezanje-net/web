@@ -47,6 +47,7 @@ query CragBySlug($crag: String!) {
           id
         }
         pitches {
+          id
           difficulty
           isProject
           number
