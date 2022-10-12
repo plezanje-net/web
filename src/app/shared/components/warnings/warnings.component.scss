@@ -4,7 +4,14 @@
   border-left: 2px solid $warn;
   padding: 12px;
   background: #fff;
+
+  ::ng-deep {
+    p:last-of-type {
+      margin-bottom: 0;
+    }
+  }
 }
+
 .author {
   color: #00000080;
   white-space: nowrap;

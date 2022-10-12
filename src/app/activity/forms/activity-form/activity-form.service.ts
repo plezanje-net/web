@@ -24,6 +24,8 @@ export class ActivityFormService {
   routesBeingLoggedFormArray: FormArray;
   routesPossibleAscentTypes = []; // This is an array of sets of possible ascentTypes for each route that is being logged. Each element (that is a set) of the array belongs to a route at the same index as it appears on the log form. Each set holds all of the currently possible ascent types for this route.
 
+  starRatingVotesForRoutes: {}; // This is an object of routeId=>stars pairs, that is user's possible previous star rating vote on each route.
+
   constructor() {}
 
   initialize(routes: FormArray) {

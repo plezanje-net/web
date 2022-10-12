@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { RawEditorSettings } from 'tinymce';
 
 @Component({
   selector: 'app-editor',
@@ -13,7 +14,7 @@ export class EditorComponent implements OnInit {
 
   focus: boolean = false;
 
-  settings = {
+  settings: RawEditorSettings = {
     height: 250,
     menubar: false,
     entity_encoding: 'raw',
@@ -36,6 +37,7 @@ export class EditorComponent implements OnInit {
     toolbar:
       'undo redo | bold italic underline strikethrough | \
       bullist numlist | link',
+    elementpath: false,
   };
 
   constructor() {}

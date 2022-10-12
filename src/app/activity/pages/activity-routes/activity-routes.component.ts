@@ -263,8 +263,14 @@ export class ActivityRoutesComponent implements OnInit, OnDestroy {
             Če je to tvoj edini uspešni vzpon v tej smeri, boš s tem ${this.genderizeVerbPipe.transform(
               'pobrisal',
               user.gender
-            )} tudi svoj glas o težavnosti te smeri in svojo oceno lepote te smeri.`
+            )} tudi svoj morebitni glas o težavnosti te smeri.`
             : ``;
+
+          finePrint += `<br/>
+            Če je to tvoj edini vzpon v tej smeri, boš s tem ${this.genderizeVerbPipe.transform(
+              'pobrisal',
+              user.gender
+            )} tudi svoj morebitni glas o lepoti te smeri.`;
 
           return this.dialog
             .open(ConfirmationDialogComponent, {

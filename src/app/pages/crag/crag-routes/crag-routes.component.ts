@@ -113,7 +113,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
       width: 52,
     },
   };
-  math = Math;
+
   hostResizeObserver: ResizeObserver;
   routeListViewStyle: 'compact' | 'table';
   tableWidth: number;

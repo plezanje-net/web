@@ -15,6 +15,11 @@ export class ActivityRowComponent implements OnInit {
   @Input() rowAction: Subject<RowAction>;
 
   type: string;
+  highestDifficulty: number;
+  highestDiffGradingSystemId: string;
+  highestLeadClimbedDifficulty: number;
+  highestLeadClimbedGradingSystemId: string;
+  totalLength: number;
 
   constructor() {}
 
@@ -22,5 +27,49 @@ export class ActivityRowComponent implements OnInit {
     this.type =
       ACTIVITY_TYPES.find((a) => a.value == this.activity.type).label ||
       'Ostalo';
+
+    let totalLength = 0;
+    let highestDifficulty = Number.MIN_SAFE_INTEGER;
+    let highestDiffGradingSystemId: string;
+    let highestLeadClimbedDifficulty = Number.MIN_SAFE_INTEGER;
+    let highestLeadClimbedGradingSystemId: string;
+
+    this.activity.routes.forEach((ar) => {
+      if (
+        ar.route.difficulty > highestDifficulty &&
+        [
+          'attempt',
+          't_attempt',
+          'allfree',
+          't_allfree',
+          'aid',
+          't_aid',
+        ].indexOf(ar.ascentType) === -1
+      ) {
+        highestDifficulty = ar.route.difficulty;
+        highestDiffGradingSystemId = ar.route.defaultGradingSystem.id;
+      }
+
+      if (
+        ar.route.difficulty > highestLeadClimbedDifficulty &&
+        ['redpoint', 'flash', 'onsight', 'repeat'].indexOf(ar.ascentType) !== -1
+      ) {
+        highestLeadClimbedDifficulty = ar.route.difficulty;
+        highestLeadClimbedGradingSystemId = ar.route.defaultGradingSystem.id;
+      }
+
+      if (
+        !isNaN(Number(ar.route.length)) &&
+        ['attempt', 't_attempt'].indexOf(ar.ascentType) === -1
+      ) {
+        totalLength += Number(ar.route.length);
+      }
+    });
+
+    this.totalLength = totalLength;
+    this.highestDifficulty = highestDifficulty;
+    this.highestDiffGradingSystemId = highestDiffGradingSystemId;
+    this.highestLeadClimbedDifficulty = highestLeadClimbedDifficulty;
+    this.highestLeadClimbedGradingSystemId = highestLeadClimbedGradingSystemId;
   }
 }
