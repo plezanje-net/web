@@ -4,7 +4,11 @@
 
 <mat-card *ngIf="!loading">
   <mat-card-content>
-    <div class="row" *ngFor="let comment of comments">
+    <div
+      class="row comment-row"
+      [class.first]="first"
+      *ngFor="let comment of comments; first as first"
+    >
       <app-comment
         [comment]="comment"
         [commentType]="comment.type"

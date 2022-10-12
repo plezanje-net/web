@@ -9,8 +9,8 @@
     <div [class.actions]="isAuthor">
       {{ comment.user?.fullName }},
       {{ comment.created | date: "d. M. yyyy HH:mm"
-      }}<ng-container *ngIf="comment.updated != comment.created">
-        , zadnja sprememba: {{ comment.updated | date: "d. M. yyyy HH:mm" }}
+      }}<ng-container *ngIf="comment.updated != comment.created"
+        >, zadnja sprememba: {{ comment.updated | date: "d. M. yyyy HH:mm" }}
       </ng-container>
       <app-comment-options
         *ngIf="isAuthor"

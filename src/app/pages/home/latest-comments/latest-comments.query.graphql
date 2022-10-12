@@ -1,28 +1,35 @@
-query LatestComments($limit: Int!) {
-  latestComments(limit: $limit) {
-    id
-    type
-    user {
+query LatestComments($input: FindCommentsInput!) {
+  latestComments(input: $input) {
+    items {
       id
-      fullName
-    }
-    content
-    created
-    updated
-    crag {
-      name
-      slug
-      country {
+      type
+      user {
+        id
+        fullName
+      }
+      content
+      created
+      updated
+      crag {
+        name
         slug
+        country {
+          slug
+          name
+        }
+      }
+      route {
         name
       }
+      # peak {
+      #   slug
+      #   name
+      # }
     }
-    route {
-      name
+    meta {
+      itemCount
+      pageNumber
+      pageSize
     }
-    # peak {
-    #   slug
-    #   name
-    # }
   }
 }

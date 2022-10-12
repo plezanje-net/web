@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LatestCommentsGQL } from 'src/generated/graphql';
+import { LatestCommentsGQL, LatestCommentsQuery } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-latest-comments',
@@ -7,35 +7,24 @@ import { LatestCommentsGQL } from 'src/generated/graphql';
   styleUrls: ['./latest-comments.component.scss'],
 })
 export class LatestCommentsComponent implements OnInit {
-  loading = true;
-  comments: {
-    __typename?: 'Comment';
-    id: string;
-    type: string;
-    content?: string;
-    created: any;
-    updated: any;
-    user?: { __typename?: 'User'; id: string; fullName: string };
-    crag?: {
-      __typename?: 'Crag';
-      name: string;
-      slug: string;
-      country: { __typename?: 'Country'; slug: string; name: string };
-    };
-    route?: { __typename?: 'Route'; name: string };
-  }[];
+  loading: boolean;
+  comments: LatestCommentsQuery['latestComments']['items'];
 
   constructor(private latestCommentsGQL: LatestCommentsGQL) {}
 
   ngOnInit(): void {
-    this.loading = false;
+    this.loading = true;
 
-    const latestComments$ = this.latestCommentsGQL.fetch({ limit: 10 });
+    const latestComments$ = this.latestCommentsGQL.fetch({
+      input: {
+        pageSize: 5,
+        pageNumber: 1,
+      },
+    });
 
     latestComments$.subscribe({
       next: (result) => {
-        this.comments = result.data.latestComments;
-        console.log(result.data.latestComments);
+        this.comments = result.data.latestComments.items;
         this.loading = false;
       },
       error: () => {
