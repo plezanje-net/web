@@ -16,6 +16,9 @@
       </button>
 
       <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="addImage()">
+          <span>Dodaj fotografijo</span>
+        </button>
         <button mat-menu-item (click)="addComment('comment')">
           <span>Dodaj komentar</span>
         </button>

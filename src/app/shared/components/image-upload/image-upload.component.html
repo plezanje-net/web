@@ -1,3 +1,7 @@
+<div mat-dialog-title fxLayout="row" fxLayoutAlign="start center">
+  <div fxFlex="100" class="title">Dodaj fotografijo</div>
+</div>
+
 <mat-dialog-content>
   <form
     class="form"
@@ -6,17 +10,18 @@
     fxLayout="column"
     fxLayoutGap="16px"
   >
-    <div fxLayout="row" fxLayoutAlign="space-between center">
-      {{ fileName || "Izberi datoteko" }}
-      <button
-        mat-mini-fab
-        type="button"
-        color="primary"
-        class="upload-btn"
-        (click)="fileInput.click(); $event.preventDefault()"
-      >
-        <mat-icon>image</mat-icon>
-      </button>
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="8px">
+      <div>
+        <button
+          type="button"
+          mat-flat-button
+          color="primary"
+          (click)="fileInput.click()"
+        >
+          Izberi datoteko
+        </button>
+      </div>
+      <div class="filename">{{ fileToUpload?.name }}</div>
       <input
         id="file"
         type="file"
@@ -26,47 +31,46 @@
         (change)="onFileSelected($event)"
       />
     </div>
-    <mat-form-field fxFlex="50">
-      <mat-label>Vrsta slike</mat-label>
-      <mat-select formControlName="type">
-        <mat-option value="photo"> Fotografija </mat-option>
-        <mat-option value="diagram"> Skica </mat-option>
-      </mat-select>
+
+    <mat-form-field class="no-hint">
+      <mat-label>Naslov</mat-label>
+      <input matInput type="text" formControlName="title" autocomplete="off" />
     </mat-form-field>
-    <mat-form-field fxFlex="50">
-      <mat-label>Naslov ali komentar</mat-label>
-      <input
-        matInput
-        type="text"
-        formControlName="description"
-        autocomplete="off"
-      />
+
+    <p>
+      <mat-checkbox
+        fxLayout="row"
+        fxLayoutAlign="start"
+        formControlName="userIsAuthor"
+        (change)="onUserIsAuthorChange($event)"
+        >Sem avtor_ica fotografije.</mat-checkbox
+      >
+    </p>
+
+    <mat-form-field *ngIf="form.controls.author">
+      <mat-label>Avtor_ica</mat-label>
+      <input matInput type="text" formControlName="author" />
     </mat-form-field>
   </form>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button
-    *ngIf="!submitting"
-    type="button"
-    mat-button
-    [mat-dialog-close]="null"
-  >
+  <button *ngIf="!loading" type="button" mat-button [mat-dialog-close]="null">
     Prekliči
   </button>
   <button
-    *ngIf="!submitting"
+    *ngIf="!loading"
     type="submit"
     mat-button
     color="primary"
     cdkFocusInitial
-    [disabled]="!fileSelected"
+    [disabled]="!fileToUpload || !form.valid"
     (click)="submit()"
   >
-    Potrdi
+    Naloži
   </button>
   <div
-    *ngIf="submitting"
+    *ngIf="loading"
     class="w-100"
     fxLayout="row"
     fxLayoutAlign="center center"

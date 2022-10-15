@@ -16,6 +16,8 @@ import {
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { User } from '@sentry/angular';
 import { ScrollService } from 'src/app/services/scroll.service';
+import { ImageUploadComponent } from 'src/app/shared/components/image-upload/image-upload.component';
+import { QueryRef } from 'apollo-angular';
 
 @Component({
   selector: 'app-crag',
@@ -59,6 +61,7 @@ export class CragComponent implements OnInit, OnDestroy {
   activeTab: string = 'smeri';
   section: string;
 
+  cragQuery: QueryRef<any>;
   cragSub: Subscription;
   subscriptions: Subscription[] = [];
 
@@ -74,8 +77,11 @@ export class CragComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // TODO: unsubscribe
-    this.authService.currentUser.subscribe((user) => (this.user = user));
+    const userSub = this.authService.currentUser.subscribe(
+      (user) => (this.user = user)
+    );
+    this.subscriptions.push(userSub);
+
     this.section = this.router.url.includes('/alpinizem/stena')
       ? 'alpinism'
       : 'sport';
@@ -103,34 +109,34 @@ export class CragComponent implements OnInit, OnDestroy {
         this.cragSub.unsubscribe();
       }
 
-      this.cragSub = this.cragBySlugGQL
-        .watch({
-          crag: params.crag,
-        })
-        .valueChanges.subscribe({
-          next: (result) => {
-            this.loading = false;
-            this.querySuccess(result.data.cragBySlug);
+      this.cragQuery = this.cragBySlugGQL.watch({
+        crag: params.crag,
+      });
 
-            if (
-              params.tab == 'info' &&
-              !this.breakpointObserver.isMatched([
-                Breakpoints.Small,
-                Breakpoints.XSmall,
-              ])
-            ) {
-              this.setActiveTab(this.tabs[1]);
-            } else if (params.tab != null) {
-              this.activeTab = params.tab;
-            } else {
-              this.activeTab = 'smeri';
-            }
-          },
-          error: (error) => {
-            this.loading = false;
-            this.queryError(error);
-          },
-        });
+      this.cragSub = this.cragQuery.valueChanges.subscribe({
+        next: (result) => {
+          this.loading = false;
+          this.querySuccess(result.data.cragBySlug);
+
+          if (
+            params.tab == 'info' &&
+            !this.breakpointObserver.isMatched([
+              Breakpoints.Small,
+              Breakpoints.XSmall,
+            ])
+          ) {
+            this.setActiveTab(this.tabs[1]);
+          } else if (params.tab != null) {
+            this.activeTab = params.tab;
+          } else {
+            this.activeTab = 'smeri';
+          }
+        },
+        error: (error) => {
+          this.loading = false;
+          this.queryError(error);
+        },
+      });
     });
     this.subscriptions.push(routeSub);
 
@@ -233,6 +239,35 @@ export class CragComponent implements OnInit, OnDestroy {
     this.router.navigate([tab.slug === 'smeri' ? {} : { tab: tab.slug }], {
       relativeTo: this.activatedRoute,
     });
+  }
+
+  async addImage() {
+    const allowed = await this.authService.guardedAction({});
+    if (allowed) {
+      this.dialog
+        .open(ImageUploadComponent, {
+          data: {
+            entityType: 'crag',
+            entityId: this.crag.id,
+            user: this.user,
+          },
+          autoFocus: false,
+        })
+        .afterClosed()
+        .subscribe((result) => {
+          if (!result) {
+            return;
+          }
+          this.loading = true;
+          this.cragQuery.refetch();
+          if (this.activeTab !== 'galerija') {
+            this.setActiveTab({
+              slug: 'galerija',
+              label: 'Galerija',
+            });
+          }
+        });
+    }
   }
 
   addComment(type: string) {

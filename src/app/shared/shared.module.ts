@@ -41,6 +41,7 @@ import { RouterModule } from '@angular/router';
 import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.component';
 import { AscentsComponent } from './components/ascents/ascents.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatInputModule,
     RouterModule,
     MatTooltipModule,
+    MatCheckboxModule,
   ],
   providers: [
     CustomBreakpointsProvider,

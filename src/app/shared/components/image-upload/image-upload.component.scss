@@ -1,3 +1,14 @@
 .form {
   width: 270px;
 }
+
+.mat-dialog-title {
+  font-size: 15px;
+  margin: -12px 0 12px 0;
+}
+
+.filename {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
