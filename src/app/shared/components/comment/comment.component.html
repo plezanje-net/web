@@ -7,7 +7,7 @@
   <div *ngIf="showRouteLink">
     <span *ngIf="comment.crag && comment.crag.type === 'sport'">
       <a [routerLink]="['/plezalisca', comment.crag.country.slug]">{{ comment.crag.country.name }}</a>,
-      <a [routerLink]="['/plezalisce', comment.crag.slug]">{{ comment.crag.name }}</a>
+      <a [routerLink]="['/plezalisce', comment.crag.slug]" [queryParams]="{ tab: 'komentarji' }">{{ comment.crag.name }}</a>
     </span>
     <span *ngIf="comment.crag && comment.crag.type === 'alpine'">
       <a [routerLink]="['/alpinizem/vrhovi/drzava', comment.crag.country.slug]">{{ comment.crag.country.name }}</a>,
