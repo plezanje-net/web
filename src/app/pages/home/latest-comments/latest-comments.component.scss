@@ -19,3 +19,18 @@ h2 {
     border-top: 0;
   }
 }
+
+// TODO Check if these rules could be applied accross the whole app
+.mat-card {
+  border-radius: 0;
+
+  .mat-card-content {
+    margin-bottom: 0;
+  }
+
+  .mat-card-actions {
+    button {
+      color: $primary;
+    }
+  }
+}

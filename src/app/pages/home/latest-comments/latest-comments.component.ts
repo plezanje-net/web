@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { DataError } from 'src/app/types/data-error';
 import { LatestCommentsGQL, LatestCommentsQuery } from 'src/generated/graphql';
+import { LoadingSpinnerService } from '../loading-spinner.service';
 
 @Component({
   selector: 'app-latest-comments',
@@ -7,13 +9,19 @@ import { LatestCommentsGQL, LatestCommentsQuery } from 'src/generated/graphql';
   styleUrls: ['./latest-comments.component.scss'],
 })
 export class LatestCommentsComponent implements OnInit {
+  @Output() errorEvent = new EventEmitter<DataError>();
+
   loading: boolean;
   comments: LatestCommentsQuery['latestComments']['items'];
 
-  constructor(private latestCommentsGQL: LatestCommentsGQL) {}
+  constructor(
+    private latestCommentsGQL: LatestCommentsGQL,
+    private loadingSpinnerService: LoadingSpinnerService
+  ) {}
 
   ngOnInit(): void {
     this.loading = true;
+    this.loadingSpinnerService.pushLoader();
 
     const latestComments$ = this.latestCommentsGQL.fetch({
       input: {
@@ -26,9 +34,13 @@ export class LatestCommentsComponent implements OnInit {
       next: (result) => {
         this.comments = result.data.latestComments.items;
         this.loading = false;
+        this.loadingSpinnerService.popLoader();
       },
       error: () => {
-        console.log('TODO');
+        this.loadingSpinnerService.popLoader();
+        this.errorEvent.emit({
+          message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
+        });
       },
     });
   }

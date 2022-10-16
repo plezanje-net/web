@@ -49,6 +49,6 @@
         (errorEvent)="handleError($event)"
       ></app-latest-difficulty-votes>
     </div>
-    <app-latest-comments></app-latest-comments>
+    <app-latest-comments (errorEvent)="handleError($event)"></app-latest-comments>
   </div>
 </div>
