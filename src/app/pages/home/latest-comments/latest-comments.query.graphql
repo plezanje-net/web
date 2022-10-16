@@ -17,14 +17,23 @@ query LatestComments($input: FindCommentsInput!) {
           slug
           name
         }
+        type
+        peak {
+          slug
+          name
+        }
       }
       route {
         name
+        slug
+        routeType {
+          id
+        }
+        crag {
+          name
+          slug
+        }
       }
-      # peak {
-      #   slug
-      #   name
-      # }
     }
     meta {
       itemCount

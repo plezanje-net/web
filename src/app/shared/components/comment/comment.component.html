@@ -1,9 +1,27 @@
 <div
   class="padding comment {{ commentType }}"
-  [ngClass]="{ card: !previewMode, preview: previewMode }"
+  [ngClass]="{ card: !previewMode }"
   fxLayout="column"
   fxLayoutGap="8px"
 >
+  <div *ngIf="showRouteLink">
+    <span *ngIf="comment.crag && comment.crag.type === 'sport'">
+      <a [routerLink]="['/plezalisca', comment.crag.country.slug]">{{ comment.crag.country.name }}</a>,
+      <a [routerLink]="['/plezalisce', comment.crag.slug]">{{ comment.crag.name }}</a>
+    </span>
+    <span *ngIf="comment.crag && comment.crag.type === 'alpine'">
+      <a [routerLink]="['/alpinizem/vrhovi/drzava', comment.crag.country.slug]">{{ comment.crag.country.name }}</a>,
+      <a [routerLink]="['/alpinizem/stena', comment.crag.slug]">{{ comment.crag.name }}</a>
+    </span>
+    <span *ngIf="comment.route && comment.route.routeType.id !== 'alpine'">
+      <a [routerLink]="['/plezalisce', comment.route.crag.slug]">{{ comment.route.crag.name }}</a>,
+      <a [routerLink]="['/plezalisce', comment.route.crag.slug, 'smer', comment.route.slug]">{{ comment.route.name }}</a>
+    </span>
+    <span *ngIf="comment.route && comment.route.routeType.id === 'alpine'">
+      <a [routerLink]="['/alpinizem/stena', comment.route.crag.slug]">{{ comment.route.crag.name }}</a>,
+      <a [routerLink]="['/alpinizem/stena', comment.route.crag.slug, 'smer', comment.route.slug]">{{ comment.route.name }}</a>
+    </span>
+  </div>
   <div fxFlex [innerHTML]="comment.content"></div>
   <div fxFlex fxLayout="row" fxLayoutAlign="end center" class="author">
     <div [class.actions]="isAuthor">
