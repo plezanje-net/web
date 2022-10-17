@@ -1,14 +1,18 @@
 @import "../../../../styles/colors.scss";
 @import "../../../../styles/variables.scss";
 
-.comment.card {
-  margin-bottom: 16px;
+.comment {
+  &.card {
+    margin-bottom: 16px;
+  }
+
+  &.card.condition {
+    margin-bottom: 16px;
+    border-left-color: $accent;
+  }
 }
 
-.condition {
-  margin-bottom: 16px;
-  border-left-color: $accent;
-}
+
 
 .author {
   color: $gray-dark;
