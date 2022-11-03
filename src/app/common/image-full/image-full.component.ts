@@ -1,5 +1,6 @@
 import { Component, HostListener, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from 'src/environments/environment';
 import { DeleteImageGQL, Image } from 'src/generated/graphql';
 
@@ -20,7 +21,8 @@ export class ImageFullComponent {
     public dialogRef: MatDialogRef<ImageFullComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: { images: Image[]; currentImageIndex: number },
-    private deleteImageGQL: DeleteImageGQL
+    private deleteImageGQL: DeleteImageGQL,
+    private snackBar: MatSnackBar
   ) {
     this.images = this.data.images;
     this.currentImageIndex = this.data.currentImageIndex;
@@ -46,9 +48,18 @@ export class ImageFullComponent {
   }
 
   onDeleteClick() {
-    // TODO let parent know that an image was deleted or reload the crag/route page or something
     this.deleteImageGQL.mutate({ id: this.image.id }).subscribe(({ data }) => {
-      console.log('success: ' + data.deleteImage);
+      if (data.deleteImage) {
+        this.dialogRef.close();
+        this.snackBar.open('Fotografija je bila odstranjena.', null, {
+          duration: 3000,
+        });
+      } else {
+        this.snackBar.open('Fotografije ni bilo možno odstraniti.', null, {
+          duration: 3000,
+          panelClass: 'error',
+        });
+      }
     });
   }
 
