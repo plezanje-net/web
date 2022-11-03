@@ -1,7 +1,7 @@
 <div class="full-container">
   <div class="buttons-row">
     <!-- add check if the user is the author or an admin, else hide the button -->
-    <button mat-icon-button (click)="onDeleteClick()">
+    <button mat-icon-button (click)="onDeleteClick()" *ngIf="currentUser && image.user && currentUser.id === image.user.id">
       <mat-icon>delete</mat-icon>
     </button>
     <button mat-icon-button (click)="onCloseClick()">

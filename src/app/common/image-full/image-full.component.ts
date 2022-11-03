@@ -1,26 +1,29 @@
-import { Component, HostListener, Inject } from '@angular/core';
+import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import {
   MatDialog,
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { take } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { environment } from 'src/environments/environment';
-import { DeleteImageGQL, Image } from 'src/generated/graphql';
+import { DeleteImageGQL, Image, User } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-image-full',
   templateUrl: './image-full.component.html',
   styleUrls: ['./image-full.component.scss'],
 })
-export class ImageFullComponent {
+export class ImageFullComponent implements OnInit {
   storageUrl = environment.storageUrl;
 
   images: Image[];
 
   currentImageIndex: number;
   image: Image;
+  currentUser: User;
 
   constructor(
     public dialogRef: MatDialogRef<ImageFullComponent>,
@@ -28,11 +31,18 @@ export class ImageFullComponent {
     public data: { images: Image[]; currentImageIndex: number },
     private deleteImageGQL: DeleteImageGQL,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private authService: AuthService
   ) {
     this.images = this.data.images;
     this.currentImageIndex = this.data.currentImageIndex;
     this.image = this.images[this.currentImageIndex];
+  }
+
+  ngOnInit() {
+    this.authService.currentUser
+      .pipe(take(1))
+      .subscribe((user) => (this.currentUser = user));
   }
 
   /**

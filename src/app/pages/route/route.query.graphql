@@ -65,6 +65,9 @@ query RouteBySlug($cragSlug: String!, $routeSlug: String!) {
       aspectRatio
       maxIntrinsicWidth
       author
+      user {
+        id
+      }
     }
     sector {
       id
