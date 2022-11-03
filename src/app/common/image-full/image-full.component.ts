@@ -1,7 +1,7 @@
 import { Component, HostListener, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { environment } from 'src/environments/environment';
-import { Image } from 'src/generated/graphql';
+import { DeleteImageGQL, Image } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-image-full',
@@ -19,7 +19,8 @@ export class ImageFullComponent {
   constructor(
     public dialogRef: MatDialogRef<ImageFullComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: { images: Image[]; currentImageIndex: number }
+    public data: { images: Image[]; currentImageIndex: number },
+    private deleteImageGQL: DeleteImageGQL
   ) {
     this.images = this.data.images;
     this.currentImageIndex = this.data.currentImageIndex;
@@ -42,6 +43,13 @@ export class ImageFullComponent {
 
   onCloseClick() {
     this.dialogRef.close();
+  }
+
+  onDeleteClick() {
+    // TODO let parent know that an image was deleted or reload the crag/route page or something
+    this.deleteImageGQL.mutate({ id: this.image.id }).subscribe(({ data }) => {
+      console.log('success: ' + data.deleteImage);
+    });
   }
 
   @HostListener('document:keydown.arrowright')
