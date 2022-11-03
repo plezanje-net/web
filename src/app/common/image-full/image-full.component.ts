@@ -1,6 +1,11 @@
 import { Component, HostListener, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { environment } from 'src/environments/environment';
 import { DeleteImageGQL, Image } from 'src/generated/graphql';
 
@@ -22,7 +27,8 @@ export class ImageFullComponent {
     @Inject(MAT_DIALOG_DATA)
     public data: { images: Image[]; currentImageIndex: number },
     private deleteImageGQL: DeleteImageGQL,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {
     this.images = this.data.images;
     this.currentImageIndex = this.data.currentImageIndex;
@@ -48,19 +54,36 @@ export class ImageFullComponent {
   }
 
   onDeleteClick() {
-    this.deleteImageGQL.mutate({ id: this.image.id }).subscribe(({ data }) => {
-      if (data.deleteImage) {
-        this.dialogRef.close();
-        this.snackBar.open('Fotografija je bila odstranjena.', null, {
-          duration: 3000,
-        });
-      } else {
-        this.snackBar.open('Fotografije ni bilo možno odstraniti.', null, {
-          duration: 3000,
-          panelClass: 'error',
-        });
-      }
-    });
+    this.dialog
+      .open(ConfirmationDialogComponent, {
+        data: {
+          message: 'Odstranim sliko?',
+        },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result != null) {
+          this.deleteImageGQL
+            .mutate({ id: this.image.id })
+            .subscribe(({ data }) => {
+              if (data.deleteImage) {
+                this.dialogRef.close();
+                this.snackBar.open('Fotografija je bila odstranjena.', null, {
+                  duration: 3000,
+                });
+              } else {
+                this.snackBar.open(
+                  'Fotografije ni bilo možno odstraniti.',
+                  null,
+                  {
+                    duration: 3000,
+                    panelClass: 'error',
+                  }
+                );
+              }
+            });
+        }
+      });
   }
 
   @HostListener('document:keydown.arrowright')
