@@ -1,14 +1,15 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { IDistribution } from '../../../common/distribution-chart/distribution-chart.component';
 import { GradeDistributionService } from 'src/app/shared/services/grade-distribution.service';
-import { Route } from 'src/generated/graphql';
+import { Route, User } from 'src/generated/graphql';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-route-info',
   templateUrl: './route-info.component.html',
   styleUrls: ['./route-info.component.scss'],
 })
-export class RouteInfoComponent implements OnInit {
+export class RouteInfoComponent implements OnInit, OnDestroy {
   @Input() route: Route;
   grades: any[];
   hideGrade = false;
@@ -25,7 +26,13 @@ export class RouteInfoComponent implements OnInit {
     RB: 'Preopremil_a',
   };
 
-  constructor(private gradeDistributionService: GradeDistributionService) {}
+  user: User;
+  subscriptions = [];
+
+  constructor(
+    private gradeDistributionService: GradeDistributionService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     if (this.route) {
@@ -43,5 +50,14 @@ export class RouteInfoComponent implements OnInit {
       this.route.properties.find(
         (property) => property.propertyType.id == 'extGrade'
       ) != null;
+
+    const userSub = this.authService.currentUser.subscribe(
+      (user) => (this.user = user)
+    );
+    this.subscriptions.push(userSub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 }

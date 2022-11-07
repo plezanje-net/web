@@ -83,6 +83,18 @@
   ></app-route-grades>
 </div>
 
+<div class="card no-border padding" *ngIf="user">
+  <h4>Moji vzponi</h4>
+  <button
+    mat-button
+    color="primary"
+    fxFill
+    [routerLink]="['/plezalni-dnevnik/vzponi', { routeId: route.id }]"
+  >
+    Prikaži v plezalnem dnevniku
+  </button>
+</div>
+
 <div class="card no-border">
   <h2>Popularnost smeri</h2>
   <div class="row" fxLayout="row" fxLayoutAlign="space-between center">

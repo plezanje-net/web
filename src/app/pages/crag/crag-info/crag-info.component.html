@@ -52,3 +52,15 @@
     fxFlexAlign="stretch"
   ></app-distribution-chart>
 </div>
+
+<div class="card no-border padding" *ngIf="user">
+  <h4>Moji obiski</h4>
+  <button
+    mat-button
+    color="primary"
+    fxFill
+    [routerLink]="['/plezalni-dnevnik', { cragId: crag.id }]"
+  >
+    Prikaži v plezalnem dnevniku
+  </button>
+</div>
