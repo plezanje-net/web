@@ -92,6 +92,9 @@ query CragBySlug($crag: String!) {
       aspectRatio
       maxIntrinsicWidth
       author
+      user {
+        id
+      }
     }
     user {
       id

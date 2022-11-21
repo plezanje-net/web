@@ -1,29 +1,48 @@
-import { Component, HostListener, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, HostListener, Inject, OnInit } from '@angular/core';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { take } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { environment } from 'src/environments/environment';
-import { Image } from 'src/generated/graphql';
+import { DeleteImageGQL, Image, User } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-image-full',
   templateUrl: './image-full.component.html',
   styleUrls: ['./image-full.component.scss'],
 })
-export class ImageFullComponent {
+export class ImageFullComponent implements OnInit {
   storageUrl = environment.storageUrl;
 
   images: Image[];
 
   currentImageIndex: number;
   image: Image;
+  currentUser: User;
 
   constructor(
     public dialogRef: MatDialogRef<ImageFullComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: { images: Image[]; currentImageIndex: number }
+    public data: { images: Image[]; currentImageIndex: number },
+    private deleteImageGQL: DeleteImageGQL,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
+    private authService: AuthService
   ) {
     this.images = this.data.images;
     this.currentImageIndex = this.data.currentImageIndex;
     this.image = this.images[this.currentImageIndex];
+  }
+
+  ngOnInit() {
+    this.authService.currentUser
+      .pipe(take(1))
+      .subscribe((user) => (this.currentUser = user));
   }
 
   /**
@@ -42,6 +61,39 @@ export class ImageFullComponent {
 
   onCloseClick() {
     this.dialogRef.close();
+  }
+
+  onDeleteClick() {
+    this.dialog
+      .open(ConfirmationDialogComponent, {
+        data: {
+          message: 'Odstranim sliko?',
+        },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result != null) {
+          this.deleteImageGQL
+            .mutate({ id: this.image.id })
+            .subscribe(({ data }) => {
+              if (data.deleteImage) {
+                this.dialogRef.close();
+                this.snackBar.open('Fotografija je bila odstranjena.', null, {
+                  duration: 3000,
+                });
+              } else {
+                this.snackBar.open(
+                  'Fotografije ni bilo možno odstraniti.',
+                  null,
+                  {
+                    duration: 3000,
+                    panelClass: 'error',
+                  }
+                );
+              }
+            });
+        }
+      });
   }
 
   @HostListener('document:keydown.arrowright')
