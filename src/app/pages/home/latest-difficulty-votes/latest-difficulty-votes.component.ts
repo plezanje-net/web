@@ -26,8 +26,6 @@ export class LatestDifficultyVotesComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   difficultyVotes: DifficultyVote[] = [];
 
-  subscription;
-
   constructor(
     private authService: AuthService,
     private latestDiffcultyVotesGQL: LatestDifficultyVotesGQL,
