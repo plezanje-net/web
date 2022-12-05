@@ -1,4 +1,4 @@
-query LatestComments($input: FindCommentsInput!) {
+query LatestComments($input: LatestCommentsInput!) {
   latestComments(input: $input) {
     items {
       id
