@@ -29,6 +29,9 @@ import { ContributionsComponent } from './pages/contributions/contributions.comp
 import { PublishStatusChangeDialogComponent } from './pages/contributions/publish-status-change-dialog/publish-status-change-dialog.component';
 import { MatCardModule } from '@angular/material/card';
 import { ContributionComponent } from './pages/contributions/contribution/contribution.component';
+import { CountriesComponent } from './pages/countries/countries.component';
+import { AreasComponent } from './pages/areas/areas.component';
+import { AreaFormComponent } from './forms/area-form/area-form.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +44,9 @@ import { ContributionComponent } from './pages/contributions/contribution/contri
     ContributionsComponent,
     PublishStatusChangeDialogComponent,
     ContributionComponent,
+    CountriesComponent,
+    AreasComponent,
+    AreaFormComponent,
   ],
   imports: [
     CommonModule,

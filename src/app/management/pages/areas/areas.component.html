@@ -1,0 +1,50 @@
+<div>
+  <div class="white-back mt-16">
+    <div
+      class="container py-8"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+      fxLayout.lt-sm="column"
+    >
+      <div>
+        <div class="subheading">Urejanje področij</div>
+        <h1>{{ country?.name }}</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="container p15 mt-16">
+    <div>
+      <div *ngFor="let area of country?.areas; let i = index">
+        <div
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          fxLayout.lt-sm="column"
+          class="area mt-8"
+        >
+          <div class="name" fxFlex="100" fxFlex.lt-sm>
+            {{ area.name }}
+          </div>
+          <div fxFlex class="totals">
+            {{ totals(area) }}
+          </div>
+          <div class="tools" fxLayout="row" fxLayoutAlign="start center">
+            <button mat-icon-button (click)="edit(area)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              (click)="remove(area)"
+              *ngIf="!hasDescendants(area)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="buttons mt-16">
+      <button mat-button color="primary" (click)="add()">Dodaj področje</button>
+    </div>
+  </div>
+</div>

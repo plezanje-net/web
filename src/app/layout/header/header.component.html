@@ -54,6 +54,13 @@
         [routerLink]="['/moj-profil']"
         >Moj profil</a
       >
+      <a
+        *ngIf="user.roles.includes('admin')"
+        mat-button
+        fxHide.gt-sm
+        [matMenuTriggerFor]="managementMenu"
+        >Administracija</a
+      >
       <a *ngIf="user != null" mat-button fxHide.gt-sm (click)="logout()"
         >Odjava</a
       >
@@ -69,7 +76,17 @@
 <mat-menu #authMenu="matMenu">
   <button mat-menu-item disabled>{{ user?.fullName }}</button>
   <a mat-menu-item [routerLink]="['/moj-profil']">Moj profil</a>
+  <a
+    mat-menu-item
+    *ngIf="user.roles.includes('admin')"
+    [matMenuTriggerFor]="managementMenu"
+    >Administracija</a
+  >
   <button mat-menu-item (click)="logout()">
     <span>Odjava</span>
   </button>
+</mat-menu>
+
+<mat-menu #managementMenu="matMenu">
+  <a mat-menu-item [routerLink]="['/urejanje/drzave']">Države in področja</a>
 </mat-menu>
