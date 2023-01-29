@@ -1,0 +1,40 @@
+<form
+  class="form no-hints"
+  fxLayout="column"
+  fxLayoutGap="16px"
+  [formGroup]="form"
+  (submit)="save()"
+>
+  <mat-form-field>
+    <mat-label>Izberi plezališče</mat-label>
+    <mat-select formControlName="crag">
+      <mat-option *ngFor="let crag of crags" [value]="crag.id">{{
+        crag.name
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-dialog-actions
+    fxLayout="column"
+    fxLayoutAlign="center end"
+    fxLayoutGap="8px"
+  >
+    <div fxLayout="row" fxLayoutAlign="end center">
+      <ng-container *ngIf="!saving">
+        <button mat-button [mat-dialog-close]="null">Prekliči</button>
+
+        <button
+          type="submit"
+          *ngIf="!saving"
+          mat-button
+          color="primary"
+          [disabled]="!form.valid || form.pristine"
+        >
+          Shrani
+        </button>
+      </ng-container>
+      <span *ngIf="saving" class="loading">
+        <mat-spinner diameter="30"></mat-spinner>
+      </span>
+    </div>
+  </mat-dialog-actions>
+</form>

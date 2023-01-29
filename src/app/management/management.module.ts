@@ -32,6 +32,7 @@ import { ContributionComponent } from './pages/contributions/contribution/contri
 import { CountriesComponent } from './pages/countries/countries.component';
 import { AreasComponent } from './pages/areas/areas.component';
 import { AreaFormComponent } from './forms/area-form/area-form.component';
+import { MoveSectorFormComponent } from './forms/move-sector-form/move-sector-form.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { AreaFormComponent } from './forms/area-form/area-form.component';
     CountriesComponent,
     AreasComponent,
     AreaFormComponent,
+    MoveSectorFormComponent,
   ],
   imports: [
     CommonModule,

@@ -20,6 +20,7 @@ import { ConfirmationDialogComponent } from '../../../shared/components/confirma
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from '@sentry/angular';
 import { ContributionService } from '../contributions/contribution/contribution.service';
+import { MoveSectorFormComponent } from '../../forms/move-sector-form/move-sector-form.component';
 
 interface TmpSector {
   id: string;
@@ -139,6 +140,12 @@ export class CragSectorsComponent implements OnInit, OnDestroy {
 
   edit(sector: Sector): void {
     this.dialog.open(SectorFormComponent, { data: { sector: sector } });
+  }
+
+  moveToCrag(sector: Sector): void {
+    this.dialog.open(MoveSectorFormComponent, {
+      data: { sector: sector, countrySlug: this.crag.country.slug },
+    });
   }
 
   remove(sector: Sector): void {
