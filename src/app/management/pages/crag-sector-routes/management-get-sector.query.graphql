@@ -15,6 +15,20 @@ query ManagementGetSector($id: String!) {
       defaultGradingSystem {
         id
       }
+      sectors {
+        id
+        label
+        name
+        routes {
+          id
+          name
+          difficulty
+          defaultGradingSystem {
+            id
+            name
+          }
+        }
+      }
     }
     routes {
       author
@@ -28,6 +42,7 @@ query ManagementGetSector($id: String!) {
       position
       created
       sector {
+        id
         publishStatus
       }
       routeType {

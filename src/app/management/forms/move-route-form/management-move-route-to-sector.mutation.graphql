@@ -1,0 +1,3 @@
+mutation ManagementMoveRouteToSector($input: MoveRouteToSectorInput!) {
+  moveRouteToSector(input: $input)
+}

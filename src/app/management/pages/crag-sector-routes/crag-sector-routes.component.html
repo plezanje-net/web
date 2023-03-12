@@ -82,6 +82,15 @@
                 <mat-icon>edit</mat-icon>
               </button>
               <button
+                *ngIf="user.roles.includes('admin')"
+                mat-icon-button
+                matTooltip="Orodja"
+                [matMenuTriggerFor]="optionsMenu"
+                [matMenuTriggerData]="{ route: route }"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <button
                 mat-icon-button
                 matTooltip="Spremeni vrstni red"
                 cdkDragHandle
@@ -139,5 +148,12 @@
         Dodaj prvo smer
       </button>
     </div>
+    <mat-menu #optionsMenu="matMenu">
+      <ng-template matMenuContent let-route="route">
+        <button mat-menu-item (click)="moveToSector(route)">
+          Premakni v drug sektor
+        </button>
+      </ng-template>
+    </mat-menu>
   </div>
 </div>

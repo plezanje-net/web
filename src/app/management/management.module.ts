@@ -33,6 +33,8 @@ import { CountriesComponent } from './pages/countries/countries.component';
 import { AreasComponent } from './pages/areas/areas.component';
 import { AreaFormComponent } from './forms/area-form/area-form.component';
 import { MoveSectorFormComponent } from './forms/move-sector-form/move-sector-form.component';
+import { MoveRouteFormComponent } from './forms/move-route-form/move-route-form.component';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,7 @@ import { MoveSectorFormComponent } from './forms/move-sector-form/move-sector-fo
     AreasComponent,
     AreaFormComponent,
     MoveSectorFormComponent,
+    MoveRouteFormComponent,
   ],
   imports: [
     CommonModule,
@@ -62,6 +65,7 @@ import { MoveSectorFormComponent } from './forms/move-sector-form/move-sector-fo
     MatTabsModule,
     MatTooltipModule,
     MatSnackBarModule,
+    MatRadioModule,
     MatProgressSpinnerModule,
     MatCheckboxModule,
     MatDialogModule,

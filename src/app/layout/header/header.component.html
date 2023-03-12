@@ -55,7 +55,7 @@
         >Moj profil</a
       >
       <a
-        *ngIf="user.roles.includes('admin')"
+        *ngIf="user?.roles.includes('admin')"
         mat-button
         fxHide.gt-sm
         [matMenuTriggerFor]="managementMenu"
@@ -78,7 +78,7 @@
   <a mat-menu-item [routerLink]="['/moj-profil']">Moj profil</a>
   <a
     mat-menu-item
-    *ngIf="user.roles.includes('admin')"
+    *ngIf="user?.roles.includes('admin')"
     [matMenuTriggerFor]="managementMenu"
     >Administracija</a
   >
