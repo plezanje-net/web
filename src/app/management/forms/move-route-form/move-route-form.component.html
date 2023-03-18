@@ -77,7 +77,7 @@
     </div>
     <div fxLayout="row">
       <div fxFlex="50">
-        Št. glasov o težavnosti: {{ sourceRoute.difficultyVotes.length }}
+        Št. glasov o težavnosti: {{ getNrNonBaseDiffVotes(sourceRoute) }}
       </div>
       <div fxFlex="30px">
         <mat-icon>{{
@@ -87,7 +87,7 @@
         }}</mat-icon>
       </div>
       <div fxFlex="50">
-        Št. glasov o težavnosti: {{ targetRoute.difficultyVotes.length }}
+        Št. glasov o težavnosti: {{ getNrNonBaseDiffVotes(targetRoute) }}
       </div>
     </div>
     <div fxLayout="row">

@@ -105,6 +105,10 @@ export class MoveRouteFormComponent implements OnInit, OnDestroy {
     return route.difficultyVotes.find(({ isBase }) => isBase)?.difficulty;
   }
 
+  getNrNonBaseDiffVotes(route: Route): number {
+    return route.difficultyVotes.filter(({ isBase }) => !isBase).length;
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
