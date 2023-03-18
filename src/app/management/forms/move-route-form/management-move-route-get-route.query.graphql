@@ -5,6 +5,7 @@ query ManagementMoveRouteGetRoute($id: String!) {
     created
     difficulty
     nrTries
+    isProject
     difficultyVotes {
       id
       isBase

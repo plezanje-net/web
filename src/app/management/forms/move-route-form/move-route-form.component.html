@@ -91,7 +91,13 @@
       </div>
     </div>
     <div fxLayout="row">
-      <div fxFlex="50" [class.depr]="form.value.primarySelection == 'target'">
+      <div
+        fxFlex="50"
+        [class.depr]="
+          sourceRoute.isProject ||
+          (form.value.primarySelection == 'target' && !targetRoute.isProject)
+        "
+      >
         Bazna ocena:
         <app-grade
           *ngIf="hasBaseDiff(sourceRoute)"
@@ -101,7 +107,13 @@
         ></app-grade>
       </div>
       <div fxFlex="30px"></div>
-      <div fxFlex="50" [class.depr]="form.value.primarySelection == 'source'">
+      <div
+        fxFlex="50"
+        [class.depr]="
+          targetRoute.isProject ||
+          (form.value.primarySelection == 'source' && !sourceRoute.isProject)
+        "
+      >
         Bazna ocena:
         <app-grade
           *ngIf="hasBaseDiff(targetRoute)"
