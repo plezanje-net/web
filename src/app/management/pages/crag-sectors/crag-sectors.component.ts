@@ -144,7 +144,11 @@ export class CragSectorsComponent implements OnInit, OnDestroy {
 
   moveToCrag(sector: Sector): void {
     this.dialog.open(MoveSectorFormComponent, {
-      data: { sector: sector, countrySlug: this.crag.country.slug },
+      data: {
+        crag: this.crag,
+        sector: sector,
+        countrySlug: this.crag.country.slug,
+      },
     });
   }
 

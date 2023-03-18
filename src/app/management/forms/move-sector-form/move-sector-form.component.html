@@ -7,11 +7,18 @@
 >
   <mat-form-field>
     <mat-label>Izberi plezališče</mat-label>
-    <mat-select formControlName="crag">
-      <mat-option *ngFor="let crag of crags" [value]="crag.id">{{
-        crag.name
-      }}</mat-option>
-    </mat-select>
+    <input
+      type="text"
+      placeholder="Izberi plezališče"
+      matInput
+      formControlName="crag"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+      <mat-option *ngFor="let crag of filteredCrags | async" [value]="crag">
+        {{ crag.name }}
+      </mat-option>
+    </mat-autocomplete>
   </mat-form-field>
   <mat-dialog-actions
     fxLayout="column"

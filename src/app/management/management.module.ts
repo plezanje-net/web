@@ -35,6 +35,7 @@ import { AreaFormComponent } from './forms/area-form/area-form.component';
 import { MoveSectorFormComponent } from './forms/move-sector-form/move-sector-form.component';
 import { MoveRouteFormComponent } from './forms/move-route-form/move-route-form.component';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { MatRadioModule } from '@angular/material/radio';
     MatTabsModule,
     MatTooltipModule,
     MatSnackBarModule,
+    MatAutocompleteModule,
     MatRadioModule,
     MatProgressSpinnerModule,
     MatCheckboxModule,
