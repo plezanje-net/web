@@ -86,6 +86,8 @@ export class MoveSectorFormComponent implements OnInit, OnDestroy {
 
     const value = this.form.value;
 
+    this.form.disable();
+
     const success = () => {
       this.apollo.client.resetStore().then(() => {
         this.dialogRef.close();
@@ -99,6 +101,7 @@ export class MoveSectorFormComponent implements OnInit, OnDestroy {
         panelClass: 'error',
         duration: 3000,
       });
+      this.form.enable();
     };
 
     this.moveSectorGQL
