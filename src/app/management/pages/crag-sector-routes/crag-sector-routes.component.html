@@ -153,6 +153,15 @@
         <button mat-menu-item (click)="moveToSector(route)">
           Premakni v drug sektor
         </button>
+        <button
+          mat-menu-item
+          (click)="mergeWithRoute(route)"
+          *ngIf="
+            route.publishStatus == 'published' && route.pitches.length == 0
+          "
+        >
+          Združi s smerjo
+        </button>
       </ng-template>
     </mat-menu>
   </div>

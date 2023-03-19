@@ -16,6 +16,7 @@ import {
 export interface MoveRouteFormComponentData {
   route: Route;
   crag: Crag;
+  withinSector?: Sector;
 }
 
 @Component({
@@ -39,7 +40,7 @@ export class MoveRouteFormComponent implements OnInit, OnDestroy {
   targetRoute: Route;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: MoveRouteFormComponentData,
+    @Inject(MAT_DIALOG_DATA) public data: MoveRouteFormComponentData,
     private apollo: Apollo,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -55,10 +56,23 @@ export class MoveRouteFormComponent implements OnInit, OnDestroy {
       .map((sector) => ({
         ...sector,
         routes: sector.routes.filter(
-          ({ publishStatus, pitches }) =>
+          ({ publishStatus, pitches, id }) =>
             publishStatus == 'published' && pitches.length == 0
         ),
       }));
+
+    if (this.data.withinSector) {
+      this.targetSector = this.data.withinSector;
+      this.form.controls.targetSector.setValue({
+        ...this.targetSector,
+        routes: this.targetSector.routes.filter(
+          ({ publishStatus, pitches, id }) =>
+            publishStatus == 'published' &&
+            pitches.length == 0 &&
+            id != this.data.route.id
+        ),
+      });
+    }
 
     const targetSectorSub =
       this.form.controls.targetSector.valueChanges.subscribe((sector) => {
@@ -120,8 +134,6 @@ export class MoveRouteFormComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    console.log(this.form.value);
-
     this.saving = true;
 
     const success = () => {

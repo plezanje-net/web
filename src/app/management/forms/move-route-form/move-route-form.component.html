@@ -5,7 +5,7 @@
   [formGroup]="form"
   (submit)="save()"
 >
-  <mat-form-field>
+  <mat-form-field *ngIf="!data.withinSector">
     <mat-label>Izberi ciljni sektor</mat-label>
     <mat-select formControlName="targetSector">
       <mat-option *ngFor="let sector of targetSectors" [value]="sector">{{
@@ -16,6 +16,7 @@
   <mat-form-field
     *ngIf="
       form.value.targetSector &&
+      sourceRoute &&
       sourceRoute.pitches.length == 0 &&
       sourceRoute.publishStatus == 'published'
     "

@@ -172,6 +172,12 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
     });
   }
 
+  mergeWithRoute(route: Route): void {
+    this.dialog.open(MoveRouteFormComponent, {
+      data: { route: route, crag: this.crag, withinSector: this.sector },
+    });
+  }
+
   remove(sector: Sector): void {
     this.dialog
       .open(ConfirmationDialogComponent, {
