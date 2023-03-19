@@ -27,6 +27,10 @@ query ManagementGetSector($id: String!) {
             id
             name
           }
+          publishStatus
+          pitches {
+            id
+          }
         }
       }
     }

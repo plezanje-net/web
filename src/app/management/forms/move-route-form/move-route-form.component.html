@@ -13,7 +13,13 @@
       }}</mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field *ngIf="form.value.targetSector">
+  <mat-form-field
+    *ngIf="
+      form.value.targetSector &&
+      sourceRoute.pitches.length == 0 &&
+      sourceRoute.publishStatus == 'published'
+    "
+  >
     <mat-label>Združi s smerjo</mat-label>
     <mat-select formControlName="targetRoute">
       <mat-option>-- Ne združi --</mat-option>

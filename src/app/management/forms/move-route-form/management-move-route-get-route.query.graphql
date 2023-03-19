@@ -6,6 +6,7 @@ query ManagementMoveRouteGetRoute($id: String!) {
     difficulty
     nrTries
     isProject
+    publishStatus
     difficultyVotes {
       id
       isBase
@@ -20,6 +21,9 @@ query ManagementMoveRouteGetRoute($id: String!) {
     defaultGradingSystem {
       id
       name
+    }
+    pitches {
+      id
     }
   }
 }

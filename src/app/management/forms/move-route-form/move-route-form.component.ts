@@ -50,9 +50,15 @@ export class MoveRouteFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.crag = this.data.crag;
-    this.targetSectors = this.data.crag.sectors.filter(
-      ({ id }) => id != this.data.route.sector.id
-    );
+    this.targetSectors = this.data.crag.sectors
+      .filter(({ id }) => id != this.data.route.sector.id)
+      .map((sector) => ({
+        ...sector,
+        routes: sector.routes.filter(
+          ({ publishStatus, pitches }) =>
+            publishStatus == 'published' && pitches.length == 0
+        ),
+      }));
 
     const targetSectorSub =
       this.form.controls.targetSector.valueChanges.subscribe((sector) => {
