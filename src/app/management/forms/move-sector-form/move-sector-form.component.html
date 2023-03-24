@@ -1,0 +1,47 @@
+<form
+  class="form no-hints"
+  fxLayout="column"
+  fxLayoutGap="16px"
+  [formGroup]="form"
+  (submit)="save()"
+>
+  <mat-form-field>
+    <mat-label>Izberi plezališče</mat-label>
+    <input
+      type="text"
+      placeholder="Izberi plezališče"
+      matInput
+      formControlName="crag"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+      <mat-option *ngFor="let crag of filteredCrags | async" [value]="crag">
+        {{ crag.name }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-dialog-actions
+    fxLayout="column"
+    fxLayoutAlign="center end"
+    fxLayoutGap="8px"
+  >
+    <div fxLayout="row" fxLayoutAlign="end center">
+      <ng-container *ngIf="!saving">
+        <button mat-button [mat-dialog-close]="null">Prekliči</button>
+
+        <button
+          type="submit"
+          *ngIf="!saving"
+          mat-button
+          color="primary"
+          [disabled]="!form.valid || form.pristine"
+        >
+          Shrani
+        </button>
+      </ng-container>
+      <span *ngIf="saving" class="loading">
+        <mat-spinner diameter="30"></mat-spinner>
+      </span>
+    </div>
+  </mat-dialog-actions>
+</form>

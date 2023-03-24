@@ -1,0 +1,3 @@
+mutation ManagementMoveSectorToCrag($id: String!, $cragId: String!) {
+  moveSectorToCrag(id: $id, cragId: $cragId)
+}

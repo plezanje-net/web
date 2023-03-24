@@ -1,0 +1,9 @@
+query ManagementMoveSectorFormGetCrags($country: String!) {
+  countryBySlug(slug: $country) {
+    id
+    crags {
+      id
+      name
+    }
+  }
+}

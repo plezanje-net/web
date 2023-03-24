@@ -1,0 +1,29 @@
+query ManagementMoveRouteGetRoute($id: String!) {
+  route(id: $id) {
+    id
+    name
+    created
+    difficulty
+    nrTries
+    isProject
+    publishStatus
+    difficultyVotes {
+      id
+      isBase
+      difficulty
+    }
+    starRatingVotes {
+      id
+    }
+    comments {
+      id
+    }
+    defaultGradingSystem {
+      id
+      name
+    }
+    pitches {
+      id
+    }
+  }
+}

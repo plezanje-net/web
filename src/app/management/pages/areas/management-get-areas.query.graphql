@@ -1,0 +1,23 @@
+query CountryAreas($country: String!) {
+  countryBySlug(slug: $country) {
+    id
+    name
+    slug
+    areas {
+      id
+      name
+      areas {
+        id
+      }
+      crags {
+        id
+      }
+      peaks {
+        id
+      }
+      iceFalls {
+        id
+      }
+    }
+  }
+}

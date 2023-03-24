@@ -1,0 +1,29 @@
+@import "../../../../styles/colors.scss";
+@import "../../../../styles/variables.scss";
+
+.area {
+  background: #fff;
+  box-shadow: 0 2px 6px 0 #6494ff26;
+  padding: 4px 12px;
+  min-height: 52px;
+
+  border-left: 1px solid $blue;
+
+  .name {
+    font-weight: 500;
+    font-size: 16px;
+    padding: 12px 0;
+  }
+}
+
+.buttons {
+  padding: 12px 0;
+  text-align: center;
+}
+.totals {
+  white-space: nowrap;
+  padding-right: 16px;
+}
+.mat-icon-button:not(.mat-accent) {
+  color: #666;
+}

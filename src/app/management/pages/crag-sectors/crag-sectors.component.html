@@ -59,7 +59,16 @@
             fxLayout="row"
             fxLayoutAlign="start center"
           >
-            <button mat-icon-button (click)="edit(sector)">
+            <button
+              *ngIf="user.roles.includes('admin')"
+              mat-icon-button
+              matTooltip="Orodja"
+              [matMenuTriggerFor]="optionsMenu"
+              [matMenuTriggerData]="{ sector: sector }"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <button mat-icon-button (click)="edit(sector)" matTooltip="Uredi">
               <mat-icon>edit</mat-icon>
             </button>
             <button
@@ -70,7 +79,11 @@
               <mat-icon>sort</mat-icon>
             </button>
 
-            <button mat-icon-button (click)="remove(sector)">
+            <button
+              mat-icon-button
+              (click)="remove(sector)"
+              matTooltip="Odstrani"
+            >
               <mat-icon>delete</mat-icon>
             </button>
           </div>
@@ -109,6 +122,13 @@
       <div class="buttons mt-16">
         <button mat-button color="primary" (click)="add()">Dodaj sektor</button>
       </div>
+      <mat-menu #optionsMenu="matMenu">
+        <ng-template matMenuContent let-sector="sector">
+          <button mat-menu-item (click)="moveToCrag(sector)">
+            Premakni v drugo plezališče
+          </button>
+        </ng-template>
+      </mat-menu>
     </div>
   </div>
 </div>

@@ -29,6 +29,13 @@ import { ContributionsComponent } from './pages/contributions/contributions.comp
 import { PublishStatusChangeDialogComponent } from './pages/contributions/publish-status-change-dialog/publish-status-change-dialog.component';
 import { MatCardModule } from '@angular/material/card';
 import { ContributionComponent } from './pages/contributions/contribution/contribution.component';
+import { CountriesComponent } from './pages/countries/countries.component';
+import { AreasComponent } from './pages/areas/areas.component';
+import { AreaFormComponent } from './forms/area-form/area-form.component';
+import { MoveSectorFormComponent } from './forms/move-sector-form/move-sector-form.component';
+import { MoveRouteFormComponent } from './forms/move-route-form/move-route-form.component';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -41,6 +48,11 @@ import { ContributionComponent } from './pages/contributions/contribution/contri
     ContributionsComponent,
     PublishStatusChangeDialogComponent,
     ContributionComponent,
+    CountriesComponent,
+    AreasComponent,
+    AreaFormComponent,
+    MoveSectorFormComponent,
+    MoveRouteFormComponent,
   ],
   imports: [
     CommonModule,
@@ -54,6 +66,8 @@ import { ContributionComponent } from './pages/contributions/contribution/contri
     MatTabsModule,
     MatTooltipModule,
     MatSnackBarModule,
+    MatAutocompleteModule,
+    MatRadioModule,
     MatProgressSpinnerModule,
     MatCheckboxModule,
     MatDialogModule,
