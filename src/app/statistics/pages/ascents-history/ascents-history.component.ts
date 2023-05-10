@@ -56,7 +56,7 @@ export class AscentsHistoryComponent implements OnInit, OnDestroy {
             },
             activityRoutesInput: {
               publish: ['public'],
-              orderBy: { field: 'score', direction: 'DESC' },
+              orderBy: { field: 'orderScore', direction: 'DESC' },
             },
           };
 
