@@ -1,0 +1,5 @@
+mutation ManagementCreateArea($input: CreateAreaInput!) {
+  createArea(input: $input) {
+    id
+  }
+}

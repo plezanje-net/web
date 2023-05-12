@@ -7,12 +7,15 @@ import {
   Route,
   RouteBySlugGQL,
   RouteBySlugQuery,
+  User,
 } from 'src/generated/graphql';
 import { Subject, Subscription, switchMap } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CommentFormComponent } from 'src/app/shared/components/comment-form/comment-form.component';
 import { GradingSystemsService } from 'src/app/shared/services/grading-systems.service';
+import { ImageUploadComponent } from 'src/app/shared/components/image-upload/image-upload.component';
+import { QueryRef } from 'apollo-angular';
 
 @Component({
   selector: 'app-route',
@@ -30,6 +33,10 @@ export class RouteComponent implements OnInit, OnDestroy {
   action$ = new Subject<string>();
   actionSubscription: Subscription;
   routeQuerySubscription: Subscription;
+  routeQuery: QueryRef<any>;
+
+  user: User;
+  userSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -42,6 +49,9 @@ export class RouteComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.userSubscription = this.authService.currentUser.subscribe(
+      (user) => (this.user = user)
+    );
     this.section = this.router.url.includes('/alpinizem/stena')
       ? 'alpinism'
       : 'sport';
@@ -49,10 +59,11 @@ export class RouteComponent implements OnInit, OnDestroy {
     this.routeQuerySubscription = this.activatedRoute.params
       .pipe(
         switchMap((params) => {
-          return this.routeBySlugGQL.watch({
+          this.routeQuery = this.routeBySlugGQL.watch({
             cragSlug: params.crag,
             routeSlug: params.route,
-          }).valueChanges;
+          });
+          return this.routeQuery.valueChanges;
         })
       )
       .subscribe({
@@ -79,6 +90,29 @@ export class RouteComponent implements OnInit, OnDestroy {
           break;
       }
     });
+  }
+
+  async addImage() {
+    const allowed = await this.authService.guardedAction({});
+    if (allowed) {
+      this.dialog
+        .open(ImageUploadComponent, {
+          data: {
+            entityType: 'route',
+            entityId: this.route.id,
+            user: this.user,
+          },
+          autoFocus: false,
+        })
+        .afterClosed()
+        .subscribe((result) => {
+          if (!result) {
+            return;
+          }
+          this.loading = true;
+          this.routeQuery.refetch();
+        });
+    }
   }
 
   addComment(type: string) {
@@ -177,5 +211,6 @@ export class RouteComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.routeQuerySubscription.unsubscribe();
     this.actionSubscription.unsubscribe();
+    this.userSubscription.unsubscribe();
   }
 }

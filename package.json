@@ -10,7 +10,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "codegen": "graphql-codegen --config codegen.yml",
-    "codegen-production": "graphql-codegen --config codegen.prod.yml"
+    "codegen-production": "graphql-codegen --config codegen.prod.yml",
+    "dev": "npm run codegen && ng serve"
   },
   "private": true,
   "dependencies": {

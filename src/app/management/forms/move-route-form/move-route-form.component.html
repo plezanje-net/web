@@ -1,0 +1,158 @@
+<form
+  class="form no-hints"
+  fxLayout="column"
+  fxLayoutGap="16px"
+  [formGroup]="form"
+  (submit)="save()"
+>
+  <mat-form-field *ngIf="!data.withinSector">
+    <mat-label>Izberi ciljni sektor</mat-label>
+    <mat-select formControlName="targetSector">
+      <mat-option *ngFor="let sector of targetSectors" [value]="sector">{{
+        [sector.label, sector.name].join(" - ")
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field
+    *ngIf="
+      form.value.targetSector &&
+      sourceRoute &&
+      sourceRoute.pitches.length == 0 &&
+      sourceRoute.publishStatus == 'published'
+    "
+  >
+    <mat-label>Združi s smerjo</mat-label>
+    <mat-select formControlName="targetRoute">
+      <mat-option>-- Ne združi --</mat-option>
+      <mat-option
+        *ngFor="let route of form.value.targetSector.routes"
+        [value]="route"
+        >{{ route.name }}</mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+  <div *ngIf="targetRoute && sourceRoute">
+    <mat-radio-group fxLayout="row" formControlName="primarySelection">
+      <mat-radio-button value="source" fxFlex="50"
+        >{{ sourceRoute.name }}
+        <app-grade
+          [difficulty]="sourceRoute.difficulty"
+          [gradingSystemId]="sourceRoute.defaultGradingSystem?.id"
+          [showModifier]="true"
+        ></app-grade
+      ></mat-radio-button>
+      <div fxFlex="30px"></div>
+      <mat-radio-button value="target" fxFlex="50"
+        >{{ targetRoute.name }}
+        <app-grade
+          [difficulty]="targetRoute.difficulty"
+          [gradingSystemId]="targetRoute.defaultGradingSystem?.id"
+          [showModifier]="true"
+        ></app-grade
+      ></mat-radio-button>
+    </mat-radio-group>
+    <div fxLayout="row">
+      <div fxFlex="50" [class.depr]="targetRoute.created < sourceRoute.created">
+        Dodano: {{ sourceRoute.created | date : "d. M. yyyy" }}
+      </div>
+      <div fxFlex="30px"></div>
+      <div fxFlex="50" [class.depr]="targetRoute.created > sourceRoute.created">
+        Dodano: {{ targetRoute.created | date : "d. M. yyyy" }}
+      </div>
+    </div>
+    <div fxLayout="row">
+      <div fxFlex="50">Komentarjev: {{ sourceRoute.comments.length }}</div>
+      <div fxFlex="30px">
+        <mat-icon>{{
+          form.value.primarySelection == "target"
+            ? "arrow_forward"
+            : "arrow_back"
+        }}</mat-icon>
+      </div>
+      <div fxFlex="50">Komentarjev: {{ targetRoute.comments.length }}</div>
+    </div>
+    <div fxLayout="row">
+      <div fxFlex="50">Zabeleženih vzponov: {{ sourceRoute.nrTries }}</div>
+      <div fxFlex="30px">
+        <mat-icon>{{
+          form.value.primarySelection == "target"
+            ? "arrow_forward"
+            : "arrow_back"
+        }}</mat-icon>
+      </div>
+      <div fxFlex="50">Zabeleženih vzponov: {{ targetRoute.nrTries }}</div>
+    </div>
+    <div fxLayout="row">
+      <div fxFlex="50">
+        Št. glasov o težavnosti: {{ getNrNonBaseDiffVotes(sourceRoute) }}
+      </div>
+      <div fxFlex="30px">
+        <mat-icon>{{
+          form.value.primarySelection == "target"
+            ? "arrow_forward"
+            : "arrow_back"
+        }}</mat-icon>
+      </div>
+      <div fxFlex="50">
+        Št. glasov o težavnosti: {{ getNrNonBaseDiffVotes(targetRoute) }}
+      </div>
+    </div>
+    <div fxLayout="row">
+      <div
+        fxFlex="50"
+        [class.depr]="
+          sourceRoute.isProject ||
+          (form.value.primarySelection == 'target' && !targetRoute.isProject)
+        "
+      >
+        Bazna ocena:
+        <app-grade
+          *ngIf="hasBaseDiff(sourceRoute)"
+          [difficulty]="getBaseDiff(sourceRoute)"
+          [gradingSystemId]="sourceRoute.defaultGradingSystem?.id"
+          [showModifier]="true"
+        ></app-grade>
+      </div>
+      <div fxFlex="30px"></div>
+      <div
+        fxFlex="50"
+        [class.depr]="
+          targetRoute.isProject ||
+          (form.value.primarySelection == 'source' && !sourceRoute.isProject)
+        "
+      >
+        Bazna ocena:
+        <app-grade
+          *ngIf="hasBaseDiff(targetRoute)"
+          [difficulty]="getBaseDiff(targetRoute)"
+          [gradingSystemId]="targetRoute.defaultGradingSystem?.id"
+          [showModifier]="true"
+        ></app-grade>
+      </div>
+    </div>
+  </div>
+  <mat-dialog-actions
+    fxLayout="column"
+    fxLayoutAlign="center end"
+    fxLayoutGap="8px"
+  >
+    <div fxLayout="row" fxLayoutAlign="end center">
+      <ng-container *ngIf="!saving">
+        <button mat-button [mat-dialog-close]="null">Prekliči</button>
+
+        <button
+          type="submit"
+          *ngIf="!saving"
+          mat-button
+          color="primary"
+          [disabled]="!form.valid || form.pristine"
+        >
+          Shrani
+        </button>
+      </ng-container>
+      <span *ngIf="saving" class="loading">
+        <mat-spinner diameter="30"></mat-spinner>
+      </span>
+    </div>
+  </mat-dialog-actions>
+</form>

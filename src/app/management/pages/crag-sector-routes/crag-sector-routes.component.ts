@@ -17,6 +17,7 @@ import {
 } from '../../../../generated/graphql';
 import { LayoutService } from '../../../services/layout.service';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { MoveRouteFormComponent } from '../../forms/move-route-form/move-route-form.component';
 import {
   RouteFormComponent,
   RouteFormValues,
@@ -163,6 +164,18 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
 
   edit(route: Route): void {
     this.dialog.open(RouteFormComponent, { data: { route: route } });
+  }
+
+  moveToSector(route: Route): void {
+    this.dialog.open(MoveRouteFormComponent, {
+      data: { route: route, crag: this.crag },
+    });
+  }
+
+  mergeWithRoute(route: Route): void {
+    this.dialog.open(MoveRouteFormComponent, {
+      data: { route: route, crag: this.crag, withinSector: this.sector },
+    });
   }
 
   remove(sector: Sector): void {

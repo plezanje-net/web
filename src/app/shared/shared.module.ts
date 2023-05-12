@@ -33,6 +33,7 @@ import { PluralizeVerb } from './pipes/pluralize-verb.pipe';
 import { DataErrorComponent } from './components/data-error/data-error.component';
 import { AscentTypeComponent } from './components/ascent-type/ascent-type.component';
 import { AscentPublishOptionComponent } from './components/ascent-publish-option/ascent-publish-option.component';
+import { ImageUploadComponent } from './components/image-upload/image-upload.component';
 import { ResponsiveImageComponent } from './components/responsive-image/responsive-image.component';
 import { InfoPropertyComponent } from './components/info-property/info-property.component';
 import { PublishStatusHintComponent } from './components/publish-status-hint/publish-status-hint.component';
@@ -40,6 +41,7 @@ import { RouterModule } from '@angular/router';
 import { YesNoDialogComponent } from './components/yes-no-dialog/yes-no-dialog.component';
 import { AscentsComponent } from './components/ascents/ascents.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -62,6 +64,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     PluralizeVerb,
     AscentTypeComponent,
     AscentPublishOptionComponent,
+    ImageUploadComponent,
     ResponsiveImageComponent,
     InfoPropertyComponent,
     PublishStatusHintComponent,
@@ -86,6 +89,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatInputModule,
     RouterModule,
     MatTooltipModule,
+    MatCheckboxModule,
   ],
   providers: [
     CustomBreakpointsProvider,

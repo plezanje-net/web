@@ -1,0 +1,7 @@
+query Countries {
+  countries {
+    id
+    slug
+    name
+  }
+}

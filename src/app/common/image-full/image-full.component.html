@@ -1,6 +1,9 @@
 <div class="full-container">
-  <div class="close-button-row" (click)="onCloseClick()">
-    <button mat-icon-button>
+  <div class="buttons-row">
+    <button mat-icon-button (click)="onDeleteClick()" *ngIf="currentUser && image.user && currentUser.id === image.user.id">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-icon-button (click)="onCloseClick()">
       <mat-icon>close</mat-icon>
     </button>
   </div>
@@ -57,10 +60,10 @@
             >{{ image.crag.name }}</a
           >
         </div>
-        <div *ngIf="image.user" class="author">
+        <div *ngIf="image.author" class="author">
           <mat-icon>photo_camera</mat-icon>
           <span>
-            {{ image.user.fullName }}
+            {{ image.author }}
           </span>
         </div>
       </div>

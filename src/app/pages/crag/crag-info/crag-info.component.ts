@@ -1,6 +1,7 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Crag } from 'src/generated/graphql';
+import { AuthService } from 'src/app/auth/auth.service';
+import { Crag, User } from 'src/generated/graphql';
 import { IDistribution } from '../../../common/distribution-chart/distribution-chart.component';
 
 @Component({
@@ -8,7 +9,7 @@ import { IDistribution } from '../../../common/distribution-chart/distribution-c
   templateUrl: './crag-info.component.html',
   styleUrls: ['./crag-info.component.scss'],
 })
-export class CragInfoComponent implements OnInit, OnChanges {
+export class CragInfoComponent implements OnInit, OnChanges, OnDestroy {
   @Input() crag: Crag;
 
   @Input() id: string = 'default';
@@ -16,15 +17,26 @@ export class CragInfoComponent implements OnInit, OnChanges {
   attendanceDistribution: IDistribution[] = [];
 
   crags$ = new BehaviorSubject<any>([]);
+  user: User;
+  subscriptions = [];
 
-  constructor() {}
+  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
     this.init();
+
+    const userSub = this.authService.currentUser.subscribe(
+      (user) => (this.user = user)
+    );
+    this.subscriptions.push(userSub);
   }
 
   ngOnChanges(): void {
     this.init();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
   init() {

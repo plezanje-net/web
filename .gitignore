@@ -46,5 +46,6 @@ testem.log
 .DS_Store
 Thumbs.db
 
+src/assets/storage
 src/assets/images
 src/generated/*

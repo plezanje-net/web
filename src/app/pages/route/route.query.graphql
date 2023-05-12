@@ -59,7 +59,15 @@ query RouteBySlug($cragSlug: String!, $routeSlug: String!) {
       updated
     }
     images {
+      id
+      title
       path
+      aspectRatio
+      maxIntrinsicWidth
+      author
+      user {
+        id
+      }
     }
     sector {
       id
