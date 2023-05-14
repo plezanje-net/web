@@ -1,5 +1,5 @@
 <ng-template #date let-activity="activity">
-  {{ activity.date | date: "d. M. yyyy" }}
+  {{ activity.date | date : "d. M. yyyy" }}
 </ng-template>
 
 <ng-template #user let-activity="activity">
@@ -107,7 +107,7 @@
       </tr>
       <ng-container *ngIf="activity.routes.length > 1">
         <tr
-          *ngFor="let activityRoute of activity.routes | slice: 1"
+          *ngFor="let activityRoute of activity.routes | slice : 1"
           class="row expandable-row"
           [ngClass]="{ 'expanded-row': activityMainRows[i].expanded }"
         >
@@ -240,7 +240,7 @@
     </div>
 
     <ng-container *ngIf="activity.routes.length > 1">
-      <div *ngFor="let activityRoute of activity.routes | slice: 1">
+      <div *ngFor="let activityRoute of activity.routes | slice : 1">
         <div
           fxLayout="row"
           class="pl-8 expandable-row"
