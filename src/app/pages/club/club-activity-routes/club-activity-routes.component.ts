@@ -11,9 +11,9 @@ import {
   ActivityFiltersCragGQL,
   ActivityFiltersRouteGQL,
   ActivityRoute,
-  UserFullNameGQL,
   ActivityRoutesByClubSlugGQL,
   ActivityRoutesByClubSlugQuery,
+  Club,
 } from 'src/generated/graphql';
 import { ClubService } from '../club.service';
 
@@ -76,9 +76,12 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
   raSubscription: Subscription;
   memberAddedSubscription: Subscription;
   filtersSubscription: Subscription;
+  clubSubscription: Subscription;
   ignoreFormChange = true;
 
   noTopropeOnPage = false;
+
+  club: Club;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -86,12 +89,17 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
     private activityFiltersCragGQL: ActivityFiltersCragGQL,
     private activityFiltersRouteGQL: ActivityFiltersRouteGQL,
     private activityRoutesByClubSlugGQL: ActivityRoutesByClubSlugGQL,
-    private userFullNameGQL: UserFullNameGQL,
     private clubService: ClubService
   ) {}
 
   ngOnInit(): void {
     const clubSlug = this.activatedRoute.snapshot.parent.params.club;
+
+    this.clubSubscription = this.clubService.club$.subscribe({
+      next: (club: Club) => {
+        this.club = club;
+      },
+    });
 
     // A new member can also be added on club-activity-routes page
     this.memberAddedSubscription = this.clubService.memberAdded$.subscribe(
@@ -218,17 +226,9 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
       }
     }
     if (this.filters.controls.userId.value && !this.filterMemberFullName) {
-      if (this.activityRoutes.length) {
-        this.filterMemberFullName = this.activityRoutes[0].user.fullName;
-      } else {
-        this.userFullNameGQL
-          .fetch({ userId: this.filters.controls.userId.value })
-          .pipe(take(1))
-          .subscribe(
-            (member: any) =>
-              (this.filterMemberFullName = member.data.user.fullName)
-          );
-      }
+      this.filterMemberFullName = this.club.members.filter(
+        (member) => member.user.id === this.filters.controls.userId.value
+      )[0].user.fullName;
     }
   }
 
@@ -238,5 +238,6 @@ export class ClubActivityRoutesComponent implements OnInit, OnDestroy {
     this.filtersSubscription.unsubscribe();
     this.raSubscription.unsubscribe();
     this.memberAddedSubscription.unsubscribe();
+    this.clubSubscription.unsubscribe();
   }
 }

@@ -1,5 +1,0 @@
-query UserFullName($userId: String!) {
-  user(email: "", id: $userId) {
-    fullName
-  }
-}
