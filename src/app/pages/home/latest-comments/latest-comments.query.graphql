@@ -1,0 +1,44 @@
+query LatestComments($input: LatestCommentsInput!) {
+  latestComments(input: $input) {
+    items {
+      id
+      type
+      user {
+        id
+        fullName
+      }
+      content
+      created
+      updated
+      crag {
+        name
+        slug
+        country {
+          slug
+          name
+        }
+        type
+        peak {
+          slug
+          name
+        }
+      }
+      route {
+        name
+        slug
+        routeType {
+          id
+        }
+        crag {
+          name
+          slug
+        }
+      }
+    }
+    meta {
+      itemCount
+      pageNumber
+      pageSize
+    }
+  }
+}

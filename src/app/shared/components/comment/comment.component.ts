@@ -12,6 +12,7 @@ export class CommentComponent implements OnInit, OnDestroy {
   @Input() comment: Comment;
   @Input() commentType: string;
   @Input() previewMode = false;
+  @Input() showRouteLink = false;
 
   isAuthor = false;
 

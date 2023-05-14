@@ -62,6 +62,7 @@ export class CommentOptionsComponent implements OnInit {
                 refetchQueries: [
                   namedOperations.Query.CragBySlug,
                   namedOperations.Query.IceFallBySlug,
+                  namedOperations.Query.LatestComments,
                 ],
               }
             )

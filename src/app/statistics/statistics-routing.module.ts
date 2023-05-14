@@ -4,6 +4,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { DifficultyVotesComponent } from './pages/difficulty-votes/difficulty-votes.component';
 import { AscentsHistoryComponent } from './pages/ascents-history/ascents-history.component';
 import { StatisticsHomeComponent } from './pages/statistics-home/statistics-home.component';
+import { CommentsHistoryComponent } from './pages/comments-history/comments-history.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,11 @@ const routes: Routes = [
   {
     path: 'vzponi',
     component: AscentsHistoryComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'komentarji',
+    component: CommentsHistoryComponent,
     canActivate: [AuthGuard],
   },
 ];

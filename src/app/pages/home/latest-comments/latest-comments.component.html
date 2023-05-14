@@ -1,0 +1,25 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+  <h2>Zadnji komentarji</h2>
+</div>
+
+<mat-card *ngIf="!loading">
+  <mat-card-content>
+    <div
+      class="row comment-row"
+      [class.first]="first"
+      *ngFor="let comment of comments; first as first"
+    >
+      <app-comment
+        [comment]="comment"
+        [commentType]="comment.type"
+        previewMode="true"
+        showRouteLink="true"
+      ></app-comment>
+    </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button [routerLink]="['/pregledi/komentarji']">
+      Prikaži več komentarjev
+    </button>
+  </mat-card-actions>
+</mat-card>

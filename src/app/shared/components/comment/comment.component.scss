@@ -2,16 +2,17 @@
 @import "../../../../styles/variables.scss";
 
 .comment {
-  margin-bottom: 16px;
-}
-.condition {
-  margin-bottom: 16px;
-  border-left-color: $accent;
+  &.card {
+    margin-bottom: 16px;
+  }
+
+  &.card.condition {
+    margin-bottom: 16px;
+    border-left-color: $accent;
+  }
 }
 
-.preview {
-  margin-bottom: 0;
-}
+
 
 .author {
   color: $gray-dark;

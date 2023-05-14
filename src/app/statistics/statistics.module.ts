@@ -14,12 +14,14 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { SharedModule } from '../shared/shared.module';
 import { StatisticsHomeComponent } from './pages/statistics-home/statistics-home.component';
 import { AscentsHistoryComponent } from './pages/ascents-history/ascents-history.component';
+import { CommentsHistoryComponent } from './pages/comments-history/comments-history.component';
 
 @NgModule({
   declarations: [
     DifficultyVotesComponent,
     StatisticsHomeComponent,
     AscentsHistoryComponent,
+    CommentsHistoryComponent,
   ],
   imports: [
     CommonModule,
