@@ -15,6 +15,7 @@ import {
   DryRunCreateActivityGQL,
   DryRunUpdateActivityGQL,
   StarRatingVotesGQL,
+  Pitch,
 } from 'src/generated/graphql';
 import dayjs from 'dayjs';
 import { Router } from '@angular/router';
@@ -301,6 +302,19 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         tried: new FormControl(route.tried),
         trTicked: new FormControl(route.trTicked),
         type: new FormControl(route.routeType.id),
+        pitches: new FormArray(
+          route.pitches.map(
+            (pitch: Pitch) =>
+              new FormGroup({
+                add: new FormControl(false),
+                id: new FormControl(pitch.id),
+                ascentType: new FormControl({ value: null }),
+                publish: new FormControl('public'),
+                difficulty: new FormControl(pitch.difficulty),
+                number: new FormControl(pitch.number),
+              })
+          )
+        ),
       })
     );
   }
@@ -320,6 +334,14 @@ export class ActivityFormComponent implements OnInit, OnDestroy {
         votedStarRating: route.votedStarRating,
         publish: route.publish,
         votedDifficulty: route.votedDifficulty,
+        pitches: route.pitches
+          .filter(({ add }) => add)
+          .map(({ id, ascentType, publish, number }) => ({
+            pitchId: id,
+            ascentType,
+            publish,
+            position: number,
+          })),
         position: i, // position of the route within the same activity of ones log
       };
     });

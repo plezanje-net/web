@@ -109,6 +109,86 @@
         </mat-select>
       </mat-form-field>
     </div>
+    <div *ngIf="route.value.pitches.length">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          Zabeleži posamezne raztežaje
+        </mat-expansion-panel-header>
+        <div
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          fxLayoutGap="16px"
+          fxLayout.lt-md="column"
+          fxLayoutAlign.lt-md="start stretch"
+          class="mt-16"
+          *ngFor="let pitch of route.controls.pitches.controls"
+        >
+          <div fxFlex="240px" fxFlex.lt-md fxLayout="row">
+            <div fxFlex="160px">
+              <mat-checkbox [formControl]="pitch.controls.add"
+                >{{ pitch.value.number }}. raztežaj</mat-checkbox
+              >
+            </div>
+            <div fxFlex="80px">
+              <app-grade
+                [difficulty]="pitch.value.difficulty"
+                [gradingSystemId]="route.value.defaultGradingSystemId"
+              >
+              </app-grade>
+            </div>
+          </div>
+          <div
+            fxFlex="100"
+            fxLayout="row"
+            fxLayout.lt-sm="column"
+            fxLayoutGap="16px"
+          >
+            <mat-form-field
+              class="no-hint"
+              fxFlex="100"
+              *ngIf="pitch.value.add"
+            >
+              <mat-label>Vrsta vzpona</mat-label>
+              <mat-select [formControl]="pitch.controls.ascentType">
+                <mat-select-trigger>{{
+                  mapAscentTypeValueToFullLabel(pitch.value.ascentType)
+                }}</mat-select-trigger>
+                <ng-container *ngFor="let type of nonTopRopeAscentTypes">
+                  <mat-option
+                    *ngIf="logPossibleEver(type.value)"
+                    [value]="type.value"
+                    >{{ type.label }}
+                  </mat-option>
+                </ng-container>
+                <mat-optgroup label="Top rope">
+                  <ng-container *ngFor="let type of topRopeAscentTypes">
+                    <mat-option
+                      *ngIf="logPossibleEver(type.value)"
+                      [value]="type.value"
+                      >{{ type.label }}
+                    </mat-option>
+                  </ng-container>
+                </mat-optgroup>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field
+              class="no-hint"
+              fxFlex="100"
+              *ngIf="pitch.value.add"
+            >
+              <mat-label>Vidnost</mat-label>
+              <mat-select [formControl]="pitch.controls.publish">
+                <mat-option
+                  *ngFor="let option of publishOptions"
+                  [value]="option.value"
+                  >{{ option.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </div>
     <div
       fxFlex
       fxLayout="row"

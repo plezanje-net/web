@@ -33,6 +33,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { ActivityEntryRoutesComponent } from './partials/activity-entry-routes/activity-entry-routes.component';
 import { DryRunActivityDialogComponent } from './forms/activity-form/dry-run-activity-dialog/dry-run-activity-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     ReactiveFormsModule,
     ActivityRoutingModule,
     MatDialogModule,
+    MatExpansionModule,
   ],
   providers: [
     {
