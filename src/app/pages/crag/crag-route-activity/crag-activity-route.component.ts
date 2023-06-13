@@ -1,22 +1,15 @@
 import { Component, Inject, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 export interface DialogData {
   routeId: string;
   routeName: string;
 }
 import { QueryRef } from 'apollo-angular';
 import {
-  concatMap,
-  debounceTime,
-  filter,
-  Subject,
   Subscription,
-  switchMap,
   take,
 } from 'rxjs';
-import { DataError } from 'src/app/types/data-error';
-// import { AuthService } from 'src/app/auth/auth.service';
+import { DataError } from 'src/app/types/data-error';;
 import {
   ASCENT_TYPES,
   PUBLISH_OPTIONS,
@@ -34,11 +27,9 @@ import { FilteredTable } from '../../../common/filtered-table';
   styleUrls: ['./crag-activity-route.component.scss'],
 })
 export class CragActivityRouteComponent {
-  userId: string;
   routeId: string;
   routeName: string
   error: DataError = null;
-  modifier: number = 0;
 
   routes: MyActivityRoutesQuery['myActivityRoutes']['items'];
   pagination: MyActivityRoutesQuery['myActivityRoutes']['meta'];
@@ -79,8 +70,7 @@ export class CragActivityRouteComponent {
   constructor(
     public dialogRef: MatDialogRef<CragActivityRouteComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private myActivityRoutesGQL: MyActivityRoutesGQL,
-    private activatedRoute: ActivatedRoute,
+    private myActivityRoutesGQL: MyActivityRoutesGQL
   ) {}
 
   onNoClick(): void {
@@ -89,8 +79,21 @@ export class CragActivityRouteComponent {
 
   ngOnInit(): void {
     const ft = this.filteredTable;
+    ft.setRouteParams({routeId: this.data.routeId, orderBy: {field: "date", direction: "DESC"}});
+    const navSub = ft.navigate$.subscribe((params) => {
+      this.myActivityRoutesGQL
+        .fetch({input: params})
+        .pipe(take(1))
+        .subscribe((result) => {
+          this.loading = false;
+          ft.navigating = false;
+          this.querySuccess(result.data.myActivityRoutes);
+          });
+      }
+    );
 
-    ft.setRouteParams({routeId: this.data.routeId});
+    this.subscriptions.push(navSub);
+    
     const queryParams: FindActivityRoutesInput = ft.queryParams;
     this.myActivityRoutesGQL.watch({ input: queryParams });
 
@@ -98,54 +101,25 @@ export class CragActivityRouteComponent {
       this.activityRouteSub.unsubscribe();
     }
 
-
+    this.loading = true;
     this.activityRouteQuery = this.myActivityRoutesGQL.watch({ input: queryParams });
 
     this.activityRouteSub = this.activityRouteQuery.valueChanges.subscribe({
       next: (result) => {
         this.loading = false;
+        ft.navigating = false;
         this.querySuccess(result.data.myActivityRoutes);
       },
       error: () => {
         this.loading = false;
         this.queryError();
-      },
+      }
     });
 
+  }
 
-  //   const routeParamsSub = this.activatedRoute.params
-
-  //   .pipe(
-  //     switchMap((params) => {
-  //       ft.setRouteParams(params);
-
-  //       this.ignoreFormChange = true;
-  //       // this.filters.patchValue(ft.filterParams, { emitEvent: false });
-
-  //       // this.applyRelationFilterDisplayValues();
-
-  //       this.loading = true;
-
-  //       const queryParams: FindActivityRoutesInput = ft.queryParams;
-
-  //       return this.myActivityRoutesGQL.watch({ input: queryParams })
-  //         .valueChanges;
-  //     }),
-
-  //   )
-  //   .subscribe({
-  //     next: (result) => {
-  //       this.loading = false;
-  //       ft.navigating = false;
-  //       this.ignoreFormChange = false;
-  //       this.querySuccess(result.data.myActivityRoutes);
-  //     },
-  //     error: () => {
-  //       this.queryError();
-  //     },
-  //   });
-
-  // this.subscriptions.push(routeParamsSub);
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   queryError(): void {
@@ -157,7 +131,6 @@ export class CragActivityRouteComponent {
   querySuccess(data: MyActivityRoutesQuery['myActivityRoutes']): void {
     this.routes = data.items;
     this.pagination = data.meta;
-    console.log("routes", this.routes);
     this.noTopropeOnPage = !this.routes.some(
       (route) =>
         this.ascentTypes.find((at) => at.value === route.ascentType).topRope

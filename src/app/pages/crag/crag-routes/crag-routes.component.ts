@@ -152,7 +152,12 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      // console.log(`Dialog result: ${result}`);
+      if(result) {
+        this.router.navigate([
+          '/plezalni-dnevnik/vzponi',
+          { routeId: routeId },
+        ]);
+      }
     });
   }
 

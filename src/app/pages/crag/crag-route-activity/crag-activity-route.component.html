@@ -1,52 +1,72 @@
 <app-data-error *ngIf="error" [error]="error"></app-data-error>
 
-<ng-container>
+<ng-container  *ngIf="!error">
   <h1 mat-dialog-title>Vzponi za smer {{data.routeName}}</h1>
-  <div class="container">
-    <div class="card has-loader scrollable-table">
+  <div class="mt-4">
+    <div       
+      class="table-wrapper"
+      ngClass.gt-sm="scrollable"
+      >
       <div class="card-loader" *ngIf="loading">
         <app-loader></app-loader>
       </div>
-      <table class="card-table">
-        <tr class="row header">
-          <td *ngFor="let column of filteredTable.columns">
-            <span
-              *ngIf="column.sortable"
-              class="sortable"
-              [class.sorted]="filteredTable.sortColumn == column.name"
-              (click)="filteredTable.sort(column)"
+      <table class="stats-card-table">
+        <thead>
+          <tr>
+            <th *ngFor="let column of filteredTable.columns"
             >
-              {{ column.label }}
-              <mat-icon inline *ngIf="filteredTable.sortColumn != column.name"
-                >sort</mat-icon
+              <span
+                *ngIf="column.sortable"
+                class="sortable"
+                [class.sorted]="filteredTable.sortColumn == column.name"
+                (click)="filteredTable.sort(column)"
               >
-              <mat-icon
-                inline
-                *ngIf="filteredTable.sortColumn == column.name"
-                >{{
-                  filteredTable.sortDirection == "DESC"
-                    ? "arrow_downward"
-                    : "arrow_upward"
-                }}</mat-icon
-              >
-            </span>
-            <span *ngIf="!column.sortable">{{ column.label }}</span>
-          </td>
-          <td></td>
-        </tr>
-
-        <tr
-          class="row"
-          *ngFor="let route of routes"
-          app-crag-activity-route-row
-          [route]="route"
-          [rowAction]="rowAction$"
-          [noTopropeOnPage]="noTopropeOnPage"
-        ></tr>
+                {{ column.label }}
+                <mat-icon inline *ngIf="filteredTable.sortColumn != column.name"
+                  >sort</mat-icon
+                >
+                <mat-icon
+                  inline
+                  *ngIf="filteredTable.sortColumn == column.name"
+                  >{{
+                    filteredTable.sortDirection == "DESC"
+                      ? "arrow_downward"
+                      : "arrow_upward"
+                  }}</mat-icon
+                >
+              </span>
+              <span *ngIf="!column.sortable">{{ column.label }}</span>
+            </th>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="row"
+            *ngFor="let route of routes"
+            app-crag-activity-route-row
+            [route]="route"
+            [rowAction]="rowAction$"
+            [noTopropeOnPage]="noTopropeOnPage"
+          ></tr>
+        </tbody>
       </table>
+
+      <mat-paginator
+      *ngIf="pagination != null"
+      hidePageSize
+      showFirstLastButtons
+      [length]="pagination.itemCount"
+      [pageIndex]="pagination.pageNumber - 1"
+      [pageSize]="pagination.pageSize"
+      (page)="filteredTable.paginate($event)"
+    >
+    </mat-paginator>
     </div>
   </div>
   <div mat-dialog-actions>
-    <button mat-button mat-dialog-close>Zapri</button>
+    <button mat-button mat-dialog-close cdkFocusInitial>Zapri</button>
+    <button mat-button [mat-dialog-close]="true">Odpri v plezalnem dnevniku</button>
+    
   </div>
 </ng-container>
