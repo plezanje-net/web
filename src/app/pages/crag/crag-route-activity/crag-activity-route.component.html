@@ -3,13 +3,14 @@
 <ng-container  *ngIf="!error">
   <h1 mat-dialog-title>Vzponi za smer {{data.routeName}}</h1>
   <div class="mt-4">
+    <div class="card-loader" *ngIf="loading">
+      <app-loader></app-loader>
+    </div>
     <div       
       class="table-wrapper"
       ngClass.gt-sm="scrollable"
+      *ngIf="!loading"
       >
-      <div class="card-loader" *ngIf="loading">
-        <app-loader></app-loader>
-      </div>
       <table class="stats-card-table">
         <thead>
           <tr>

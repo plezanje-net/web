@@ -1,10 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Subject } from 'rxjs';
 import { PUBLISH_OPTIONS } from 'src/app/common/activity.constants';
 import {
   ActivityRoute,
-  ActivityRouteChangePublishGQL,
 } from 'src/generated/graphql';
 
 @Component({

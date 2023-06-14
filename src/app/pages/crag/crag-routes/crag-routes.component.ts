@@ -148,7 +148,7 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
 
   openDialog(routeId, routeName) {
     const dialogRef = this.dialog.open(CragActivityRouteComponent, {
-      data: {userId: this.authService.currentUser.getValue().id, routeId: routeId, routeName: routeName},
+      data: { routeId: routeId, routeName: routeName},
     });
 
     dialogRef.afterClosed().subscribe(result => {

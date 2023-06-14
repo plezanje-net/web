@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ActivityRouteRowComponent } from './activity-route-row.component';
+import { CragActivityRouteRowComponent } from './crag-activity-route-row.component';
 
-describe('ActivityRouteRowComponent', () => {
-  let component: ActivityRouteRowComponent;
-  let fixture: ComponentFixture<ActivityRouteRowComponent>;
+describe('CragActivityRouteRowComponent', () => {
+  let component: CragActivityRouteRowComponent;
+  let fixture: ComponentFixture<CragActivityRouteRowComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ActivityRouteRowComponent],
+      declarations: [CragActivityRouteRowComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ActivityRouteRowComponent);
+    fixture = TestBed.createComponent(CragActivityRouteRowComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

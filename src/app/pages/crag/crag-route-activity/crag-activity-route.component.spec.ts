@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GradeComponent } from './grade.component';
+import { CragActivityRouteComponent } from './crag-activity-route.component';
 
-describe('GradeComponent', () => {
-  let component: GradeComponent;
-  let fixture: ComponentFixture<GradeComponent>;
+describe('CragActivityRouteComponent', () => {
+  let component: CragActivityRouteComponent;
+  let fixture: ComponentFixture<CragActivityRouteComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [GradeComponent],
+      declarations: [CragActivityRouteComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GradeComponent);
+    fixture = TestBed.createComponent(CragActivityRouteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
