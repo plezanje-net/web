@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -33,6 +34,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { ActivityEntryRoutesComponent } from './partials/activity-entry-routes/activity-entry-routes.component';
 import { DryRunActivityDialogComponent } from './forms/activity-form/dry-run-activity-dialog/dry-run-activity-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 @NgModule({
   declarations: [
@@ -70,6 +72,10 @@ import { MatDialogModule } from '@angular/material/dialog';
     ReactiveFormsModule,
     ActivityRoutingModule,
     MatDialogModule,
+    MatCardModule,
+    NgxEchartsModule.forRoot({
+      echarts: () => import('echarts')
+    })
   ],
   providers: [
     {
