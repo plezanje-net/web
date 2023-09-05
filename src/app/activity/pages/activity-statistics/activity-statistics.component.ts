@@ -54,7 +54,7 @@ export class ActivityStatisticsComponent implements OnInit {
     }
   };
   currentYear = null;
-  colors = ['#d51c54', '#f8b231', '#00a19a'];
+  colors = ['#D13C2A', '#999999', '#609CDE'];
 
   filters = new FormGroup({
     year: new FormControl(),
@@ -149,7 +149,7 @@ export class ActivityStatisticsComponent implements OnInit {
         var grade = await this.GradingSystemsService.diffToGrade(
           element.difficulty,
           'french',
-          true
+          false
         );
         if(xAxisLabels.indexOf(grade.name)===-1) { 
           xAxisLabels.push(grade.name );
