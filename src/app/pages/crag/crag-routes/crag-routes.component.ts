@@ -146,7 +146,8 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     private dialog: MatDialog
   ) {}
 
-  openDialog(routeId, routeName) {
+  openDialog(event: Event, routeId: string, routeName: string) {
+    event.stopPropagation();
     const dialogRef = this.dialog.open(CragActivityRouteComponent, {
       data: { routeId: routeId, routeName: routeName},
     });
