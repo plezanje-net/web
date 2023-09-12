@@ -101,6 +101,8 @@ import { HowToContributeComponent } from './pages/help/how-to-contribute/how-to-
 import { LatestDifficultyVotesComponent } from './pages/home/latest-difficulty-votes/latest-difficulty-votes.component';
 import { LatestCommentsComponent } from './pages/home/latest-comments/latest-comments.component';
 import { LatestAscentsComponent } from './pages/home/latest-ascents/latest-ascents.component';
+import { CragActivityRouteComponent } from './pages/crag/crag-route-activity/crag-activity-route.component';
+import { CragActivityRouteRowComponent } from './pages/crag/crag-route-activity/crag-activity-route-row/crag-activity-route-row.component';
 
 const formFieldAppearance: MatFormFieldDefaultOptions = {
   appearance: 'fill',
@@ -179,6 +181,8 @@ class CustomDateAdapter extends NativeDateAdapter {
     LatestDifficultyVotesComponent,
     LatestCommentsComponent,
     LatestAscentsComponent,
+    CragActivityRouteComponent,
+    CragActivityRouteRowComponent
   ],
   imports: [
     BrowserModule,

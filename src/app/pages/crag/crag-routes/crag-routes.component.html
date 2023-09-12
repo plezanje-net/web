@@ -370,6 +370,7 @@
                     [value]="ascents[route.id]"
                     displayType="icon"
                     iconAlignment="center"
+                    (click)="openDialog($event, route.id, route.name)"
                   >
                   </app-ascent-type>
                 </td>

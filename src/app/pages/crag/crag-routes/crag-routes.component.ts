@@ -7,6 +7,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {MatDialog,} from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SnackBarButtonsComponent } from 'src/app/shared/snack-bar-buttons/snack-bar-buttons.component';
@@ -19,6 +20,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { SearchService } from 'src/app/shared/services/search.service';
+import { CragActivityRouteComponent } from 'src/app/pages/crag/crag-route-activity/crag-activity-route.component';
 
 @Component({
   selector: 'app-crag-routes',
@@ -140,8 +142,25 @@ export class CragRoutesComponent implements OnInit, OnDestroy {
     private localStorageService: LocalStorageService,
     private changeDetection: ChangeDetectorRef,
     private hostElement: ElementRef,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private dialog: MatDialog
   ) {}
+
+  openDialog(event: Event, routeId: string, routeName: string) {
+    event.stopPropagation();
+    const dialogRef = this.dialog.open(CragActivityRouteComponent, {
+      data: { routeId: routeId, routeName: routeName},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.router.navigate([
+          '/plezalni-dnevnik/vzponi',
+          { routeId: routeId },
+        ]);
+      }
+    });
+  }
 
   ngOnInit(): void {
     if (sessionStorage.getItem('shownColumns')) {
