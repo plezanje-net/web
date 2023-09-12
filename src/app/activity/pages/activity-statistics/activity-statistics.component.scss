@@ -1,0 +1,250 @@
+@import "~@angular/material/theming";
+@import "../../../../styles/colors.scss";
+@import "../../../../styles/variables.scss";
+
+.demo-chart {
+    min-height: 400px;
+    width: 100%;
+    padding-top: 30px;;
+}
+
+
+
+.sector-heading {
+  padding: 0;
+  margin-top: 24px;
+  margin-left: 16px;
+}
+
+.shadow {
+  box-shadow: $card-shadow;
+}
+
+table {
+  background-color: white;
+  width: 100%;
+  border-collapse: separate;
+
+  tr {
+    // +1 to accomodate top border on tds (except 1st row which 'uses' border of th)
+    height: 43px;
+    &:first-child {
+      height: 42px;
+    }
+  }
+
+  thead tr {
+    height: 48px;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 2;
+  }
+
+  tbody tr {
+    &:not(.details-row) {
+      cursor: pointer;
+    }
+    &:hover:not(.details-row) {
+      background-color: $blue-very-light;
+    }
+  }
+
+  td,
+  th {
+    padding: 8px;
+    text-align: left;
+    font-weight: 400;
+
+    &.checkbox {
+      padding-left: 12px;
+      padding-right: 12px;
+      text-align: center;
+      span {
+        cursor: pointer;
+      }
+      mat-checkbox {
+        vertical-align: middle;
+        margin-top: -4px;
+      }
+    }
+
+    &.name {
+      padding-left: 0;
+    }
+
+    &.icon {
+      text-align: center;
+    }
+  }
+
+  th {
+    color: $gray-dark;
+    vertical-align: bottom;
+    white-space: nowrap;
+    border-bottom: 1px solid $gray-lighter;
+
+    &.checkbox {
+      width: 40px;
+      min-width: 40px;
+    }
+  }
+
+  td {
+    vertical-align: middle;
+    border-top: 1px solid $gray-lighter;
+  }
+
+  tbody tr:first-child {
+    td {
+      border: none;
+    }
+  }
+
+  tbody tr.details-row {
+    height: 0;
+    td {
+      border: none;
+      height: 0;
+      padding: 0;
+    }
+  }
+}
+
+.compact {
+  background-color: white;
+
+  .route {
+    display: flex;
+    align-items: center;
+    border-top: 1px solid $gray-lighter;
+    &:first-child {
+      border-top: none;
+    }
+    padding: 8px;
+    padding-left: 0;
+
+    cursor: pointer;
+    &:hover {
+      background-color: $blue-very-light;
+    }
+
+    .checkbox {
+      flex: 0 0 40px;
+      text-align: center;
+    }
+
+    .info-wrap {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+
+      .info-row-first {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        .name {
+          flex: 1;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+
+        .star {
+          margin-left: 4px;
+          display: flex;
+          align-items: center;
+        }
+      }
+
+      .info-row-second {
+        display: flex;
+        justify-content: space-between;
+
+        .grade-length-wrap {
+          display: flex;
+
+          .grade {
+            width: 40px;
+            margin-right: 4px;
+          }
+        }
+
+        .multipitch-comments-my-ascents-wrap {
+          display: flex;
+          align-items: center;
+        }
+
+        .multipitch,
+        .comments {
+          flex: 0 0 20px;
+          width: 20px;
+          height: 20px;
+          margin-left: 4px;
+        }
+
+        .my-ascents {
+          flex: 0 0 36px;
+          width: 36px;
+          height: 18px;
+          margin-left: 4px;
+        }
+      }
+
+      .info-row-third {
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+.route-expanding-container {
+  max-height: 0;
+  transition: max-height $cubic-bezier;
+  overflow: hidden;
+}
+
+.selected {
+  background-color: $blue-very-light;
+}
+
+.warn {
+  color: $red;
+}
+.notice {
+  color: $orange;
+}
+
+.row > td {
+  font-weight: 500;
+}
+
+.mat-card {
+  border-radius: 0;
+  margin-top:1.25em;
+  padding-top:2px !important;
+
+  .mat-card-title {
+    font-weight: 400;
+    font-size: 20px;
+    padding-top: 4px;
+    line-height: 20px;
+    margin: 0;
+  }
+  .mat-form-field.no-hint .mat-form-field-wrapper {
+    margin-bottom: 0;
+  }
+
+  .mat-card-actions {
+    button {
+      color: $primary;
+    }
+  }
+
+  .mat-card-content {
+    margin-top: 20px;
+    margin-bottom: 0;
+  }
+}

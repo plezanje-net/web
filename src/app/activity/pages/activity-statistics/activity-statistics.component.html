@@ -1,5 +1,99 @@
 <app-activity-header active="statistika"></app-activity-header>
 
-<div class="container mt-16">
-  <p><i>Statistika vzponov je še v izdelavi</i></p>
+<div class="container has-loader mt-16">
+  <div class="card-loader" *ngIf="loading">
+    <app-loader></app-loader>
+  </div>
+  <div *ngIf="!loading">
+    <div
+    fxLayout="row"
+    fxLayout.lt-sm="column"
+    [formGroup]="filters"
+    fxLayoutGap="16px"
+    >
+
+    <mat-form-field class="no-hint infix-width-auto" id="no-bottom" fxFlex>
+      <mat-label>Vse</mat-label>
+      <mat-select formControlName="year">
+        <mat-option *ngFor="let year of activityYears" [value]="year.value"
+          >{{ year.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    
+  </div>
+  <mat-card>
+    <mat-card-content>
+      <h2>Tabela</h2>
+      <div>
+        <div       
+        class="table-wrapper"
+        ngClass.gt-sm="scrollable"
+        *ngIf="!loading"
+        >
+          <table class="shadow mt-16">
+            <thead>
+              <tr>
+                <th class="stat-th" 
+                [ngStyle]="{
+                  'width.%': 20
+                }">
+                  <span>Ocena</span>
+                </th>
+                <th class="stat-th" 
+                [ngStyle]="{
+                  'width.%': 20
+                }">
+                  <span>RP</span>
+                </th>
+                <th class="stat-th" 
+                [ngStyle]="{
+                  'width.%': 20
+                }">
+                  <span>Flash</span>
+                </th>
+                <th class="stat-th" 
+                [ngStyle]="{
+                  'width.%': 20
+                }">
+                  <span>NP</span>
+                </th>
+                <th class="stat-th" 
+                [ngStyle]="{
+                  'width.%': 20
+                }">
+                  <span>Skupaj</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="table-body">
+              <tr *ngFor="let xAxisLabel of xAxisData.reverse(); index as i">
+                <td>{{xAxisLabel}}</td>
+                <td>{{dataRP[dataRP.length - i -1]}}</td>
+                <td>{{dataF[dataF.length - i - 1]}}</td>
+                <td>{{dataOS[dataOS.length - i - 1]}}</td>
+                <td>{{dataOS[dataOS.length - i - 1] + dataF[dataF.length - i - 1] + dataRP[dataRP.length - i - 1]}}</td>
+              </tr>
+              <tr class="row">
+                <td>Skupaj</td>
+                <td>{{dataRPSum}}</td>
+                <td>{{dataFSum}}</td>
+                <td>{{dataOSSum}}</td>
+                <td>{{dataRPSum + dataFSum + dataOSSum}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-content>
+      <h2>Graf</h2>
+      <div echarts [options]="options" class="demo-chart shadow"></div>
+    </mat-card-content>
+    <mat-card-content>
+      <h2>Po letih</h2>
+      <div echarts [options]="optionsLine" class="demo-chart shadow"></div>
+    </mat-card-content>
+  </mat-card>
 </div>
