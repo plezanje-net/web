@@ -88,10 +88,10 @@ export class ActivityStatisticsComponent implements OnInit {
         })
       )
       .subscribe({
-        next: (result) => {
+        next: async (result) => {
           this.loading = false;
           this.myStats = <StatsActivities[]>result.data.myActivityStatistics;
-          this.querySuccess(null);
+          await this.querySuccess(null);
           this.parseByYear();
 
         },
@@ -125,75 +125,74 @@ export class ActivityStatisticsComponent implements OnInit {
     var data2 = [];
     var data3 = [];       
     let xAxisLabels = [];  
-
-    this.myStats.forEach(async (element) => {
-      if(year && element.year!==year) return;
-      if( this.activityYears.findIndex((el) => el.value === element.year)===-1)  {
-        this.activityYears.push({
-          value: element.year,
-          label: element.year.toString(),
-          nrRoutesRP: 0,
-          nrRoutesF: 0,
-          nrRoutesOS: 0
-        }); 
-      }
-
-      this.activityYears = this.activityYears.sort((a, b) => {
-        if(a.value == null || b.value == null) -1;
-        else return b.value - a.value
-      })
-
-      if(!year) this.currentYear = this.activityYears[0].label;
-
-      try {
-        var grade = await this.GradingSystemsService.diffToGrade(
-          element.difficulty,
-          'french',
-          false
-        );
-        if(xAxisLabels.indexOf(grade.name)===-1) { 
-          xAxisLabels.push(grade.name );
-          if(element.ascent_type === 'redpoint') {
-              data1.push(element.nr_routes);
-              data2.push(0);
-              data3.push(0);
-          } else if(element.ascent_type === 'flash') {
-            data1.push(0);
-            data2.push(element.nr_routes);
-            data3.push(0);
-          } if(element.ascent_type === 'onsight') {
-            data1.push(0);
-            data2.push(0);
-            data3.push(element.nr_routes);
-          }
-        } else {
-          if(element.ascent_type === 'redpoint') {
-            data1[data1.length-1] += element.nr_routes;
-          } else if(element.ascent_type === 'flash') {
-            data2[data2.length-1] += element.nr_routes;
-          } if(element.ascent_type === 'onsight') {
-            data3[data3.length-1] += element.nr_routes;
-          }
+    for await(let element of this.myStats[Symbol.iterator]()) {
+      if(!(year && element.year!==year)) {
+        if( this.activityYears.findIndex((el) => el.value === element.year)===-1)  {
+          this.activityYears.push({
+            value: element.year,
+            label: element.year.toString(),
+            nrRoutesRP: 0,
+            nrRoutesF: 0,
+            nrRoutesOS: 0
+          }); 
         }
 
-      } catch (error) {
-        console.log("Error getting grade:", error);
-      } finally {
-        this.dataRP = data1;
-        this.dataRPSum = data1.reduce(
-          (accumulator, currentValue) => accumulator + currentValue, 0
-        );
-        this.dataF = data2;
-        this.dataFSum = this.dataF.reduce(
-          (accumulator, currentValue) => accumulator + currentValue, 0
-        );
-        this.dataOS = data3;
-        this.dataOSSum = this.dataOS.reduce(
-          (accumulator, currentValue) => accumulator + currentValue, 0
-        );
-        this.buildOptions(data1, data2, data3, xAxisLabels);
+        this.activityYears = this.activityYears.sort((a, b) => {
+          if(a.value == null || b.value == null) -1;
+          else return b.value - a.value
+        })
+
+        if(!year) this.currentYear = this.activityYears[0].label;
+
+        try {
+          var grade = await this.GradingSystemsService.diffToGrade(
+            element.difficulty,
+            'french',
+            false
+          );
+          if(xAxisLabels.indexOf(grade.name)===-1) { 
+            xAxisLabels.unshift(grade.name );
+            if(element.ascent_type === 'redpoint') {
+                data1.push(element.nr_routes);
+                data2.push(0);
+                data3.push(0);
+            } else if(element.ascent_type === 'flash') {
+              data1.push(0);
+              data2.push(element.nr_routes);
+              data3.push(0);
+            } if(element.ascent_type === 'onsight') {
+              data1.push(0);
+              data2.push(0);
+              data3.push(element.nr_routes);
+            }
+          } else {
+            if(element.ascent_type === 'redpoint') {
+              data1[data1.length-1] += element.nr_routes;
+            } else if(element.ascent_type === 'flash') {
+              data2[data2.length-1] += element.nr_routes;
+            } if(element.ascent_type === 'onsight') {
+              data3[data3.length-1] += element.nr_routes;
+            }
+          }
+        } catch (error) {
+          console.log("Error getting grade:", error);
+        }
       }
-    });
+    }
+    this.dataRP = data1;
+    this.dataRPSum = data1.reduce(
+      (accumulator, currentValue) => accumulator + currentValue, 0
+    );
+    this.dataF = data2;
+    this.dataFSum = this.dataF.reduce(
+      (accumulator, currentValue) => accumulator + currentValue, 0
+    );
+    this.dataOS = data3;
+    this.dataOSSum = this.dataOS.reduce(
+      (accumulator, currentValue) => accumulator + currentValue, 0
+    );
+    this.xAxisData = xAxisLabels;
+    this.buildOptions(data1, data2, data3);
   }
 
   buildOptionsLine(sorted) {
@@ -244,8 +243,8 @@ export class ActivityStatisticsComponent implements OnInit {
     };
   }
 
-  buildOptions(data1, data2, data3, xAxisLabels) {
-    this.xAxisData = xAxisLabels;
+  buildOptions(data1, data2, data3) {
+
     this.options = {
       title: {
         text: this.currentYear
@@ -276,7 +275,7 @@ export class ActivityStatisticsComponent implements OnInit {
       xAxis: {
       },
       yAxis: {
-            data: xAxisLabels,
+            data: this.xAxisData.map((x)=> x).reverse(),
         name: 'Ocena',
         axisLine: { onZero: true },
         splitLine: { show: false },
