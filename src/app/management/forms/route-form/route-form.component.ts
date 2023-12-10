@@ -199,7 +199,7 @@ export class RouteFormComponent implements OnInit, OnDestroy {
       (route?.difficultyVotes.length == 0 ||
         (route?.difficultyVotes.length == 1 &&
           route?.difficultyVotes[0].isBase)) &&
-      route.nrTries === 0
+      !route.nrTries
     );
   }
 
