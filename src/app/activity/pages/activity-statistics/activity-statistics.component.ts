@@ -30,28 +30,28 @@ export class ActivityStatisticsComponent implements OnInit {
   optionsLine: EChartsOption;
   myStats: StatsActivities[];
   loading = true;
-  labels = [
-    "Z rdečo piko", "Flash", "Na pogled"
-  ];
+  labels = ['Z rdečo piko', 'Flash', 'Na pogled'];
   xAxisData = [];
   dataRP = [];
   dataF = [];
-  dataOS = [];  
+  dataOS = [];
   dataRPSum = 0;
   dataFSum = 0;
-  dataOSSum = 0;  
-  activityYears = [{
-    value: null,
-    label: "Vse",
-    nrRoutesRP: 0,
-    nrRoutesF: 0,
-    nrRoutesOS: 0
-  }];
+  dataOSSum = 0;
+  activityYears = [
+    {
+      value: null,
+      label: 'Vse',
+      nrRoutesRP: 0,
+      nrRoutesF: 0,
+      nrRoutesOS: 0,
+    },
+  ];
   emphasisStyle = {
     itemStyle: {
       shadowBlur: 10,
-      shadowColor: 'rgba(0,0,0,0.3)'
-    }
+      shadowColor: 'rgba(0,0,0,0.3)',
+    },
   };
   currentYear = null;
   colors = ['#D13C2A', '#999999', '#609CDE'];
@@ -66,7 +66,6 @@ export class ActivityStatisticsComponent implements OnInit {
     private loadingSpinnerService: LoadingSpinnerService,
     private authService: AuthService,
     private GradingSystemsService: GradingSystemsService
-
   ) {}
 
   @Output() errorEvent = new EventEmitter<DataError>();
@@ -83,7 +82,9 @@ export class ActivityStatisticsComponent implements OnInit {
         switchMap((user) => {
           this.loadingSpinnerService.pushLoader();
           return this.myStatsGQL.fetch({
-            input: {}
+            input: {
+              routeTypes: ['sport'],
+            },
           });
         })
       )
@@ -93,56 +94,61 @@ export class ActivityStatisticsComponent implements OnInit {
           this.myStats = <StatsActivities[]>result.data.myActivityStatistics;
           await this.querySuccess(null);
           this.parseByYear();
-
         },
         error: (error) => {
           this.loadingSpinnerService.popLoader();
           this.queryError();
         },
       });
-
   }
 
   //parses result for graph by year
   parseByYear(): void {
-    this.activityYears.forEach(year => {
-      if(year.value) {
-          var filterByYear = this.myStats.filter(x=> x.year == year.value);
-          filterByYear.forEach((elementByYear, index) => {
-            if(elementByYear.ascent_type=='redpoint') year.nrRoutesRP += elementByYear.nr_routes;
-            if(elementByYear.ascent_type=='flash') year.nrRoutesF += elementByYear.nr_routes;
-            if(elementByYear.ascent_type=='onsight') year.nrRoutesOS += elementByYear.nr_routes;
-          });
+    this.activityYears.forEach((year) => {
+      if (year.value) {
+        var filterByYear = this.myStats.filter((x) => x.year == year.value);
+        filterByYear.forEach((elementByYear, index) => {
+          if (elementByYear.ascent_type == 'redpoint')
+            year.nrRoutesRP += elementByYear.nr_routes;
+          if (elementByYear.ascent_type == 'flash')
+            year.nrRoutesF += elementByYear.nr_routes;
+          if (elementByYear.ascent_type == 'onsight')
+            year.nrRoutesOS += elementByYear.nr_routes;
+        });
       }
     });
 
-    var sorted = this.activityYears.filter(year => year.value).sort((a, b) => a.value - b.value);
+    var sorted = this.activityYears
+      .filter((year) => year.value)
+      .sort((a, b) => a.value - b.value);
     this.buildOptionsLine(sorted);
   }
 
   async querySuccess(year) {
     var data1 = [];
     var data2 = [];
-    var data3 = [];       
-    let xAxisLabels = [];  
-    for await(let element of this.myStats[Symbol.iterator]()) {
-      if(!(year && element.year!==year)) {
-        if( this.activityYears.findIndex((el) => el.value === element.year)===-1)  {
+    var data3 = [];
+    let xAxisLabels = [];
+    for await (let element of this.myStats[Symbol.iterator]()) {
+      if (!(year && element.year !== year)) {
+        if (
+          this.activityYears.findIndex((el) => el.value === element.year) === -1
+        ) {
           this.activityYears.push({
             value: element.year,
             label: element.year.toString(),
             nrRoutesRP: 0,
             nrRoutesF: 0,
-            nrRoutesOS: 0
-          }); 
+            nrRoutesOS: 0,
+          });
         }
 
         this.activityYears = this.activityYears.sort((a, b) => {
-          if(a.value == null || b.value == null) -1;
-          else return b.value - a.value
-        })
+          if (a.value == null || b.value == null) -1;
+          else return b.value - a.value;
+        });
 
-        if(!year) this.currentYear = this.activityYears[0].label;
+        if (!year) this.currentYear = this.activityYears[0].label;
 
         try {
           var grade = await this.GradingSystemsService.diffToGrade(
@@ -150,46 +156,51 @@ export class ActivityStatisticsComponent implements OnInit {
             'french',
             false
           );
-          if(xAxisLabels.indexOf(grade.name)===-1) { 
-            xAxisLabels.unshift(grade.name );
-            if(element.ascent_type === 'redpoint') {
-                data1.push(element.nr_routes);
-                data2.push(0);
-                data3.push(0);
-            } else if(element.ascent_type === 'flash') {
+          if (xAxisLabels.indexOf(grade.name) === -1) {
+            xAxisLabels.unshift(grade.name);
+            if (element.ascent_type === 'redpoint') {
+              data1.push(element.nr_routes);
+              data2.push(0);
+              data3.push(0);
+            } else if (element.ascent_type === 'flash') {
               data1.push(0);
               data2.push(element.nr_routes);
               data3.push(0);
-            } if(element.ascent_type === 'onsight') {
+            }
+            if (element.ascent_type === 'onsight') {
               data1.push(0);
               data2.push(0);
               data3.push(element.nr_routes);
             }
           } else {
-            if(element.ascent_type === 'redpoint') {
-              data1[data1.length-1] += element.nr_routes;
-            } else if(element.ascent_type === 'flash') {
-              data2[data2.length-1] += element.nr_routes;
-            } if(element.ascent_type === 'onsight') {
-              data3[data3.length-1] += element.nr_routes;
+            if (element.ascent_type === 'redpoint') {
+              data1[data1.length - 1] += element.nr_routes;
+            } else if (element.ascent_type === 'flash') {
+              data2[data2.length - 1] += element.nr_routes;
+            }
+            if (element.ascent_type === 'onsight') {
+              data3[data3.length - 1] += element.nr_routes;
             }
           }
         } catch (error) {
-          console.log("Error getting grade:", error);
+          console.log('Error getting grade:', error);
         }
       }
     }
     this.dataRP = data1;
     this.dataRPSum = data1.reduce(
-      (accumulator, currentValue) => accumulator + currentValue, 0
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
     );
     this.dataF = data2;
     this.dataFSum = this.dataF.reduce(
-      (accumulator, currentValue) => accumulator + currentValue, 0
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
     );
     this.dataOS = data3;
     this.dataOSSum = this.dataOS.reduce(
-      (accumulator, currentValue) => accumulator + currentValue, 0
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
     );
     this.xAxisData = xAxisLabels;
     this.buildOptions(data1, data2, data3);
@@ -198,60 +209,59 @@ export class ActivityStatisticsComponent implements OnInit {
   buildOptionsLine(sorted) {
     this.optionsLine = {
       tooltip: {
-        trigger: 'axis'
+        trigger: 'axis',
       },
       color: this.colors,
       legend: {
-        data: this.labels
+        data: this.labels,
       },
       grid: {
         left: '3%',
         right: '4%',
         bottom: '3%',
-        containLabel: true
+        containLabel: true,
       },
       toolbox: {
         feature: {
-          saveAsImage: {}
-        }
+          saveAsImage: {},
+        },
       },
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: sorted.map(x=> x.label)
+        data: sorted.map((x) => x.label),
       },
       yAxis: {
-        type: 'value'
+        type: 'value',
       },
       series: [
         {
           name: this.labels[0],
           type: 'line',
-          data: sorted.map(x=> x.nrRoutesRP)
+          data: sorted.map((x) => x.nrRoutesRP),
         },
         {
           name: this.labels[1],
           type: 'line',
-          data: sorted.map(x=> x.nrRoutesF)
+          data: sorted.map((x) => x.nrRoutesF),
         },
         {
           name: this.labels[2],
           type: 'line',
-          data: sorted.map(x=> x.nrRoutesOS)
-        }
-      ]
+          data: sorted.map((x) => x.nrRoutesOS),
+        },
+      ],
     };
   }
 
   buildOptions(data1, data2, data3) {
-
     this.options = {
       title: {
-        text: this.currentYear
+        text: this.currentYear,
       },
       legend: {
         data: this.labels,
-        left: '35%'
+        left: '35%',
       },
       // brush: {
       //   toolbox: ['rect', 'polygon', 'lineX', 'lineY', 'keep', 'clear'],
@@ -267,31 +277,30 @@ export class ActivityStatisticsComponent implements OnInit {
       // },
       toolbox: {
         feature: {
-          saveAsImage: {}
-        }
+          saveAsImage: {},
+        },
       },
       tooltip: {},
       color: this.colors,
-      xAxis: {
-      },
+      xAxis: {},
       yAxis: {
-            data: this.xAxisData.map((x)=> x).reverse(),
+        data: this.xAxisData.map((x) => x).reverse(),
         name: 'Ocena',
         axisLine: { onZero: true },
         splitLine: { show: false },
-        splitArea: { show: false }
+        splitArea: { show: false },
       },
       grid: {
-        bottom: 50
+        bottom: 50,
       },
       series: [
         {
           name: this.labels[0],
           type: 'bar',
           stack: 'one',
-    
+
           emphasis: this.emphasisStyle,
-          data: data1
+          data: data1,
         },
         {
           name: this.labels[1],
@@ -299,7 +308,6 @@ export class ActivityStatisticsComponent implements OnInit {
           stack: 'one',
           emphasis: this.emphasisStyle,
           data: data2,
-    
         },
         {
           name: this.labels[2],
@@ -307,9 +315,8 @@ export class ActivityStatisticsComponent implements OnInit {
           stack: 'one',
           emphasis: this.emphasisStyle,
           data: data3,
-    
-        }
-      ]
+        },
+      ],
     };
   }
 
