@@ -1,10 +1,9 @@
-import type { EChartsOption } from 'echarts';
+import { EChartsOption, SeriesOption } from 'echarts';
 import { StatsActivities, MyActivityStatsGQL } from 'src/generated/graphql';
 import { FormControl, FormGroup } from '@angular/forms';
 import {
   Component,
   EventEmitter,
-  Input,
   OnDestroy,
   OnInit,
   Output,
@@ -15,38 +14,35 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { DataError } from 'src/app/types/data-error';
 import {
   GradingSystemsService,
-  IGrade,
 } from '../../../shared/services/grading-systems.service';
 import { LoadingSpinnerService } from '../../../pages/home/loading-spinner.service';
+import { ASCENT_TYPES } from 'src/app/common/activity.constants';
+import { AscentType } from 'src/app/types/ascent-type';
 
 @Component({
   selector: 'app-activity-statistics',
   templateUrl: './activity-statistics.component.html',
   styleUrls: ['./activity-statistics.component.scss'],
 })
-export class ActivityStatisticsComponent implements OnInit {
+export class ActivityStatisticsComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   options: EChartsOption;
-  optionsLine: EChartsOption;
+  optionsByYear: EChartsOption;
   myStats: StatsActivities[];
   loading = true;
-  labels = ['Z rdečo piko', 'Flash', 'Na pogled'];
+  sumLabel = 'Skupaj';
   xAxisData = [];
-  dataRP = [];
-  dataF = [];
-  dataOS = [];
-  dataRPSum = 0;
-  dataFSum = 0;
-  dataOSSum = 0;
   activityYears = [
     {
       value: null,
       label: 'Vse',
-      nrRoutesRP: 0,
-      nrRoutesF: 0,
-      nrRoutesOS: 0,
+      // nrRoutesRP: 0,
+      // nrRoutesF: 0,
+      // nrRoutesOS: 0,
+      ascents: []
     },
   ];
+  data = [];
   emphasisStyle = {
     itemStyle: {
       shadowBlur: 10,
@@ -54,12 +50,20 @@ export class ActivityStatisticsComponent implements OnInit {
     },
   };
   currentYear = null;
-  colors = ['#D13C2A', '#999999', '#609CDE'];
 
   filters = new FormGroup({
     year: new FormControl(),
+    ascentType: new FormControl(),
   });
 
+  ascentTypes = ASCENT_TYPES;
+
+  topRopeAscentTypes = ASCENT_TYPES.filter((ascentType) => ascentType.topRope);
+  nonTopRopeAscentTypes = ASCENT_TYPES.filter(
+    (ascentType) => !ascentType.topRope
+  );
+  defaultAscentTypes = ['onsight', 'redpoint', 'flash'];
+  selectedAscentTypes:AscentType[] = [];
   subscriptions: Subscription[] = [];
   constructor(
     private myStatsGQL: MyActivityStatsGQL,
@@ -71,11 +75,22 @@ export class ActivityStatisticsComponent implements OnInit {
   @Output() errorEvent = new EventEmitter<DataError>();
 
   ngOnInit(): void {
-    const filtersSub = this.filters.valueChanges.subscribe((values) => {
+    const filtersSub = this.filters.valueChanges.subscribe(async (values) => {
+      
+      this.selectedAscentTypes = this.ascentTypes.filter((x)=> values.ascentType.includes(x.value)).sort((a,b)=> {
+        if (a.order < b.order) {
+          return -1;
+        } else if (a.order > b.order) {
+          return 1;
+        }
+        return 0;
+      });
       this.currentYear = values.year;
-      this.querySuccess(values.year);
+      await this.querySuccess(values.year);
+      this.buildOptionsByYear();
     });
     this.subscriptions.push(filtersSub);
+    this.filters.controls.ascentType.setValue(this.defaultAscentTypes);
 
     this.subscription = this.authService.currentUser
       .pipe(
@@ -93,174 +108,133 @@ export class ActivityStatisticsComponent implements OnInit {
           this.loading = false;
           this.myStats = <StatsActivities[]>result.data.myActivityStatistics;
           await this.querySuccess(null);
-          this.parseByYear();
+          await this.calcActivitiesByYear()
+          this.buildOptionsByYear();
         },
         error: (error) => {
           this.loadingSpinnerService.popLoader();
           this.queryError();
         },
       });
+      this.subscriptions.push(this.subscription);
   }
 
-  //parses result for graph by year
-  parseByYear(): void {
-    this.activityYears.forEach((year) => {
-      if (year.value) {
-        var filterByYear = this.myStats.filter((x) => x.year == year.value);
-        filterByYear.forEach((elementByYear, index) => {
-          if (elementByYear.ascent_type == 'redpoint')
-            year.nrRoutesRP += elementByYear.nr_routes;
-          if (elementByYear.ascent_type == 'flash')
-            year.nrRoutesF += elementByYear.nr_routes;
-          if (elementByYear.ascent_type == 'onsight')
-            year.nrRoutesOS += elementByYear.nr_routes;
+  async calcActivitiesByYear() {
+    for await (let element of this.myStats[Symbol.iterator]()) {
+      const ind = this.activityYears.findIndex((el) => el.value === element.year);
+      if ( ind === -1 ) {
+        this.activityYears.push({
+          value: element.year,
+          label: element.year.toString(),
+          ascents: [],
         });
       }
-    });
 
-    var sorted = this.activityYears
-      .filter((year) => year.value)
-      .sort((a, b) => a.value - b.value);
-    this.buildOptionsLine(sorted);
+      this.activityYears.forEach(el => {
+        if(el.value == element.year) {
+          if (!el.ascents[element.ascent_type]) {
+            el.ascents[element.ascent_type] = 0;
+          }
+          el.ascents[element.ascent_type] += element.nr_routes;
+        }
+      });
+      this.activityYears = this.activityYears.sort((a, b) => {
+        if (a.value == null || b.value == null) -1;
+        else return b.value - a.value;
+      });
+
+      this.currentYear = this.activityYears[0].label;
+    }
   }
 
   async querySuccess(year) {
-    var data1 = [];
-    var data2 = [];
-    var data3 = [];
-    let xAxisLabels = [];
+    if (!this.myStats) {
+      return;
+    }
+
+    var tempData = [];
+    this.data = [];
     for await (let element of this.myStats[Symbol.iterator]()) {
       if (!(year && element.year !== year)) {
-        if (
-          this.activityYears.findIndex((el) => el.value === element.year) === -1
-        ) {
-          this.activityYears.push({
-            value: element.year,
-            label: element.year.toString(),
-            nrRoutesRP: 0,
-            nrRoutesF: 0,
-            nrRoutesOS: 0,
-          });
-        }
-
-        this.activityYears = this.activityYears.sort((a, b) => {
-          if (a.value == null || b.value == null) -1;
-          else return b.value - a.value;
-        });
-
-        if (!year) this.currentYear = this.activityYears[0].label;
-
         try {
           var grade = await this.GradingSystemsService.diffToGrade(
             element.difficulty,
             'french',
             false
           );
-          if (xAxisLabels.indexOf(grade.name) === -1) {
-            xAxisLabels.unshift(grade.name);
-            if (element.ascent_type === 'redpoint') {
-              data1.push(element.nr_routes);
-              data2.push(0);
-              data3.push(0);
-            } else if (element.ascent_type === 'flash') {
-              data1.push(0);
-              data2.push(element.nr_routes);
-              data3.push(0);
+          if (this.selectedAscentTypes.find((x) => x.value === element.ascent_type)) {
+            if (!tempData[this.sumLabel]) {
+              tempData[this.sumLabel] = [];
+              tempData[this.sumLabel]['sum'] = 0;
             }
-            if (element.ascent_type === 'onsight') {
-              data1.push(0);
-              data2.push(0);
-              data3.push(element.nr_routes);
+
+            if (!tempData[grade.name] ) {
+              tempData[grade.name] = [];
+              tempData[grade.name]['sum'] = 0;
             }
-          } else {
-            if (element.ascent_type === 'redpoint') {
-              data1[data1.length - 1] += element.nr_routes;
-            } else if (element.ascent_type === 'flash') {
-              data2[data2.length - 1] += element.nr_routes;
+  
+            if (!tempData[grade.name][element.ascent_type]) {
+              tempData[grade.name][element.ascent_type] = 0;
             }
-            if (element.ascent_type === 'onsight') {
-              data3[data3.length - 1] += element.nr_routes;
+            tempData[grade.name][element.ascent_type] += element.nr_routes;
+
+            if (!tempData[this.sumLabel][element.ascent_type]) {
+              tempData[this.sumLabel][element.ascent_type] = 0;
             }
+
+            
+            tempData[this.sumLabel][element.ascent_type] += element.nr_routes;
+            tempData[grade.name]['sum'] += element.nr_routes;
+            tempData[this.sumLabel]['sum'] += element.nr_routes;
           }
         } catch (error) {
           console.log('Error getting grade:', error);
         }
       }
     }
-    this.dataRP = data1;
-    this.dataRPSum = data1.reduce(
-      (accumulator, currentValue) => accumulator + currentValue,
-      0
-    );
-    this.dataF = data2;
-    this.dataFSum = this.dataF.reduce(
-      (accumulator, currentValue) => accumulator + currentValue,
-      0
-    );
-    this.dataOS = data3;
-    this.dataOSSum = this.dataOS.reduce(
-      (accumulator, currentValue) => accumulator + currentValue,
-      0
-    );
-    this.xAxisData = xAxisLabels;
-    this.buildOptions(data1, data2, data3);
+    
+    let sort = Object.keys(tempData).sort().reverse();
+    this.xAxisData = sort;
+    sort.forEach(element => {
+      this.data.push({ grade: element, data: tempData[element]});
+    });
+    let first = this.data.shift();
+    if (first) {
+      this.data.push(first);
+    }
+    this.buildOptions();
   }
 
-  buildOptionsLine(sorted) {
-    this.optionsLine = {
-      tooltip: {
-        trigger: 'axis',
-      },
-      color: this.colors,
-      legend: {
-        data: this.labels,
-      },
-      grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true,
-      },
-      toolbox: {
-        feature: {
-          saveAsImage: {},
-        },
-      },
-      xAxis: {
-        type: 'category',
-        boundaryGap: false,
-        data: sorted.map((x) => x.label),
-      },
-      yAxis: {
-        type: 'value',
-      },
-      series: [
-        {
-          name: this.labels[0],
-          type: 'line',
-          data: sorted.map((x) => x.nrRoutesRP),
-        },
-        {
-          name: this.labels[1],
-          type: 'line',
-          data: sorted.map((x) => x.nrRoutesF),
-        },
-        {
-          name: this.labels[2],
-          type: 'line',
-          data: sorted.map((x) => x.nrRoutesOS),
-        },
-      ],
-    };
-  }
+  buildOptions() {
+    let series = this.selectedAscentTypes.map((x) => {
+      let sums = [];
+      this.data.forEach(element => {
+        if (element.grade !== this.sumLabel) {
+          if (element.data[x.value] ) {
+            sums.unshift(element.data[x.value]);
+          } else {
+            sums.unshift(0);
+          }
+        }
+      });
 
-  buildOptions(data1, data2, data3) {
+      return {
+        name: ((x.topRope) ? '(T) ': '') + x.label,
+        type: 'bar',
+        stack: 'one',
+
+        emphasis: this.emphasisStyle,
+        data: sums,
+      } as SeriesOption
+    }
+    );
+
     this.options = {
       title: {
         text: this.currentYear,
       },
       legend: {
-        data: this.labels,
+        data: this.selectedAscentTypes.map((x) => ((x.topRope) ? '(T) ': '') + x.label),
         left: '35%',
       },
       // brush: {
@@ -281,10 +255,10 @@ export class ActivityStatisticsComponent implements OnInit {
         },
       },
       tooltip: {},
-      color: this.colors,
+      color: this.selectedAscentTypes.map((x) => x.color),
       xAxis: {},
       yAxis: {
-        data: this.xAxisData.map((x) => x).reverse(),
+        data: this.xAxisData.slice(1).reverse(),
         name: 'Ocena',
         axisLine: { onZero: true },
         splitLine: { show: false },
@@ -293,30 +267,61 @@ export class ActivityStatisticsComponent implements OnInit {
       grid: {
         bottom: 50,
       },
-      series: [
-        {
-          name: this.labels[0],
-          type: 'bar',
-          stack: 'one',
+      series: series,
+    };
+  }
 
-          emphasis: this.emphasisStyle,
-          data: data1,
+
+  buildOptionsByYear() {
+    let series = this.selectedAscentTypes.map((x)=> {
+      let sums = [];
+      this.activityYears.forEach(element => {
+        if (element.value) {
+          if (element.ascents[x.value] ) {
+            sums.unshift(element.ascents[x.value]);
+          } else {
+            sums.unshift(0);
+          }
+        }
+      });
+
+      return {
+        name: ((x.topRope) ? '(T) ': '') + x.label,
+        type: 'line',
+        data: sums.reverse(),
+      } as SeriesOption
+    });
+
+
+    this.optionsByYear = {
+      tooltip: {
+        trigger: 'axis',
+      },
+      color: this.selectedAscentTypes.map((x) => x.color),
+      legend: {
+        data: this.selectedAscentTypes.map((x) => ((x.topRope) ? '(T) ': '') + x.label),
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true,
+      },
+      toolbox: {
+        feature: {
+          saveAsImage: {},
         },
-        {
-          name: this.labels[1],
-          type: 'bar',
-          stack: 'one',
-          emphasis: this.emphasisStyle,
-          data: data2,
-        },
-        {
-          name: this.labels[2],
-          type: 'bar',
-          stack: 'one',
-          emphasis: this.emphasisStyle,
-          data: data3,
-        },
-      ],
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: this.activityYears.map((x)=> x.label).slice(1),
+      },
+      yAxis: {
+        type: 'value',
+      },
+      series: series
+      ,
     };
   }
 
@@ -324,5 +329,9 @@ export class ActivityStatisticsComponent implements OnInit {
     this.errorEvent.emit({
       message: 'Prišlo je do nepričakovane napake pri zajemu podatkov.',
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }
