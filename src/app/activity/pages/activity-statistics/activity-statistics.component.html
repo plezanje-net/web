@@ -38,7 +38,7 @@
       </mat-form-field>
     </div>
 
-    <div class="card has-loader scrollable-table mt-16" *ngIf="myStats.length>0">
+    <div class="card has-loader scrollable-table mt-16" *ngIf="myRouteStats && myRouteStats.length>0">
       <div class="card-loader" *ngIf="loading">
         <app-loader></app-loader>
       </div>
@@ -84,20 +84,27 @@
       </table>
     </div>
 
-    <div class="card mt-16" *ngIf="myStats.length>0">
+    <div class="card mt-16" *ngIf="myRouteStats && myRouteStats.length>0">
       <h3>Graf</h3>
       <div class="p-16">
         <div echarts [options]="options" class="demo-chart m-16"></div>
       </div>
     </div>
 
-    <div class="card mt-16" *ngIf="myStats.length>0">
-      <h3>Po letih</h3>
+    <div class="card mt-16" *ngIf="myRouteStats && myRouteStats.length>0">
+      <h3>Število smeri po letih</h3>
       <div class="p-16">
         <div echarts [options]="optionsByYear" class="demo-chart m-16"></div>
       </div>
     </div>
-    <div *ngIf="myStats.length==0" class="card mt-16">      
+
+    <div class="card mt-16" *ngIf="myActivityStats && myActivityStats.length>0">
+      <h3>Število aktivnosti po letih</h3>
+      <div class="p-16">
+        <div echarts [options]="activitiesByYear" class="demo-chart m-16"></div>
+      </div>
+    </div>
+    <div *ngIf="myRouteStats && myRouteStats.length==0" class="card mt-16">      
       <h3>Ni podatkov</h3>
     </div>
   </div>

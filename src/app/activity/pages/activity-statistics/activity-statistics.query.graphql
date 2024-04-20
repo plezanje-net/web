@@ -1,8 +1,17 @@
-query MyActivityStats($input: FindActivityRoutesInput) {
-  myActivityStatistics(input: $input) {  
+query MyRoutesStats($input: FindActivityRoutesInput) {
+  myRoutesStatistics(input: $input) {  
 		year,
     difficulty,
     ascent_type,
     nr_routes
   }
 }
+
+query MyActivitiesStatistics($input: FindActivitiesInput) {
+  myActivitiesStatistics(input: $input) {  
+		year,
+    nr_activities,
+    type
+  }
+}
+

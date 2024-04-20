@@ -1,5 +1,5 @@
 import { EChartsOption, SeriesOption } from 'echarts';
-import { StatsActivities, MyActivityStatsGQL } from 'src/generated/graphql';
+import { StatsRoutes, MyRoutesStatsGQL, StatsActivities, MyActivitiesStatisticsGQL } from 'src/generated/graphql';
 import { FormControl, FormGroup } from '@angular/forms';
 import {
   Component,
@@ -16,7 +16,7 @@ import {
   GradingSystemsService,
 } from '../../../shared/services/grading-systems.service';
 import { LoadingSpinnerService } from '../../../pages/home/loading-spinner.service';
-import { ASCENT_TYPES } from 'src/app/common/activity.constants';
+import { ACTIVITY_TYPES, ASCENT_TYPES } from 'src/app/common/activity.constants';
 import { AscentType } from 'src/app/types/ascent-type';
 
 @Component({
@@ -26,9 +26,12 @@ import { AscentType } from 'src/app/types/ascent-type';
 })
 export class ActivityStatisticsComponent implements OnInit, OnDestroy {
   subscription: Subscription;
+  subscriptionActivity: Subscription;
   options: EChartsOption;
   optionsByYear: EChartsOption;
-  myStats: StatsActivities[];
+  activitiesByYear: EChartsOption;
+  myRouteStats: StatsRoutes[];
+  myActivityStats: StatsActivities[];
   loading = true;
   sumLabel = 'Skupaj';
   xAxisData = [];
@@ -36,9 +39,6 @@ export class ActivityStatisticsComponent implements OnInit, OnDestroy {
     {
       value: null,
       label: 'Vse',
-      // nrRoutesRP: 0,
-      // nrRoutesF: 0,
-      // nrRoutesOS: 0,
       ascents: []
     },
   ];
@@ -57,6 +57,9 @@ export class ActivityStatisticsComponent implements OnInit, OnDestroy {
   });
 
   ascentTypes = ASCENT_TYPES;
+  activityTypes = ACTIVITY_TYPES.filter(
+    (a) => a.value != 'peak' && a.value != 'iceFall'
+  );
 
   topRopeAscentTypes = ASCENT_TYPES.filter((ascentType) => ascentType.topRope);
   nonTopRopeAscentTypes = ASCENT_TYPES.filter(
@@ -66,7 +69,8 @@ export class ActivityStatisticsComponent implements OnInit, OnDestroy {
   selectedAscentTypes:AscentType[] = [];
   subscriptions: Subscription[] = [];
   constructor(
-    private myStatsGQL: MyActivityStatsGQL,
+    private myRouteStatsGQL: MyRoutesStatsGQL,
+    private myActivityStatsGQL: MyActivitiesStatisticsGQL,
     private loadingSpinnerService: LoadingSpinnerService,
     private authService: AuthService,
     private GradingSystemsService: GradingSystemsService
@@ -96,7 +100,7 @@ export class ActivityStatisticsComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap((user) => {
           this.loadingSpinnerService.pushLoader();
-          return this.myStatsGQL.fetch({
+          return this.myRouteStatsGQL.fetch({
             input: {
               routeTypes: ['sport'],
             },
@@ -106,9 +110,9 @@ export class ActivityStatisticsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: async (result) => {
           this.loading = false;
-          this.myStats = <StatsActivities[]>result.data.myActivityStatistics;
+          this.myRouteStats = <StatsRoutes[]>result.data.myRoutesStatistics;
           await this.querySuccess(null);
-          await this.calcActivitiesByYear()
+          this.calcRoutesByYear()
           this.buildOptionsByYear();
         },
         error: (error) => {
@@ -116,11 +120,36 @@ export class ActivityStatisticsComponent implements OnInit, OnDestroy {
           this.queryError();
         },
       });
+
+      this.subscriptionActivity = this.authService.currentUser
+      .pipe(
+        switchMap((user) => {
+          this.loadingSpinnerService.pushLoader();
+          return this.myActivityStatsGQL.fetch({
+            input: {
+              // activityTypes: ['crag'],
+            },
+          });
+        })
+      )
+      .subscribe({
+        next: async (result) => {
+          this.loading = false;
+          this.myActivityStats = <StatsActivities[]>result.data.myActivitiesStatistics;
+  
+          this.buildOptionsActivitiesByYear();
+        },
+        error: (error) => {
+          this.loadingSpinnerService.popLoader();
+          this.queryError();
+        },
+      });
+
       this.subscriptions.push(this.subscription);
   }
 
-  async calcActivitiesByYear() {
-    for await (let element of this.myStats[Symbol.iterator]()) {
+  calcRoutesByYear() {
+    for (let element of this.myRouteStats[Symbol.iterator]()) {
       const ind = this.activityYears.findIndex((el) => el.value === element.year);
       if ( ind === -1 ) {
         this.activityYears.push({
@@ -148,13 +177,13 @@ export class ActivityStatisticsComponent implements OnInit, OnDestroy {
   }
 
   async querySuccess(year) {
-    if (!this.myStats) {
+    if (!this.myRouteStats) {
       return;
     }
 
     var tempData = [];
     this.data = [];
-    for await (let element of this.myStats[Symbol.iterator]()) {
+    for await (let element of this.myRouteStats[Symbol.iterator]()) {
       if (!(year && element.year !== year)) {
         try {
           var grade = await this.GradingSystemsService.diffToGrade(
@@ -288,7 +317,7 @@ export class ActivityStatisticsComponent implements OnInit, OnDestroy {
       return {
         name: ((x.topRope) ? '(T) ': '') + x.label,
         type: 'line',
-        data: sums.reverse(),
+        data: sums,
       } as SeriesOption
     });
 
@@ -315,7 +344,7 @@ export class ActivityStatisticsComponent implements OnInit, OnDestroy {
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: this.activityYears.map((x)=> x.label).slice(1),
+        data: this.activityYears.map((x)=> x.label).slice(1).reverse(),
       },
       yAxis: {
         type: 'value',
@@ -323,6 +352,60 @@ export class ActivityStatisticsComponent implements OnInit, OnDestroy {
       series: series
       ,
     };
+  }
+
+  buildOptionsActivitiesByYear() {
+
+    const years = [...new Set(this.myActivityStats.map((x) => x.year))];
+
+    let series = this.activityTypes.map((x)=> {
+      let sums = []
+        years.forEach((element, index) => {
+          const el = this.myActivityStats.find((s)=>s.type === x.value && s.year == element);
+          if (el) {
+            sums[index] = el.nr_activities;
+          } else {
+            sums[index] = 0;
+          }
+        });
+      return {
+        name: x.label,
+        type: 'line',
+        data: sums,
+      } as SeriesOption
+    });
+
+    this.activitiesByYear = {
+      tooltip: {
+        trigger: 'axis',
+      },
+      color: this.activityTypes.map((x) => x.color),
+      legend: {
+        data: this.activityTypes.map((x) => x.label),
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true,
+      },
+      toolbox: {
+        feature: {
+          saveAsImage: {},
+        },
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: years,
+      },
+      yAxis: {
+        type: 'value',
+      },
+      series: series
+      ,
+    };
+
   }
 
   queryError() {
