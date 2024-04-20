@@ -14,7 +14,7 @@
       <mat-form-field class="no-hint infix-width-auto" id="no-bottom" fxFlex>
         <mat-label>Vse</mat-label>
         <mat-select formControlName="year">
-          <mat-option selected *ngFor="let year of activityYears" [value]="year.value"
+          <mat-option *ngFor="let year of activityYears" [value]="year.value"
             >{{ year.label }}
           </mat-option>
         </mat-select>
