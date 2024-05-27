@@ -16,6 +16,8 @@ export const ASCENT_TYPES: AscentType[] = [
     topRope: false,
     tick: true,
     topRopeTick: false,
+    color: '#609CDE',
+    order: 3,
   },
   {
     value: 'flash',
@@ -24,6 +26,8 @@ export const ASCENT_TYPES: AscentType[] = [
     topRope: false,
     tick: true,
     topRopeTick: false,
+    color: '#999999',
+    order: 2,
   },
   {
     value: 'redpoint',
@@ -32,6 +36,8 @@ export const ASCENT_TYPES: AscentType[] = [
     topRope: false,
     tick: true,
     topRopeTick: false,
+    color: '#D13C2A',
+    order: 1,
   },
   {
     value: 'repeat',
@@ -40,6 +46,8 @@ export const ASCENT_TYPES: AscentType[] = [
     topRope: false,
     tick: true,
     topRopeTick: false,
+    color: '#ECAAA1',
+    order: 4,
   },
   {
     value: 'allfree',
@@ -48,6 +56,8 @@ export const ASCENT_TYPES: AscentType[] = [
     topRope: false,
     tick: false,
     topRopeTick: false,
+    color: '#1C508C',
+    order: 6,
   },
   {
     value: 'aid',
@@ -56,6 +66,8 @@ export const ASCENT_TYPES: AscentType[] = [
     topRope: false,
     tick: false,
     topRopeTick: false,
+    color: '#FAE9E7',
+    order: 7,
   },
   {
     value: 'attempt',
@@ -64,6 +76,8 @@ export const ASCENT_TYPES: AscentType[] = [
     topRope: false,
     tick: false,
     topRopeTick: false,
+    color: '#383838',
+    order: 5,
   },
   {
     value: 't_onsight',
@@ -72,6 +86,8 @@ export const ASCENT_TYPES: AscentType[] = [
     topRope: true,
     tick: false,
     topRopeTick: true,
+    color: '#609CDE',
+    order: 10,
   },
   {
     value: 't_flash',
@@ -80,6 +96,8 @@ export const ASCENT_TYPES: AscentType[] = [
     topRope: true,
     tick: false,
     topRopeTick: true,
+    color: '#999999',
+    order: 9,
   },
   {
     value: 't_redpoint',
@@ -88,6 +106,8 @@ export const ASCENT_TYPES: AscentType[] = [
     topRope: true,
     tick: false,
     topRopeTick: true,
+    color: '#D13C2A',
+    order: 8,
   },
   {
     value: 't_repeat',
@@ -96,6 +116,8 @@ export const ASCENT_TYPES: AscentType[] = [
     topRope: true,
     tick: false,
     topRopeTick: false,
+    color: '#ECAAA1',
+    order: 11,
   },
   {
     value: 't_allfree',
@@ -104,6 +126,8 @@ export const ASCENT_TYPES: AscentType[] = [
     topRope: true,
     tick: false,
     topRopeTick: false,
+    color: '#1C508C',
+    order: 13,
   },
   {
     value: 't_aid',
@@ -112,6 +136,8 @@ export const ASCENT_TYPES: AscentType[] = [
     topRope: true,
     tick: false,
     topRopeTick: false,
+    color: '#FAE9E7',
+    order: 14,
   },
   {
     value: 't_attempt',
@@ -120,6 +146,8 @@ export const ASCENT_TYPES: AscentType[] = [
     topRope: true,
     tick: false,
     topRopeTick: false,
+    color: '#383838',
+    order: 12,
   },
 ];
 
@@ -131,10 +159,10 @@ export const PUBLISH_OPTIONS: Registry[] = [
 ];
 
 export const ACTIVITY_TYPES: Registry[] = [
-  { value: 'crag', label: 'Dan v plezališču' },
-  { value: 'climbingGym', label: 'Plezalni center' },
-  { value: 'trainingGym', label: 'Telovadnica' },
-  { value: 'peak', label: 'Osvojen vrh' },
-  { value: 'iceFall', label: 'Slap' },
-  { value: 'other', label: 'Ostalo' },
+  { value: 'crag', label: 'Dan v plezališču', color: '#383838' },
+  { value: 'climbingGym', label: 'Plezalni center', color: '#1C508C' },
+  { value: 'trainingGym', label: 'Telovadnica', color: '#8C2A1E' },
+  { value: 'peak', label: 'Osvojen vrh', color: '#383838' },
+  { value: 'iceFall', label: 'Slap', color: '#383838' },
+  { value: 'other', label: 'Ostalo', color: '#ECAAA1' },
 ];

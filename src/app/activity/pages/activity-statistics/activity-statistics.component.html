@@ -19,13 +19,30 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+
+      <mat-form-field class="no-hint infix-width-auto" fxFlex>
+        <mat-label>Vrsta vzpona</mat-label>
+        <mat-select formControlName="ascentType" multiple>
+          <mat-option *ngFor="let type of nonTopRopeAscentTypes" [value]="type.value"
+            >{{ type.label }}
+          </mat-option>
+          <mat-optgroup label="Top rope">
+            <ng-container *ngFor="let type of topRopeAscentTypes">
+              <mat-option
+                [value]="type.value"
+                >{{ type.label }}
+              </mat-option>
+            </ng-container>
+          </mat-optgroup>
+        </mat-select>
+      </mat-form-field>
     </div>
 
-    <div class="card has-loader scrollable-table mt-16">
+    <div class="card has-loader scrollable-table mt-16" *ngIf="myRouteStats && myRouteStats.length>0">
       <div class="card-loader" *ngIf="loading">
         <app-loader></app-loader>
       </div>
-      <table class="card-table">
+      <table class="card-table" >
         <thead>
           <tr class="row header">
             <th
@@ -36,29 +53,13 @@
             >
               <span>Ocena</span>
             </th>
-            <th
-              class="stat-th"
-              [ngStyle]="{
-                'width.%': 20
-              }"
+            <th *ngFor="let type of selectedAscentTypes"
+            class="stat-th"
+            [ngStyle]="{
+              'width.%': 20
+            }"
             >
-              <span>RP</span>
-            </th>
-            <th
-              class="stat-th"
-              [ngStyle]="{
-                'width.%': 20
-              }"
-            >
-              <span>Flash</span>
-            </th>
-            <th
-              class="stat-th"
-              [ngStyle]="{
-                'width.%': 20
-              }"
-            >
-              <span>NP</span>
+              <span>{{ type.label }}</span>
             </th>
             <th
               class="stat-th"
@@ -72,44 +73,39 @@
         </thead>
         <tbody class="table-body">
           <tr
-            *ngFor="let xAxisLabel of xAxisData; index as i"
+            *ngFor="let dataElement of data"
             class="row"
           >
-            <td>{{ xAxisLabel }}</td>
-            <td>{{ dataRP[dataRP.length - i - 1] }}</td>
-            <td>{{ dataF[dataF.length - i - 1] }}</td>
-            <td>{{ dataOS[dataOS.length - i - 1] }}</td>
-            <td>
-              {{
-                dataOS[dataOS.length - i - 1] +
-                  dataF[dataF.length - i - 1] +
-                  dataRP[dataRP.length - i - 1]
-              }}
-            </td>
-          </tr>
-          <tr class="row">
-            <td>Skupaj</td>
-            <td>{{ dataRPSum }}</td>
-            <td>{{ dataFSum }}</td>
-            <td>{{ dataOSSum }}</td>
-            <td>{{ dataRPSum + dataFSum + dataOSSum }}</td>
+            <td>{{ dataElement.grade}}</td>
+            <td *ngFor="let type of selectedAscentTypes; index as i">{{ dataElement.data[type.value]}}</td>
+            <td>{{ dataElement.data['sum']}}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <div class="card mt-16">
+    <div class="card mt-16" *ngIf="myRouteStats && myRouteStats.length>0">
       <h3>Graf</h3>
       <div class="p-16">
         <div echarts [options]="options" class="demo-chart m-16"></div>
       </div>
     </div>
 
-    <div class="card mt-16">
-      <h3>Po letih</h3>
+    <div class="card mt-16" *ngIf="myRouteStats && myRouteStats.length>0">
+      <h3>Število smeri po letih</h3>
       <div class="p-16">
-        <div echarts [options]="optionsLine" class="demo-chart m-16"></div>
+        <div echarts [options]="optionsByYear" class="demo-chart m-16"></div>
       </div>
+    </div>
+
+    <div class="card mt-16" *ngIf="myActivityStats && myActivityStats.length>0">
+      <h3>Število aktivnosti po letih</h3>
+      <div class="p-16">
+        <div echarts [options]="activitiesByYear" class="demo-chart m-16"></div>
+      </div>
+    </div>
+    <div *ngIf="myRouteStats && myRouteStats.length==0" class="card mt-16">      
+      <h3>Ni podatkov</h3>
     </div>
   </div>
 </div>
