@@ -18,5 +18,5 @@ jobs:
       - run: npm install
       - run: npm run codegen-production
       - run: npm run build-production
-      - run: rm -rf ${{ secrets.WWW_ROOT }}/web/*
-      - run: cp -r ./dist/plezanje-net/* ${{ secrets.WWW_ROOT }}/web/
+      - run: rm -rf ${{ secrets.WWW_ROOT }}/www/*
+      - run: cp -r ./dist/plezanje-net/* ${{ secrets.WWW_ROOT }}/www/
