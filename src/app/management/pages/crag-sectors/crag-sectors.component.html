@@ -21,6 +21,15 @@
 
   <div class="container p15 mt-16">
     <div
+      *ngIf="sectors.length === 1 && !sectors[0].label && !sectors[0].name"
+      class="noname notice"
+    >
+      Če je to plezališče brez sektorjev, nadaljuj z urejanjem smeri v sektorju
+      brez imena. Če je to plezališče z več sektorji, najprej uredi sektor brez
+      imena, tako da mu spremeniš ime, nato pa dodaj še druge sektorje.
+    </div>
+
+    <div
       cdkDropList
       (cdkDropListDropped)="drop($event)"
       [class.saving]="savingPositions"
@@ -42,6 +51,11 @@
           }"
         >
           <div class="name" fxFlex="100" fxFlex.lt-sm>
+            <span
+              *ngIf="sectors.length == 1 && !sector.label && !sector.name"
+              class="noname"
+              >Brez imena</span
+            >
             <span>{{ sector.label }}</span> {{ sector.name }}
           </div>
           <div fxFlex>
