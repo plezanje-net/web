@@ -17,6 +17,7 @@ import {
 } from '../../../../generated/graphql';
 import { LayoutService } from '../../../services/layout.service';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { GuidebookPhotoComponent } from '../../forms/guidebook-photo/guidebook-photo.component';
 import { MoveRouteFormComponent } from '../../forms/move-route-form/move-route-form.component';
 import {
   RouteFormComponent,
@@ -209,6 +210,33 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
             duration: 3000,
           });
         },
+      });
+  }
+
+  openGuidebookPhotoDialog(): void {
+    // Calculate the maximum route position
+    const maxRoutePosition =
+      this.routes.length > 0
+        ? Math.max(...this.routes.map((route) => route.position))
+        : 0;
+
+    this.dialog
+      .open(GuidebookPhotoComponent, {
+        data: {
+          sectorId: this.sector.id,
+          maxRoutePosition: maxRoutePosition,
+        },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (!result) return;
+        this.snackBar.open(
+          'Smeri so bile dodane. Prosim preveri, če so vsi podatki pravilni.',
+          null,
+          {
+            duration: 3000,
+          }
+        );
       });
   }
 }

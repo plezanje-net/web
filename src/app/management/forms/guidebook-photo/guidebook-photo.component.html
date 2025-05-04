@@ -1,0 +1,61 @@
+<div mat-dialog-title fxLayout="row" fxLayoutAlign="start center">
+  <div fxFlex="100" class="title">Slikaj vodniček</div>
+</div>
+
+<mat-dialog-content>
+  <form
+    class="form"
+    [formGroup]="form"
+    (submit)="submit()"
+    fxLayout="column"
+    fxLayoutGap="16px"
+  >
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="8px">
+      <div>
+        <button
+          type="button"
+          mat-flat-button
+          color="primary"
+          (click)="fileInput.click()"
+        >
+          Izberi datoteko
+        </button>
+      </div>
+      <div class="filename">{{ fileToUpload?.name }}</div>
+      <input
+        id="file"
+        type="file"
+        #fileInput
+        hidden
+        accept="image/*"
+        capture="environment"
+        (change)="onFileSelected($event)"
+      />
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button *ngIf="!loading" type="button" mat-button [mat-dialog-close]="null">
+    Prekliči
+  </button>
+  <button
+    *ngIf="!loading"
+    type="submit"
+    mat-button
+    color="primary"
+    cdkFocusInitial
+    [disabled]="!fileToUpload"
+    (click)="submit()"
+  >
+    Potrdi
+  </button>
+  <div
+    *ngIf="loading"
+    class="w-100"
+    fxLayout="row"
+    fxLayoutAlign="center center"
+  >
+    <mat-spinner diameter="30"></mat-spinner>
+  </div>
+</mat-dialog-actions>
