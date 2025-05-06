@@ -1,0 +1,15 @@
+.filename {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 500;
+}

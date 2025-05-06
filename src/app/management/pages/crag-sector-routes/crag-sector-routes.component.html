@@ -29,6 +29,7 @@
       class="route ghost mt-8"
     >
       <div fxFlex class="tools" fxLayout="row" fxLayoutAlign="end center">
+        <div fxFlex></div>
         <i>Dodaj smer na začetek</i>
         <button
           mat-icon-button
@@ -164,5 +165,14 @@
         </button>
       </ng-template>
     </mat-menu>
+
+    <button
+      mat-icon-button
+      class="beta-feature"
+      (click)="openGuidebookPhotoDialog()"
+      matTooltip="Slikaj vodniček (beta funkcija)"
+    >
+      <mat-icon class="small-icon">photo_camera</mat-icon>
+    </button>
   </div>
 </div>

@@ -63,3 +63,17 @@
     }
   }
 }
+
+// Beta feature styling
+.beta-feature {
+  margin-top: 16px;
+  color: $gray;
+  opacity: 0.7;
+
+  .small-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+    line-height: 18px;
+  }
+}
