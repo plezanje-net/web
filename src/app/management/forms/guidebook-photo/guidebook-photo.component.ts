@@ -133,10 +133,7 @@ export class GuidebookPhotoComponent {
 
         // Make request to GPT-4 mini API
         this.http
-          .post<{ output: RouteData[] }>(
-            `${environment.guidebookScanURL}/gpt4mini/guidebook-photo`,
-            formData
-          )
+          .post<{ output: RouteData[] }>(environment.guidebookScanURL, formData)
           .subscribe({
             next: async (response) => {
               let position = this.data?.maxRoutePosition || 0;
