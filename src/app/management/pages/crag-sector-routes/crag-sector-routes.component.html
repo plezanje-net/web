@@ -167,6 +167,7 @@
     </mat-menu>
 
     <button
+      *ngIf="developerMode"
       mat-icon-button
       class="beta-feature"
       (click)="openGuidebookPhotoDialog()"

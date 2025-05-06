@@ -2,7 +2,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { User } from '@sentry/angular';
 import { Apollo } from 'apollo-angular';
 import { combineLatest, filter, Subscription, switchMap, take } from 'rxjs';
@@ -56,13 +56,33 @@ export class CragSectorRoutesComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private authService: AuthService,
     private activatedRoute: ActivatedRoute,
+    private router: Router,
     private layoutService: LayoutService,
     private sectorGQL: ManagementGetSectorGQL,
     private savePositionGQL: ManagementSaveRoutePositionGQL,
     private deleteRouteGQL: ManagementDeleteRouteGQL,
     private apollo: Apollo,
     public contributionService: ContributionService
-  ) {}
+  ) {
+    // Listen for specific URL parameter to enable developer mode
+    const routerSub = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        if (
+          this.activatedRoute.snapshot.queryParams['enable_dev_mode'] === 'true'
+        ) {
+          localStorage.setItem('developer_mode', 'true');
+          this.snackBar.open('Developer mode enabled', null, {
+            duration: 2000,
+          });
+        }
+      });
+    this.subscriptions.push(routerSub);
+  }
+
+  get developerMode(): boolean {
+    return localStorage.getItem('developer_mode') === 'true';
+  }
 
   ngOnInit(): void {
     const sub = combineLatest([
