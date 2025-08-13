@@ -13,6 +13,8 @@ export const environment = {
   sentryDsn:
     'https://a6bd493f5c044c419cadb227cfe067f6@o1179288.ingest.sentry.io/6291581',
   sentryTracingUrl: 'https://plezanje.net/graphql',
+  guidebookScanURL:
+    'https://n8n-kkcc40kwskwcgkk4gokkkgos.ademsar.eu/webhook/ab7371f8-7b31-40c4-ac53-b1db3e292ed4',
 };
 
 /*

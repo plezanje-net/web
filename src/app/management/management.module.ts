@@ -36,6 +36,7 @@ import { MoveSectorFormComponent } from './forms/move-sector-form/move-sector-fo
 import { MoveRouteFormComponent } from './forms/move-route-form/move-route-form.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { GuidebookPhotoComponent } from './forms/guidebook-photo/guidebook-photo.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     AreaFormComponent,
     MoveSectorFormComponent,
     MoveRouteFormComponent,
+    GuidebookPhotoComponent,
   ],
   imports: [
     CommonModule,

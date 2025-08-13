@@ -1,0 +1,84 @@
+<div mat-dialog-title fxLayout="row" fxLayoutAlign="start center">
+  <div fxFlex="100" class="title">Dodajanje s kamero</div>
+</div>
+
+<mat-dialog-content>
+  <form
+    class="form"
+    [formGroup]="form"
+    (submit)="submit()"
+    fxLayout="column"
+    fxLayoutGap="16px"
+  >
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="8px">
+      <div>
+        <button
+          type="button"
+          mat-flat-button
+          color="primary"
+          (click)="fileInput.click()"
+        >
+          Izberi datoteko
+        </button>
+      </div>
+      <div class="filename">{{ fileToUpload?.name }}</div>
+      <input
+        id="file"
+        type="file"
+        #fileInput
+        hidden
+        accept="image/*"
+        capture="environment"
+        (change)="onFileSelected($event)"
+      />
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Dodatna navodila</mat-label>
+      <textarea
+        matInput
+        formControlName="prompt"
+        placeholder="Vnesite dodatna navodila za AI (npr. 'Opazuj predvsem desno stran fotografije...')"
+        rows="4"
+      ></textarea>
+      <mat-hint
+        >Navodila bodo poslana AI za dodatno pomoč pri prepoznavanju
+        smeri</mat-hint
+      >
+      <button 
+        *ngIf="form.get('prompt').value"
+        matSuffix 
+        mat-icon-button 
+        type="button" 
+        aria-label="Clear" 
+        (click)="clearSavedPrompt()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button *ngIf="!loading" type="button" mat-button [mat-dialog-close]="null">
+    Prekliči
+  </button>
+  <button
+    *ngIf="!loading"
+    type="submit"
+    mat-button
+    color="primary"
+    cdkFocusInitial
+    [disabled]="!fileToUpload"
+    (click)="submit()"
+  >
+    Potrdi
+  </button>
+  <div
+    *ngIf="loading"
+    class="w-100"
+    fxLayout="row"
+    fxLayoutAlign="center center"
+  >
+    <mat-spinner diameter="30"></mat-spinner>
+  </div>
+</mat-dialog-actions>

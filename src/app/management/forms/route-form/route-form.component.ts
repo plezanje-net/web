@@ -20,6 +20,7 @@ export interface RouteFormComponentData {
 }
 
 export interface RouteFormValues {
+  name?: string;
   position?: number;
   sectorId?: string;
   defaultGradingSystemId?: string;
