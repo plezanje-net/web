@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -9,6 +9,7 @@ import { ManagementCreateRouteGQL } from 'src/generated/graphql';
 interface RouteData {
   name: string;
   difficulty: number;
+  isProject?: boolean;
 }
 
 export interface GuidebookPhotoData {
@@ -21,7 +22,15 @@ export interface GuidebookPhotoData {
   templateUrl: './guidebook-photo.component.html',
   styleUrls: ['./guidebook-photo.component.scss'],
 })
-export class GuidebookPhotoComponent {
+/**
+ * Component for handling guidebook photo uploads and AI analysis
+ * Features:
+ * - Allows uploading photos of climbing routes for AI analysis
+ * - Resizes images before upload to optimize size
+ * - Supports adding custom prompt instructions for the AI
+ * - Automatically saves and retrieves the last used prompt from localStorage
+ */
+export class GuidebookPhotoComponent implements OnInit {
   fileToUpload: File;
   loading = false;
   form = new FormGroup({
@@ -33,6 +42,9 @@ export class GuidebookPhotoComponent {
   maxWidth = 1200;
   maxHeight = 1200;
   imageQuality = 0.8;
+  
+  // Key for storing the prompt in localStorage
+  private readonly STORAGE_KEY = 'guidebookPhotoPrompt';
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: GuidebookPhotoData,
@@ -42,8 +54,24 @@ export class GuidebookPhotoComponent {
     private createGQL: ManagementCreateRouteGQL
   ) {}
 
+  ngOnInit(): void {
+    // Load the last used prompt from localStorage
+    const savedPrompt = localStorage.getItem(this.STORAGE_KEY);
+    if (savedPrompt) {
+      this.form.get('prompt').setValue(savedPrompt);
+    }
+  }
+
   onFileSelected(event: Event) {
     this.fileToUpload = (<HTMLInputElement>event.target).files.item(0);
+  }
+
+  /**
+   * Clears the saved prompt from localStorage and resets the form field
+   */
+  clearSavedPrompt() {
+    localStorage.removeItem(this.STORAGE_KEY);
+    this.form.get('prompt').setValue('');
   }
 
   /**
@@ -131,6 +159,8 @@ export class GuidebookPhotoComponent {
         const prompt = this.form.get('prompt').value;
         if (prompt) {
           formData.append('prompt', prompt);
+          // Save the prompt to localStorage for future use
+          localStorage.setItem(this.STORAGE_KEY, prompt);
         }
 
         // Include the sector ID in the request if available
@@ -154,7 +184,7 @@ export class GuidebookPhotoComponent {
                       sectorId: this.data.sectorId,
                       defaultGradingSystemId: 'font',
                       routeTypeId: 'boulder',
-                      isProject: false,
+                      isProject: route.isProject,
                       position,
                       publishStatus: 'draft',
                     },

@@ -45,6 +45,15 @@
         >Navodila bodo poslana AI za dodatno pomoč pri prepoznavanju
         smeri</mat-hint
       >
+      <button 
+        *ngIf="form.get('prompt').value"
+        matSuffix 
+        mat-icon-button 
+        type="button" 
+        aria-label="Clear" 
+        (click)="clearSavedPrompt()">
+        <mat-icon>close</mat-icon>
+      </button>
     </mat-form-field>
   </form>
 </mat-dialog-content>
