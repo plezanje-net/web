@@ -1,5 +1,5 @@
 overwrite: true
-schema: "https://plezanje.net/graphql"
+schema: "https://api.plezanje.eu/graphql"
 documents: "src/**/*.graphql"
 generates:
   src/generated/graphql.ts:
